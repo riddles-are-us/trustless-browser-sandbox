@@ -1,5 +1,6 @@
+use serde::Serialize;
 pub trait Coordinate: Sized {
-    type Direction;
+    type Direction: Clone;
     fn adjacents(&self) -> Vec<Self>;
     fn directions() -> Vec<Self::Direction>;
     fn adjacent(&self, direction: Self::Direction) -> Self;
@@ -8,6 +9,7 @@ pub trait Coordinate: Sized {
     fn new(x: i64, y: i64) -> Self;
 }
 
+#[derive (Clone, Serialize)]
 pub enum HexDirection {
     TopLeft,
     TopRight,
@@ -17,6 +19,7 @@ pub enum HexDirection {
     Left,
 }
 
+#[derive (Clone, Serialize)]
 pub struct HexCoordinate {
     x: i64,
     y: i64,
@@ -118,6 +121,25 @@ impl Coordinate for HexCoordinate {
         Self::new(x, y)
     }
 }
+
+#[derive (Serialize)]
+pub struct Tile<C: Coordinate, F: Clone> {
+    cor: C,
+    feature: F,
+}
+
+impl<C: Coordinate, F: Clone> Tile<C, F> {
+    pub fn new(c: C, f: F) -> Self {
+        Tile {
+            cor: c,
+            feature: f
+        }
+    }
+    pub fn set_feature(&mut self, f: F) {
+        self.feature = f
+    }
+}
+
 
 
 #[cfg(test)]

@@ -35,7 +35,6 @@ pub fn zkmain() -> i64 {
     ]};
     */
 
-
     zkwasm_rust_sdk::dbg!("msg {:?}\n", msghash);
 
     let pk = unsafe {BabyJubjubPoint {

@@ -1,4 +1,5 @@
 use super::coordinate::Coordinate;
+use super::coordinate::Tile;
 pub struct PositionedObject<C:Coordinate, Object: Clone> {
     pub position: C,
     pub object: Object,
@@ -16,12 +17,12 @@ impl<C: Coordinate, O: Clone> PositionedObject<C, O> {
 pub struct Map<C:Coordinate, O: Clone> {
     pub width: usize,
     pub height: usize,
-    pub tiles: Vec<C>,
+    pub tiles: Vec<Tile<C, Option<C::Direction>>>,
     pub objects: Vec<PositionedObject<C, O>>,
 }
 
 impl<C:Coordinate, O: Clone> Map<C, O> {
-    pub fn new(width: usize, height: usize, tiles: Vec<C>, objects: Vec<PositionedObject<C, O>>) -> Self {
+    pub fn new(width: usize, height: usize, tiles: Vec<Tile<C, Option<C::Direction>>>, objects: Vec<PositionedObject<C, O>>) -> Self {
         Map {
             width,
             height,
@@ -37,9 +38,14 @@ impl<C:Coordinate, O: Clone> Map<C, O> {
     pub fn remove(&mut self, index: usize) -> PositionedObject<C, O> {
         self.objects.swap_remove(index)
     }
-    pub fn coordinate_of_tile_index(&self, index: usize) -> C{
+    pub fn coordinate_of_tile_index(&self, index: usize) -> C {
         C::new((index % self.width) as i64, (index / self.height) as i64)
     }
+
+    pub fn set_feature(&mut self, index: usize, f: Option<C::Direction>) {
+        self.tiles.get_mut(index).unwrap().set_feature(f)
+    }
+
     pub fn get_neighbours(
         &mut self,
         pos: &PositionedObject<C, O>,

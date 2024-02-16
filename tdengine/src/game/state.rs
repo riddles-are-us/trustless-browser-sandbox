@@ -1,7 +1,9 @@
 use zkwasm_rust_sdk::wasm_dbg;
 
+use crate::tile::coordinate::Tile;
 use crate::tile::map::Map;
 use crate::tile::coordinate::HexCoordinate;
+use crate::tile::coordinate::HexDirection;
 use crate::tile::coordinate::Coordinate;
 use super::object::Monster;
 use super::object::Object;
@@ -24,6 +26,16 @@ pub static mut GLOBAL: State = State {
 pub fn init_state() {
     let monster = Monster::new(10, 5, 1);
     let global = unsafe {&mut GLOBAL};
+    for _ in 0..56 {
+        global.map.tiles.push(
+            Tile::new(HexCoordinate::new(0,0), None),
+        )
+    };
+
+    global.map.set_feature(0, Some(HexDirection::BottomRight));
+    global.map.set_feature(8, Some(HexDirection::BottomRight));
+    global.map.set_feature(17, Some(HexDirection::BottomRight));
+
     global.map.spawn(Object::Monster(monster.clone()), HexCoordinate::new(0,0));
     global.map.spawn(Object::Monster(monster), HexCoordinate::new(4,3));
 }

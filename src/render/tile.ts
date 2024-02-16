@@ -23,14 +23,17 @@ function toY(xcor: number, ycor: number): number {
         return tileHeight + tileHeight*ycor;
 }
 
-export function drawTiles() {
+export function drawTiles(tiles: any) {
         console.log("drawing Tiles");
         let c = document.getElementById("canvas")! as HTMLCanvasElement;
         let context = c.getContext("2d")!;
         context.clearRect(0, 0, c.width, c.height);
-        for (var i = 0; i<6; i++) {
+        for (var i = 0; i<8; i++) {
             for (var j = 0; j<7; j++) {
-                hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, tileRadius, "gray", context)
+              hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, tileRadius, "gray", context)
+              if (tiles[j * 8 + i].feature != null) {
+                hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, 5, "red", context)
+              }
             }
         }
 }

@@ -17,9 +17,10 @@ pub mod state;
 
 static mut MERKLE: Merkle = Merkle { root: [0; 4] };
 
-const CMD_MOVE: u8 = 0;
-const CMD_ATTACK: u8 = 1;
-const CMD_DROP: u8 = 2;
+const CMD_RUN: u8 = 0;
+const CMD_SPAWN: u8 = 1;
+const CMD_ATTACK: u8 = 2;
+const CMD_DROP: u8 = 3;
 
 /// Step function receives a encoded command and changes the global state accordingly
 #[wasm_bindgen]
@@ -29,7 +30,7 @@ pub fn step(command: u64) {
         wasm_dbg(commands[0] as u64);
     };
 
-    if commands[0] == CMD_MOVE {
+    if commands[0] == CMD_SPAWN{
         let objindex = u16::from_le_bytes(commands[1..3].try_into().unwrap());
         unsafe {
             wasm_dbg(objindex as u64);
@@ -70,4 +71,11 @@ pub fn get_objects() -> String {
         coordinates.push(vec![x,y]);
     }
     serde_json::to_string(&coordinates).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn get_tiles() -> String {
+    //zkwasm_rust_sdk::dbg!("finish loading {:?}", merkle_root);
+    let global = unsafe {&GLOBAL};
+    serde_json::to_string(&global.map.tiles).unwrap()
 }
