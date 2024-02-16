@@ -43,6 +43,17 @@ export function numToUint8Array(num: number): Uint8Array {
     return arr;
 }
 
+export function BNToUint8Array(num: bigint): Uint8Array {
+    let arr = new Uint8Array(8);
+    for (let i = 0; i < 8; i++) {
+       arr[i] = Number(num % 256n);
+       num = num >> 8n;
+    }
+    return arr;
+}
+
+
+
 export class SignatureWitness {
   pkey: Array<string>;
   sig: Array<string>;

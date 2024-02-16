@@ -5,6 +5,7 @@ pub trait Coordinate: Sized {
     fn adjacent(&self, direction: Self::Direction) -> Self;
     fn distance(p1: &Self, p2: &Self) -> u64;
     fn repr(&self) -> (i64, i64);
+    fn new(x: i64, y: i64) -> Self;
 }
 
 pub enum HexDirection {
@@ -21,17 +22,15 @@ pub struct HexCoordinate {
     y: i64,
 }
 
-impl HexCoordinate {
-    pub fn new(x: i64, y: i64) -> Self {
+impl Coordinate for HexCoordinate {
+    type Direction = HexDirection;
+
+    fn new(x: i64, y: i64) -> Self {
         HexCoordinate {
             x,
             y,
         }
     }
-}
-
-impl Coordinate for HexCoordinate {
-    type Direction = HexDirection;
     fn repr(&self) -> (i64, i64) {
         (self.x, self.y)
     }

@@ -27,6 +27,7 @@ export function drawTiles() {
         console.log("drawing Tiles");
         let c = document.getElementById("canvas")! as HTMLCanvasElement;
         let context = c.getContext("2d")!;
+        context.clearRect(0, 0, c.width, c.height);
         for (var i = 0; i<6; i++) {
             for (var j = 0; j<7; j++) {
                 hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, tileRadius, "gray", context)

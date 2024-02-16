@@ -6,6 +6,7 @@ use wasm_bindgen::prelude::*;
 
 use crate::tile::coordinate::Coordinate;
 
+use self::state::init_state;
 use self::state::GLOBAL;
 
 pub mod object;
@@ -16,17 +17,31 @@ pub mod state;
 
 static mut MERKLE: Merkle = Merkle { root: [0; 4] };
 
-const CMD_TRANSPORT: u64 = 0;
-const CMD_RECHARGE: u64 = 1;
-const CMD_DIG: u64 = 2;
+const CMD_MOVE: u8 = 0;
+const CMD_ATTACK: u8 = 1;
+const CMD_DROP: u8 = 2;
 
 /// Step function receives a encoded command and changes the global state accordingly
 #[wasm_bindgen]
 pub fn step(command: u64) {
-    unsafe {
-        wasm_dbg(command);
-    };
     let commands = command.to_le_bytes();
+    unsafe {
+        wasm_dbg(commands[0] as u64);
+    };
+
+    if commands[0] == CMD_MOVE {
+        let objindex = u16::from_le_bytes(commands[1..3].try_into().unwrap());
+        unsafe {
+            wasm_dbg(objindex as u64);
+        };
+
+        let pos = u32::from_le_bytes(commands[4..8].try_into().unwrap());
+
+        unsafe {
+            wasm_dbg(pos as u64);
+        };
+        state::handle_move(objindex as usize, pos as usize);
+    }
 }
 
 // load the game with user account
@@ -40,6 +55,7 @@ pub fn load(account: u64, r0: u64, r1:u64, r2:u64, r3:u64) {
 
 #[wasm_bindgen]
 pub fn init(seed: u64) {
+    init_state()
     //zkwasm_rust_sdk::dbg!("finish loading {:?}", merkle_root);
 }
 
@@ -53,21 +69,5 @@ pub fn get_objects() -> String {
         let (x,y) = obj.position.repr();
         coordinates.push(vec![x,y]);
     }
-    "abc".to_string()
-    //serde_json::to_string(&coordinates).unwrap()
+    serde_json::to_string(&coordinates).unwrap()
 }
-
-#[wasm_bindgen]
-pub fn get_num() -> u64 {
-    123
-}
-
-#[wasm_bindgen]
-pub fn get_string() -> String {
-   "ac".to_string()
-}
-
-
-
-
-

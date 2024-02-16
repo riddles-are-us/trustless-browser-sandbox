@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import statusReducer from '../data/statusSlice';
 import accountReducer from '../data/accountSlice';
 import endpointReducer from "../data/endpoint";
+import gameReducer from "../data/game";
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -15,6 +16,7 @@ export const store = configureStore({
           "acccount/fetchAccount/fulfilled",
           "account.l1Account.web3",
           "endpoint.zkWasmServiceHelper",
+          "status.config.latest_server_checksum",
         ],
       },
     }),
@@ -22,6 +24,7 @@ export const store = configureStore({
     status: statusReducer,
     account: accountReducer,
     endpoint: endpointReducer,
+    game: gameReducer,
   },
 });
 
