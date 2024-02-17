@@ -29,8 +29,9 @@ pub fn step(command: u64) {
     unsafe {
         wasm_dbg(commands[0] as u64);
     };
-
-    if commands[0] == CMD_SPAWN{
+    if commands[0] == CMD_RUN {
+        state::handle_run();
+    } else if commands[0] == CMD_SPAWN{
         let objindex = u16::from_le_bytes(commands[1..3].try_into().unwrap());
         unsafe {
             wasm_dbg(objindex as u64);

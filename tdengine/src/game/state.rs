@@ -50,3 +50,16 @@ pub fn handle_move(obj_index: usize, pos: usize) {
         wasm_dbg(obj.position.repr().1 as u64);
     }
 }
+
+pub fn handle_run() {
+    let global = unsafe {&mut GLOBAL};
+    let map = unsafe { &GLOBAL.map };
+    let objs = &mut global.map.objects;
+    for obj in objs.iter_mut() {
+      let index = map.index_of_tile_coordinate(&obj.position);
+      let feature = map.get_feature(index);
+      if let Some(f) = feature {
+          obj.position = obj.position.adjacent(f)
+      }
+    }
+}

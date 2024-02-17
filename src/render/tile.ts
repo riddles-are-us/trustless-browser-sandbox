@@ -1,10 +1,12 @@
 const tileRadius = 40;
 const tileHeight = 34;
 
-function hexagon(x: number, y: number, r:number, color: string, context: CanvasRenderingContext2D) {
+function hexagon(x: number, y: number, color: string, context: CanvasRenderingContext2D) {
         context.beginPath();
+        var r = tileRadius;
         var xd = tileRadius/2;
         var yd = tileHeight;
+        context.fillStyle = color;
         context.lineTo(x - xd, y - yd);
         context.lineTo(x + xd, y - yd);
         context.lineTo(x + r, y);
@@ -12,7 +14,24 @@ function hexagon(x: number, y: number, r:number, color: string, context: CanvasR
         context.lineTo(x - xd, y + yd);
         context.lineTo(x - r, y);
         context.lineTo(x - xd, y - yd);
-        context.stroke();
+        context.fill();
+}
+
+function direction(x: number, y: number, direction: string, color: string, context: CanvasRenderingContext2D) {
+        context.beginPath();
+        var r = tileRadius;
+        var xd = tileRadius/2;
+        var yd = tileHeight;
+        context.fillStyle = color;
+        context.lineTo(x - xd, y - yd);
+        context.lineTo(x + xd, y - yd);
+        context.lineTo(x + r, y);
+        context.lineTo(x + xd, y + yd);
+        context.lineTo(x - xd, y + yd);
+        context.lineTo(x - r, y);
+        context.lineTo(x - xd, y - yd);
+        context.fill();
+
 }
 
 function toX(xcor: number, ycor: number): number {
@@ -30,9 +49,9 @@ export function drawTiles(tiles: any) {
         context.clearRect(0, 0, c.width, c.height);
         for (var i = 0; i<8; i++) {
             for (var j = 0; j<7; j++) {
-              hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, tileRadius, "gray", context)
+              hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, "gray", context)
               if (tiles[j * 8 + i].feature != null) {
-                hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, 5, "red", context)
+                direction((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, tiles[j*8 + i].feature, "green", context)
               }
             }
         }
@@ -41,9 +60,10 @@ export function drawTiles(tiles: any) {
 function drawObject(xcor:number, ycor:number, context: CanvasRenderingContext2D) {
         let x = toX(xcor, ycor);
         let y = toY(xcor, ycor);
+        context.fillStyle = "orange";
         context.beginPath();
-        context.arc(x, y, 10, 0, 2 * Math.PI);
-        context.stroke();
+        context.arc(x, y, 15, 0, 2 * Math.PI);
+        context.fill();
 }
 
 export function drawObjects(attrs: Array<number>) {

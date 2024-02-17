@@ -42,9 +42,19 @@ impl<C:Coordinate, O: Clone> Map<C, O> {
         C::new((index % self.width) as i64, (index / self.height) as i64)
     }
 
+    pub fn index_of_tile_coordinate(&self, cor: &C) -> usize {
+        let (x, y) = cor.repr();
+        (x as usize) + (y as usize) * self.width
+    }
+
     pub fn set_feature(&mut self, index: usize, f: Option<C::Direction>) {
         self.tiles.get_mut(index).unwrap().set_feature(f)
     }
+
+    pub fn get_feature(&self, index: usize) -> Option<C::Direction> {
+        self.tiles.get(index).unwrap().feature.clone()
+    }
+
 
     pub fn get_neighbours(
         &mut self,

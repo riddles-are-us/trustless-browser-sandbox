@@ -77,27 +77,6 @@ impl Coordinate for HexCoordinate {
     }
     fn adjacent(&self, direction: Self::Direction) -> Self {
         use HexDirection::*;
-        let left_start = self.y % 2;  // for y=0,1,2, ... start with 0 else start with 1
-        let x = match direction {
-            TopLeft => {
-                self.x - left_start
-            },
-            TopRight => {
-                self.x + 1 - left_start
-            },
-            Left => {
-                self.x - 1
-            },
-            Right => {
-                self.x + 1
-            },
-            BottomRight => {
-                self.x + 1 - left_start
-            },
-            BottomLeft => {
-                self.x - left_start
-            },
-        };
         let y = match direction {
             TopLeft => {
                 self.y - 1
@@ -118,6 +97,28 @@ impl Coordinate for HexCoordinate {
                 self.y + 1
             },
         };
+        let left_start = y % 2;  // for y=0,1,2, ... start with 0 else start with 1
+        let x = match direction {
+            TopLeft => {
+                self.x - left_start
+            },
+            TopRight => {
+                self.x + 1 - left_start
+            },
+            Left => {
+                self.x - 1
+            },
+            Right => {
+                self.x + 1
+            },
+            BottomRight => {
+                self.x + 1 - left_start
+            },
+            BottomLeft => {
+                self.x - left_start
+            },
+        };
+
         Self::new(x, y)
     }
 }
@@ -125,7 +126,7 @@ impl Coordinate for HexCoordinate {
 #[derive (Serialize)]
 pub struct Tile<C: Coordinate, F: Clone> {
     cor: C,
-    feature: F,
+    pub feature: F,
 }
 
 impl<C: Coordinate, F: Clone> Tile<C, F> {
