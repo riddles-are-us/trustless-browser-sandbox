@@ -1,5 +1,8 @@
+use serde::Serialize;
 use super::coordinate::Coordinate;
 use super::coordinate::Tile;
+
+#[derive (Clone, Serialize)]
 pub struct PositionedObject<C:Coordinate, Object: Clone> {
     pub position: C,
     pub object: Object,

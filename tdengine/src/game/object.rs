@@ -1,4 +1,6 @@
-#[derive (Clone)]
+use serde::Serialize;
+
+#[derive (Clone, Serialize)]
 pub struct Monster {
     hp: u64,
     range: u64,
@@ -15,14 +17,14 @@ impl Monster {
     }
 }
 
-#[derive (Clone)]
+#[derive (Clone, Serialize)]
 pub struct Tower{
     range: u64,
     power: u64,
 }
 
 impl Tower {
-    pub fn new(hp: u64, range: u64, power: u64) -> Self {
+    pub fn new(range: u64, power: u64) -> Self {
         Tower {
             range,
             power
@@ -30,10 +32,40 @@ impl Tower {
     }
 }
 
-#[derive (Clone)]
+#[derive (Clone, Serialize)]
+pub struct Spawner{
+    rate: u64,
+}
+
+impl Spawner {
+    pub fn new(rate: u64) -> Self {
+        Spawner {
+            rate
+        }
+    }
+}
+
+#[derive (Clone, Serialize)]
+pub struct Collector{
+    buf: u64,
+}
+
+impl Collector {
+    pub fn new(buf: u64) -> Self {
+        Collector {
+           buf
+        }
+    }
+}
+
+
+
+#[derive (Clone, Serialize)]
 pub enum Object {
     Monster(Monster),
     Tower(Tower),
+    Spawner(Spawner),
+    Collector(Collector),
 }
 
 

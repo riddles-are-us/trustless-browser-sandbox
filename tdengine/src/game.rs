@@ -66,12 +66,7 @@ pub fn init(seed: u64) {
 pub fn get_objects() -> String {
     //zkwasm_rust_sdk::dbg!("finish loading {:?}", merkle_root);
     let global = unsafe {&GLOBAL};
-    let mut coordinates = vec![];
-    for obj in global.map.objects.iter() {
-        let (x,y) = obj.position.repr();
-        coordinates.push(vec![x,y]);
-    }
-    serde_json::to_string(&coordinates).unwrap()
+    serde_json::to_string(&global.map.objects).unwrap()
 }
 
 #[wasm_bindgen]

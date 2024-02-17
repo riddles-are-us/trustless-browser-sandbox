@@ -57,19 +57,34 @@ export function drawTiles(tiles: any) {
         }
 }
 
-function drawObject(xcor:number, ycor:number, context: CanvasRenderingContext2D) {
-        let x = toX(xcor, ycor);
-        let y = toY(xcor, ycor);
-        context.fillStyle = "orange";
+function drawObject(obj:any, context: CanvasRenderingContext2D) {
+        let x = toX(obj.position.x, obj.position.y);
+        let y = toY(obj.position.x, obj.position.y);
         context.beginPath();
+        switch (Object.keys(obj.object)[0]) {
+          case "Monster": {
+            context.fillStyle = "orange";
+            context.arc(x, y, 15, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
+          case "Tower": {
+            context.fillStyle = "black";
+            context.arc(x, y, 15, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
+        }
         context.arc(x, y, 15, 0, 2 * Math.PI);
         context.fill();
 }
 
-export function drawObjects(attrs: Array<number>) {
+export function drawObjects(objs: Array<any>) {
         console.log("drawing Objects");
         let c = document.getElementById("canvas")! as HTMLCanvasElement;
         let context = c.getContext("2d")!;
-        drawObject(attrs[0], attrs[1], context);
+        for (var obj of objs) {
+          drawObject(obj, context);
+        }
 }
 

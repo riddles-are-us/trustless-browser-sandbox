@@ -67,11 +67,8 @@ export function GameController() {
       console.log("tiles", tiles);
       drawTiles(tiles);
 
-      let cors = JSON.parse(objs);
-      let length = cors.length;
-      for (var i=0; i<length; i++) {
-        drawObjects(cors[i]);
-      }
+      let objects = JSON.parse(objs);
+      drawObjects(objects);
     });
   }
 
@@ -86,11 +83,8 @@ export function GameController() {
       console.log("tiles", tiles);
       drawTiles(tiles);
 
-      let cors = JSON.parse(objs);
-      let length = cors.length;
-      for (var i=0; i<length; i++) {
-        drawObjects(cors[i]);
-      }
+      let objects = JSON.parse(objs);
+      drawObjects(objects);
     });
 
   }

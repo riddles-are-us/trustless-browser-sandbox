@@ -7,6 +7,8 @@ use crate::tile::coordinate::HexDirection;
 use crate::tile::coordinate::Coordinate;
 use super::object::Monster;
 use super::object::Object;
+use super::object::Spawner;
+use super::object::Tower;
 
 // The global state
 pub struct State {
@@ -25,6 +27,8 @@ pub static mut GLOBAL: State = State {
 
 pub fn init_state() {
     let monster = Monster::new(10, 5, 1);
+    let tower = Tower::new(5, 1);
+    let spawner = Spawner::new(5);
     let global = unsafe {&mut GLOBAL};
     for _ in 0..56 {
         global.map.tiles.push(
@@ -35,9 +39,16 @@ pub fn init_state() {
     global.map.set_feature(0, Some(HexDirection::BottomRight));
     global.map.set_feature(8, Some(HexDirection::BottomRight));
     global.map.set_feature(17, Some(HexDirection::BottomRight));
+    global.map.set_feature(25, Some(HexDirection::TopRight));
+    global.map.set_feature(18, Some(HexDirection::BottomRight));
+    global.map.set_feature(26, Some(HexDirection::TopRight));
+    global.map.set_feature(19, Some(HexDirection::BottomRight));
+    global.map.set_feature(27, Some(HexDirection::TopRight));
+    global.map.set_feature(20, Some(HexDirection::BottomRight));
 
-    global.map.spawn(Object::Monster(monster.clone()), HexCoordinate::new(0,0));
-    global.map.spawn(Object::Monster(monster), HexCoordinate::new(4,3));
+    global.map.spawn(Object::Monster(monster), HexCoordinate::new(0,0));
+    global.map.spawn(Object::Spawner(spawner), HexCoordinate::new(0,0));
+    global.map.spawn(Object::Tower(tower), HexCoordinate::new(4,3));
 }
 
 pub fn handle_move(obj_index: usize, pos: usize) {
