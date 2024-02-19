@@ -1,0 +1,103 @@
+const tileRadius = 40;
+const tileHeight = 34;
+
+function hexagon(x: number, y: number, color: string, context: CanvasRenderingContext2D) {
+        context.beginPath();
+        var r = tileRadius;
+        var xd = tileRadius/2;
+        var yd = tileHeight;
+        context.fillStyle = color;
+        context.lineTo(x - xd, y - yd);
+        context.lineTo(x + xd, y - yd);
+        context.lineTo(x + r, y);
+        context.lineTo(x + xd, y + yd);
+        context.lineTo(x - xd, y + yd);
+        context.lineTo(x - r, y);
+        context.lineTo(x - xd, y - yd);
+        context.fill();
+}
+
+function direction(x: number, y: number, direction: string, color: string, context: CanvasRenderingContext2D) {
+        context.beginPath();
+        var r = tileRadius;
+        var xd = tileRadius/2;
+        var yd = tileHeight;
+        context.fillStyle = color;
+        context.lineTo(x - xd, y - yd);
+        context.lineTo(x + xd, y - yd);
+        context.lineTo(x + r, y);
+        context.lineTo(x + xd, y + yd);
+        context.lineTo(x - xd, y + yd);
+        context.lineTo(x - r, y);
+        context.lineTo(x - xd, y - yd);
+        context.fill();
+
+}
+
+function toX(xcor: number, ycor: number): number {
+        return (ycor % 2)*((tileRadius*3)/2) + tileRadius + xcor *(tileRadius * 3);
+}
+
+function toY(xcor: number, ycor: number): number {
+        return tileHeight + tileHeight*ycor;
+}
+
+export function drawTiles(tiles: any) {
+        console.log("drawing Tiles");
+        let c = document.getElementById("canvas")! as HTMLCanvasElement;
+        let context = c.getContext("2d")!;
+        context.clearRect(0, 0, c.width, c.height);
+        for (var i = 0; i<8; i++) {
+            for (var j = 0; j<7; j++) {
+              hexagon((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, "gray", context)
+              if (tiles[j * 8 + i].feature != null) {
+                direction((j % 2)*((tileRadius*3)/2) + tileRadius + i *(tileRadius * 3), tileHeight + tileHeight*j, tiles[j*8 + i].feature, "green", context)
+              }
+            }
+        }
+}
+
+function drawObject(obj:any, context: CanvasRenderingContext2D) {
+        let x = toX(obj.position.x, obj.position.y);
+        let y = toY(obj.position.x, obj.position.y);
+        context.beginPath();
+        context.font = "16px serif";
+        switch (Object.keys(obj.object)[0]) {
+          case "Monster": {
+            context.fillStyle = "orange";
+            context.arc(x, y, 15, 0, 2 * Math.PI);
+            context.fill();
+            context.fillStyle = "white";
+            context.fillText(obj.object.Monster.hp, x, y-10);
+            break;
+          }
+          case "Tower": {
+            context.fillStyle = "black";
+            context.arc(x, y, 15, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
+          case "Spawner": {
+            context.fillStyle = "white";
+            context.arc(x, y, 10, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
+          case "Collector": {
+            context.fillStyle = "green";
+            context.arc(x, y, 10, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
+        }
+}
+
+export function drawObjects(objs: Array<any>) {
+        console.log("drawing Objects");
+        let c = document.getElementById("canvas")! as HTMLCanvasElement;
+        let context = c.getContext("2d")!;
+        for (var obj of objs) {
+          drawObject(obj, context);
+        }
+}
+

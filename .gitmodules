@@ -1,0 +1,3 @@
+[submodule "roguelike"]
+	path = roguelike
+	url = git@github.com:junyu0312/roguelike.git

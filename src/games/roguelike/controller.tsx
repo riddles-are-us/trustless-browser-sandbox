@@ -1,8 +1,8 @@
-import init, * as gameplay from "../js";
-import { drawObjects, drawTiles } from "../render/tile";
+import init, * as gameplay from "../../js";
+import { drawObjects, drawTiles } from "./tile";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Button, Form } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,20 +10,20 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 
 // ZKWASM RELATED STUFF
-import { NewProveTask } from "../modals/addNewProveTask";
-import { selectCommands, selectMessageToSigned, selectMsgHash } from "../data/game";
-import { numToUint8Array, SignatureWitness } from "../utils/proof";
+import { NewProveTask } from "../../modals/addNewProveTask";
+import { selectCommands, selectMessageToSigned, selectMsgHash } from "../../data/game";
+import { numToUint8Array, SignatureWitness } from "../../utils/proof";
 import { PrivateKey, PublicKey, bnToHexLe } from "delphinus-curves/src/altjubjub";
 
 import {
   selectL2Account,
-} from "../data/accountSlice";
+} from "../../data/accountSlice";
 
 import {
   selectGameLoaded,
   setLoaded,
   appendCommand,
-} from "../data/game";
+} from "../../data/game";
 
 
 export function GameController() {
@@ -62,6 +62,7 @@ export function GameController() {
 
   function loadGame(l2account: number) {
     (init as any)().then(() => {
+      /*
       gameplay.load(
         BigInt(l2account),
         BigInt(merklePreRoot[0]),
@@ -71,6 +72,7 @@ export function GameController() {
       );
       //setTargets([Number(target0), Number(target1), Number(target2)]);
       dispatch(setLoaded(true));
+       */
     });
   }
 
@@ -78,17 +80,10 @@ export function GameController() {
     (init as any)().then(() => {
       console.log("setting instance");
       console.log(gameplay);
-      gameplay.init(BigInt(l2account));
-      let objs = gameplay.get_objects();
-      console.log("objs", objs);
-
-      let tiles = gameplay.get_tiles();
-      tiles = JSON.parse(tiles);
-      console.log("tiles", tiles);
-      drawTiles(tiles);
-
-      let objects = JSON.parse(objs);
-      drawObjects(objects);
+      gameplay.new_game();
+      dispatch(setLoaded(true));
+      //let objects = JSON.parse(objs);
+      //drawObjects(objects);
     });
   }
 
@@ -97,16 +92,9 @@ export function GameController() {
       console.log("moving ");
       let command = (0n<<32n);
       dispatch(appendCommand(command));
-      gameplay.step(command);
-      let objs = gameplay.get_objects();
-      console.log("objs", objs);
-      let tiles = gameplay.get_tiles();
-      tiles = JSON.parse(tiles);
-      console.log("tiles", tiles);
-      drawTiles(tiles);
-
-      let objects = JSON.parse(objs);
-      drawObjects(objects);
+      //gameplay.step(command);
+      //let objs = gameplay.get_objects();
+      //console.log("objs", objs);
     });
 
   }

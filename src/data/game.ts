@@ -1,17 +1,24 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, store } from "../app/store";
 import { BNToUint8Array, SignatureWitness } from "../utils/proof";
+import sha256 from "sha256";
+import BN from "bn.js";
+import {bnToHexLe} from 'delphinus-curves/src/altjubjub';
 
 export interface GameState {
   loaded: boolean;
-  merkleRoot: Array<number>;
+  preMerkleRoot: Array<bigint>;
+  postMerkleRoot: Array<bigint>;
+  msgHash: string; //start with 0x little end
   commands: Array<bigint>;
 }
 
 const initialState: GameState = {
   loaded: false,
-  merkleRoot: [0, 0, 0, 0],
-  commands: []
+  preMerkleRoot: [0n, 0n, 0n, 0n],
+  postMerkleRoot: [0n, 0n, 0n, 0n],
+  commands: [],
+  msgHash: "0x0" //
 };
 
 export const getMerkleRoot = createAsyncThunk(
@@ -22,6 +29,12 @@ export const getMerkleRoot = createAsyncThunk(
   }
 );
 
+function  hashMessage(msg: Uint8Array): string {
+    const hash = sha256(Buffer.from(msg));
+    let bn = new BN(hash, "hex");
+    return bnToHexLe(bn)
+  }
+
 export const gameSlice = createSlice({
   name: 'game',
   initialState,
@@ -29,11 +42,21 @@ export const gameSlice = createSlice({
     setLoaded: (state, loaded) => {
       state.loaded = loaded.payload;
     },
+    setPreMerkleRoot: (state, loaded) => {
+      state.preMerkleRoot = loaded.payload;
+    },
+    setPostMerkleRoot: (state, loaded) => {
+      state.preMerkleRoot = loaded.payload;
+    },
     appendCommand: (state, command) => {
       console.log("command loaded");
       state.commands.push(command.payload);
+      const buf = new Uint8Array(state.commands.length * 8);
+      state.commands.map((v, i) => {
+          buf.set(BNToUint8Array(v), 8*i);
+      });
+      state.msgHash = hashMessage(buf);
     }
-
   },
   extraReducers: (builder) => {
     builder
@@ -46,6 +69,9 @@ export const gameSlice = createSlice({
 
 export const selectGameLoaded = (state: RootState) => state.game.loaded;
 export const selectCommands = (state: RootState) => state.game.commands;
+export const selectPreMerkleRoot = (state: RootState) => state.game.preMerkleRoot;
+export const selectPostMerkleRoot = (state: RootState) => state.game.postMerkleRoot;
+export const selectMsgHash = (state: RootState) => state.game.msgHash;
 export const { setLoaded, appendCommand } = gameSlice.actions;
 export const selectMessageToSigned = (state: RootState) => {
     const buf = new Uint8Array(state.game.commands.length * 8);
