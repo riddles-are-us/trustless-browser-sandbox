@@ -34,13 +34,15 @@ impl Tower {
 
 #[derive (Clone, Serialize)]
 pub struct Spawner{
-    rate: u64,
+    pub rate: u64,
+    pub count: u64
 }
 
 impl Spawner {
-    pub fn new(rate: u64) -> Self {
+    pub fn new(rate: u64, count: u64) -> Self {
         Spawner {
-            rate
+            rate,
+            count
         }
     }
 }

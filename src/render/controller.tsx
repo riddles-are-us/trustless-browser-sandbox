@@ -16,6 +16,7 @@ import {
 import {
   selectGameLoaded,
   setLoaded,
+  appendCommand,
 } from "../data/game";
 
 
@@ -28,6 +29,7 @@ export function GameController() {
      2451350522329201736
   */
 
+  const dispatch = useAppDispatch();
 
   let l2account = useAppSelector(selectL2Account);
   let gameLoaded = useAppSelector(selectGameLoaded);
@@ -50,7 +52,7 @@ export function GameController() {
         BigInt(merkleRoot[3])
       );
       //setTargets([Number(target0), Number(target1), Number(target2)]);
-      setLoaded(true);
+      dispatch(setLoaded(true));
     });
   }
 
@@ -75,7 +77,9 @@ export function GameController() {
   function stepMove() {
     (init as any)().then(() => {
       console.log("moving ");
-      gameplay.step(4n<<32n);
+      let command = (0n<<32n);
+      dispatch(appendCommand(command));
+      gameplay.step(command);
       let objs = gameplay.get_objects();
       console.log("objs", objs);
       let tiles = gameplay.get_tiles();
@@ -134,7 +138,7 @@ export function GameController() {
         <button className="sell-button" onClick={(e)=>{stepMove()}}>step move</button>
         </Col>
       </Row>
-      <canvas id="canvas" height="350" width="750"></canvas>
+      <canvas id="canvas" height="350" width="1024"></canvas>
     </>);
 }
 

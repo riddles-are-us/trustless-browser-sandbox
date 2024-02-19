@@ -1,5 +1,5 @@
 use serde::Serialize;
-pub trait Coordinate: Sized {
+pub trait Coordinate: Sized + PartialEq {
     type Direction: Clone;
     fn adjacents(&self) -> Vec<Self>;
     fn directions() -> Vec<Self::Direction>;
@@ -19,7 +19,7 @@ pub enum HexDirection {
     Left,
 }
 
-#[derive (Clone, Serialize)]
+#[derive (Clone, Serialize, PartialEq)]
 pub struct HexCoordinate {
     x: i64,
     y: i64,

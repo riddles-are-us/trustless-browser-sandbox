@@ -30,6 +30,7 @@ export const gameSlice = createSlice({
       state.loaded = loaded.payload;
     },
     appendCommand: (state, command) => {
+      console.log("command loaded");
       state.commands.push(command.payload);
     }
 
@@ -44,8 +45,9 @@ export const gameSlice = createSlice({
 });
 
 export const selectGameLoaded = (state: RootState) => state.game.loaded;
+export const selectCommands = (state: RootState) => state.game.commands;
 export const { setLoaded, appendCommand } = gameSlice.actions;
-export const selectSignedCommand = (state: RootState) => {
+export const selectMessageToSigned = (state: RootState) => {
     const buf = new Uint8Array(state.game.commands.length * 8);
     state.game.commands.map((v, i) => {
       buf.set(BNToUint8Array(v), 8*i);

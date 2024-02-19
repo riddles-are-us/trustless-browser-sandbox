@@ -15,6 +15,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { ModalOptions } from "../types/layout";
 import { numToUint8Array, SignatureWitness } from "../utils/proof";
 import { GameController } from "../render/controller";
+import { selectCommands, selectMessageToSigned } from "../data/game";
 
 import {
   selectL2Account,
@@ -27,7 +28,7 @@ export function Main() {
   const [currentModal, setCurrentModal] = useState<ModalOptions | null>(null);
 
   // Game related handlers for state
-  const [commands, setCommands] = useState<Array<number>>([]);
+  let commands = useAppSelector(selectCommands);
   const [instances, setInstances] = useState<Array<string>>([]);
   const [location, setLocation] = useState<string>("loading...");
   const [reward, setReward] = useState<number>(0);
@@ -38,19 +39,11 @@ export function Main() {
   const [witness, setWitness] = useState<Array<string>>([]);
 
   let l2account = useAppSelector(selectL2Account);
-
-  const msgToSign = () => {
-    const buf = new Uint8Array(commands.length * 8);
-    commands.map((v, i) => {
-      buf.set(numToUint8Array(v), 8*i);
-    });
-    console.log(buf);
-    return buf;
-  }
+  let msgToSign = useAppSelector(selectMessageToSigned);
 
   useEffect(() => {
     if (l2account) {
-            let msg = msgToSign();
+            let msg = msgToSign;
             console.log(l2account);
             let prikey = PrivateKey.fromString(l2account.address);
             let signingWitness = new SignatureWitness(prikey, msg);
@@ -64,7 +57,7 @@ export function Main() {
             }
             setWitness(witness);
     }
-  }, [l2account, location]);
+  }, [l2account, commands]);
 
   // Start or stop scrolling the background when the 'scroll' state changes
 

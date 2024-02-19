@@ -61,11 +61,14 @@ function drawObject(obj:any, context: CanvasRenderingContext2D) {
         let x = toX(obj.position.x, obj.position.y);
         let y = toY(obj.position.x, obj.position.y);
         context.beginPath();
+        context.font = "16px serif";
         switch (Object.keys(obj.object)[0]) {
           case "Monster": {
             context.fillStyle = "orange";
             context.arc(x, y, 15, 0, 2 * Math.PI);
             context.fill();
+            context.fillStyle = "white";
+            context.fillText(obj.object.Monster.hp, x, y-10);
             break;
           }
           case "Tower": {
@@ -74,9 +77,19 @@ function drawObject(obj:any, context: CanvasRenderingContext2D) {
             context.fill();
             break;
           }
+          case "Spawner": {
+            context.fillStyle = "white";
+            context.arc(x, y, 10, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
+          case "Collector": {
+            context.fillStyle = "green";
+            context.arc(x, y, 10, 0, 2 * Math.PI);
+            context.fill();
+            break;
+          }
         }
-        context.arc(x, y, 15, 0, 2 * Math.PI);
-        context.fill();
 }
 
 export function drawObjects(objs: Array<any>) {

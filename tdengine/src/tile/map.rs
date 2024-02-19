@@ -9,7 +9,7 @@ pub struct PositionedObject<C:Coordinate, Object: Clone> {
 }
 
 impl<C: Coordinate, O: Clone> PositionedObject<C, O> {
-    fn new(obj: O, pos: C) -> Self {
+    pub fn new(obj: O, pos: C) -> Self {
         PositionedObject {
             object: obj,
             position: pos
@@ -34,9 +34,12 @@ impl<C:Coordinate, O: Clone> Map<C, O> {
         }
 
     }
-    pub fn spawn(&mut self, object: O, position: C) -> &PositionedObject<C, O> {
+    pub fn spawn_at(&mut self, object: O, position: C) -> &PositionedObject<C, O> {
         self.objects.push(PositionedObject::new(object, position));
         self.objects.get(self.objects.len()-1).unwrap()
+    }
+    pub fn spawn(&mut self, p: PositionedObject<C, O>) {
+        self.objects.push(p)
     }
     pub fn remove(&mut self, index: usize) -> PositionedObject<C, O> {
         self.objects.swap_remove(index)
