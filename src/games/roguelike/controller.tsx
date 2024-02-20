@@ -1,5 +1,7 @@
 import init, * as gameplay from "./js";
 import { drawObjects, drawTiles } from "./tile";
+import cheems from "../../images/cheems.jpg";
+import cheemM01 from "../../images/cheems-monster-01.jpg";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
@@ -45,6 +47,7 @@ export function GameController() {
   const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [witness, setWitness] = useState<Array<string>>([]);
   const [instance, setInstance] = useState<Array<string>>([]);
+  const [state, setState] = useState<any>(null);
 
   function updatePreMerkle(index: number, value: bigint) {
     let a = merklePreRoot;
@@ -82,25 +85,51 @@ export function GameController() {
       console.log(gameplay);
       gameplay.new_game();
       gameplay.challenge_next_floor();
-      dispatch(setLoaded(true));
       let stateStr = gameplay.state();
       let state = JSON.parse(stateStr);
             console.log(":state:", state);
+      setState(state);
+      dispatch(setLoaded(true));
       //drawObjects(objects);
     });
   }
 
-  function stepMove() {
+  function pickCard(card_index: number) {
     (init as any)().then(() => {
       console.log("moving ");
       let command = (0n<<32n);
+      gameplay.play_a_card(card_index)
       dispatch(appendCommand(command));
+      let stateStr = gameplay.state();
+      let state = JSON.parse(stateStr);
+            console.log(":state:", state);
+      setState(state);
+
       //gameplay.step(command);
       //let objs = gameplay.get_objects();
       //console.log("objs", objs);
     });
 
   }
+  function endTurn() {
+    (init as any)().then(() => {
+      console.log("next round");
+      let command = (0n<<32n);
+      gameplay.end_turn();
+      dispatch(appendCommand(command));
+      let stateStr = gameplay.state();
+      let state = JSON.parse(stateStr);
+            console.log(":state:", state);
+      setState(state);
+
+      //gameplay.step(command);
+      //let objs = gameplay.get_objects();
+      //console.log("objs", objs);
+    });
+
+  }
+
+
 
   useEffect(() => {
     if (l2account) {
@@ -127,8 +156,9 @@ export function GameController() {
        }
        setWitness(witness);
             setInstance(["0x" + msgHash + ":bytes-packed"]);
+       console.log("state is:", state);
     }
-  }, [l2account, commands]);
+  }, [l2account, commands, state, gameLoaded]);
 
 
 
@@ -171,10 +201,42 @@ export function GameController() {
           </Form>
         </Col>
       </Row>
+            {gameLoaded && state &&
+            <>
+              <Row>
+                <Col>
+                        <img src={cheems} width="100%"></img>
+                </Col>
+                <Col>
+                        <p>Floor: {state.floor}</p>
+                        <p>Hp: {state.hero_hp}</p>
+                        <p>Block: {state.hero_block}</p>
+                        <p>Power: {state.hero_power}</p>
+                </Col>
+                <Col>
+                        <img src={cheemM01} width="100%"></img>
+
+                </Col>
+                <Col>
+                        <p>Enemy: {state.enemy_name}</p>
+                        <p>hp: {state.enemy_hp}</p>
+                        <p>block: {state.enemy_block}</p>
+                        <p>NextMove: {state.enemy_action.Myself.block}</p>
+                </Col>
+                <Col>
+                      {state["hand_of_card"].map((card:any, i:number) => {
+                    return <Button onClick={()=>{
+                                  pickCard(i)
+                          }}
+                          >{card.name} (power {card.power})</Button>
+                })}
+                    <Button onClick={()=>endTurn()}>next round</Button>
+                    </Col>
+
+              </Row>
+            </>
+            }
       <Row>
-        <Col>
-        <button className="sell-button" onClick={(e)=>{stepMove()}}>step move</button>
-        </Col>
         <Col>
             <NewProveTask
               md5="EDDF817B748715A7F2708873D7346941"
@@ -186,7 +248,8 @@ export function GameController() {
 
 
       </Row>
-      <canvas id="canvas" height="350" width="1024"></canvas>
+      <Row>
+      </Row>
       <Row>
         <Form>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
