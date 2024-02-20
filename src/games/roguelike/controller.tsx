@@ -1,4 +1,4 @@
-import init, * as gameplay from "../../js";
+import init, * as gameplay from "./js";
 import { drawObjects, drawTiles } from "./tile";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -81,8 +81,11 @@ export function GameController() {
       console.log("setting instance");
       console.log(gameplay);
       gameplay.new_game();
+      gameplay.challenge_next_floor();
       dispatch(setLoaded(true));
-      //let objects = JSON.parse(objs);
+      let stateStr = gameplay.state();
+      let state = JSON.parse(stateStr);
+            console.log(":state:", state);
       //drawObjects(objects);
     });
   }

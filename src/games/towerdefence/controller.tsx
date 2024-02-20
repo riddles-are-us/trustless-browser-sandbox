@@ -1,8 +1,8 @@
-import init, * as gameplay from "../js";
-import { drawObjects, drawTiles } from "../render/tile";
+import init, * as gameplay from "./js";
+import { drawObjects, drawTiles } from "./tile";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Button, Form } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,20 +10,20 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 
 // ZKWASM RELATED STUFF
-import { NewProveTask } from "../modals/addNewProveTask";
-import { selectCommands, selectMessageToSigned, selectMsgHash } from "../data/game";
-import { numToUint8Array, SignatureWitness } from "../utils/proof";
+import { NewProveTask } from "../../modals/addNewProveTask";
+import { selectCommands, selectMessageToSigned, selectMsgHash } from "../../data/game";
+import { numToUint8Array, SignatureWitness } from "../../utils/proof";
 import { PrivateKey, PublicKey, bnToHexLe } from "delphinus-curves/src/altjubjub";
 
 import {
   selectL2Account,
-} from "../data/accountSlice";
+} from "../../data/accountSlice";
 
 import {
   selectGameLoaded,
   setLoaded,
   appendCommand,
-} from "../data/game";
+} from "../../data/game";
 
 
 export function GameController() {
@@ -229,10 +229,3 @@ export function GameController() {
       </Row>
     </>);
 }
-
-
-
-
-
-
-
