@@ -1,5 +1,5 @@
 import init, * as gameplay from "./js";
-import { drawObjects, drawTiles } from "./tile";
+import { Card, Move } from "./card";
 import cheems from "../../images/cheems.jpg";
 import cheemM01 from "../../images/cheems-monster-01.jpg";
 
@@ -46,6 +46,7 @@ export function GameController() {
   const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [witness, setWitness] = useState<Array<string>>([]);
+  const [sigWitness, setSigWitness] = useState<Array<string>>([]);
   const [instance, setInstance] = useState<Array<string>>([]);
   const [state, setState] = useState<any>(null);
 
@@ -97,7 +98,7 @@ export function GameController() {
   function pickCard(card_index: number) {
     (init as any)().then(() => {
       console.log("moving ");
-      let command = (0n<<32n);
+      let command = BigInt(card_index + 1);
       gameplay.play_a_card(card_index)
       dispatch(appendCommand(command));
       let stateStr = gameplay.state();
@@ -114,13 +115,20 @@ export function GameController() {
   function endTurn() {
     (init as any)().then(() => {
       console.log("next round");
-      let command = (0n<<32n);
+      let command = (0n);
       gameplay.end_turn();
       dispatch(appendCommand(command));
       let stateStr = gameplay.state();
       let state = JSON.parse(stateStr);
             console.log(":state:", state);
       setState(state);
+      if (state.enemy_hp <= 0) {
+          gameplay.challenge_next_floor();
+          let stateStr = gameplay.state();
+          let state = JSON.parse(stateStr);
+          console.log(":state:", state);
+          setState(state);
+      }
 
       //gameplay.step(command);
       //let objs = gameplay.get_objects();
@@ -150,12 +158,18 @@ export function GameController() {
        let signingWitness = new SignatureWitness(prikey, msg);
        let sig_witness:Array<string> = signingWitness.sig.map((v) => "0x" + v+ ":bytes-packed");
        let pubkey_witness:Array<string> = signingWitness.pkey.map((v) => "0x" + v+ ":bytes-packed");
+       let commands_info = [`${commands.length}:i64`].concat(commands.map((v) => `${v}:i64`));
        let witness = pubkey_witness;
        for (var s of sig_witness) {
            witness.push(s);
        }
-       setWitness(witness);
-            setInstance(["0x" + msgHash + ":bytes-packed"]);
+       setSigWitness(witness);
+       setWitness(commands_info.concat(witness));
+       setInstance(
+           ["0x" + msgHash + ":bytes-packed"]
+               .concat(merklePreRoot.map((x)=>`${x}:i64`))
+               .concat(merklePostRoot.map((x)=>`${x}:i64`))
+       );
        console.log("state is:", state);
     }
   }, [l2account, commands, state, gameLoaded]);
@@ -221,15 +235,14 @@ export function GameController() {
                         <p>Enemy: {state.enemy_name}</p>
                         <p>hp: {state.enemy_hp}</p>
                         <p>block: {state.enemy_block}</p>
-                        <p>NextMove: {state.enemy_action.Myself.block}</p>
+                        <p>NextMove:
+                                <Move obj ={state.enemy_action}></Move>
+                        </p>
                 </Col>
                 <Col>
-                      {state["hand_of_card"].map((card:any, i:number) => {
-                    return <Button onClick={()=>{
-                                  pickCard(i)
-                          }}
-                          >{card.name} (power {card.power})</Button>
-                })}
+                    {state["hand_of_card"].map((card:any, i:number) => {
+                        return <Button onClick={()=>{pickCard(i)}}><Card obj={card}></Card></Button>
+                    })}
                     <Button onClick={()=>endTurn()}>next round</Button>
                     </Col>
 
@@ -245,8 +258,6 @@ export function GameController() {
               OnTaskSubmitSuccess={()=>{}}
             ></NewProveTask>
         </Col>
-
-
       </Row>
       <Row>
       </Row>
@@ -260,33 +271,26 @@ export function GameController() {
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>PublicKey-X</Form.Label>
-            <Form.Control as="input" value ={witness[0]} readOnly />
+            <Form.Control as="input" value ={sigWitness[0]} readOnly />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>PublicKey-Y</Form.Label>
-            <Form.Control as="input" value ={witness[1]} readOnly />
+            <Form.Control as="input" value ={sigWitness[1]} readOnly />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>Signature-X</Form.Label>
-            <Form.Control as="input" value ={witness[2]} readOnly />
+            <Form.Control as="input" value ={sigWitness[2]} readOnly />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>Signature-Y</Form.Label>
-            <Form.Control as="input" value ={witness[3]} readOnly />
+            <Form.Control as="input" value ={sigWitness[3]} readOnly />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>Signature-S</Form.Label>
-            <Form.Control as="input" value ={witness[4]} readOnly />
+            <Form.Control as="input" value ={sigWitness[4]} readOnly />
           </Form.Group>
         </Form>
 
       </Row>
     </>);
 }
-
-
-
-
-
-
-
