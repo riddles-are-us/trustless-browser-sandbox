@@ -2,10 +2,11 @@ import init, * as gameplay from "./js";
 import { Card, Move } from "./card";
 import cheems from "../../images/cheems.jpg";
 import cheemM01 from "../../images/cheems-monster-01.jpg";
+import gameover from "../../images/gameover.png";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, ProgressBar } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -26,6 +27,8 @@ import {
   setLoaded,
   appendCommand,
 } from "../../data/game";
+
+import { ImageMD5 } from "./js/config";
 
 
 export function GameController() {
@@ -215,44 +218,65 @@ export function GameController() {
           </Form>
         </Col>
       </Row>
-            {gameLoaded && state &&
+            {gameLoaded && state  &&
             <>
-              <Row>
+              {state.hero_hp > 0 &&
+              <>
+              <Row className="mb-3">
+                <Col>
+                    <h3 className="float-start">Floor: {state.floor}</h3>
+                    <Button className="float-end" onClick={()=>endTurn()}>next round</Button>
+                </Col>
+              </Row>
+              <Row className="mb-3">
                 <Col>
                         <img src={cheems} width="100%"></img>
                 </Col>
                 <Col>
-                        <p>Floor: {state.floor}</p>
-                        <p>Hp: {state.hero_hp}</p>
-                        <p>Block: {state.hero_block}</p>
-                        <p>Power: {state.hero_power}</p>
+                        <h4>Hp</h4>
+                        <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
+                        <h4 className="mt-2">Block</h4>
+                        <ProgressBar now={state.hero_block * 3} label={`${state.hero_block}`} />
+                        <h4 className="mt-2">Power</h4>
+                        <ProgressBar now={state.hero_power * 10} label={`${state.hero_power}`} />
                 </Col>
                 <Col>
                         <img src={cheemM01} width="100%"></img>
 
                 </Col>
                 <Col>
-                        <p>Enemy: {state.enemy_name}</p>
-                        <p>hp: {state.enemy_hp}</p>
-                        <p>block: {state.enemy_block}</p>
-                        <p>NextMove:
+                        <h4>Hp: {state.enemy_name}</h4>
+                        <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
+                        <h4 className="mt-2">Block</h4>
+                        <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
+                        <h4 className="mt-2">NextMove:
                                 <Move obj ={state.enemy_action}></Move>
-                        </p>
+                        </h4>
                 </Col>
-                <Col>
-                    {state["hand_of_card"].map((card:any, i:number) => {
-                        return <Button onClick={()=>{pickCard(i)}}><Card obj={card}></Card></Button>
-                    })}
-                    <Button onClick={()=>endTurn()}>next round</Button>
-                    </Col>
-
               </Row>
+
+              <Row className="mb-5 text-center">
+                <Col className="shadow-lg p-2">
+                    {state["hand_of_card"].map((card:any, i:number) => {
+                        return <button className="btn btn-light" onClick={()=>{pickCard(i)}}><Card obj={card}></Card></button>
+                    })}
+                </Col>
+              </Row>
+              </>
+              }
+              {state.hero_hp <= 0 &&
+              <Row>
+                <Col>
+                  <img src={gameover} width="500px"></img>
+                </Col>
+              </Row>
+              }
             </>
             }
       <Row>
         <Col>
             <NewProveTask
-              md5="EDDF817B748715A7F2708873D7346941"
+              md5={ImageMD5}
               inputs={instance}
               witness={witness}
               OnTaskSubmitSuccess={()=>{}}

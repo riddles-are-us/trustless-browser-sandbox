@@ -9,8 +9,6 @@ use wasm_bindgen::prelude::*;
 //use zkwasm_rust_sdk::wasm_dbg;
 //use zkwasm_rust_sdk::require;
 
-
-
 #[wasm_bindgen]
 pub fn zkmain() -> i64 {
     let mut hasher = Sha256::new();

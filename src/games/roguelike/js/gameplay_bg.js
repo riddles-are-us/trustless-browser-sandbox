@@ -76,3 +76,9 @@ export function state() {
     }
 }
 
+/**
+*/
+export function zkmain() {
+    wasm.zkmain();
+}
+

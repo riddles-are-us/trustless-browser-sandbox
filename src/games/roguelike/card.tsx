@@ -4,23 +4,25 @@ interface IProps {
 
 export function Card(card: IProps) {
   return (
-    <ul>
-      <li>name: {card.obj.name}</li>
-      <li>power cost: {card.obj.power}</li>
-      {card.obj.Myself &&
+    <>
+    <h3 >{card.obj.name}</h3>
+    <ul className="list-group">
+      <li className="list-group-item">power cost: {card.obj.power}</li>
+      {card.obj.skill.Myself &&
       <>
-        <li>increase hp: {card.obj.Myself.hp}</li>
-        <li>increase block: {card.obj.Myself.block}</li>
+        <li className="list-group-item">increase hp: {card.obj.skill.Myself.hp}</li>
+        <li className="list-group-item">increase block: {card.obj.skill.Myself.block}</li>
       </>
       }
-      {card.obj.Opposite &&
+      {card.obj.skill.Opposite &&
       <>
-        <li>enemy hp {card.obj.Opposite.hp}</li>
-        <li>enemy block {card.obj.Opposite.block}</li>
+        <li className="list-group-item">enemy hp {card.obj.skill.Opposite.hp}</li>
+        <li className="list-group-item">enemy block {card.obj.skill.Opposite.block}</li>
       </>
       }
 
     </ul>
+    </>
   )
 }
 

@@ -17,3 +17,6 @@ export function end_turn(): void;
 * @returns {string}
 */
 export function state(): string;
+/**
+*/
+export function zkmain(): void;

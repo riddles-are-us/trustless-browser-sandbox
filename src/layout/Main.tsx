@@ -11,6 +11,7 @@ import { Container } from "react-bootstrap";
 import { MainNavBar } from "../components/Nav";
 import { ModalOptions } from "../types/layout";
 import { GameController } from "../games/roguelike/controller";
+import { ImageMD5 } from "../games/roguelike/js/config";
 
 import {
   selectL2Account,
@@ -45,7 +46,7 @@ export function Main() {
           <Container style={{ position: "relative", top: "10px", paddingBottom:"100px"}}>
           </Container>
           <Container>
-            <HistoryTasks md5="EDDF817B748715A7F2708873D7346941"></HistoryTasks>
+            <HistoryTasks md5={ImageMD5}></HistoryTasks>
           </Container>
         </>
       )}
