@@ -254,7 +254,6 @@ export function GameController() {
                         </h4>
                 </Col>
               </Row>
-
               <Row className="mb-5 text-center">
                 <Col className="shadow-lg p-2">
                     {state["hand_of_card"].map((card:any, i:number) => {

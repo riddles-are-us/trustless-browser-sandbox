@@ -123,6 +123,90 @@ impl Coordinate for HexCoordinate {
     }
 }
 
+
+#[derive (Clone, Serialize)]
+pub enum RectDirection {
+    Top,
+    Right,
+    Bottom,
+    Left,
+}
+
+#[derive (Clone, Serialize, PartialEq)]
+pub struct RectCoordinate {
+    x: i64,
+    y: i64,
+}
+
+impl Coordinate for RectCoordinate {
+    type Direction = RectDirection;
+
+    fn new(x: i64, y: i64) -> Self {
+        RectCoordinate {
+            x,
+            y,
+        }
+    }
+    fn repr(&self) -> (i64, i64) {
+        (self.x, self.y)
+    }
+    fn distance(p1: &Self, p2: &Self) -> u64 {
+        let diff_y = (p1.y - p2.y).abs() as u64;
+        let diff_x = (p1.x - p2.x).abs() as u64;
+        diff_y + diff_x
+    }
+    fn adjacents(&self) -> Vec<Self> {
+        vec![
+            self.adjacent(Self::Direction::Top),
+            self.adjacent(Self::Direction::Right),
+            self.adjacent(Self::Direction::Bottom),
+            self.adjacent(Self::Direction::Left),
+        ]
+    }
+    fn directions() -> Vec<Self::Direction> {
+        vec![
+            Self::Direction::Top,
+            Self::Direction::Right,
+            Self::Direction::Bottom,
+            Self::Direction::Left,
+        ]
+    }
+    fn adjacent(&self, direction: Self::Direction) -> Self {
+        use RectDirection::*;
+        let y = match direction {
+            Top=> {
+                self.y - 1
+            },
+            Right => {
+                self.y
+            },
+            Left => {
+                self.y
+            },
+            Bottom => {
+                self.y + 1
+            },
+        };
+        let x = match direction {
+            Top => {
+                self.x
+            },
+            Left => {
+                self.x - 1
+            },
+            Right => {
+                self.x + 1
+            },
+            Bottom=> {
+                self.x
+            },
+        };
+
+        Self::new(x, y)
+    }
+}
+
+
 #[derive (Serialize)]
 pub struct Tile<C: Coordinate, F: Clone> {
     cor: C,

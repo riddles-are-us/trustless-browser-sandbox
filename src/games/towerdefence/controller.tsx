@@ -7,6 +7,8 @@ import { Button, Form } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import InputGroup from 'react-bootstrap/InputGroup';
+import {Transaction} from "../../components/Transaction";
+import { ImageMD5 } from "./js/config";
 
 
 // ZKWASM RELATED STUFF
@@ -39,7 +41,6 @@ export function GameController() {
 
   let l2account = useAppSelector(selectL2Account);
   let gameLoaded = useAppSelector(selectGameLoaded);
-  let commands = useAppSelector(selectCommands);
 
   const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
@@ -89,6 +90,7 @@ export function GameController() {
 
       let objects = JSON.parse(objs);
       drawObjects(objects);
+      dispatch(setLoaded(true));
     });
   }
 
@@ -118,28 +120,6 @@ export function GameController() {
         }
     }
   }, [l2account]);
-
-  let msgToSign = useAppSelector(selectMessageToSigned);
-  let msgHash = useAppSelector(selectMsgHash);
-
-  useEffect(() => {
-    if (l2account) {
-       let msg = msgToSign;
-       console.log(l2account);
-       let prikey = PrivateKey.fromString(l2account.address);
-       let signingWitness = new SignatureWitness(prikey, msg);
-       let sig_witness:Array<string> = signingWitness.sig.map((v) => "0x" + v+ ":bytes-packed");
-       let pubkey_witness:Array<string> = signingWitness.pkey.map((v) => "0x" + v+ ":bytes-packed");
-       let witness = pubkey_witness;
-       for (var s of sig_witness) {
-           witness.push(s);
-       }
-       setWitness(witness);
-            setInstance(["0x" + msgHash + ":bytes-packed"]);
-    }
-  }, [l2account, commands]);
-
-
 
   return (
     <>
@@ -182,50 +162,19 @@ export function GameController() {
       </Row>
       <Row>
         <Col>
-        <button className="sell-button" onClick={(e)=>{stepMove()}}>step move</button>
+                <h3>Tower Defence with 12 * 8</h3>
         </Col>
+
         <Col>
-            <NewProveTask
-              md5="EDDF817B748715A7F2708873D7346941"
-              inputs={instance}
-              witness={witness}
-              OnTaskSubmitSuccess={()=>{}}
-            ></NewProveTask>
+            <Button className="float-end" onClick={()=>stepMove()}>Step</Button>
         </Col>
 
-
       </Row>
-      <canvas id="canvas" height="350" width="1024"></canvas>
-      <Row>
-        <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Movements</Form.Label>
-            <Form.Control as="input" value = {
-                      commands.map((x) => ` ${x}:i64`).join(";")
-            } readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>PublicKey-X</Form.Label>
-            <Form.Control as="input" value ={witness[0]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>PublicKey-Y</Form.Label>
-            <Form.Control as="input" value ={witness[1]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-X</Form.Label>
-            <Form.Control as="input" value ={witness[2]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-Y</Form.Label>
-            <Form.Control as="input" value ={witness[3]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-S</Form.Label>
-            <Form.Control as="input" value ={witness[4]} readOnly />
-          </Form.Group>
-        </Form>
-
+      <Row className="text-center">
+          <Col>
+      <canvas id="canvas" height="500" width="740"></canvas>
+          </Col>
       </Row>
+      <Transaction md5={ImageMD5} ></Transaction>
     </>);
 }

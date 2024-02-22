@@ -10,8 +10,11 @@ import "bootswatch/dist/slate/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { MainNavBar } from "../components/Nav";
 import { ModalOptions } from "../types/layout";
-import { GameController } from "../games/roguelike/controller";
-import { ImageMD5 } from "../games/roguelike/js/config";
+//import { GameController } from "../games/roguelike/controller";
+//import { ImageMD5 } from "../games/roguelike/js/config";
+
+import { GameController } from "../games/towerdefence/controller";
+import { ImageMD5 } from "../games/towerdefence/js/config";
 
 import {
   selectL2Account,

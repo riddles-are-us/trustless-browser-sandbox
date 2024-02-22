@@ -2,9 +2,9 @@ use serde::Serialize;
 
 #[derive (Clone, Serialize)]
 pub struct Monster {
-    hp: u64,
-    range: u64,
-    power: u64,
+    pub hp: u64,
+    pub range: u64,
+    pub power: u64,
 }
 
 impl Monster {
