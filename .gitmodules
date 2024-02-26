@@ -1,3 +1,6 @@
 [submodule "roguelike"]
 	path = roguelike
 	url = git@github.com:junyu0312/roguelike.git
+[submodule "tdengine"]
+	path = tdengine
+	url = https://github.com/DelphinusLab/towerdefence-demo

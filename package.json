@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@esotericsoftware/spine-canvas": "^4.2.15",
-    "@esotericsoftware/spine-player": "^4.2.15",
-    "@esotericsoftware/spine-ts": "^4.2.13",
     "@reduxjs/toolkit": "^1.5.1",
     "@wasm-tool/wasm-pack-plugin": "^1.7.0",
     "assert": "^2.1.0",
