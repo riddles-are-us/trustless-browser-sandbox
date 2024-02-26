@@ -7,7 +7,7 @@ export function addressAbbreviation(address: string, tailLength: number) {
 }
 
 export async function signMessage(message: string) {
-  let signature = await withBrowserConnector(async (provider: DelphinusBrowserConnector) => {
+  const signature = await withBrowserConnector(async (provider: DelphinusBrowserConnector) => {
     if (!provider) {
       throw new Error("No provider found!");
     }

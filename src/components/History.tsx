@@ -14,7 +14,7 @@ export interface UserHistoryProps {
 
 export default function ImageDetail(props: UserHistoryProps) {
   const dispatch = useAppDispatch();
-  let account = useAppSelector(selectL1Account);
+  const account = useAppSelector(selectL1Account);
   const query = {
     md5: props.md5,
     user_address: account? account!.address:"",
@@ -26,7 +26,7 @@ export default function ImageDetail(props: UserHistoryProps) {
   // UI Loading states
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
-  let tasks = useAppSelector(selectTasks);
+  const tasks = useAppSelector(selectTasks);
 
   useEffect(() => {
     if (account) {

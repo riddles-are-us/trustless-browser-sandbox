@@ -6,11 +6,11 @@ export function Inputs(inputs: Array<string>) {
 }
 
 export function bytesToBN(data:Uint8Array) {
-  let chunksize = 64;
-  let bns = [];
+  const chunksize = 64;
+  const bns = [];
   for (let i = 0; i < data.length; i += 32) {
     const chunk = data.slice(i, i + 32);
-    let a = new BN(chunk,'le');
+    const a = new BN(chunk,'le');
     bns.push(a);
     // do whatever
   }
@@ -18,10 +18,10 @@ export function bytesToBN(data:Uint8Array) {
 }
 
 export function bytesToU64Hex(data:Uint8Array) {
-  let bns = [];
+  const bns = [];
   for (let i = 0; i < data.length; i += 8) {
     const chunk = data.slice(i, i + 8);
-    let a = new BN(chunk,'le');
+    const a = new BN(chunk,'le');
     bns.push("0x" + a.toString(16));
     // do whatever
   }
@@ -29,13 +29,13 @@ export function bytesToU64Hex(data:Uint8Array) {
 }
 
 export function BNtoBuffer(bn: BN) {
-    let bytes = bn.toArray("le",16);
-    let buf = new Uint8Array(bytes.length);
+    const bytes = bn.toArray("le",16);
+    const buf = new Uint8Array(bytes.length);
     return buf;
 }
 
 export function numToUint8Array(num: number): Uint8Array {
-    let arr = new Uint8Array(8);
+    const arr = new Uint8Array(8);
     for (let i = 0; i < 8; i++) {
        arr[i] = num % 256;
        num = Math.floor(num / 256);
@@ -44,7 +44,7 @@ export function numToUint8Array(num: number): Uint8Array {
 }
 
 export function BNToUint8Array(num: bigint): Uint8Array {
-    let arr = new Uint8Array(8);
+    const arr = new Uint8Array(8);
     for (let i = 0; i < 8; i++) {
        arr[i] = Number(num % 256n);
        num = num >> 8n;
@@ -58,8 +58,8 @@ export class SignatureWitness {
   pkey: Array<string>;
   sig: Array<string>;
   constructor(prikey: PrivateKey, msg: Uint8Array) {
-    let sig = prikey.sign(msg);
-    let pkey = prikey.publicKey;
+    const sig = prikey.sign(msg);
+    const pkey = prikey.publicKey;
     this.pkey = [bnToHexLe(pkey.key.x.v), bnToHexLe(pkey.key.y.v)];
     this.sig = [bnToHexLe(sig[0][0]), bnToHexLe(sig[0][1]), bnToHexLe(sig[1])];
   }

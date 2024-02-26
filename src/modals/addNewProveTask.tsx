@@ -30,7 +30,7 @@ interface NewWASMImageProps {
 }
 
 export async function signMessage(message: string) {
-  let signature = await withBrowserConnector(async (provider: DelphinusBrowserConnector) => {
+  const signature = await withBrowserConnector(async (provider: DelphinusBrowserConnector) => {
     if (!provider) {
       throw new Error("No provider found!");
     }
@@ -53,7 +53,7 @@ export async function signMessage(message: string) {
 
 export function NewProveTask(props: NewWASMImageProps) {
   const dispatch = useAppDispatch();
-  let account = useAppSelector(selectL1Account);
+  const account = useAppSelector(selectL1Account);
 
   const [message, setMessage] = React.useState<string>("");
   const [status, setStatus] = React.useState<ModalStatus>(
@@ -61,14 +61,14 @@ export function NewProveTask(props: NewWASMImageProps) {
   );
 
   const prepareNewProveTask = async function () {
-    let info: ProvingParams = {
+    const info: ProvingParams = {
       user_address: account!.address.toLowerCase(),
       md5: props.md5,
       public_inputs: props.inputs,
       private_inputs: props.witness,
     };
 
-    let msgString = ZkWasmUtil.createProvingSignMessage(info);
+    const msgString = ZkWasmUtil.createProvingSignMessage(info);
 
     let signature: string;
     try {
@@ -82,7 +82,7 @@ export function NewProveTask(props: NewWASMImageProps) {
       throw Error("Unsigned Transaction");
     }
 
-    let task: WithSignature<ProvingParams> = {
+    const task: WithSignature<ProvingParams> = {
       ...info,
       signature: signature,
     };
@@ -91,7 +91,7 @@ export function NewProveTask(props: NewWASMImageProps) {
   };
 
   const addNewProveTask = async function () {
-    let task = await prepareNewProveTask();
+    const task = await prepareNewProveTask();
 
     dispatch(addProvingTask(task))
       .unwrap()
@@ -108,7 +108,7 @@ export function NewProveTask(props: NewWASMImageProps) {
         setStatus(ModalStatus.PreConfirm);
       })
       .finally(() => {
-        let query = {
+        const query = {
           user_address: account!.address,
           md5: props.md5,
           id: "",
@@ -120,7 +120,7 @@ export function NewProveTask(props: NewWASMImageProps) {
       });
   };
 
-  let content = (
+  const content = (
     <>
       <Container>
         <Form.Group className="mb-3 position-relative">
@@ -159,7 +159,7 @@ export function NewProveTask(props: NewWASMImageProps) {
     </>
   );
 
-  let modalprops: ModalCommonProps = {
+  const modalprops: ModalCommonProps = {
     btnLabel: <button className="sell-button">Submit Proof</button>,
     title: "Submit Your Game Play",
     childrenClass: "",

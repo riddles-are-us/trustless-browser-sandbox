@@ -34,9 +34,9 @@ const initialState: StatusState = {
 export const loadStatus = createAsyncThunk(
   "status/fetchStatus",
   async (query: QueryParams, thunkApi) => {
-    let state = thunkApi.getState() as RootState;
-    let helper = state.endpoint.zkWasmServiceHelper;
-    let tasksInfo = await helper.loadTasks(query);
+    const state = thunkApi.getState() as RootState;
+    const helper = state.endpoint.zkWasmServiceHelper;
+    const tasksInfo = await helper.loadTasks(query);
     if (tasksInfo) {
        return tasksInfo.data;
     } else {
@@ -48,14 +48,12 @@ export const loadStatus = createAsyncThunk(
 export const addProvingTask = createAsyncThunk(
   "status/addProveTask",
   async (task: WithSignature<ProvingParams>, thunkApi) => {
-    let state = thunkApi.getState() as RootState;
-    let helper = state.endpoint.zkWasmServiceHelper;
-    let response = await helper.addProvingTask(task);
+    const state = thunkApi.getState() as RootState;
+    const helper = state.endpoint.zkWasmServiceHelper;
+    const response = await helper.addProvingTask(task);
     return response;
   }
 );
-
-
 
 export const statusSlice = createSlice({
   name: 'status',

@@ -5,8 +5,8 @@ const height = 8;
 
 function rect(x: number, y: number, color: string, context: CanvasRenderingContext2D) {
         context.beginPath();
-        var xd = tileWidth/2;
-        var yd = tileHeight/2;
+        const xd = tileWidth/2;
+        const yd = tileHeight/2;
         context.fillStyle = color;
         context.lineTo(x - xd, y - yd);
         context.lineTo(x + xd, y - yd);
@@ -18,8 +18,8 @@ function rect(x: number, y: number, color: string, context: CanvasRenderingConte
 
 function direction(x: number, y: number, direction: string, color: string, context: CanvasRenderingContext2D) {
         context.beginPath();
-        var xd = tileWidth/2;
-        var yd = tileHeight/2;
+        const xd = tileWidth/2;
+        const yd = tileHeight/2;
         context.fillStyle = color;
         context.lineTo(x - xd + 1, y - yd + 1);
         context.lineTo(x + xd - 1, y - yd + 1);
@@ -39,11 +39,11 @@ function toY(xcor: number, ycor: number): number {
 
 export function drawTiles(tiles: any) {
         console.log("drawing Tiles");
-        let c = document.getElementById("canvas")! as HTMLCanvasElement;
-        let context = c.getContext("2d")!;
+        const c = document.getElementById("canvas")! as HTMLCanvasElement;
+        const context = c.getContext("2d")!;
         context.clearRect(0, 0, c.width, c.height);
-        for (var i = 0; i<width; i++) {
-            for (var j = 0; j<height; j++) {
+        for (let i = 0; i<width; i++) {
+            for (let j = 0; j<height; j++) {
               rect(toX(i, j), toY(i, j), "gray", context)
               if (tiles[j * width + i].feature != null) {
                 direction(toX(i, j), toY(i, j), tiles[j * width + i].feature, "gray", context)
@@ -53,8 +53,8 @@ export function drawTiles(tiles: any) {
 }
 
 function drawObject(obj:any, context: CanvasRenderingContext2D) {
-        let x = toX(obj.position.x, obj.position.y);
-        let y = toY(obj.position.x, obj.position.y);
+        const x = toX(obj.position.x, obj.position.y);
+        const y = toY(obj.position.x, obj.position.y);
         context.beginPath();
         context.font = "16px serif";
         switch (Object.keys(obj.object)[0]) {
@@ -89,9 +89,9 @@ function drawObject(obj:any, context: CanvasRenderingContext2D) {
 
 export function drawObjects(objs: Array<any>) {
         console.log("drawing Objects");
-        let c = document.getElementById("canvas")! as HTMLCanvasElement;
-        let context = c.getContext("2d")!;
-        for (var obj of objs) {
+        const c = document.getElementById("canvas")! as HTMLCanvasElement;
+        const context = c.getContext("2d")!;
+        for (const obj of objs) {
           drawObject(obj, context);
         }
 }

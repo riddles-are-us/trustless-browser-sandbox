@@ -38,8 +38,7 @@ export enum ModalStatus {
 
 export function ModalCommon(props: ModalCommonProps) {
   const [show, setShow] = useState(false);
-
-  let account = useAppSelector(selectL1Account);
+  const account = useAppSelector(selectL1Account);
   const handleClose = () => {
     if (props.handleClose) {
       props.handleClose();
@@ -100,7 +99,7 @@ export function ModalCommon(props: ModalCommonProps) {
 }
 
 export function WaitingForResponseBar() {
-  let wfr = false;
+  const wfr = false;
   if (wfr) {
     return <Spinner animation="border" variant="light"></Spinner>;
   } else {

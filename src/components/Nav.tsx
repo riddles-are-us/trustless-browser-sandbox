@@ -26,8 +26,8 @@ interface IProps {
 export function MainNavBar(props: IProps) {
   const dispatch = useAppDispatch();
 
-  let account = useAppSelector(selectL1Account);
-  let l2account = useAppSelector(selectL2Account);
+  const account = useAppSelector(selectL1Account);
+  const l2account = useAppSelector(selectL2Account);
 
   useEffect(() => {
     dispatch(loginL1AccountAsync());

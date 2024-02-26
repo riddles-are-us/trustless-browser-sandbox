@@ -16,7 +16,7 @@ export const defaultEndpoint: Endpoint = {
 };
 function customEndpoints() {
   //Get custom endpoint array from local storage
-  let endpoints = localStorage.getItem(storageKey);
+  const endpoints = localStorage.getItem(storageKey);
   if (endpoints) {
     return JSON.parse(endpoints) as Endpoint[];
   }
@@ -24,7 +24,7 @@ function customEndpoints() {
 }
 
 function getLastUsedEndpoint() {
-  let endpoint = localStorage.getItem("lastUsedEndpoint");
+  const endpoint = localStorage.getItem("lastUsedEndpoint");
   if (endpoint) {
     console.log("last used endpoint: " + endpoint + "");
     return JSON.parse(endpoint) as Endpoint;

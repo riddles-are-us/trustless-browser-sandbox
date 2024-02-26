@@ -20,20 +20,20 @@ export interface ProofInfoProps {
 }
 
 export function ProofInfoModal(info: ProofInfoProps) {
-  let account = useAppSelector(selectL1Account);
-  let task = info.task;
-  let aggregate_proof = bytesToBN(task.proof);
-  let instances = bytesToBN(task.instances);
-  let aux = bytesToBN(task.aux);
+  const account = useAppSelector(selectL1Account);
+  const task = info.task;
+  const aggregate_proof = bytesToBN(task.proof);
+  const instances = bytesToBN(task.instances);
+  const aux = bytesToBN(task.aux);
   //const appConfig = useAppSelector(selectConfig);
   async function testverify() {
     if (account) {
-      let image = await zkwasmHelper.queryImage(info.task.md5);
+      const image = await zkwasmHelper.queryImage(info.task.md5);
       //await verify_task(task, appConfig, setMessageCallback);
       console.error("wallet not connected");
     }
   }
-  let taskproof = (
+  const taskproof = (
     <>
       <Container>
         <Tabs defaultActiveKey="Inputs" className="mb-3" justify>
@@ -78,7 +78,7 @@ export function ProofInfoModal(info: ProofInfoProps) {
       </Container>
     </>
   );
-  let props: ModalCommonProps = {
+  const props: ModalCommonProps = {
     btnLabel: <i className="bi bi-eye cursor-pointer"></i>,
     title: "Proof Information",
     childrenClass: "",

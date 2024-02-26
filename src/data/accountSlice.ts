@@ -20,7 +20,7 @@ export class L2AccountInfo {
 
 async function loginL1Account() {
   return await withBrowserConnector(async (web3: DelphinusBrowserConnector) => {
-    let i = await web3.getJsonRpcSigner();
+    const i = await web3.getJsonRpcSigner();
     return {
         address: await i.getAddress(),
         chainId: (await web3.getNetworkId()).toString()
@@ -29,7 +29,7 @@ async function loginL1Account() {
 }
 
 async function loginL2Account(address: string): Promise<L2AccountInfo> {
-  let str:string = await signMessage(address);
+  const str:string = await signMessage(address);
   console.log("signed result", str);
   return new L2AccountInfo(str.substring(0,34));
 }
@@ -57,8 +57,8 @@ const initialState: AccountState = {
 export const loginL1AccountAsync = createAsyncThunk(
   'acccount/fetchAccount',
   async (thunkApi) => {
-    let account = await loginL1Account();
-    let l2account = await loginL2Account(account.address);
+    const account = await loginL1Account();
+    const l2account = await loginL2Account(account.address);
     return account;
   }
 );
@@ -66,7 +66,7 @@ export const loginL1AccountAsync = createAsyncThunk(
 export const loginL2AccountAsync = createAsyncThunk(
   'acccount/deriveL2Account',
   async (l1account:L1AccountInfo,  thunkApi) => {
-    let l2account = await loginL2Account(l1account.address);
+    const l2account = await loginL2Account(l1account.address);
     return l2account;
   }
 );
