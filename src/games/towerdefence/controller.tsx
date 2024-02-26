@@ -39,8 +39,8 @@ export function GameController() {
 
   const dispatch = useAppDispatch();
 
-  let l2account = useAppSelector(selectL2Account);
-  let gameLoaded = useAppSelector(selectGameLoaded);
+  const l2account = useAppSelector(selectL2Account);
+  const gameLoaded = useAppSelector(selectGameLoaded);
 
   const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
@@ -48,13 +48,13 @@ export function GameController() {
   const [instance, setInstance] = useState<Array<string>>([]);
 
   function updatePreMerkle(index: number, value: bigint) {
-    let a = merklePreRoot;
+    const a = merklePreRoot;
     a[index] = value;
     setPreMerkleRoot(a);
   }
 
   function updatePostMerkle(index: number, value: bigint) {
-    let a = merklePostRoot;
+    const a = merklePostRoot;
     a[index] = value;
     setPostMerkleRoot(a);
   }
@@ -80,7 +80,7 @@ export function GameController() {
       console.log("setting instance");
       console.log(gameplay);
       gameplay.init(BigInt(l2account));
-      let objs = gameplay.get_objects();
+      const objs = gameplay.get_objects();
       console.log("objs", objs);
 
       let tiles = gameplay.get_tiles();
@@ -88,7 +88,7 @@ export function GameController() {
       console.log("tiles", tiles);
       drawTiles(tiles);
 
-      let objects = JSON.parse(objs);
+      const objects = JSON.parse(objs);
       drawObjects(objects);
       dispatch(setLoaded(true));
     });
@@ -97,17 +97,17 @@ export function GameController() {
   function stepMove() {
     (init as any)().then(() => {
       console.log("moving ");
-      let command = (0n<<32n);
+      const command = (0n<<32n);
       dispatch(appendCommand(command));
       gameplay.step(command);
-      let objs = gameplay.get_objects();
+      const objs = gameplay.get_objects();
       console.log("objs", objs);
       let tiles = gameplay.get_tiles();
       tiles = JSON.parse(tiles);
       console.log("tiles", tiles);
       drawTiles(tiles);
 
-      let objects = JSON.parse(objs);
+      const objects = JSON.parse(objs);
       drawObjects(objects);
     });
 

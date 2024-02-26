@@ -31,7 +31,7 @@ export const getMerkleRoot = createAsyncThunk(
 
 function  hashMessage(msg: Uint8Array): string {
     const hash = sha256(Buffer.from(msg));
-    let bn = new BN(hash, "hex");
+    const bn = new BN(hash, "hex");
     return bnToHexLe(bn)
   }
 
@@ -48,6 +48,7 @@ export const gameSlice = createSlice({
     setPostMerkleRoot: (state, loaded) => {
       state.preMerkleRoot = loaded.payload;
     },
+
     appendCommand: (state, command) => {
       console.log("command loaded");
       state.commands.push(command.payload);
@@ -61,8 +62,10 @@ export const gameSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getMerkleRoot.pending, (state) => {
+        console.log("getMerkleRoot pending");
       })
       .addCase(getMerkleRoot.fulfilled, (state, c) => {
+        console.log("getMerkleRoot fulfilled");
       })
   },
 });

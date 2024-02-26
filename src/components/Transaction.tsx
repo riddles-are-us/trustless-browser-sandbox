@@ -24,9 +24,9 @@ interface IProp {
 }
 
 export function Transaction(prop: IProp) {
-  let l2account = useAppSelector(selectL2Account);
-  let gameLoaded = useAppSelector(selectGameLoaded);
-  let commands = useAppSelector(selectCommands);
+  const l2account = useAppSelector(selectL2Account);
+  const gameLoaded = useAppSelector(selectGameLoaded);
+  const commands = useAppSelector(selectCommands);
 
   const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
@@ -35,20 +35,20 @@ export function Transaction(prop: IProp) {
   const [instance, setInstance] = useState<Array<string>>([]);
 
 
-  let msgToSign = useAppSelector(selectMessageToSigned);
-  let msgHash = useAppSelector(selectMsgHash);
+  const msgToSign = useAppSelector(selectMessageToSigned);
+  const msgHash = useAppSelector(selectMsgHash);
 
   useEffect(() => {
     if (l2account && gameLoaded) {
-       let msg = msgToSign;
+       const msg = msgToSign;
        console.log(l2account);
-       let prikey = PrivateKey.fromString(l2account.address);
-       let signingWitness = new SignatureWitness(prikey, msg);
-       let sig_witness:Array<string> = signingWitness.sig.map((v) => "0x" + v+ ":bytes-packed");
-       let pubkey_witness:Array<string> = signingWitness.pkey.map((v) => "0x" + v+ ":bytes-packed");
-       let commands_info = [`${commands.length}:i64`].concat(commands.map((v) => `${v}:i64`));
-       let witness = pubkey_witness;
-       for (var s of sig_witness) {
+       const prikey = PrivateKey.fromString(l2account.address);
+       const signingWitness = new SignatureWitness(prikey, msg);
+       const sig_witness:Array<string> = signingWitness.sig.map((v) => "0x" + v+ ":bytes-packed");
+       const pubkey_witness:Array<string> = signingWitness.pkey.map((v) => "0x" + v+ ":bytes-packed");
+       const commands_info = [`${commands.length}:i64`].concat(commands.map((v) => `${v}:i64`));
+       const witness = pubkey_witness;
+       for (const s of sig_witness) {
            witness.push(s);
        }
        setSigWitness(witness);
@@ -70,7 +70,7 @@ export function Transaction(prop: IProp) {
               md5={prop.md5}
               inputs={instance}
               witness={witness}
-              OnTaskSubmitSuccess={()=>{}}
+              OnTaskSubmitSuccess={()=>{return}}
             ></NewProveTask>
         </Col>
       </Row>
@@ -82,6 +82,7 @@ export function Transaction(prop: IProp) {
                       commands.map((x) => ` ${x}:i64`).join(";")
             } readOnly />
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>PublicKey-X</Form.Label>
             <Form.Control as="input" value ={sigWitness[0]} readOnly />
