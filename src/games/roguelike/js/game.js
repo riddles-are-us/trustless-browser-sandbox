@@ -1,6 +1,22 @@
 /* tslint:disable */
 /* eslint-disable */
 import { __wbg_set_wasm } from "./gameplay_bg.js";
+import { MerkleEnv } from "../../../sdk/merkle.ts";
+
+const {
+  merkle_address,
+  merkle_setroot,
+  merkle_getroot,
+  merkle_set,
+  merkle_get,
+  poseidon_new,
+  poseidon_push,
+  poseidon_finalize,
+  cache_set_mode,
+  cache_store_data,
+  cache_set_hash,
+  cache_fetch_data,
+} = new MerkleEnv();
 
 let _print_buf = [];
 
@@ -47,18 +63,18 @@ const __wbg_star0 = {
       console.error("wasm_input should not been called in non-zkwasm mode");
       throw new Error("Unsupported wasm api: wasm_input");
     },
-    poseidon_new: () => {
-      console.error("wasm_input should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
-    poseidon_push: () => {
-      console.error("wasm_input should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
-    poseidon_finalize: () => {
-      console.error("wasm_input should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
+    merkle_address,
+    merkle_setroot,
+    merkle_getroot,
+    merkle_set,
+    merkle_get,
+    poseidon_new,
+    poseidon_push,
+    poseidon_finalize,
+    cache_set_mode,
+    cache_store_data,
+    cache_set_hash,
+    cache_fetch_data,
     babyjubjub_sum_new: () => {
       console.error("baby_jubjub_sum_new");
       throw new Error("Unsupported wasm api: wasm_input");
