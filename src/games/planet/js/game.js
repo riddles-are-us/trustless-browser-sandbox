@@ -1,6 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
 import { __wbg_set_wasm } from "./gameplay_bg.js";
+
+let _print_buf = [];
+
+function print_result() {
+  // Convert the array of numbers to a string
+  const result = String.fromCharCode(..._print_buf);
+
+  _print_buf = [];
+
+  console.log("Wasm_dbg_char result",result);
+}
+
 var dbg_string = "";
 const __wbg_star0 = {
     abort: () => {
@@ -16,10 +28,16 @@ const __wbg_star0 = {
     wasm_dbg: (c) => {
       console.log("wasm_dbg", c);
     },
-    wasm_dbg_char: (c) => {
-      console.error("wasm_dbg_char should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
+      /**
+     * - Convert the number to a character
+     * - Check if the character is a newline
+     * - Print the accumulated result when encountering a newline
+     * - Append the character to the print buffer
+     */
+    wasm_dbg_char: (data) =>
+    String.fromCharCode(Number(data)) === "\n"
+      ? print_result()
+      : _print_buf.push(Number(data)),
 
     wasm_input: () => {
       console.error("wasm_input should not been called in non-zkwasm mode");
