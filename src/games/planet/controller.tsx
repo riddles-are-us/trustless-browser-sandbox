@@ -36,7 +36,7 @@ export function GameController() {
   const [loaded, setLoaded] = useState<boolean>(false);
   let l2account = useAppSelector(selectL2Account);
 
-  function updateState(ins) {
+  function updateState(ins: any) {
     let location = ins.get_location();
     let energy = ins.get_energy();
     let food = ins.get_food();
