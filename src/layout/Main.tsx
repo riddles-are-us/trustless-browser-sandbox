@@ -14,8 +14,8 @@ import { ModalOptions } from "../types/layout";
 //import { GameController } from "../games/roguelike/controller";
 //import { ImageMD5 } from "../games/roguelike/js/config";
 
-import { GameController } from "../games/towerdefence/controller";
-import { ImageMD5 } from "../games/towerdefence/js/config";
+import { GameController } from "../games/planet/controller";
+import { ImageMD5 } from "../games/planet/js/config";
 
 import {
   selectL2Account,
