@@ -4,9 +4,10 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import HistoryTasks from "../components/History";
+import "bootswatch/dist/slate/bootstrap.min.css";
+//import 'bootstrap/dist/css/bootstrap.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./style.scss";
-import "bootswatch/dist/slate/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { MainNavBar } from "../components/Nav";
 import { ModalOptions } from "../types/layout";
@@ -16,6 +17,10 @@ import { ModalOptions } from "../types/layout";
 
 import { GameController } from "../games/planet/controller";
 import { ImageMD5 } from "../games/planet/js/config";
+
+//import { GameController } from "../games/towerdefence/controller";
+//import { ImageMD5 } from "../games/towerdefence/js/config";
+
 
 import {
   selectL2Account,
