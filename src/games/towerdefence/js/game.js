@@ -1,6 +1,34 @@
 /* tslint:disable */
 /* eslint-disable */
 import { __wbg_set_wasm } from "./gameplay_bg.js";
+import { MerkleEnv } from "../../../sdk/merkle.ts";
+
+const {
+  merkle_address,
+  merkle_setroot,
+  merkle_getroot,
+  merkle_set,
+  merkle_get,
+  poseidon_new,
+  poseidon_push,
+  poseidon_finalize,
+  cache_set_mode,
+  cache_store_data,
+  cache_set_hash,
+  cache_fetch_data,
+} = new MerkleEnv();
+
+let _print_buf = [];
+
+function print_result() {
+  // Convert the array of numbers to a string
+  const result = String.fromCharCode(..._print_buf);
+
+  _print_buf = [];
+
+  console.log("Wasm_dbg_char result",result);
+}
+
 var dbg_string = "";
 const __wbg_star0 = {
     abort: () => {
@@ -16,10 +44,16 @@ const __wbg_star0 = {
     wasm_dbg: (c) => {
       console.log("wasm_dbg", c);
     },
-    wasm_dbg_char: (c) => {
-      console.error("wasm_dbg_char should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
+      /**
+     * - Convert the number to a character
+     * - Check if the character is a newline
+     * - Print the accumulated result when encountering a newline
+     * - Append the character to the print buffer
+     */
+    wasm_dbg_char: (data) =>
+    String.fromCharCode(Number(data)) === "\n"
+      ? print_result()
+      : _print_buf.push(Number(data)),
 
     wasm_input: () => {
       console.error("wasm_input should not been called in non-zkwasm mode");
@@ -29,18 +63,18 @@ const __wbg_star0 = {
       console.error("wasm_input should not been called in non-zkwasm mode");
       throw new Error("Unsupported wasm api: wasm_input");
     },
-    poseidon_new: () => {
-      console.error("wasm_input should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
-    poseidon_push: () => {
-      console.error("wasm_input should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
-    poseidon_finalize: () => {
-      console.error("wasm_input should not been called in non-zkwasm mode");
-      throw new Error("Unsupported wasm api: wasm_input");
-    },
+    merkle_address,
+    merkle_setroot,
+    merkle_getroot,
+    merkle_set,
+    merkle_get,
+    poseidon_new,
+    poseidon_push,
+    poseidon_finalize,
+    cache_set_mode,
+    cache_store_data,
+    cache_set_hash,
+    cache_fetch_data,
     babyjubjub_sum_new: () => {
       console.error("baby_jubjub_sum_new");
       throw new Error("Unsupported wasm api: wasm_input");
