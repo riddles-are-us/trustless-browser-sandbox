@@ -10,6 +10,7 @@ import { Button, Form, ProgressBar } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import InputGroup from 'react-bootstrap/InputGroup';
+import {Transaction} from "../../components/Transaction";
 
 
 // ZKWASM RELATED STUFF
@@ -64,8 +65,6 @@ export function GameController() {
     a[index] = value;
     setPostMerkleRoot(a);
   }
-
-
 
   function loadGame(l2account: number) {
     (init as any)().then(() => {
@@ -140,8 +139,6 @@ export function GameController() {
 
   }
 
-
-
   useEffect(() => {
     if (l2account) {
         if (gameLoaded == false) {
@@ -150,74 +147,10 @@ export function GameController() {
     }
   }, [l2account]);
 
-  const msgToSign = useAppSelector(selectMessageToSigned);
-  const msgHash = useAppSelector(selectMsgHash);
-
-  useEffect(() => {
-    if (l2account) {
-       const msg = msgToSign;
-       console.log(l2account);
-       const prikey = PrivateKey.fromString(l2account.address);
-       const signingWitness = new SignatureWitness(prikey, msg);
-       const sig_witness:Array<string> = signingWitness.sig.map((v) => "0x" + v+ ":bytes-packed");
-       const pubkey_witness:Array<string> = signingWitness.pkey.map((v) => "0x" + v+ ":bytes-packed");
-       const commands_info = [`${commands.length}:i64`].concat(commands.map((v) => `${v}:i64`));
-       const witness = pubkey_witness;
-       for (const s of sig_witness) {
-           witness.push(s);
-       }
-       setSigWitness(witness);
-       setWitness(commands_info.concat(witness));
-       setInstance(
-           ["0x" + msgHash + ":bytes-packed"]
-               .concat(merklePreRoot.map((x)=>`${x}:i64`))
-               .concat(merklePostRoot.map((x)=>`${x}:i64`))
-       );
-       console.log("state is:", state);
-    }
-  }, [l2account, commands, state, gameLoaded]);
-
 
 
   return (
     <>
-      <Row>
-        <Col>
-           <Form>
-             <InputGroup className="mb-3">
-               <InputGroup.Text>Merkle Root 0</InputGroup.Text>
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(0, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(1, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(2, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(3, BigInt(event.target.value))}}
-                />
-               <InputGroup.Text
-                   onClick = {() => {loadGame(Number(l2account!.toBigInt()))}}
-                >
-                Load Game</InputGroup.Text>
-             </InputGroup>
-             <InputGroup className="mb-3">
-               <InputGroup.Text>Instances</InputGroup.Text>
-               <Form.Control
-                   as = "input"
-                   value = {instance}
-                   readOnly
-                />
-             </InputGroup>
-          </Form>
-        </Col>
-      </Row>
             {gameLoaded && state  &&
             <>
               {state.hero_hp > 0 &&
@@ -273,47 +206,7 @@ export function GameController() {
             </>
             }
       <Row>
-        <Col>
-            <NewProveTask
-              md5={ImageMD5}
-              inputs={instance}
-              witness={witness}
-              OnTaskSubmitSuccess={()=>{return}}
-            ></NewProveTask>
-        </Col>
-      </Row>
-      <Row>
-      </Row>
-      <Row>
-        <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Movements</Form.Label>
-            <Form.Control as="input" value = {
-                      commands.map((x) => ` ${x}:i64`).join(";")
-            } readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>PublicKey-X</Form.Label>
-            <Form.Control as="input" value ={sigWitness[0]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>PublicKey-Y</Form.Label>
-            <Form.Control as="input" value ={sigWitness[1]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-X</Form.Label>
-            <Form.Control as="input" value ={sigWitness[2]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-Y</Form.Label>
-            <Form.Control as="input" value ={sigWitness[3]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-S</Form.Label>
-            <Form.Control as="input" value ={sigWitness[4]} readOnly />
-          </Form.Group>
-        </Form>
-
+        <Transaction md5={ImageMD5} ></Transaction>
       </Row>
     </>);
 }

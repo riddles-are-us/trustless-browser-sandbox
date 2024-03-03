@@ -13,6 +13,7 @@ import {
 } from "../data/game";
 import { SignatureWitness } from "../utils/proof";
 import { Form } from "react-bootstrap";
+import InputGroup from 'react-bootstrap/InputGroup';
 import { PrivateKey } from "delphinus-curves/src/altjubjub";
 
 import {
@@ -61,9 +62,62 @@ export function Transaction(prop: IProp) {
     }
   }, [l2account, gameLoaded, commands]);
 
+  function updatePreMerkle(index: number, value: bigint) {
+    const a = merklePreRoot;
+    a[index] = value;
+    setPreMerkleRoot(a);
+  }
+
+  function updatePostMerkle(index: number, value: bigint) {
+    const a = merklePostRoot;
+    a[index] = value;
+    setPostMerkleRoot(a);
+  }
+
+  function loadGame(l2account: number) {
+    return;
+  }
 
   return (
     <>
+      <Row>
+        <Col>
+           <Form>
+             <InputGroup className="mb-3">
+               <InputGroup.Text>Merkle Root 0</InputGroup.Text>
+               <Form.Control
+                   as = "input"
+                   onChange = {(event) => {updatePreMerkle(0, BigInt(event.target.value))}}
+                />
+               <Form.Control
+                   as = "input"
+                   onChange = {(event) => {updatePreMerkle(1, BigInt(event.target.value))}}
+                />
+               <Form.Control
+                   as = "input"
+                   onChange = {(event) => {updatePreMerkle(2, BigInt(event.target.value))}}
+                />
+               <Form.Control
+                   as = "input"
+                   onChange = {(event) => {updatePreMerkle(3, BigInt(event.target.value))}}
+                />
+                <InputGroup.Text
+                   onClick = {() => {loadGame(Number(l2account!.toBigInt()))}}
+                >
+                Load Game</InputGroup.Text>
+             </InputGroup>
+             <InputGroup className="mb-3">
+               <InputGroup.Text>Instances</InputGroup.Text>
+               <Form.Control
+                   as = "input"
+                   value = {instance}
+                   readOnly
+                />
+             </InputGroup>
+          </Form>
+        </Col>
+      </Row>
+
       <Row>
         <Col>
             <NewProveTask

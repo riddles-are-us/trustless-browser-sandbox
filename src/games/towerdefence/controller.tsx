@@ -42,38 +42,8 @@ export function GameController() {
   const l2account = useAppSelector(selectL2Account);
   const gameLoaded = useAppSelector(selectGameLoaded);
 
-  const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
-  const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [witness, setWitness] = useState<Array<string>>([]);
   const [instance, setInstance] = useState<Array<string>>([]);
-
-  function updatePreMerkle(index: number, value: bigint) {
-    const a = merklePreRoot;
-    a[index] = value;
-    setPreMerkleRoot(a);
-  }
-
-  function updatePostMerkle(index: number, value: bigint) {
-    const a = merklePostRoot;
-    a[index] = value;
-    setPostMerkleRoot(a);
-  }
-
-
-
-  function loadGame(l2account: number) {
-    (init as any)().then(() => {
-      gameplay.load(
-        BigInt(l2account),
-        BigInt(merklePreRoot[0]),
-        BigInt(merklePreRoot[1]),
-        BigInt(merklePreRoot[2]),
-        BigInt(merklePreRoot[3])
-      );
-      //setTargets([Number(target0), Number(target1), Number(target2)]);
-      dispatch(setLoaded(true));
-    });
-  }
 
   function initGame(l2account: number) {
     (init as any)().then(() => {
@@ -123,43 +93,6 @@ export function GameController() {
 
   return (
     <>
-      <Row>
-        <Col>
-           <Form>
-             <InputGroup className="mb-3">
-               <InputGroup.Text>Merkle Root 0</InputGroup.Text>
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(0, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(1, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(2, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(3, BigInt(event.target.value))}}
-                />
-               <InputGroup.Text
-                   onClick = {() => {loadGame(Number(l2account!.toBigInt()))}}
-                >
-                Load Game</InputGroup.Text>
-             </InputGroup>
-             <InputGroup className="mb-3">
-               <InputGroup.Text>Instances</InputGroup.Text>
-               <Form.Control
-                   as = "input"
-                   value = {instance}
-                   readOnly
-                />
-             </InputGroup>
-          </Form>
-        </Col>
-      </Row>
       <Row>
         <Col>
                 <h3>Tower Defence with 12 * 8</h3>
