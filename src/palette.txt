@@ -1,0 +1,5 @@
+background: #120122
+card-background: #120122
+prim-grad-1: #11F0F8
+sec-grad-1: #F4CF81
+input-background: #120122 (95%)
