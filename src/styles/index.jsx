@@ -32,6 +32,15 @@ export const HeaderWrapper = styled.div`
     padding: 10px;
 `
 
+export const CardsWrapper = styled.div`
+display: flex; /* Use flexbox to layout children side by side */
+justify-content: space-around; /* Space out cards evenly */
+width: 100%;
+max-width: 1320px;
+margin: 0 auto; /* Center the wrapper */
+padding: 20px 0; /* Add some padding on top and bottom */
+`
+
 /* text & links */
 
 export const HeaderLink = styled.a`
@@ -65,6 +74,47 @@ export const BannerText = styled.p`
     line-height: 1.3em;
 `
 
+/* cards */
+
+export const GameCard = styled.div`
+background: #120122;
+border-radius: 20px;
+flex: 1; /* Allow cards to grow and fill the available space */
+margin: 0 10px; /* Add some space between the cards */
+`
+
+export const GameCardFace = styled.div`
+    background: #FFF;
+    border-radius: 20px 20px 0 0;
+    margin: 0;
+    min-height: 256px;
+`
+
+export const GameCardInner = styled.div`
+    padding: 1rem;
+    color: #FFF;
+`
+
+export const GameCardTitle = styled.h2`
+    font-size: 24pt;
+    font-weight: 600;
+    color: #FFF;
+`
+
+export const GameCardText = styled.p`
+    font-size: 12pt;
+    color: #FFF;
+`
+
+export const GameCardDetailLink = styled.a`
+    font-size: 10pt;
+    color: #CCC;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+`
+
 /* buttons & other elements */
 
 export const Button = styled.div`
@@ -76,7 +126,21 @@ export const Button = styled.div`
     font-size: 14pt;
     font-weight: 600;
     border-radius: 20px;
-    margin: auto 10px;
+    margin: 10px;
+    width: auto;
+    cursor: pointer;
+`
+
+export const ReverseButton = styled.div`
+    display: inline-block;
+    background: transparent;
+    padding: 15px 20px;
+    color: #FFF;
+    font-size: 14pt;
+    font-weight: 600;
+    border: 2px solid rgba(17, 240, 248, 1);
+    border-radius: 20px;
+    margin: 10px;
     width: auto;
     cursor: pointer;
 `
@@ -89,6 +153,6 @@ export const Input = styled.input`
     color: #7A7A7A;
     font-size: 12pt;
     font-weight: 600;
-    margin: auto 10px;
+    margin: 10px;
     min-width: 450px;
 `

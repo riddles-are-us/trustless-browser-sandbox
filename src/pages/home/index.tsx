@@ -9,6 +9,14 @@ import {
   BannerText,
   Button,
   Input,
+  CardsWrapper,
+  GameCard,
+  GameCardFace,
+  GameCardInner,
+  GameCardTitle,
+  GameCardText,
+  ReverseButton,
+  GameCardDetailLink
 } from '../../styles'
 import Header from '../../components/header';
 
@@ -27,11 +35,61 @@ export function Home() {
           Writting a letter of request is a common occurrence in many
           professional roles. If you ever wondered how to compose one
           professionaly, exploring a sample request letter can be a
-          good way to familiarize yourself with the important components..
+          good way to familiarize yourself with the important components.
         </BannerText>
         <Input placeholder='Writting a letter of request' style={{ marginLeft: ' -10px' }} />
         <Button>Claim your rewards</Button>
        </BannerContentWrapper>
+       <CardsWrapper>
+              {/* Card 1 */}
+              <GameCard>
+                <GameCardFace />
+                <GameCardInner>
+                  <GameCardTitle>Unitrek</GameCardTitle>
+                  <GameCardText>
+                    Launch your game on every platform without loosing
+                    sleep. Let LootLocker handle all.
+                    <br />
+                    <br />
+                    <GameCardDetailLink href='#' target="_self">Details</GameCardDetailLink>
+                  </GameCardText>
+                  <ReverseButton>Play</ReverseButton>
+                  <Button>Stake</Button>
+                </GameCardInner>
+              </GameCard>
+              {/* Card 2 */}
+              <GameCard>
+                <GameCardFace />
+                <GameCardInner>
+                  <GameCardTitle>Unitrek</GameCardTitle>
+                  <GameCardText>
+                    Launch your game on every platform without loosing
+                    sleep. Let LootLocker handle all.
+                    <br />
+                    <br />
+                    <GameCardDetailLink href='#' target="_self">Details</GameCardDetailLink>
+                  </GameCardText>
+                  <ReverseButton>Play</ReverseButton>
+                  <Button>Stake</Button>
+                </GameCardInner>
+              </GameCard>
+              {/* Card 3 */}
+              <GameCard>
+                <GameCardFace />
+                <GameCardInner>
+                  <GameCardTitle>Unitrek</GameCardTitle>
+                  <GameCardText>
+                    Launch your game on every platform without loosing
+                    sleep. Let LootLocker handle all.
+                    <br />
+                    <br />
+                    <GameCardDetailLink href='#' target="_self">Details</GameCardDetailLink>
+                  </GameCardText>
+                  <ReverseButton>Play</ReverseButton>
+                  <Button>Stake</Button>
+                </GameCardInner>
+              </GameCard>
+            </CardsWrapper>
       </ContentWrapper>
     </BannerWrapper>
   </PageWrapper>
