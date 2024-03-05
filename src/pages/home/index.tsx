@@ -27,7 +27,7 @@ export function Home() {
           Writting a letter of request is a common occurrence in many
           professional roles. If you ever wondered how to compose one
           professionaly, exploring a sample request letter can be a
-          good way to familiarize yourself with the important components.
+          good way to familiarize yourself with the important components..
         </BannerText>
         <Input placeholder='Writting a letter of request' style={{ marginLeft: ' -10px' }} />
         <Button>Claim your rewards</Button>
