@@ -17,7 +17,6 @@ export const PageWrapper = styled.div`
 
 export const TopPageWrapper = styled.div`
     max-width: 100vw;
-    min-height: 100vh;
     background-image: url(${bannerBackground});
     background-size: cover;
     padding: 20px;
@@ -30,7 +29,7 @@ export const ContentWrapper = styled.div`
 `
 
 export const BannerWrapper = styled.div`
-    min-height: 100vh;
+    padding-bottom: 150px;
 `
 
 export const BannerContentWrapper = styled.div`
