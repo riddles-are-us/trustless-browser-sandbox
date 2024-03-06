@@ -1,22 +1,39 @@
 import React from 'react';
 import {
-    HeaderWrapper,
+  Button,
+  ContentWrapper,
+    CopyrightText,
+    FooterSectionInner,
+    FooterSectionWrapper,
+    FooterTitle,
+    FooterWrapper,
     HeaderLink,
 } from '../../styles'
-import RiddleLogo from '../../assets/img/riddle-logo.png'
+import RiddleLogoOnly from '../../assets/img/riddle-logo-only.png'
 
 export function Footer() {
     return (
       <>
-    <HeaderWrapper>
-        <img src={RiddleLogo} height={24}/>
-        <HeaderLink href='#' target='_self'>
-            Top Games
-        </HeaderLink>
-        <HeaderLink href='#' target='_self'>
-            Leaderboard
-        </HeaderLink>
-    </HeaderWrapper>
+    <FooterWrapper>
+      <ContentWrapper>
+        <FooterSectionWrapper>
+          <FooterSectionInner>
+            <img src={RiddleLogoOnly} height={64}/>
+          </FooterSectionInner>
+          <FooterSectionInner>
+            <Button>Submit your game</Button>
+          </FooterSectionInner>
+          <FooterSectionInner />
+          <FooterSectionInner style={{ textAlign: 'right' }}>
+          <FooterTitle>Community</FooterTitle>
+          [Twitter] [Discord] [Telegram]
+          <br />
+          <CopyrightText>Copyright © 2024 The Riddle of the Scroll. All rights reserved.</CopyrightText>
+          </FooterSectionInner>
+        </FooterSectionWrapper>
+        
+        </ContentWrapper>
+    </FooterWrapper>
       </>
     );
   }

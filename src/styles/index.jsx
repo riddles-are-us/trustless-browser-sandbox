@@ -45,11 +45,26 @@ export const HeaderWrapper = styled.div`
 `
 
 export const FooterWrapper = styled.div`
-    width: 100vw;
-    max-width: 1320px;
+    width: 100%;
+    min-height: 200px;
+    overflow-x: hidden;
     background: #1F0F2E;
     color: #FFF;
-    padding: 10px;
+    padding: 40px;
+`
+
+export const FooterSectionWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 20px 0;
+    margin: 10px;
+`
+
+export const FooterSectionInner = styled.div`
+    width: 100%;
+    text-align: left;
+    margin: auto;
 `
 
 export const CardsWrapper = styled.div`
@@ -104,7 +119,7 @@ export const PartnersInnerWrapper = styled.div`
 
 export const PartnersBannerWrapper = styled.div`
     margin: 20px;
-    padding: 40px;
+    padding: 75px;
     border-radius: 20px;
     background: #FFF;
 `
@@ -164,6 +179,17 @@ export const RankingTitleText = styled.p`
     margin-top: -15px;
 `
 
+export const FooterTitle = styled.p`
+    font-size: 14pt;
+    font-weight: 600;
+`
+
+export const CopyrightText = styled.p`
+    font-size: 8pt;
+    font-weight: 400;
+    color: #FAFAFA;
+`
+
 /* cards */
 
 export const GameCard = styled.div`
@@ -172,8 +198,10 @@ export const GameCard = styled.div`
     flex: 1;
     margin: 0 10px;
     border: 1px solid transparent;
+    transition: all 0.3s ease;
     &:hover {
-        border: 1px solid rgba(17, 240, 248, 1);
+        border: 1px solid rgba(17, 240, 248, 0.2);
+        box-shadow: 0 8px 16px 0 rgba(17, 240, 248, 0.5);
     }
 `
 
@@ -253,10 +281,19 @@ export const RankingBadgeInner = styled.div`
 
 /* buttons & other elements */
 
+export const Spacer50 = styled.div`
+    margin: 25px auto;
+`
+
+export const Spacer100 = styled.div`
+    margin: 50px auto;
+`
+
 export const Button = styled.div`
     display: inline-block;
     background: rgba(17, 240, 248, 1);
     background: linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
+    transition: all 0.5s ease;
     padding: 15px 20px;
     color: #160227;
     font-size: 14pt;
@@ -265,6 +302,9 @@ export const Button = styled.div`
     margin: 10px;
     width: auto;
     cursor: pointer;
+    &:hover {
+        background: linear-gradient(90deg, rgba(17,240,248,0.9) 0%, rgba(244,207,129,0.9) 100%);
+    }
 `
 
 export const ReverseButton = styled.div`
@@ -279,10 +319,13 @@ export const ReverseButton = styled.div`
     margin: 10px;
     width: auto;
     cursor: pointer;
+    &:hover {
+        border: 2px solid rgba(17, 240, 248, 0.9);
+    }
 `
 
 export const Input = styled.input`
-    border: 1px solid rgba(17, 240, 248, 1);
+    border: 2px solid rgba(17, 240, 248, 1);
     background: rgba(22, 22, 22, 0.95);
     border-radius: 20px;
     padding: 15px 20px;
@@ -291,4 +334,49 @@ export const Input = styled.input`
     font-weight: 600;
     margin: 10px;
     min-width: 450px;
+`
+
+/* table */
+
+export const TableWrapper = styled.div`
+    width: 100%;
+`
+
+export const TableRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1320px;
+    margin: 5px auto;
+    padding: 10px;
+    border-radius: 20px;
+    background: #231A2A;
+    text-align: right;
+    &:hover {
+        background: #120122;
+    }
+`
+export const TableCell = styled.div`
+    color: #FFF;
+    font-size: 12pt;
+    font-weight: 500;
+    flex: 1;
+    text-align: left;
+    padding: 0 10px;
+`
+
+export const TitleRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1320px;
+    margin: auto;
+    padding: 10px;
+`
+
+export const TableTitle = styled.div`
+    font-size: 16pt;
+    font-weight: 600;
 `
