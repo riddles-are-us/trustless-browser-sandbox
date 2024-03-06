@@ -11,14 +11,28 @@ import {
   Input,
   CardsWrapper,
   GameCard,
-  GameCardFace,
+  GameCardFace1,
+  GameCardFace2,
+  GameCardFace3,
   GameCardInner,
   GameCardTitle,
   GameCardText,
   ReverseButton,
-  GameCardDetailLink
+  GameCardDetailLink,
+  RankingBoardWrapper,
+  RankingBoardTitle,
+  RankingLeaderboardWrapper,
+  RankingBadge,
+  RankingBadgeInner,
+  NormalText,
+  RankingBadgeWrapper,
+  RankingTitleText,
+  RankingImgInner,
 } from '../../styles'
 import Header from '../../components/header';
+import RankingImg1 from '../../assets/img/RankingImg1.png'
+import RankingImg2 from '../../assets/img/RankingImg2.png'
+import RankingImg3 from '../../assets/img/RankingImg3.png'
 
 
 export function Home() {
@@ -43,9 +57,9 @@ export function Home() {
        <CardsWrapper>
               {/* Card 1 */}
               <GameCard>
-                <GameCardFace />
+                <GameCardFace1 />
                 <GameCardInner>
-                  <GameCardTitle>Unitrek</GameCardTitle>
+                  <GameCardTitle>Street Pets Pioneer</GameCardTitle>
                   <GameCardText>
                     Launch your game on every platform without loosing
                     sleep. Let LootLocker handle all.
@@ -59,7 +73,7 @@ export function Home() {
               </GameCard>
               {/* Card 2 */}
               <GameCard>
-                <GameCardFace />
+                <GameCardFace2 />
                 <GameCardInner>
                   <GameCardTitle>Unitrek</GameCardTitle>
                   <GameCardText>
@@ -75,9 +89,9 @@ export function Home() {
               </GameCard>
               {/* Card 3 */}
               <GameCard>
-                <GameCardFace />
+                <GameCardFace3 />
                 <GameCardInner>
-                  <GameCardTitle>Unitrek</GameCardTitle>
+                  <GameCardTitle>0xpioneer</GameCardTitle>
                   <GameCardText>
                     Launch your game on every platform without loosing
                     sleep. Let LootLocker handle all.
@@ -90,6 +104,39 @@ export function Home() {
                 </GameCardInner>
               </GameCard>
             </CardsWrapper>
+            <RankingBoardWrapper>
+              <RankingBoardTitle>Ranking Board</RankingBoardTitle>
+              <RankingLeaderboardWrapper>
+                
+                <RankingBadgeWrapper>
+                <RankingBadge style={{ marginTop: '200px' }}>
+                  <RankingBadgeInner>
+                    <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
+                  </RankingBadgeInner>
+                </RankingBadge>
+                <RankingTitleText>Mr. Titan</RankingTitleText>
+                </RankingBadgeWrapper>
+                
+                <RankingBadgeWrapper>
+                <RankingBadge>
+                  <RankingBadgeInner>
+                    <RankingImgInner src={RankingImg1} style={{ marginTop: '100px' }} />
+                  </RankingBadgeInner>
+                </RankingBadge>
+                <RankingTitleText>Sakurako</RankingTitleText>
+                </RankingBadgeWrapper>
+
+                <RankingBadgeWrapper>
+                <RankingBadge style={{ marginTop: '200px' }}>
+                  <RankingBadgeInner>
+                    <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
+                  </RankingBadgeInner>
+                </RankingBadge>
+                <RankingTitleText>wkfgn45698</RankingTitleText>
+                </RankingBadgeWrapper>
+
+              </RankingLeaderboardWrapper>
+            </RankingBoardWrapper>
       </ContentWrapper>
     </BannerWrapper>
   </PageWrapper>

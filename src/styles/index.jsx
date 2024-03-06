@@ -1,5 +1,9 @@
 import bannerBackground from '../assets/img/landing-background.png'
 import styled from 'styled-components';
+import GameCard1Img from '../assets/img/street-pets-pioneer.png'
+import GameCard2Img from '../assets/img/unitrek.png'
+import GameCard3Img from '../assets/img/0xpioneer.png'
+import RankingBadgeBackground from '../assets/img/ranking-badge-background.png'
 
 /* wrappers */
 
@@ -33,12 +37,35 @@ export const HeaderWrapper = styled.div`
 `
 
 export const CardsWrapper = styled.div`
-display: flex; /* Use flexbox to layout children side by side */
-justify-content: space-around; /* Space out cards evenly */
-width: 100%;
-max-width: 1320px;
-margin: 0 auto; /* Center the wrapper */
-padding: 20px 0; /* Add some padding on top and bottom */
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px 0;
+`
+
+export const RankingBoardWrapper = styled.div`
+    width: 100%;
+    margin: 150px auto;
+    color: #FFF;
+`
+
+export const RankingLeaderboardWrapper = styled.div`
+    min-width: 80%;
+    max-width: 1100px;
+    display: flex;
+    justify-content: space-around;
+    margin: 0 auto;
+`
+
+export const RankingBadgeWrapper = styled.div`
+    margin-top: -30px;
+`
+
+export const RankingImgInner = styled.img`
+    border-radius: 50%;
+    max-width: 50%;
 `
 
 /* text & links */
@@ -74,20 +101,62 @@ export const BannerText = styled.p`
     line-height: 1.3em;
 `
 
+export const RankingBoardTitle = styled.h3`
+    font-size: 32pt;
+    color: #FFF;
+    font-weight: 600;
+    text-align: center;
+`
+
+export const NormalText = styled.p`
+    font-size: 12pt;
+    font-weight: 500;
+    color: #FFF;
+    text-align: center;
+`
+
+export const RankingTitleText = styled.p`
+    font-size: 16pt;
+    font-weight: 500;
+    color: #FFF;
+    text-align: center;
+    margin-top: -15px;
+`
+
 /* cards */
 
 export const GameCard = styled.div`
-background: #120122;
-border-radius: 20px;
-flex: 1; /* Allow cards to grow and fill the available space */
-margin: 0 10px; /* Add some space between the cards */
+    background: #120122;
+    border-radius: 20px;
+    flex: 1;
+    margin: 0 10px;
 `
 
-export const GameCardFace = styled.div`
+export const GameCardFace1 = styled.div`
     background: #FFF;
     border-radius: 20px 20px 0 0;
     margin: 0;
     min-height: 256px;
+    background-image: url(${GameCard1Img});
+    background-size: cover;
+`
+
+export const GameCardFace2 = styled.div`
+    background: #FFF;
+    border-radius: 20px 20px 0 0;
+    margin: 0;
+    min-height: 256px;
+    background-image: url(${GameCard2Img});
+    background-size: cover;
+`
+
+export const GameCardFace3 = styled.div`
+    background: #FFF;
+    border-radius: 20px 20px 0 0;
+    margin: 0;
+    min-height: 256px;
+    background-image: url(${GameCard3Img});
+    background-size: cover;
 `
 
 export const GameCardInner = styled.div`
@@ -113,6 +182,26 @@ export const GameCardDetailLink = styled.a`
     &:hover {
         text-decoration: underline;
     }
+`
+
+export const RankingBadge = styled.div`
+    width: 374px;
+    min-width: 374px;
+    max-width: 374px;
+    height: 361px;
+    min-height: 361px;
+    max-height: 361px;
+    border-radius: 50%;
+    background-size: cover;
+    justify-content: center;
+    text-align: center;
+    margin: auto 75px;
+    background-image: url(${RankingBadgeBackground});
+`
+
+export const RankingBadgeInner = styled.div`
+    min-width: 100%;
+    background-size: cover;
 `
 
 /* buttons & other elements */
