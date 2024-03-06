@@ -28,17 +28,25 @@ import {
   RankingBadgeWrapper,
   RankingTitleText,
   RankingImgInner,
+  PartnersWrapper,
+  TopPageWrapper,
+  FooterWrapper,
+  PartnersInnerWrapper,
+  PartnersBannerWrapper,
 } from '../../styles'
 import Header from '../../components/header';
 import RankingImg1 from '../../assets/img/RankingImg1.png'
 import RankingImg2 from '../../assets/img/RankingImg2.png'
 import RankingImg3 from '../../assets/img/RankingImg3.png'
+import Footer from '../../components/footer';
 
 
 export function Home() {
   return (
     <>
   <PageWrapper>
+    {/* start banner and header of the main page */}
+    <TopPageWrapper>
     <BannerWrapper>
       <ContentWrapper>
       <Header />
@@ -54,92 +62,124 @@ export function Home() {
         <Input placeholder='Writting a letter of request' style={{ marginLeft: ' -10px' }} />
         <Button>Claim your rewards</Button>
        </BannerContentWrapper>
+       </ContentWrapper>
+       </BannerWrapper>
+       </TopPageWrapper>
+
+       {/* start contents section */}
+       <ContentWrapper>
+
+      {/* cards */}
        <CardsWrapper>
-              {/* Card 1 */}
-              <GameCard>
-                <GameCardFace1 />
-                <GameCardInner>
-                  <GameCardTitle>Street Pets Pioneer</GameCardTitle>
-                  <GameCardText>
-                    Launch your game on every platform without loosing
-                    sleep. Let LootLocker handle all.
-                    <br />
-                    <br />
-                    <GameCardDetailLink href='#' target="_self">Details</GameCardDetailLink>
-                  </GameCardText>
-                  <ReverseButton>Play</ReverseButton>
-                  <Button>Stake</Button>
-                </GameCardInner>
-              </GameCard>
-              {/* Card 2 */}
-              <GameCard>
-                <GameCardFace2 />
-                <GameCardInner>
-                  <GameCardTitle>Unitrek</GameCardTitle>
-                  <GameCardText>
-                    Launch your game on every platform without loosing
-                    sleep. Let LootLocker handle all.
-                    <br />
-                    <br />
-                    <GameCardDetailLink href='#' target="_self">Details</GameCardDetailLink>
-                  </GameCardText>
-                  <ReverseButton>Play</ReverseButton>
-                  <Button>Stake</Button>
-                </GameCardInner>
-              </GameCard>
-              {/* Card 3 */}
-              <GameCard>
-                <GameCardFace3 />
-                <GameCardInner>
-                  <GameCardTitle>0xpioneer</GameCardTitle>
-                  <GameCardText>
-                    Launch your game on every platform without loosing
-                    sleep. Let LootLocker handle all.
-                    <br />
-                    <br />
-                    <GameCardDetailLink href='#' target="_self">Details</GameCardDetailLink>
-                  </GameCardText>
-                  <ReverseButton>Play</ReverseButton>
-                  <Button>Stake</Button>
-                </GameCardInner>
-              </GameCard>
-            </CardsWrapper>
-            <RankingBoardWrapper>
-              <RankingBoardTitle>Ranking Board</RankingBoardTitle>
-              <RankingLeaderboardWrapper>
-                
-                <RankingBadgeWrapper>
-                <RankingBadge style={{ marginTop: '200px' }}>
-                  <RankingBadgeInner>
-                    <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
-                  </RankingBadgeInner>
-                </RankingBadge>
-                <RankingTitleText>Mr. Titan</RankingTitleText>
-                </RankingBadgeWrapper>
-                
-                <RankingBadgeWrapper>
-                <RankingBadge>
-                  <RankingBadgeInner>
-                    <RankingImgInner src={RankingImg1} style={{ marginTop: '100px' }} />
-                  </RankingBadgeInner>
-                </RankingBadge>
-                <RankingTitleText>Sakurako</RankingTitleText>
-                </RankingBadgeWrapper>
 
-                <RankingBadgeWrapper>
-                <RankingBadge style={{ marginTop: '200px' }}>
-                  <RankingBadgeInner>
-                    <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
-                  </RankingBadgeInner>
-                </RankingBadge>
-                <RankingTitleText>wkfgn45698</RankingTitleText>
-                </RankingBadgeWrapper>
+        {/* Card 1 */}
+        <GameCard>
+          <GameCardFace1 />
+          <GameCardInner>
+            <GameCardTitle>Street Pets Pioneer</GameCardTitle>
+            <GameCardText>
+              Launch your game on every platform without loosing
+              sleep. Let LootLocker handle all.
+              <br />
+              <br />
+              <GameCardDetailLink href='#' target="_self">Details →</GameCardDetailLink>
+            </GameCardText>
+            <ReverseButton>Play</ReverseButton>
+            <Button>Stake</Button>
+          </GameCardInner>
+        </GameCard>
 
-              </RankingLeaderboardWrapper>
-            </RankingBoardWrapper>
+        {/* Card 2 */}
+        <GameCard>
+          <GameCardFace2 />
+          <GameCardInner>
+            <GameCardTitle>Unitrek</GameCardTitle>
+            <GameCardText>
+              Launch your game on every platform without loosing
+              sleep. Let LootLocker handle all.
+              <br />
+              <br />
+              <GameCardDetailLink href='#' target="_self">Details →</GameCardDetailLink>
+            </GameCardText>
+            <ReverseButton>Play</ReverseButton>
+            <Button>Stake</Button>
+          </GameCardInner>
+        </GameCard>
+
+        {/* Card 3 */}
+        <GameCard>
+          <GameCardFace3 />
+          <GameCardInner>
+            <GameCardTitle>0xpioneer</GameCardTitle>
+            <GameCardText>
+              Launch your game on every platform without loosing
+              sleep. Let LootLocker handle all.
+              <br />
+              <br />
+              <GameCardDetailLink href='#' target="_self">Details →</GameCardDetailLink>
+            </GameCardText>
+            <ReverseButton>Play</ReverseButton>
+            <Button>Stake</Button>
+          </GameCardInner>
+        </GameCard>
+      </CardsWrapper>
+
+      {/* start ranking board */}
+      <RankingBoardWrapper>
+        <RankingBoardTitle>Ranking Board</RankingBoardTitle>
+        <RankingLeaderboardWrapper>
+             
+          <RankingBadgeWrapper>
+            <RankingBadge style={{ marginTop: '200px' }}>
+              <RankingBadgeInner>
+                <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
+              </RankingBadgeInner>
+            </RankingBadge>
+            <RankingTitleText>Mr. Titan</RankingTitleText>
+          </RankingBadgeWrapper>
+                
+          <RankingBadgeWrapper>
+            <RankingBadge>
+              <RankingBadgeInner>
+                <RankingImgInner src={RankingImg1} style={{ marginTop: '100px' }} />
+              </RankingBadgeInner>
+            </RankingBadge>
+            <RankingTitleText>Sakurako</RankingTitleText>
+          </RankingBadgeWrapper>
+
+          <RankingBadgeWrapper>
+            <RankingBadge style={{ marginTop: '200px' }}>
+              <RankingBadgeInner>
+                <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
+              </RankingBadgeInner>
+            </RankingBadge>
+            <RankingTitleText>wkfgn45698</RankingTitleText>
+          </RankingBadgeWrapper>
+
+        </RankingLeaderboardWrapper>
+      </RankingBoardWrapper>
+
       </ContentWrapper>
-    </BannerWrapper>
+    
+      {/* start partners */}
+      <RankingBoardTitle>
+        Partners
+      </RankingBoardTitle>
+      <PartnersWrapper>
+        <PartnersInnerWrapper>
+
+          {/* partner 1 */}
+          <PartnersBannerWrapper>
+            1
+          </PartnersBannerWrapper>
+
+        </PartnersInnerWrapper>
+      </PartnersWrapper>
+      
   </PageWrapper>
+  <FooterWrapper>
+        <Footer />
+  </FooterWrapper>
     </>
   );
 }

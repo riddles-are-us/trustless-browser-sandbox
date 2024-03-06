@@ -4,10 +4,18 @@ import GameCard1Img from '../assets/img/street-pets-pioneer.png'
 import GameCard2Img from '../assets/img/unitrek.png'
 import GameCard3Img from '../assets/img/0xpioneer.png'
 import RankingBadgeBackground from '../assets/img/ranking-badge-background.png'
+import PartnersBackground from '../assets/img/a-footer-fire-full.png'
 
 /* wrappers */
 
 export const PageWrapper = styled.div`
+    max-width: 100vw;
+    min-height: 100vh;
+    background: rgb(18,1,34);
+    background: linear-gradient(180deg, rgba(18,1,34,1) 0%, rgba(0,0,0,1) 100%);
+`
+
+export const TopPageWrapper = styled.div`
     max-width: 100vw;
     min-height: 100vh;
     background-image: url(${bannerBackground});
@@ -36,12 +44,20 @@ export const HeaderWrapper = styled.div`
     padding: 10px;
 `
 
+export const FooterWrapper = styled.div`
+    width: 100vw;
+    max-width: 1320px;
+    background: #1F0F2E;
+    color: #FFF;
+    padding: 10px;
+`
+
 export const CardsWrapper = styled.div`
     display: flex;
     justify-content: space-around;
     width: 100%;
     max-width: 1320px;
-    margin: 0 auto;
+    margin: -200px auto 0 auto;
     padding: 20px 0;
 `
 
@@ -52,8 +68,8 @@ export const RankingBoardWrapper = styled.div`
 `
 
 export const RankingLeaderboardWrapper = styled.div`
-    min-width: 80%;
-    max-width: 1100px;
+    min-width: 60%;
+    max-width: 1000px;
     display: flex;
     justify-content: space-around;
     margin: 0 auto;
@@ -66,6 +82,31 @@ export const RankingBadgeWrapper = styled.div`
 export const RankingImgInner = styled.img`
     border-radius: 50%;
     max-width: 50%;
+`
+
+export const PartnersWrapper = styled.div`
+    width: 100%;
+    min-height: 400px;
+    color: #FFF;
+    background-image: url(${PartnersBackground});
+    background-size: cover;
+    padding-top: 150px;
+`
+
+export const PartnersInnerWrapper = styled.div`
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1320px;
+    margin: -200px auto 0 auto;
+    padding: 20px 0;
+`
+
+export const PartnersBannerWrapper = styled.div`
+    margin: 20px;
+    padding: 40px;
+    border-radius: 20px;
+    background: #FFF;
 `
 
 /* text & links */
@@ -130,6 +171,10 @@ export const GameCard = styled.div`
     border-radius: 20px;
     flex: 1;
     margin: 0 10px;
+    border: 1px solid transparent;
+    &:hover {
+        border: 1px solid rgba(17, 240, 248, 1);
+    }
 `
 
 export const GameCardFace1 = styled.div`
@@ -184,6 +229,8 @@ export const GameCardDetailLink = styled.a`
     }
 `
 
+/* ranking */
+
 export const RankingBadge = styled.div`
     width: 374px;
     min-width: 374px;
@@ -235,7 +282,7 @@ export const ReverseButton = styled.div`
 `
 
 export const Input = styled.input`
-    border: 1px solid #222;
+    border: 1px solid rgba(17, 240, 248, 1);
     background: rgba(22, 22, 22, 0.95);
     border-radius: 20px;
     padding: 15px 20px;
