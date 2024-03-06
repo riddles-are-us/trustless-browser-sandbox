@@ -67,6 +67,11 @@ export const FooterSectionInner = styled.div`
     margin: auto;
 `
 
+export const FooterIconWrapper = styled.span`
+    margin-left: 15px;
+    cursor: pointer;
+`
+
 export const CardsWrapper = styled.div`
     display: flex;
     justify-content: space-around;
@@ -162,6 +167,7 @@ export const RankingBoardTitle = styled.h3`
     color: #FFF;
     font-weight: 600;
     text-align: center;
+    margin: 50px;
 `
 
 export const NormalText = styled.p`
@@ -355,6 +361,7 @@ export const TableRow = styled.div`
     text-align: right;
     &:hover {
         background: #120122;
+        cursor: pointer;
     }
 `
 export const TableCell = styled.div`
