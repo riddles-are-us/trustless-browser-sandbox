@@ -22,6 +22,7 @@ import {
   selectGameLoaded,
   setLoaded,
   appendCommand,
+  setReadyToSubmit,
 } from "../../data/game";
 
 import { ImageMD5 } from "./js/config";
@@ -100,7 +101,9 @@ export function GameController() {
       const state = JSON.parse(stateStr);
             console.log(":state:", state);
       setState(state);
-      if (state.enemy_hp <= 0) {
+      if (state.hero_hp <= 0) {
+          dispatch(setReadyToSubmit(true));
+      } else if (state.enemy_hp <= 0) {
           gameplay.challenge_next_floor();
           const stateStr = gameplay.state();
           const state = JSON.parse(stateStr);
@@ -127,62 +130,59 @@ export function GameController() {
 
   return (
     <>
-            {gameLoaded && state  &&
-            <>
-              {state.hero_hp > 0 &&
-              <>
-              <Row className="mb-3">
-                <Col>
-                    <h3 className="float-start">Floor: {state.floor}</h3>
-                    <Button className="float-end" onClick={()=>endTurn()}>next round</Button>
-                </Col>
-              </Row>
-              <Row className="mb-3">
-                <Col>
-                        <img src={cheems} width="100%"></img>
-                </Col>
-                <Col>
-                        <h4>Hp</h4>
-                        <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
-                        <h4 className="mt-2">Block</h4>
-                        <ProgressBar now={state.hero_block * 3} label={`${state.hero_block}`} />
-                        <h4 className="mt-2">Power</h4>
-                        <ProgressBar now={state.hero_power * 10} label={`${state.hero_power}`} />
-                </Col>
-                <Col>
-                        <img src={cheemM01} width="100%"></img>
+       {gameLoaded && state &&
+       <>
+         {state.hero_hp > 0 &&
+         <>
+         <Row className="mb-3">
+           <Col>
+               <h3 className="float-start">Floor: {state.floor}</h3>
+               <Button className="float-end" onClick={()=>endTurn()}>next round</Button>
+           </Col>
+         </Row>
+         <Row className="mb-3">
+           <Col>
+                   <img src={cheems} width="100%"></img>
+           </Col>
+           <Col>
+                   <h4>Hp</h4>
+                   <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
+                   <h4 className="mt-2">Block</h4>
+                   <ProgressBar now={state.hero_block * 3} label={`${state.hero_block}`} />
+                   <h4 className="mt-2">Power</h4>
+                   <ProgressBar now={state.hero_power * 10} label={`${state.hero_power}`} />
+           </Col>
+           <Col>
+                   <img src={cheemM01} width="100%"></img>
 
-                </Col>
-                <Col>
-                        <h4>Hp: {state.enemy_name}</h4>
-                        <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
-                        <h4 className="mt-2">Block</h4>
-                        <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
-                        <h4 className="mt-2">NextMove:
-                                <Move obj ={state.enemy_action}></Move>
-                        </h4>
-                </Col>
-              </Row>
-              <Row className="mb-5 text-center">
-                <Col className="shadow-lg p-2">
-                    {state["hand_of_card"].map((card:any, i:number) => {
-                        return <button className="btn btn-light" onClick={()=>{pickCard(i)}}><Card obj={card}></Card></button>
-                    })}
-                </Col>
-              </Row>
-              </>
-              }
-              {state.hero_hp <= 0 &&
-              <Row>
-                <Col>
-                  <img src={gameover} width="500px"></img>
-                </Col>
-              </Row>
-              }
-            </>
-            }
-      <Row>
-        <Transaction md5={ImageMD5} ></Transaction>
-      </Row>
+           </Col>
+           <Col>
+                   <h4>Hp: {state.enemy_name}</h4>
+                   <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
+                   <h4 className="mt-2">Block</h4>
+                   <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
+                   <h4 className="mt-2">NextMove:
+                           <Move obj ={state.enemy_action}></Move>
+                   </h4>
+           </Col>
+         </Row>
+         <Row className="mb-5 text-center">
+           <Col className="shadow-lg p-2">
+               {state["hand_of_card"].map((card:any, i:number) => {
+                   return <button className="btn btn-light" onClick={()=>{pickCard(i)}}><Card obj={card}></Card></button>
+               })}
+           </Col>
+         </Row>
+         </>
+         }
+         {state.hero_hp <= 0 &&
+         <Row>
+           <Col>
+             <img src={gameover} width="500px"></img>
+           </Col>
+         </Row>
+         }
+       </>
+       }
     </>);
 }

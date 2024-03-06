@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { selectReadyToSubmit } from "../data/game";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import HistoryTasks from "../components/History";
@@ -16,6 +17,7 @@ import { ModalOptions } from "../types/layout";
 //import { ImageMD5 } from "../games/streetpets/js/config";
 
 import { GameController } from "../games/roguelike/controller";
+import { Transaction } from "../components/Transaction";
 import { ImageMD5 } from "../games/roguelike/js/config";
 
 
@@ -27,6 +29,7 @@ import {
 export function Main() {
   const dispatch = useAppDispatch();
   const [currentModal, setCurrentModal] = useState<ModalOptions | null>(null);
+  let readyToSubmit = useAppSelector(selectReadyToSubmit);
   let l2account = useAppSelector(selectL2Account);
 
 
@@ -48,8 +51,15 @@ export function Main() {
       </Container>
 
       { 1 && (
-        <>
           <Container style={{ position: "relative", top: "10px", paddingBottom:"100px"}}>
+          </Container>
+      )}
+      { readyToSubmit && (
+        <>
+          <Container className="justify-content-center">
+              <Row>
+                  <Transaction md5={ImageMD5} ></Transaction>
+              </Row>
           </Container>
           <Container>
             <HistoryTasks md5={ImageMD5}></HistoryTasks>
