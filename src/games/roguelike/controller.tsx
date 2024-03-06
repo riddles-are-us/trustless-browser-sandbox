@@ -1,10 +1,5 @@
 import init, * as gameplay from "./js";
-import { Card, Move } from "./card";
-import cheems from "../../images/cheems.jpg";
-import cheemM01 from "../../images/cheems-monster-01.jpg";
-import gameover from "../../images/gameover.png";
-
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Button, Form, ProgressBar } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
@@ -12,12 +7,12 @@ import Col from "react-bootstrap/Col";
 import InputGroup from 'react-bootstrap/InputGroup';
 import {Transaction} from "../../components/Transaction";
 
+// Controller Related STUFF
+import { Card, Move } from "./card";
+import cheems from "../../images/cheems.jpg";
+import cheemM01 from "../../images/cheems-monster-01.jpg";
+import gameover from "../../images/gameover.png";
 
-// ZKWASM RELATED STUFF
-import { NewProveTask } from "../../modals/addNewProveTask";
-import { selectCommands, selectMessageToSigned, selectMsgHash } from "../../data/game";
-import { numToUint8Array, SignatureWitness } from "../../utils/proof";
-import { PrivateKey, PublicKey, bnToHexLe } from "delphinus-curves/src/altjubjub";
 
 import {
   selectL2Account,
@@ -45,26 +40,7 @@ export function GameController() {
 
   const l2account = useAppSelector(selectL2Account);
   const gameLoaded = useAppSelector(selectGameLoaded);
-  const commands = useAppSelector(selectCommands);
-
-  const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
-  const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
-  const [witness, setWitness] = useState<Array<string>>([]);
-  const [sigWitness, setSigWitness] = useState<Array<string>>([]);
-  const [instance, setInstance] = useState<Array<string>>([]);
   const [state, setState] = useState<any>(null);
-
-  function updatePreMerkle(index: number, value: bigint) {
-    const a = merklePreRoot;
-    a[index] = value;
-    setPreMerkleRoot(a);
-  }
-
-  function updatePostMerkle(index: number, value: bigint) {
-    const a = merklePostRoot;
-    a[index] = value;
-    setPostMerkleRoot(a);
-  }
 
   function loadGame(l2account: number) {
     (init as any)().then(() => {
