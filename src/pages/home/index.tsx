@@ -39,6 +39,8 @@ import {
   Spacer50,
   Spacer100,
   TableRow,
+  BulletBlue,
+  BulletGrey,
 } from '../../styles'
 import Header from '../../components/header';
 import Footer from '../../components/footer';
@@ -51,7 +53,8 @@ import PAnimoca from '../../assets/img/p-animoca.png'
 import Badge1 from '../../assets/img/Badge1.png'
 import Badge2 from '../../assets/img/Badge2.png'
 import Badge3 from '../../assets/img/Badge3.png'
-
+import ArrowRight from '../../assets/img/arrow-right.png'
+import ArrowLeft from '../../assets/img/arrow-left.png'
 
 export function Home() {
   const navigate = useNavigate();
@@ -89,6 +92,7 @@ export function Home() {
 
       {/* cards */}
        <CardsWrapper>
+        <img src={ArrowLeft} width={80} height={80} style={{ margin: 'auto', alignItems: 'center' }} />
 
         {/* Card 1 */}
         <GameCard>
@@ -140,6 +144,15 @@ export function Home() {
             <Button>Stake</Button>
           </GameCardInner>
         </GameCard>
+
+        <img src={ArrowRight} width={80} height={80} style={{ margin: 'auto', alignItems: 'center' }} />
+      </CardsWrapper>
+      <CardsWrapper style={{ marginTop: 'auto', justifyContent: 'space-between', width: '200px' }}>
+        <BulletBlue />
+        <BulletGrey />
+        <BulletGrey />
+        <BulletGrey />
+        <BulletGrey />
       </CardsWrapper>
 
       {/* start ranking board */}
@@ -186,14 +199,14 @@ export function Home() {
 
             {/* title row */}
             <TitleRow>
-              <TableCell>
+              <TableCell fixedWidth={true}>
                 <TableTitle>
-                  #
+                  
                 </TableTitle>
               </TableCell>
-              <TableCell>
+              <TableCell fixedWidth={true}>
                 <TableTitle>
-                  User
+                  
                 </TableTitle>
               </TableCell>
               <TableCell>
@@ -221,8 +234,8 @@ export function Home() {
 
           {/* table contents. will need to map, but for demoing will just hardcode the lines */}
           <TableRow>
-            <TableCell><img src={Badge1} width={24} /></TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}><img src={Badge1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -230,8 +243,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell><img src={Badge2} width={24} /></TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}><img src={Badge2} width={24} /></TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -239,8 +252,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell><img src={Badge3} width={24} /></TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}><img src={Badge3} width={24} /></TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -248,8 +261,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>4</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>4</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -257,8 +270,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>5</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>5</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -266,8 +279,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>6</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>6</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -275,8 +288,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>7</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>7</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -284,8 +297,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>8</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>8</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -293,8 +306,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>9</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>9</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>
@@ -302,8 +315,8 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell>10</TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
+            <TableCell fixedWidth={true}>10</TableCell>
+            <TableCell fixedWidth={true}><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
             <TableCell> 7654387</TableCell>
             <TableCell>934774575</TableCell>

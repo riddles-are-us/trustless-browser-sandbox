@@ -6,6 +6,10 @@ import GameCard3Img from '../assets/img/0xpioneer.png'
 import RankingBadgeBackground from '../assets/img/ranking-badge-background.png'
 import PartnersBackground from '../assets/img/a-footer-fire-full.png'
 
+type TableCellProps = {
+    fixedWidth?: boolean;
+}
+
 /* wrappers */
 
 export const PageWrapper = styled.div`
@@ -67,7 +71,7 @@ export const FooterSectionInner = styled.div`
 `
 
 export const FooterIconWrapper = styled.span`
-    margin-left: 15px;
+    margin-left: 40px;
     cursor: pointer;
 `
 
@@ -302,6 +306,20 @@ export const Spacer100 = styled.div`
     margin: 50px auto;
 `
 
+export const BulletGrey = styled.div`
+    background: #D9D9D9;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+`
+
+export const BulletBlue = styled.div`
+    background: #11F0F8;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+`
+
 export const Button = styled.div`
     display: inline-block;
     background: rgba(17, 240, 248, 1);
@@ -369,20 +387,29 @@ export const TableRow = styled.div`
     padding: 10px;
     border-radius: 20px;
     background: #231A2A;
-    text-align: right;
     &:hover {
         background: #120122;
         cursor: pointer;
     }
-`
-export const TableCell = styled.div`
+`;
+
+export const TableCell = styled.div<TableCellProps>`
     color: #FFF;
     font-size: 12pt;
     font-weight: 500;
-    flex: 1;
     text-align: left;
     padding: 0 10px;
-`
+    ${props => props.fixedWidth ? `
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: 50px; /* Or whatever fixed width you prefer */
+    ` : `
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+    `}
+`;
+
 
 export const TitleRow = styled.div`
     display: flex;
