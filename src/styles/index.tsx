@@ -282,6 +282,19 @@ export const GameCardDetailLink = styled.a`
     }
 `
 
+export const CardButtons = styled.div`
+    margin: auto;
+    align-items: center;
+    text-align: center;
+`
+
+export const CardDetailWrapper = styled.div`
+    margin: auto auto 10px auto;
+    padding-right: 15px;
+    align-items: center;
+    text-align: right;
+`
+
 /* ranking */
 
 export const RankingBadge = styled.div`
@@ -333,7 +346,25 @@ export const Button = styled.div`
     background: rgba(17, 240, 248, 1);
     background: linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
     transition: all 0.5s ease;
-    padding: 10px 30px;
+    padding: 15px 30px;
+    color: #160227;
+    font-size: 14pt;
+    font-weight: 600;
+    border-radius: 20px;
+    margin: 10px;
+    width: auto;
+    cursor: pointer;
+    &:hover {
+         
+    }
+`
+
+export const StakeButton = styled.div`
+    display: inline-block;
+    background: rgba(17, 240, 248, 1);
+    background: linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
+    transition: all 0.5s ease;
+    padding: 10px 50px;
     color: #160227;
     font-size: 14pt;
     font-weight: 600;
@@ -349,7 +380,7 @@ export const Button = styled.div`
 export const ReverseButton = styled.div`
     display: inline-block;
     background: transparent;
-    padding: 10px 30px;
+    padding: 15px 30px;
     color: #FFF;
     font-size: 14pt;
     font-weight: 600;

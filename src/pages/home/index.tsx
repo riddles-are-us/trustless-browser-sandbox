@@ -41,6 +41,9 @@ import {
   TableRow,
   BulletBlue,
   BulletGrey,
+  StakeButton,
+  CardDetailWrapper,
+  CardButtons,
 } from '../../styles'
 import Header from '../../components/header';
 import Footer from '../../components/footer';
@@ -104,10 +107,15 @@ export function Home() {
               sleep. Let LootLocker handle all.
               <br />
               <br />
-              <GameCardDetailLink href='#' target="_self">Details →</GameCardDetailLink>
-            </GameCardText>
-            <ReverseButton onClick={handlePlayClick}>Play</ReverseButton>
-            <Button>Stake</Button>
+              </GameCardText>
+              <CardDetailWrapper>
+              <GameCardDetailLink href='#' target="_self" style={{ margin: 'auto', textAlign: 'right'}}>Details {'>'}</GameCardDetailLink>
+              </CardDetailWrapper>
+              <CardButtons>
+                <ReverseButton onClick={handlePlayClick}>Play</ReverseButton>
+                <StakeButton>Stake</StakeButton>
+            </CardButtons>
+            
           </GameCardInner>
         </GameCard>
 
@@ -121,10 +129,14 @@ export function Home() {
               sleep. Let LootLocker handle all.
               <br />
               <br />
-              <GameCardDetailLink href='#' target="_self">Details →</GameCardDetailLink>
-            </GameCardText>
-            <ReverseButton onClick={handlePlayClick}>Play</ReverseButton>
-            <Button>Stake</Button>
+              </GameCardText>
+              <CardDetailWrapper>
+              <GameCardDetailLink href='#' target="_self" style={{ margin: 'auto', textAlign: 'right'}}>Details {'>'}</GameCardDetailLink>
+              </CardDetailWrapper>
+              <CardButtons>
+                <ReverseButton onClick={handlePlayClick}>Play</ReverseButton>
+                <StakeButton>Stake</StakeButton>
+            </CardButtons>
           </GameCardInner>
         </GameCard>
 
@@ -138,10 +150,14 @@ export function Home() {
               sleep. Let LootLocker handle all.
               <br />
               <br />
-              <GameCardDetailLink href='#' target="_self">Details →</GameCardDetailLink>
-            </GameCardText>
-            <ReverseButton onClick={handlePlayClick}>Play</ReverseButton>
-            <Button>Stake</Button>
+              </GameCardText>
+              <CardDetailWrapper>
+              <GameCardDetailLink href='#' target="_self" style={{ margin: 'auto', textAlign: 'right'}}>Details {'>'}</GameCardDetailLink>
+              </CardDetailWrapper>
+              <CardButtons>
+                <ReverseButton onClick={handlePlayClick}>Play</ReverseButton>
+                <StakeButton>Stake</StakeButton>
+            </CardButtons>
           </GameCardInner>
         </GameCard>
 
