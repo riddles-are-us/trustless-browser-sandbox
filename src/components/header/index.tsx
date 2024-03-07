@@ -10,7 +10,7 @@ export function Header() {
     return (
       <>
     <HeaderWrapper>
-        <img src={RiddleLogo} height={24} style={{ margin: '-3px auto auto auto' }} />
+        <img src={RiddleLogo} height={24} style={{ margin: '-10px auto auto auto' }} />
         <HeaderLink href='#' target='_self'>
             Top Games
         </HeaderLink>

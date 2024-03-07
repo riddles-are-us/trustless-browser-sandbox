@@ -225,9 +225,10 @@ export const GameCard = styled.div`
     transition: all 0.3s ease;
     &:hover {
         border: 1px solid rgba(17, 240, 248, 0.2);
-        box-shadow: 0 8px 16px 0 rgba(17, 240, 248, 0.5);
+        box-shadow: 0 0 40px 2px rgba(17, 240, 248, 1);
     }
-`
+`;
+
 
 export const GameCardFace1 = styled.div`
     background: #FFF;
@@ -389,7 +390,7 @@ export const TableRow = styled.div`
     justify-content: space-between;
     align-items: center;
     text-align: left;
-    width: 100%;
+    width: calc(100% - 220px);
     max-width: 1320px;
     margin: 10px auto;
     padding: 10px;
@@ -403,7 +404,7 @@ export const TableRow = styled.div`
 
 export const TableCell = styled.div<TableCellProps>`
     color: #FFF;
-    font-size: 12pt;
+    font-size: 18pt;
     font-weight: 500;
     text-align: left;
     margin: auto;
@@ -424,7 +425,7 @@ export const TitleRow = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: calc(100% - 220px);
     max-width: 1320px;
     margin: auto;
     padding: 10px;
