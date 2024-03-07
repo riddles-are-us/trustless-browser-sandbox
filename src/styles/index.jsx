@@ -105,11 +105,12 @@ export const RankingImgInner = styled.img`
 
 export const PartnersWrapper = styled.div`
     width: 100%;
-    min-height: 400px;
+    min-height: 646px;
     color: #FFF;
     background-image: url(${PartnersBackground});
     background-size: cover;
-    padding-top: 150px;
+    background-position: bottom;
+    padding-top: 50px;
 `
 
 export const PartnersInnerWrapper = styled.div`
@@ -117,7 +118,7 @@ export const PartnersInnerWrapper = styled.div`
     justify-content: space-around;
     width: 100%;
     max-width: 1320px;
-    margin: -200px auto 0 auto;
+    margin: 0px auto 0 auto;
     padding: 20px 0;
 `
 
@@ -141,10 +142,17 @@ export const HeaderLink = styled.a`
 export const MainTitle = styled.h1`
     font-size: 100px;
     font-weight: 600;
-    color: #FFF;
     margin: 10px auto;
     line-height: 1.3em;
+    background: linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    @supports not (-webkit-background-clip: text) {
+        color: white;
+    }
 `
+
 
 export const SubTitle = styled.h2`
     font-size: 54px;
@@ -299,7 +307,7 @@ export const Button = styled.div`
     background: rgba(17, 240, 248, 1);
     background: linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
     transition: all 0.5s ease;
-    padding: 15px 20px;
+    padding: 10px 30px;
     color: #160227;
     font-size: 14pt;
     font-weight: 600;
@@ -308,29 +316,28 @@ export const Button = styled.div`
     width: auto;
     cursor: pointer;
     &:hover {
-        background: linear-gradient(90deg, rgba(17,240,248,0.9) 0%, rgba(244,207,129,0.9) 100%);
+         
     }
 `
 
 export const ReverseButton = styled.div`
     display: inline-block;
     background: transparent;
-    padding: 15px 20px;
+    padding: 10px 30px;
     color: #FFF;
     font-size: 14pt;
     font-weight: 600;
-    border: 2px solid rgba(17, 240, 248, 1);
+    border: 2px solid transparent;
     border-radius: 20px;
     margin: 10px;
     width: auto;
     cursor: pointer;
     &:hover {
-        border: 2px solid rgba(17, 240, 248, 0.9);
+        border: 2px solid rgba(17, 240, 248, 1);
     }
 `
 
 export const Input = styled.input`
-    border: 2px solid rgba(17, 240, 248, 1);
     background: rgba(22, 22, 22, 0.95);
     border-radius: 20px;
     padding: 15px 20px;
@@ -339,6 +346,11 @@ export const Input = styled.input`
     font-weight: 600;
     margin: 10px;
     min-width: 450px;
+    border: 2px solid transparent;
+    background-image: linear-gradient(rgba(22, 22, 22, 0.95), rgba(22, 22, 22, 0.95)), linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
+    background-clip: padding-box, border-box;
+    background-origin: border-box;
+    box-shadow: 0 0 0 2px transparent;
 `
 
 /* table */

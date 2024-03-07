@@ -151,6 +151,7 @@ export function Home() {
             <RankingBadge style={{ marginTop: '200px' }}>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
+                <img src={Badge3} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText>Mr. Titan</RankingTitleText>
@@ -160,6 +161,7 @@ export function Home() {
             <RankingBadge>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg1} style={{ marginTop: '100px' }} />
+                <img src={Badge1} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText>Sakurako</RankingTitleText>
@@ -169,6 +171,7 @@ export function Home() {
             <RankingBadge style={{ marginTop: '200px' }}>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
+                <img src={Badge2} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText>wkfgn45698</RankingTitleText>
@@ -245,15 +248,6 @@ export function Home() {
           </TableRow>
 
           <TableRow>
-            <TableCell><img src={Badge1} width={24} /></TableCell>
-            <TableCell><img src={RankingImg1} width={24} /></TableCell>
-            <TableCell>Dr. Mario</TableCell>
-            <TableCell> 7654387</TableCell>
-            <TableCell>934774575</TableCell>
-            <TableCell>Unitrek</TableCell>
-          </TableRow>
-
-          <TableRow>
             <TableCell>4</TableCell>
             <TableCell><img src={RankingImg1} width={24} /></TableCell>
             <TableCell>Dr. Mario</TableCell>
@@ -321,10 +315,11 @@ export function Home() {
       </ContentWrapper>
     
       {/* start partners */}
+      
+      <PartnersWrapper>
       <RankingBoardTitle>
         Partners
       </RankingBoardTitle>
-      <PartnersWrapper>
         <PartnersInnerWrapper>
 
           {/* partner 1 */}

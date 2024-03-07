@@ -24,7 +24,7 @@ export function Footer() {
             <img src={RiddleLogoOnly} height={64}/>
           </FooterSectionInner>
           <FooterSectionInner>
-            <Button>Submit your game</Button>
+            <Button style={{ marginLeft: '-230px' }} >Submit your game</Button>
           </FooterSectionInner>
           <FooterSectionInner />
           <FooterSectionInner style={{ textAlign: 'right' }}>
