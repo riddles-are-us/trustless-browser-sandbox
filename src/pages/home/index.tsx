@@ -179,8 +179,8 @@ export function Home() {
           <RankingBadgeWrapper>
             <RankingBadge style={{ marginTop: '200px', marginRight: '-150px' }}>
               <RankingBadgeInner>
-                <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
-                <img src={Badge3} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
+                <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
+                <img src={Badge2} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText style={{ marginRight: '-230px' }}>Mr. Titan</RankingTitleText>
@@ -199,8 +199,8 @@ export function Home() {
           <RankingBadgeWrapper>
             <RankingBadge style={{ marginTop: '200px', marginLeft: '-150px' }}>
               <RankingBadgeInner>
-                <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
-                <img src={Badge2} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
+                <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
+                <img src={Badge3} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText style={{ marginLeft: '-220px' }}>wkfgn45698</RankingTitleText>
