@@ -21,10 +21,13 @@ export const PageWrapper = styled.div`
 
 export const TopPageWrapper = styled.div`
     max-width: 100vw;
-    background-image: url(${bannerBackground});
+    background-image: 
+        linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(13, 0, 25, 1) 100%),
+        url(${bannerBackground});
     background-size: cover;
+    background-position: bottom;
     padding: 20px;
-`
+`;
 
 export const ContentWrapper = styled.div`
     width: 100%;
@@ -88,6 +91,7 @@ export const RankingBoardWrapper = styled.div`
     width: 100%;
     margin: 150px auto;
     color: #FFF;
+    text-align: left;
 `
 
 export const RankingLeaderboardWrapper = styled.div`
@@ -110,16 +114,17 @@ export const RankingImgInner = styled.img`
 export const PartnersWrapper = styled.div`
     width: 100%;
     min-height: 646px;
+    max-height: 646px;
     color: #FFF;
     background-image: url(${PartnersBackground});
-    background-size: cover;
+    background-size: auto;
     background-position: bottom;
     padding-top: 50px;
 `
 
 export const PartnersInnerWrapper = styled.div`
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     width: 100%;
     max-width: 1320px;
     margin: 0px auto 0 auto;
@@ -127,10 +132,12 @@ export const PartnersInnerWrapper = styled.div`
 `
 
 export const PartnersBannerWrapper = styled.div`
-    margin: 20px;
+    margin: 10px;
     padding: 75px;
     border-radius: 20px;
     background: #FFF;
+    align-items: center;
+    justify-content: center;
 `
 
 /* text & links */
@@ -145,7 +152,7 @@ export const HeaderLink = styled.a`
 `
 export const MainTitle = styled.h1`
     font-size: 100px;
-    font-weight: 600;
+    font-weight: extra-bold;
     margin: 10px auto;
     line-height: 1.3em;
     background: linear-gradient(90deg, rgba(17,240,248,1) 0%, rgba(244,207,129,1) 100%);
@@ -381,9 +388,10 @@ export const TableRow = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-align: left;
     width: 100%;
     max-width: 1320px;
-    margin: 5px auto;
+    margin: 10px auto;
     padding: 10px;
     border-radius: 20px;
     background: #231A2A;
@@ -398,6 +406,7 @@ export const TableCell = styled.div<TableCellProps>`
     font-size: 12pt;
     font-weight: 500;
     text-align: left;
+    margin: auto;
     padding: 0 10px;
     ${props => props.fixedWidth ? `
         flex-grow: 0;

@@ -161,13 +161,13 @@ export function Home() {
         <RankingLeaderboardWrapper>
              
           <RankingBadgeWrapper>
-            <RankingBadge style={{ marginTop: '200px' }}>
+            <RankingBadge style={{ marginTop: '200px', marginRight: '-150px' }}>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
                 <img src={Badge3} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
-            <RankingTitleText>Mr. Titan</RankingTitleText>
+            <RankingTitleText style={{ marginRight: '-230px' }}>Mr. Titan</RankingTitleText>
           </RankingBadgeWrapper>
                 
           <RankingBadgeWrapper>
@@ -181,13 +181,13 @@ export function Home() {
           </RankingBadgeWrapper>
 
           <RankingBadgeWrapper>
-            <RankingBadge style={{ marginTop: '200px' }}>
+            <RankingBadge style={{ marginTop: '200px', marginLeft: '-150px' }}>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
                 <img src={Badge2} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
               </RankingBadgeInner>
             </RankingBadge>
-            <RankingTitleText>wkfgn45698</RankingTitleText>
+            <RankingTitleText style={{ marginLeft: '-220px' }}>wkfgn45698</RankingTitleText>
           </RankingBadgeWrapper>
 
         </RankingLeaderboardWrapper>
@@ -215,7 +215,7 @@ export function Home() {
                 </TableTitle>
               </TableCell>
               <TableCell>
-                <TableTitle>
+                <TableTitle style={{ marginLeft: '80px' }}>
                   Played Times
                 </TableTitle>
               </TableCell>
@@ -337,17 +337,17 @@ export function Home() {
 
           {/* partner 1 */}
           <PartnersBannerWrapper>
-            <img src={POkxVentures} />
+            <img src={POkxVentures} style={{ maxWidth: '226px' }} />
           </PartnersBannerWrapper>
 
           {/* partner 2 */}
           <PartnersBannerWrapper>
-            <img src={PScroll} />
+            <img src={PScroll} style={{ maxWidth: '226px' }} />
           </PartnersBannerWrapper>
 
           {/* partner 3 */}
           <PartnersBannerWrapper>
-            <img src={PAnimoca} />
+            <img src={PAnimoca} style={{ maxWidth: '226px', marginTop: '10px' }} />
           </PartnersBannerWrapper>
 
         </PartnersInnerWrapper>
