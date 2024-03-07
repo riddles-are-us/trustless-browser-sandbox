@@ -2,6 +2,7 @@ import React from 'react';
 import {
     HeaderWrapper,
     HeaderLink,
+    Button,
 } from '../../styles'
 import RiddleLogo from '../../assets/img/riddle-logo.png'
 
@@ -16,6 +17,7 @@ export function Header() {
         <HeaderLink href='#' target='_self'>
             Leaderboard
         </HeaderLink>
+        <Button style={{ marginLeft: '600px' }}>Connect Wallet</Button>
     </HeaderWrapper>
       </>
     );
