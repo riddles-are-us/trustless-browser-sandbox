@@ -177,30 +177,30 @@ export function Home() {
         <RankingLeaderboardWrapper>
              
           <RankingBadgeWrapper>
-            <RankingBadge style={{ marginTop: '200px', marginRight: '-150px' }}>
+            <RankingBadge style={{ marginTop: '130px', marginRight: '-150px' }}>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg2} style={{ marginTop: '100px' }} />
-                <img src={Badge2} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
+                <img src={Badge2} width={80} style={{ position: 'absolute', margin: '60px auto 0 -140px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText style={{ marginRight: '-230px' }}>Mr. Titan</RankingTitleText>
           </RankingBadgeWrapper>
                 
           <RankingBadgeWrapper>
-            <RankingBadge>
+            <RankingBadge style={{ width: '411px', maxWidth: '411px', height: '397px', maxHeight: '397px' }} >
               <RankingBadgeInner>
-                <RankingImgInner src={RankingImg1} style={{ marginTop: '100px' }} />
-                <img src={Badge1} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
+                <RankingImgInner src={RankingImg1} style={{ marginTop: '115px' }} />
+                <img src={Badge1} width={100} style={{ position: 'absolute', margin: '65px auto 0 -145px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText>Sakurako</RankingTitleText>
           </RankingBadgeWrapper>
 
           <RankingBadgeWrapper>
-            <RankingBadge style={{ marginTop: '200px', marginLeft: '-150px' }}>
+            <RankingBadge style={{ marginTop: '130px', marginLeft: '-150px' }}>
               <RankingBadgeInner>
                 <RankingImgInner src={RankingImg3} style={{ marginTop: '100px' }} />
-                <img src={Badge3} width={65} style={{ position: 'absolute', margin: '70px auto 0 -120px' }} />
+                <img src={Badge3} width={80} style={{ position: 'absolute', margin: '60px auto 0 -130px' }} />
               </RankingBadgeInner>
             </RankingBadge>
             <RankingTitleText style={{ marginLeft: '-220px' }}>wkfgn45698</RankingTitleText>

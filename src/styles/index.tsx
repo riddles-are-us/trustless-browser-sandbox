@@ -95,8 +95,8 @@ export const RankingBoardWrapper = styled.div`
 `
 
 export const RankingLeaderboardWrapper = styled.div`
-    min-width: 60%;
-    max-width: 1000px;
+    min-width: 80%;
+    max-width: 1280px;
     display: flex;
     justify-content: space-around;
     margin: 0 auto;
@@ -118,7 +118,7 @@ export const PartnersWrapper = styled.div`
     color: #FFF;
     background-image: url(${PartnersBackground});
     background-size: auto;
-    background-position: bottom;
+    background-position: center;
     padding-top: 50px;
 `
 
