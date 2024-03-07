@@ -11,13 +11,13 @@ export function Header() {
       <>
     <HeaderWrapper>
         <img src={RiddleLogo} height={24} style={{ margin: '-10px auto auto auto' }} />
-        <HeaderLink href='#' target='_self'>
+        <HeaderLink href='#' target='_self' style={{ paddingLeft: '50px' }} >
             Top Games
         </HeaderLink>
         <HeaderLink href='#' target='_self'>
-            Leaderboard
+            Top Leaderboard
         </HeaderLink>
-        <Button style={{ marginLeft: '600px' }}>Connect Wallet</Button>
+        <Button style={{ marginLeft: '500px' }}>Connect Wallet</Button>
     </HeaderWrapper>
       </>
     );

@@ -71,7 +71,7 @@ export function Home() {
     <BannerWrapper>
       <ContentWrapper>
       <Header />
-      <BannerContentWrapper>
+      <BannerContentWrapper style={{ padding: '0 100px' }} >
         <MainTitle>The riddle of the scroll</MainTitle>
         <SubTitle>TRUSTLESS GAME ROLLUP</SubTitle>
         <BannerText>
