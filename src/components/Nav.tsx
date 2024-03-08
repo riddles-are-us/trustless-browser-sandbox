@@ -4,19 +4,18 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { loginL1AccountAsync, selectL1Account, loginL2AccountAsync, selectL2Account } from "../data/accountSlice";
 import { addressAbbreviation } from "../utils/address";
 import {
-  Button,
   Container,
-  Form,
-  Nav,
   Navbar,
-  NavDropdown,
-  Row,
-  Col,
+  Nav,
 } from "react-bootstrap";
+
+import HistoryTasks from "../modals/History";
+import { NewProveTask } from "../modals/NewProveTask";
 
 import logo from "../images/logo.png";
 import Restart from "../images/restart.png";
 import HomeIcon from "../images/home-icon.png";
+import { ImageMD5 } from "../games/roguelike/js/config";
 
 interface IProps {
   currency: number;
@@ -34,38 +33,28 @@ export function MainNavBar(props: IProps) {
   }, []);
 
   return (
-    <Navbar expand="lg" style={{ zIndex: "1000" }}>
+    <Navbar style={{ zIndex: "1000" }}>
       <Container className="justify-content-md-between">
-        <Navbar.Brand href="http://www.delphinuslab.com">
-          <img src={logo} height="30" alt="logo"></img>
+        <Navbar.Brand>
+          RIDDLES
         </Navbar.Brand>
         <Nav.Item className="action-items d-flex">
-          <img src={HomeIcon} height="30" alt="restart" className="me-2 "></img>
-          <img
-            src={Restart}
-            height="30"
-            alt="restart"
-            className="me-2 restart-button"
-            onClick={() => props.handleRestart}
-          ></img>
         </Nav.Item>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {account && (
-              <>
-                <div className="divider"></div>
-                <Navbar.Text>
-                  <div>Account</div>
-                  <div>{addressAbbreviation(account.address, 4)}</div>
-                </Navbar.Text>
-              </>
-            )}
+            <Nav.Link className="px-2 my-2 py-0">
+                <NewProveTask md5={ImageMD5}></NewProveTask>
+            </Nav.Link>
+
+            <Nav.Link className="px-2 my-2 py-0">
+                <HistoryTasks md5={ImageMD5}></HistoryTasks>
+            </Nav.Link>
+
             {l2account && (
               <>
-                <div className="divider"></div>
                 <Navbar.Text>
                   <div>Processing Key</div>
                   <div>{l2account.address}</div>
@@ -73,20 +62,8 @@ export function MainNavBar(props: IProps) {
               </>
             )}
 
-            {!account && (
-              <>
-                <div className="divider"></div>
-                <Nav.Link
-                  onClick={() => dispatch(loginL1AccountAsync())}
-                  className="px-2 my-2 py-0"
-                >
-                  Connect Wallet
-                </Nav.Link>
-              </>
-            )}
             {account && !l2account && (
               <>
-                <div className="divider"></div>
                 <Nav.Link
                   onClick={() => dispatch(loginL2AccountAsync(account!))}
                   className="px-2 my-2 py-0"
@@ -95,6 +72,29 @@ export function MainNavBar(props: IProps) {
                 </Nav.Link>
               </>
             )}
+
+            {!account && (
+              <>
+                <Nav.Link
+                  onClick={() => dispatch(loginL1AccountAsync())}
+                  className="px-2 my-2 py-0"
+                >
+                  Connect Wallet
+                </Nav.Link>
+              </>
+            )}
+
+
+            {account && (
+              <>
+                <Navbar.Text>
+                  <div>Account</div>
+                  <div>{addressAbbreviation(account.address, 4)}</div>
+                </Navbar.Text>
+              </>
+            )}
+
+
 
           </Nav>
         </Navbar.Collapse>

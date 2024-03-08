@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
-import { Container, ListGroup } from "react-bootstrap";
+import { Row, ListGroup } from "react-bootstrap";
 import { useAppSelector } from "../app/hooks";
 import "./style.scss";
 import { ModalCommon, ModalCommonProps, ModalStatus } from "./base";
@@ -13,7 +13,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { selectL1Account } from "../data/accountSlice";
 //import { selectConfig } from "../data/statusSlice";
 import { zkwasmHelper } from "../data/endpoint";
-import { Inputs } from "../utils/inputs";
+import { hexAbbreviation } from "../utils/address";
 
 export interface ProofInfoProps {
   task: Task;
@@ -35,47 +35,39 @@ export function ProofInfoModal(info: ProofInfoProps) {
   }
   const taskproof = (
     <>
-      <Container>
-        <Tabs defaultActiveKey="Inputs" className="mb-3" justify>
-          <Tab eventKey="Inputs" title="Inputs">
-            <p>
-              Public Inputs: <Inputs inputs={task.public_inputs}></Inputs>
-            </p>
-            <p>
-              Witness: <Inputs inputs={task.private_inputs}></Inputs>
-            </p>
-          </Tab>
-          <Tab eventKey="Instances" title="Instances">
-            {instances.map((proof: BN) => {
-              return (
-                <ListGroup.Item key={proof.toString("hex")}>
-                  0x{proof.toString("hex")}
-                </ListGroup.Item>
-              );
-            })}
-          </Tab>
-          <Tab eventKey="prooftranscript" title="Proof Transcripts">
-            <div className="scroll-300">
+      <Row className="proof-info">
+        <div className="title">Instances:</div>
+        <div className="items">
+          { instances.map((x, i) => {
+             return <div className="proof-badge blue" key = {i}>{`0x${x.toString("hex")}:i64`}</div>
+             })
+          }
+        </div>
+
+        <div className="title">Witness:</div>
+        <div className="items">
+          { task.private_inputs.map((x, i) => {
+             return <div className="proof-badge blue" key={i}>{`${x.toString()}`}</div>
+             })
+          }
+        </div>
+        <div className="title">Proof:</div>
+        <div className="items">
               {aggregate_proof.map((proof: BN) => {
-                return (
-                  <ListGroup.Item key={proof.toString("hex")}>
-                    0x{proof.toString("hex")}
-                  </ListGroup.Item>
-                );
+                return <div className="proof-badge green" key={proof.toString("hex")}>{`0x${hexAbbreviation(proof.toString("hex"), 2)}`}</div>
               })}
-            </div>
-          </Tab>
-          <Tab eventKey="auxdata" title="Aux Data">
+        </div>
+        <div className="title">Aux data:</div>
+        <div className="items">
             {aux.map((proof: BN) => {
               return (
-                <ListGroup.Item key={proof.toString("hex")}>
-                  0x{proof.toString("hex")}
-                </ListGroup.Item>
+                <div className="proof-badge green" key={proof.toString("hex")}>
+                  0x{hexAbbreviation(proof.toString("hex"), 2)}
+                </div>
               );
             })}
-          </Tab>
-        </Tabs>
-      </Container>
+        </div>
+      </Row>
     </>
   );
   const props: ModalCommonProps = {

@@ -16,13 +16,13 @@ code {
 #root,
 body,
 html {
-  --bg-blue: #405461;
-  --navbar-bg: #32414b;
+  --bg-blue: #ebdbb2;
+  --navbar-bg: #d5c4a1;
   --button-main: #546f80;
-  --button-hover: #658498;
+  --button-hover: #fabd2f;
   --button-click: #2e3c46;
-  --info-text-color: #d2c4b2;
-  --blue-text-color: #94c4ca;
+  --info-text-color: #795f51;
+  --blue-text-color: #795f51;
   --table-bg: #546f80;
   --table-border-color: #2e3c46;
   --icon-hover: #f1f0e1;

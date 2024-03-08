@@ -2,6 +2,8 @@
   background-color: var(--navbar-bg);
   border: none;
   color: var(--blue-text-color) !important;
+  padding-top: 0px;
+  padding-bottom: 0px;
 
   .navbar-collapse {
     @media (min-width: 992px) {
@@ -10,16 +12,19 @@
   }
 
   .navbar-brand {
+    padding-top: 0px;
+    padding-bottom: 0px;
     border: none;
+    color: #795f51;
+    font-family: "Impact"
   }
   .navbar-text {
     font-family: "Allerta";
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    letter-spacing: 0.15em;
-
+    font-size: 12px;
     color: var(--blue-text-color) !important;
+    margin-left: 10px;
   }
   .nav-link {
     border: none;
@@ -27,12 +32,13 @@
     font-family: "Allerta";
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 12px;
     line-height: 40px;
-    letter-spacing: 0.15em;
     text-align: center;
     color: var(--blue-text-color) !important;
     transition: 0.3s all ease;
+    margin-left: 10px;
+
 
     &:hover,
     &:focus {
@@ -43,7 +49,7 @@
   }
   .divider {
     border-left: 2px solid #546f80;
-    height: 40px;
+    height: 30px;
     margin: auto 10px;
     @media (max-width: 992px) {
       display: none;
@@ -52,7 +58,6 @@
 
   .action-items {
     width: 500px;
-    padding: 0 20px;
   }
 
   .restart-button {
@@ -64,56 +69,40 @@
   }
 }
 
-.currency-display {
-  background-color: var(--button-main);
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-family: "Be Vietnam";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-
-  color: var(--blue-text-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .tag {
-    font-family: "Be Vietnam";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 10px;
-
-    color: var(--blue-text-color);
-    position: relative;
-    top: -5px;
-  }
-  .value {
-    min-width: 50px;
-    font-family: "Be Vietnam";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    text-align: end;
-    color: var(--blue-text-color);
-  }
+.history {
+ padding: 20px;
+ background-color:#ebdbb2;
 }
 
-.table {
-  border: 2px solid var(--table-border-color);
-  font-family: "Inter";
+.history-table {
+  font-family: "Verdana";
   font-style: normal;
-  font-weight: 400;
-  font-size: 19px;
   line-height: 23px;
   text-align: center;
-
-  color: #b5e5eb;
-  th,
-  td {
-    border: 2px solid var(--table-border-color);
+  th {
+    font-size: 14px;
+    font-weight: 200;
+    color:#ebdbb2;
+    div {
+        background-color: #83a598;
+        margin:1px;
+        padding: 3px 5px 3px 5px;
+        border-radius: 5px;
+    }
   }
   td {
-    font-size: 14px;
+    color: #795f51;
+    div {
+        background-color: #d5c4a1;
+        margin:1px;
+        padding: 3px 5px 3px 5px;
+        border-radius: 5px;
+    }
+  }
+  td {
+    font-size: 10px;
+  }
+  .Done {
+    background: #b8bb26
   }
 }

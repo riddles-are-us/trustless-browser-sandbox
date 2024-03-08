@@ -171,3 +171,15 @@ div.content {
     background-color: var(--button-hover);
   }
 }
+
+.wasm-logo {
+  width:100px;
+  background-color: black;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  position: fixed;
+  display: block;
+  bottom: 0px;
+  right: 0px;
+}

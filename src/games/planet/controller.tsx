@@ -1,7 +1,6 @@
 /* eslint-disable no-var */
 /* eslint-disable prefer-const */
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "bootswatch/dist/slate/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
@@ -14,7 +13,6 @@ import lotimage from "../../images/lot.jpg";
 
 // ZKWASM RELATED STUFF
 import { PrivateKey } from "delphinus-curves/src/altjubjub";
-import { NewProveTask } from "../../modals/addNewProveTask";
 import { SignatureWitness, numToUint8Array } from "../../utils/proof";
 
 import { selectL2Account } from "../../data/accountSlice";
@@ -220,61 +218,6 @@ export function GameController() {
                 </Form>
               </Col>
             </Row>
-            <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Movements</Form.Label>
-                <Form.Control
-                  as="input"
-                  value={commands.map((x) => ` ${x}:i64`).join(";")}
-                />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>PublicKey-X</Form.Label>
-                <Form.Control as="input" value={witness[0]} />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>PublicKey-Y</Form.Label>
-                <Form.Control as="input" value={witness[1]} />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Signature-X</Form.Label>
-                <Form.Control as="input" value={witness[2]} />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Signature-Y</Form.Label>
-                <Form.Control as="input" value={witness[3]} />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Signature-S</Form.Label>
-                <Form.Control as="input" value={witness[4]} />
-              </Form.Group>
-            </Form>
-            <NewProveTask
-              md5="EDDF817B748715A7F2708873D7346941"
-              inputs={instances}
-              witness={witness}
-              OnTaskSubmitSuccess={() => {
-                return;
-              }}
-            ></NewProveTask>
           </Container>
         </>
       )}

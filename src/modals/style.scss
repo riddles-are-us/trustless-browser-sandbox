@@ -9,3 +9,145 @@
     max-height: 200px;
     overflow-y:scroll;
 }
+
+.history {
+ padding: 20px;
+}
+
+.history-table {
+  width: 100%;
+  font-family: "Verdana";
+  font-style: normal;
+  line-height: 23px;
+  text-align: center;
+  th {
+    font-size: 14px;
+    font-weight: 200;
+    color:#ebdbb2;
+    div {
+        background-color: #83a598;
+        margin:1px;
+        padding: 3px 5px 3px 5px;
+        border-radius: 5px;
+    }
+  }
+  td {
+    color: #795f51;
+    div {
+        background-color: #d5c4a1;
+        margin:1px;
+        padding: 3px 5px 3px 5px;
+        border-radius: 5px;
+    }
+  }
+  td {
+    font-size: 10px;
+  }
+  .Done {
+    background: #b8bb26
+  }
+}
+
+.modal-content {
+  border-radius: 30px;
+}
+
+.modal-body {
+  background-color:#ebdbb2;
+}
+
+.modal-footer {
+  background-color:#ebdbb2;
+  border:0px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.modal-header {
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  background-color: #795f5e;
+  padding-left: 30px;
+  color:#ebdbb2;
+  font-size: 25px;
+  border:0px;
+  justify-content: space-between;
+  img {
+  }
+}
+
+button.btn-confirm {
+  background-color: #fb4934;
+  color: #ebdbb2;
+  font-size: 15px;
+  box-shadow: 2px 2px 2px #b7ab8b;
+}
+
+button.btn-confirm:hover {
+  background-color: #fb4934;
+  color: #ebdbb2;
+  font-size: 15px;
+  box-shadow: 4px 4px 2px #b7ab8b;
+}
+
+div.proof-info {
+  padding-left:19px;
+  padding-right:19px;
+}
+
+div.title {
+  padding: 0px;
+  font-size: 18px;
+  font-family: "Verdana";
+  color: #795f5e;
+  margin-right: 10px;
+}
+
+div.blue {
+  background-color: #83a598;
+}
+
+div.green {
+  background-color: #b8bb26;
+}
+
+div.items {
+  margin-top: 5px;
+  padding: 0px;
+  display: flex;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+div.proof-badge {
+  margin-right: 3px;
+  font-size: 12px;
+  min-width: 40px;
+  text-align: center;
+  border-radius: 3px;
+  padding: 3px;
+  margin-bottom: 3px;
+}
+
+div.key-line {
+  margin-top: 7px;
+  display: flex;
+  background-color:#d5c4a1;
+  color: #795f5e;
+  padding:5px;
+  font-size: 12px;
+    border-radius: 5px;
+  .cap {
+    padding:5px;
+    font-size: 15px;
+  }
+  .info {
+    background-color: #ebdbb2;
+    margin-left: 5px;
+    margin-top: 3px;
+    padding:4px;
+    height: 28px;
+    align-self: center;
+    border-radius: 5px;
+  }
+}

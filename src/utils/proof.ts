@@ -17,6 +17,14 @@ export function bytesToBN(data:Uint8Array) {
   return bns;
 }
 
+export function u64ToHex(data:Array<bigint>) {
+  let bn = new BN(0);
+  for (let i = 0; i < data.length; i += 32) {
+    bn = (bn.shln(64)).add(new BN(data[i].toString(16)));
+  }
+  return bn.toString(16);
+}
+
 export function bytesToU64Hex(data:Uint8Array) {
   const bns = [];
   for (let i = 0; i < data.length; i += 8) {
@@ -51,8 +59,6 @@ export function BNToUint8Array(num: bigint): Uint8Array {
     }
     return arr;
 }
-
-
 
 export class SignatureWitness {
   pkey: Array<string>;

@@ -2,15 +2,11 @@
 import { useState } from "react";
 import {
   Button,
-  Container,
-  FloatingLabel,
-  Form,
-  FormLabel,
-  ListGroup,
   Modal,
   Spinner,
 } from "react-bootstrap";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import closeIcon from "../assets/main/modal_close.png";
+import { useAppSelector } from "../app/hooks";
 import "./style.scss";
 import React from "react";
 import { selectL1Account } from "../data/accountSlice";
@@ -70,21 +66,24 @@ export function ModalCommon(props: ModalCommonProps) {
         show={show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
+        backgroundColor="#ebdbb2"
         centered
         dialogClassName="modal-90w"
         role="dialog"
       >
-        <Modal.Header>{props.title}</Modal.Header>
+        <Modal.Header>
+          <div className="left-item">{props.title}</div>
+          <a>
+          <img src={closeIcon} className="pull-right" onClick={handleClose}/>
+          </a>
+        </Modal.Header>
         <Modal.Body className="show-grid">{props.children}</Modal.Body>
         <Modal.Footer>
           <Message></Message>
 
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
           {props.handleConfirm && props.status === ModalStatus.PreConfirm && (
             <Button
-              variant="primary"
+              variant="confirm"
               disabled={props.valid !== true || account?.address === undefined}
               onClick={props.handleConfirm}
             >

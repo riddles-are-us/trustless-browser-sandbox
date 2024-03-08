@@ -38,6 +38,7 @@ export const loadStatus = createAsyncThunk(
     const helper = state.endpoint.zkWasmServiceHelper;
     const tasksInfo = await helper.loadTasks(query);
     if (tasksInfo) {
+       console.log("tasks is", tasksInfo.data);
        return tasksInfo.data;
     } else {
        return [];

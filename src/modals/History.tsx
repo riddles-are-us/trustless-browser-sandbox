@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Card, Container, Row, Col, Table, Spinner } from "react-bootstrap";
 import { loadStatus, selectTasks} from "../data/statusSlice";
 import { ProofInfoModal } from "../modals/proofInfo";
+import { ModalCommon, ModalCommonProps, ModalStatus } from "./base";
 import "./style.scss";
 
 import {
@@ -35,9 +36,8 @@ export default function ImageDetail(props: UserHistoryProps) {
     }
   }, [account]);
 
-  return (
-      <Container className="history">
-            <h3>Game Play History</h3>
+  const taskhistory = (
+      <Container>
             <table className="history-table">
               <thead>
                 <tr>
@@ -81,4 +81,16 @@ export default function ImageDetail(props: UserHistoryProps) {
             </table>
       </Container>
   );
+  const modalProps: ModalCommonProps = {
+    btnLabel: "History",
+    title: "Game History",
+    childrenClass: "",
+    valid: true,
+    status: ModalStatus.PreConfirm,
+    children: taskhistory,
+    message: "",
+    confirmLabel: "verify on chain",
+  };
+  return ModalCommon(modalProps);
+
 }

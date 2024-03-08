@@ -1,11 +1,11 @@
 import init, * as gameplay from "./js";
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { Button, Form, ProgressBar } from "react-bootstrap";
+import { Button, ProgressBar, Container} from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import InputGroup from 'react-bootstrap/InputGroup';
-import {Transaction} from "../../components/Transaction";
+import "../style.scss";
+import "./style.scss";
 
 // Controller Related STUFF
 import { Card, Move } from "./card";
@@ -16,6 +16,8 @@ import gameover from "../../images/gameover.png";
 
 import {
   selectL2Account,
+  selectL1Account,
+  loginL2AccountAsync
 } from "../../data/accountSlice";
 
 import {
@@ -118,6 +120,8 @@ export function GameController() {
 
   }
 
+  const account = useAppSelector(selectL1Account);
+
   useEffect(() => {
     if (l2account) {
         if (gameLoaded == false) {
@@ -129,60 +133,79 @@ export function GameController() {
 
 
   return (
-    <>
+    <Container className="mt-5">
+       {!l2account &&
+          <div className="load-game">
+              <img src={cheemM01} width="100%"></img>
+              <Button
+                  onClick={() => dispatch(loginL2AccountAsync(account!))}
+               > Start Play </Button>
+          </div>
+       }
        {gameLoaded && state &&
        <>
          {state.hero_hp > 0 &&
          <>
-         <Row className="mb-3">
+         <Row className="mb-3 text-center">
            <Col>
-               <h3 className="float-start">Floor: {state.floor}</h3>
-               <Button className="float-end" onClick={()=>endTurn()}>next round</Button>
+               <h3>Floor: {state.floor}</h3>
            </Col>
          </Row>
          <Row className="mb-3">
+                 <Col></Col>
            <Col>
                    <img src={cheems} width="100%"></img>
            </Col>
            <Col>
-                   <h4>Hp</h4>
-                   <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
-                   <h4 className="mt-2">Block</h4>
+                   <div className="hp">
+                     <div>Hp</div>
+                     <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
+                   </div>
+                   <div className="mt-2">Block</div>
                    <ProgressBar now={state.hero_block * 3} label={`${state.hero_block}`} />
-                   <h4 className="mt-2">Power</h4>
+                   <div className="mt-2">Power</div>
                    <ProgressBar now={state.hero_power * 10} label={`${state.hero_power}`} />
+           </Col>
+           <Col>
+                   <div>Hp: {state.enemy_name}</div>
+                   <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
+                   <div className="mt-2">Block</div>
+                   <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
+                   <div className="mt-2">NextMove:
+                           <Move obj ={state.enemy_action}></Move>
+                   </div>
            </Col>
            <Col>
                    <img src={cheemM01} width="100%"></img>
 
            </Col>
-           <Col>
-                   <h4>Hp: {state.enemy_name}</h4>
-                   <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
-                   <h4 className="mt-2">Block</h4>
-                   <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
-                   <h4 className="mt-2">NextMove:
-                           <Move obj ={state.enemy_action}></Move>
-                   </h4>
-           </Col>
+                 <Col></Col>
+
          </Row>
          <Row className="mb-5 text-center">
-           <Col className="shadow-lg p-2">
+           <Col className="p-2">
                {state["hand_of_card"].map((card:any, i:number) => {
-                   return <button className="btn btn-light" onClick={()=>{pickCard(i)}}><Card obj={card}></Card></button>
+                   return <button className="btn btn-light m-2" onClick={()=>{pickCard(i)}}><Card obj={card}></Card></button>
                })}
            </Col>
          </Row>
+         <Row className="mb-3 text-center">
+           <Col>
+               <Button onClick={()=>endTurn()}>next round</Button>
+           </Col>
+         </Row>
+
          </>
          }
          {state.hero_hp <= 0 &&
-         <Row>
+         <Row className="mb-3 text-center">
            <Col>
              <img src={gameover} width="500px"></img>
            </Col>
          </Row>
          }
+
        </>
        }
-    </>);
+    </Container>);
 }

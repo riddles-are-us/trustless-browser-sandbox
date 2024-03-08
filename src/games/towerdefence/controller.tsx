@@ -12,7 +12,6 @@ import { ImageMD5 } from "./js/config";
 
 
 // ZKWASM RELATED STUFF
-import { NewProveTask } from "../../modals/addNewProveTask";
 import { selectCommands, selectMessageToSigned, selectMsgHash } from "../../data/game";
 import { numToUint8Array, SignatureWitness } from "../../utils/proof";
 import { PrivateKey, PublicKey, bnToHexLe } from "delphinus-curves/src/altjubjub";

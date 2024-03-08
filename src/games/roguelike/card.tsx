@@ -28,20 +28,20 @@ export function Card(card: IProps) {
 
 export function Move(move: IProps) {
   return (
-    <ul>
+    <div className="enemy-move">
       {move.obj.Myself &&
       <>
-          <li>increase hp: {move.obj.Myself.hp}</li>
-          <li>increase block: {move.obj.Myself.block}</li>
+          <div>increase hp: {move.obj.Myself.hp}</div>
+          <div>increase block: {move.obj.Myself.block}</div>
       </>
       }
       {move.obj.Opposite &&
       <>
-        <li>enemy hp {move.obj.Opposite.hp}</li>
-        <li>enemy block {move.obj.Opposite.block}</li>
+        <div>enemy hp {move.obj.Opposite.hp}</div>
+        <div>enemy block {move.obj.Opposite.block}</div>
       </>
       }
 
-    </ul>
+    </div>
   )
 }

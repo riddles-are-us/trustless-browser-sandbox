@@ -58,7 +58,7 @@ export const loginL1AccountAsync = createAsyncThunk(
   'acccount/fetchAccount',
   async (thunkApi) => {
     const account = await loginL1Account();
-    const l2account = await loginL2Account(account.address);
+    //const l2account = await loginL2Account(account.address);
     return account;
   }
 );

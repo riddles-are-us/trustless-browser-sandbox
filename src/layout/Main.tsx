@@ -4,9 +4,8 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { selectReadyToSubmit } from "../data/game";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import HistoryTasks from "../components/History";
-import "bootswatch/dist/slate/bootstrap.min.css";
-//import 'bootstrap/dist/css/bootstrap.css';
+//import "bootswatch/dist/slate/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./style.scss";
 import { Container } from "react-bootstrap";
@@ -16,11 +15,11 @@ import { ModalOptions } from "../types/layout";
 //import { GameController } from "../games/streetpets/controller";
 //import { ImageMD5 } from "../games/streetpets/js/config";
 
-import { GameController } from "../games/roguelike/controller";
-import { Transaction } from "../components/Transaction";
-import { ImageMD5 } from "../games/roguelike/js/config";
+//import { GameController } from "../games/roguelike/controller";
+//import { Transaction } from "../components/Transaction";
 
-
+import { GameController } from "../games/planet/controller";
+import logo from "../images/logo.png";
 import {
   selectL2Account,
 } from "../data/accountSlice";
@@ -38,34 +37,13 @@ export function Main() {
   return (
     <>
       <MainNavBar currency={0} handleRestart={()=>{}}></MainNavBar>
-      <Container className="d-flex justify-content-center"></Container>
-      <Container className="justify-content-center">
-        <Row className="mt-3">
-          <Col>
-          </Col>
-        </Row>
-      </Container>
-
-      <Container>
       <GameController/>
-      </Container>
 
       { 1 && (
           <Container style={{ position: "relative", top: "10px", paddingBottom:"100px"}}>
           </Container>
       )}
-      { readyToSubmit && (
-        <>
-          <Container className="justify-content-center">
-              <Row>
-                  <Transaction md5={ImageMD5} ></Transaction>
-              </Row>
-          </Container>
-          <Container>
-            <HistoryTasks md5={ImageMD5}></HistoryTasks>
-          </Container>
-        </>
-      )}
+      <img className="wasm-logo" src={logo}></img>
     </>
   );
 }

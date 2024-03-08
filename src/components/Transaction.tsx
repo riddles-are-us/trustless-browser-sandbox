@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // ZKWASM RELATED STUFF
-import { NewProveTask } from "../modals/addNewProveTask";
+import { NewProveTask } from "../modals/NewProveTask";
 import {
     selectCommands,
     selectMessageToSigned,
@@ -12,8 +12,6 @@ import {
     selectGameLoaded,
 } from "../data/game";
 import { SignatureWitness } from "../utils/proof";
-import { Form } from "react-bootstrap";
-import InputGroup from 'react-bootstrap/InputGroup';
 import { PrivateKey } from "delphinus-curves/src/altjubjub";
 
 import {
@@ -81,83 +79,37 @@ export function Transaction(prop: IProp) {
   return (
     <>
       <Row>
-        <Col>
-           <Form>
-             <InputGroup className="mb-3">
-               <InputGroup.Text>Merkle Root 0</InputGroup.Text>
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(0, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(1, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(2, BigInt(event.target.value))}}
-                />
-               <Form.Control
-                   as = "input"
-                   onChange = {(event) => {updatePreMerkle(3, BigInt(event.target.value))}}
-                />
-                <InputGroup.Text
-                   onClick = {() => {loadGame(Number(l2account!.toBigInt()))}}
-                >
-                Load Game</InputGroup.Text>
-             </InputGroup>
-             <InputGroup className="mb-3">
-               <InputGroup.Text>Instances</InputGroup.Text>
-               <Form.Control
-                   as = "input"
-                   value = {instance}
-                   readOnly
-                />
-             </InputGroup>
-          </Form>
-        </Col>
-      </Row>
+          <h3>Create the proof of your game play</h3>
+          <p>MerkleRoot:</p>
+             <div>
+                <span className="badge text-bg-info">{`xxx`}</span>
+                <span className="badge text-bg-info">{`xxx`}</span>
+                <span className="badge text-bg-info">{`xxx`}</span>
+                <span className="badge text-bg-info">{`xxx`}</span>
+             </div>
+          <p>Movements:</p>
+          <div>
+         { commands.map((x) => {
+             return <span className="badge text-bg-info">{`${x}:i64`}</span>
+             })
+         }
+          </div>
 
-      <Row>
-        <Col>
-            <NewProveTask
-              md5={prop.md5}
-              inputs={instance}
-              witness={witness}
-              OnTaskSubmitSuccess={()=>{return}}
-            ></NewProveTask>
-        </Col>
-      </Row>
-      <Row>
-        <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Movements</Form.Label>
-            <Form.Control as="input" value = {
-                      commands.map((x) => ` ${x}:i64`).join(";")
-            } readOnly />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>PublicKey-X</Form.Label>
-            <Form.Control as="input" value ={sigWitness[0]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>PublicKey-Y</Form.Label>
-            <Form.Control as="input" value ={sigWitness[1]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-X</Form.Label>
-            <Form.Control as="input" value ={sigWitness[2]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-Y</Form.Label>
-            <Form.Control as="input" value ={sigWitness[3]} readOnly />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Signature-S</Form.Label>
-            <Form.Control as="input" value ={sigWitness[4]} readOnly />
-          </Form.Group>
-        </Form>
+          <div>
+          <span>PublicKey-X:</span><span>{sigWitness[0]} </span>
+          </div>
+          <div>
+          <span>PublicKey-Y:</span><span>{sigWitness[1]} </span>
+          </div>
+          <div>
+          <span>Signature-X:</span><span>{sigWitness[2]} </span>
+          </div>
+          <div>
+          <span>Signature-Y:</span><span>{sigWitness[3]} </span>
+          </div>
+          <div>
+          <span>Signature-S:</span><span>{sigWitness[4]} </span>
+          </div>
       </Row>
     </>);
 }
