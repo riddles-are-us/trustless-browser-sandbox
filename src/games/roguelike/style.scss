@@ -1,13 +1,32 @@
 div.game-container {
-  max-width: 1400px;
-  padding-bottom: 50px;
+  width: 900px;
+  height: 600px;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 30px;
   background-size: contain;
+  padding-top: 20px;
 }
 
-div.hp {
+div.pickable-card {
+  font-size: 12px;
 }
+
+div.status {
+  display: flex;
+  align-itmes: stretch;
+  div.title {
+    color: white;
+    font-size: 14px;
+    flex-grow:0;
+    width: 30px;
+  }
+  div.progress {
+    margin-top: 3px;
+    margin-left: 5px;
+    flex-grow:1;
+  }
+}
+
 
 
 div.enemy-move {
