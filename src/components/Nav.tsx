@@ -36,7 +36,7 @@ export function MainNavBar(props: IProps) {
     <Navbar style={{ zIndex: "1000" }}>
       <Container className="justify-content-md-between">
         <Navbar.Brand>
-          RIDDLES
+          M4 SDK Playground
         </Navbar.Brand>
         <Nav.Item className="action-items d-flex">
         </Nav.Item>

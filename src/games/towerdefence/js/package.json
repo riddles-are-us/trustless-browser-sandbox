@@ -1,5 +1,5 @@
 {
-  "name": "roguelike",
+  "name": "towerdefence",
   "version": "0.1.0",
   "files": [
     "gameplay_bg.wasm",

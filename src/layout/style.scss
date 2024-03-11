@@ -13,6 +13,24 @@
   src: url(../fonts/Inter-Regular.ttf);
 }
 
+/* latin-ext */
+@font-face {
+   font-family: 'Skranji';
+   font-style: normal;
+   font-weight: 400;
+   src: url(https://fonts.gstatic.com/s/skranji/v13/OZpDg_dtriVFNerMUzKkk2Tm.woff2) format('woff2');
+   unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Skranji';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/skranji/v13/OZpDg_dtriVFNerMUzykkw.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 nav .modal-btn {
   display: inline-block;
 }
@@ -31,85 +49,6 @@ div.board-row {
 }
 #root {
   --content-width: 600px;
-}
-div.content {
-  margin: auto;
-  width: var(--content-width);
-  height: var(--content-width);
-  overflow: hidden;
-  position: relative;
-  .content-border {
-    position: relative;
-    pointer-events: none;
-    height: 100%;
-    z-index: 30;
-    background-size: cover;
-    background-image: url("../assets/main/border.png");
-    background-repeat: no-repeat;
-  }
-  .bottom-bar {
-    pointer-events: none;
-    position: absolute;
-    bottom: 1.5%;
-    left: 2%;
-    width: 96%;
-    height: 25%;
-    background-image: url("../assets/main/bottom_bar.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    z-index: 5;
-
-    .savings {
-      position: absolute;
-      left: 36.5%;
-      top: 5%;
-      font-family: "Averia Serif Libre";
-      font-style: normal;
-      font-weight: 700;
-      font-size: 1rem;
-      z-index: 15;
-      color: #000000;
-    }
-
-    .age {
-      position: absolute;
-      left: 60%;
-      top: 5%;
-      font-family: "Averia Serif Libre";
-      font-style: normal;
-      font-weight: 700;
-      font-size: 1rem;
-      z-index: 15;
-      color: #000000;
-    }
-
-    .items {
-      pointer-events: all;
-      position: relative;
-      top: 25%;
-      width: 100%;
-      height: 80%;
-      z-index: 15;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      .item {
-        //   display: flex;
-        //   flex-direction: column;
-        //   align-items: center;
-        //   justify-content: center;
-        //   position: relative;
-        width: 12%;
-        //min-height: 60%;
-        margin: 10px;
-        //   background-size: contain;
-        //   background-image: url("../images/layer3_sticker3.png");
-        //   background-repeat: no-repeat;
-        //   cursor: pointer;
-      }
-    }
-  }
 }
 
 .overflow-breakword {
@@ -134,44 +73,6 @@ div.content {
   }
 }
 
-.game-info {
-  font-family: "Be Vietnam";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 42px;
-  color: var(--blue-text-color);
-}
-
-.game-icon {
-  width: 50px;
-  height: 50px;
-}
-.game-inputs {
-  background-color: var(--navbar-bg);
-  border-radius: 15px;
-  width: 500px !important;
-}
-
-
-.sell-button {
-  border: none;
-  //background-image: url("../assets/history/proving.png");
-  margin-left: auto;
-  background-color: var(--button-main);
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--info-text-color);
-  font-family: "Be Vietnam";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 10px;
-  transition: 0.3s all ease;
-  &:hover {
-    background-color: var(--button-hover);
-  }
-}
-
 .wasm-logo {
   width:100px;
   background-color: black;
@@ -182,4 +83,191 @@ div.content {
   display: block;
   bottom: 0px;
   right: 0px;
+}
+
+.game-card-sm {
+  width: 345px;
+  height: 465px;
+  background-color: rgba(255,255,255,0.5);
+  margin-top: 20px;
+  border-radius: 30px;
+  img { 
+    margin-top: 15px;
+    height: 188px;
+    width: 315px;
+    border-radius: 25px;
+    border: 1px solid gray;
+  }
+  h4 {
+    margin: 20px 10px 10px 10px;
+  }
+  .game-card-details {
+    margin: 0px 10px 10px 10px;
+    height: 130px;
+  }
+
+  font-family: 'Skranji';
+  box-shadow: 0px 14px 28px 0px rgba(0,0,0,0.25),
+    0px 10px 10px 0px rgba(0,0,0,0.22);
+
+}
+
+.riddle-description {
+  font-family: 'Skranji';
+  color: #795f51;
+}
+
+.game-card-lg {
+  width: 378px;
+  height: 512px;
+  background-color: rgba(255,255,255,0.6);
+  box-shadow: 0px 14px 28px 0px rgba(0,0,0,0.25),
+    0px 10px 10px 0px rgba(0,0,0,0.22);
+  margin-left: 32px;
+  margin-right: 32px;
+  border-radius: 30px;
+  font-family: 'Skranji';
+  img { 
+    margin-top: 20px;
+    width: 353px;
+    height: 211px;
+    border-radius: 25px;
+    border: 1px solid gray;
+  }
+  h4 {
+    margin: 20px 10px 10px 10px;
+  }
+  .game-card-details {
+    margin: 0px 10px 10px 10px;
+    height: 150px;
+  }
+}
+
+.game-card-tiny {
+  width: 200px;
+  background-color: rgba(255,255,255,0.6);
+  margin-left: 18px;
+  margin-right: 18px;
+  border-radius: 20px;
+  font-family: 'Skranji';
+  font-size: 14px;
+  img { 
+    margin-top: 10px;
+    width: 180px;
+    height: 120px;
+    border-radius: 20px;
+    border: 1px solid gray;
+  }
+  h4 {
+    margin: 10px 10px 5px 10px;
+    font-size: 18px;
+  }
+  .game-card-details {
+    margin: 0px 5px 10px 10px;
+    height: 80px;
+  }
+  padding-bottom: 10px;
+}
+
+
+
+.banner {
+  width: 756px;
+  height: 300px;
+  margin-top: 170px;
+  img {
+     margin-bottom: 28px;
+  }
+}
+
+.section-title {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.push-bottom {
+  position: relative;
+  top: 45px;
+}
+
+.puzzle-container {
+  font-family: 'Skranji';
+  color: #795f51;
+  width: 407px;
+  height: 385px;
+  margin-top: 48px;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 17px;
+}
+
+.puzzle {
+  width: 384px;
+  height: 384px;
+  margin-top: 20px;
+  border-radius: 30px;
+  border: 12px solid #e0d7be;
+  box-shadow: 0px 14px 28px 0px rgba(0,0,0,0.25),
+    0px 10px 10px 0px rgba(0,0,0,0.22);
+}
+
+.landing-page {
+  min-width: 1340px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 0px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding-bottom: 40px;
+  .banner-sect {
+    height: 555px;
+  }
+}
+
+.btn-game-card-play {
+  background-color: #fb4934;
+  color: #ebdbb2;
+  font-size: 15px;
+  box-shadow: 2px 2px 2px #b7ab8b;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.btn-game-card-play:hover {
+  background-color: #fb4934;
+  color: #ebdbb2;
+  font-size: 15px;
+  box-shadow: 4px 4px 2px #b7ab8b;
+}
+
+.btn-game-card-stake {
+  background-color: #fb4934;
+  color: #ebdbb2;
+  font-size: 15px;
+  box-shadow: 2px 2px 2px #b7ab8b;
+}
+
+.btn-game-card-stake:hover {
+  background-color: #fb4934;
+  color: #ebdbb2;
+  font-size: 15px;
+  box-shadow: 4px 4px 2px #b7ab8b;
+}
+
+.section-card {
+  background-color: #ede3c8;
+  padding-top: 60px;
+  padding-bottom: 50px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 55px;
+  box-shadow: 0px 14px 28px 0px rgba(0,0,0,0.25),
+    0px 10px 10px 0px rgba(0,0,0,0.22);
+}
+
+.partner-card {
+  text-align: center;
+  img {
+    max-width: 300px;
+  }
 }

@@ -11,7 +11,13 @@ import "./style.scss";
 import { Card, Move } from "./card";
 import cheems from "../../images/cheems.jpg";
 import cheemM01 from "../../images/cheems-monster-01.jpg";
+import cheemM02 from "../../images/baltze.jpg";
 import gameover from "../../images/gameover.png";
+import d0 from "../../images/d0.png";
+import d1 from "../../images/d1.png";
+import d2 from "../../images/d2.png";
+import d3 from "../../images/d3.png";
+import d4 from "../../images/d4.png";
 
 
 import {
@@ -28,6 +34,8 @@ import {
 } from "../../data/game";
 
 import { ImageMD5 } from "./js/config";
+
+const bg = [d0,d1,d2,d3,d4];
 
 
 export function GameController() {
@@ -137,13 +145,13 @@ export function GameController() {
        {!l2account &&
           <div className="load-game">
               <img src={cheemM01} width="100%"></img>
-              <Button
+              <button className="btn btn-confirm"
                   onClick={() => dispatch(loginL2AccountAsync(account!))}
-               > Start Play </Button>
+               > Start Play </button>
           </div>
        }
        {gameLoaded && state &&
-       <>
+       <div className="game-container" style={{backgroundImage: `url(${bg[state.floor]})`}}>
          {state.hero_hp > 0 &&
          <>
          <Row className="mb-3 text-center">
@@ -151,48 +159,64 @@ export function GameController() {
                <h3>Floor: {state.floor}</h3>
            </Col>
          </Row>
-         <Row className="mb-3">
-                 <Col></Col>
-           <Col>
-                   <img src={cheems} width="100%"></img>
-           </Col>
-           <Col>
-                   <div className="hp">
-                     <div>Hp</div>
-                     <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
-                   </div>
-                   <div className="mt-2">Block</div>
-                   <ProgressBar now={state.hero_block * 3} label={`${state.hero_block}`} />
-                   <div className="mt-2">Power</div>
-                   <ProgressBar now={state.hero_power * 10} label={`${state.hero_power}`} />
-           </Col>
-           <Col>
-                   <div>Hp: {state.enemy_name}</div>
-                   <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
-                   <div className="mt-2">Block</div>
-                   <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
-                   <div className="mt-2">NextMove:
-                           <Move obj ={state.enemy_action}></Move>
-                   </div>
-           </Col>
-           <Col>
-                   <img src={cheemM01} width="100%"></img>
-
-           </Col>
-                 <Col></Col>
-
-         </Row>
-         <Row className="mb-5 text-center">
+         <Row className="mb-1 text-center">
            <Col className="p-2">
                {state["hand_of_card"].map((card:any, i:number) => {
                    return <button className="btn btn-light m-2" onClick={()=>{pickCard(i)}}><Card obj={card}></Card></button>
                })}
            </Col>
          </Row>
-         <Row className="mb-3 text-center">
+         <Row className="mb-1 text-center">
            <Col>
                <Button onClick={()=>endTurn()}>next round</Button>
            </Col>
+         </Row>
+
+         <Row className="mb-1">
+           <Col></Col>
+           <Col>
+              <div className="status">
+                      <div className="title">Hp:</div>
+                 <ProgressBar now={state.hero_hp} label={`${state.hero_hp}`} />
+              </div>
+
+              <div className="status">
+                      <div className="title">Block:</div>
+                   <ProgressBar now={state.hero_block * 3} label={`${state.hero_block}`} />
+              </div>
+              <img className="mt-2" src={cheems} width="100%"></img>
+              <div className="status mt-2">
+                   <div className="title">Power</div>
+                   <ProgressBar now={state.hero_power * 10} label={`${state.hero_power}`} />
+              </div>
+
+           </Col>
+           <Col>
+           </Col>
+           <Col>
+              <div className="status">
+                   <div className="title">Hp: </div>
+                   <ProgressBar now={state.enemy_hp} label={`${state.enemy_hp}`} />
+              </div>
+              <div className="status">
+                      <div className="title">Block:</div>
+                   <ProgressBar now={state.enemy_block * 3} label={`${state.enemy_block}`} />
+              </div>
+                   { state.floor %2 == 1 &&
+                   <img src={cheemM01} className="mt-2" width="100%"></img>
+                   }
+
+                   { state.floor %2 == 0 &&
+                   <img src={cheemM02} className="mt-2" width="100%"></img>
+                   }
+                   <div className="mt-2">{state.enemy_name}:
+                           <Move obj ={state.enemy_action}></Move>
+                   </div>
+
+
+           </Col>
+                 <Col></Col>
+
          </Row>
 
          </>
@@ -205,7 +229,7 @@ export function GameController() {
          </Row>
          }
 
-       </>
+       </div>
        }
     </Container>);
 }

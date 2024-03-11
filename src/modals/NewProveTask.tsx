@@ -28,6 +28,7 @@ import {
     selectMessageToSigned,
     selectMsgHash,
     selectGameLoaded,
+    selectReadyToSubmit,
 } from "../data/game";
 import { SignatureWitness } from "../utils/proof";
 import { PrivateKey } from "delphinus-curves/src/altjubjub";
@@ -78,6 +79,7 @@ export function NewProveTask(props: NewWASMImageProps) {
   const l2account = useAppSelector(selectL2Account);
   const gameLoaded = useAppSelector(selectGameLoaded);
   const commands = useAppSelector(selectCommands);
+  const readyToSubmit = useAppSelector(selectReadyToSubmit);
 
   const [merklePostRoot, setPostMerkleRoot] = useState<Array<bigint>>([0n,0n,0n,0n]);
   const [merklePreRoot, setPreMerkleRoot] = useState<Array<bigint>>([1n,1n,11111n,9n]);
@@ -109,7 +111,13 @@ export function NewProveTask(props: NewWASMImageProps) {
                .concat(merklePreRoot.map((x)=>`${x}:i64`))
                .concat(merklePostRoot.map((x)=>`${x}:i64`))
        );
+
     }
+  if (readyToSubmit == false) {
+      setMessage("You do not have a game play to prove");
+  }
+
+
   }, [l2account, gameLoaded, commands]);
 
 
@@ -124,6 +132,7 @@ export function NewProveTask(props: NewWASMImageProps) {
     const msgString = ZkWasmUtil.createProvingSignMessage(info);
 
     let signature: string;
+
     try {
       setMessage("Waiting for signature...");
       signature = await signMessage(msgString);
@@ -134,6 +143,7 @@ export function NewProveTask(props: NewWASMImageProps) {
       setMessage("Error occurred while signing message");
       throw Error("Unsigned Transaction");
     }
+
 
     const task: WithSignature<ProvingParams> = {
       ...info,
@@ -213,8 +223,9 @@ export function NewProveTask(props: NewWASMImageProps) {
     </>
   );
 
+
   const modalprops: ModalCommonProps = {
-    btnLabel: "Create Proof",
+    btnLabel: "Game Proof",
     title: "Create Proof of Your Game Play",
     childrenClass: "",
     handleConfirm: function (): void {
@@ -224,10 +235,10 @@ export function NewProveTask(props: NewWASMImageProps) {
       setStatus(ModalStatus.PreConfirm);
     },
     children: content,
-    valid: true,
+    valid: readyToSubmit,
     message: message,
     status: status,
-    confirmLabel: "Submit Proof",
+    confirmLabel: "Create Proof",
   };
   return ModalCommon(modalprops);
 }
