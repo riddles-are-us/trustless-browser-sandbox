@@ -26,6 +26,8 @@ function direction(x: number, y: number, direction: string, color: string, conte
         context.lineTo(x + xd - 1, y + yd - 1);
         context.lineTo(x - xd + 1, y + yd - 1);
         context.fill();
+        context.fillStyle = "white";
+        context.fillText(direction, x-10, y);
 
 }
 
@@ -56,7 +58,6 @@ function drawObject(obj:any, context: CanvasRenderingContext2D) {
         const x = toX(obj.position.x, obj.position.y);
         const y = toY(obj.position.x, obj.position.y);
         context.beginPath();
-        context.font = "16px serif";
         switch (Object.keys(obj.object)[0]) {
           case "Monster": {
             context.fillStyle = "orange";
@@ -66,10 +67,20 @@ function drawObject(obj:any, context: CanvasRenderingContext2D) {
             context.fillText(obj.object.Monster.hp, x, y-10);
             break;
           }
+          case "Dropped": {
+            context.fillStyle = "blue";
+            context.arc(x, y, 13, 0, 2 * Math.PI);
+            context.fill();
+            context.fillStyle = "white";
+            context.fillText(obj.object.Dropped.delta, x, y-10);
+            break;
+          }
           case "Tower": {
             context.fillStyle = "black";
             context.arc(x, y, 15, 0, 2 * Math.PI);
             context.fill();
+            context.fillStyle = "white";
+            context.fillText(obj.object.Tower.count, x, y-10);
             break;
           }
           case "Spawner": {

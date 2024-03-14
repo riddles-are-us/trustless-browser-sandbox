@@ -8,6 +8,7 @@ import {bnToHexLe} from 'delphinus-curves/src/altjubjub';
 export interface GameState {
   loaded: boolean;
   readyToSubmit: boolean;
+  md5: string | null,
   preMerkleRoot: Array<bigint>;
   postMerkleRoot: Array<bigint>;
   msgHash: string; //start with 0x little end
@@ -17,6 +18,7 @@ export interface GameState {
 const initialState: GameState = {
   loaded: false,
   readyToSubmit: false,
+  md5: null,
   preMerkleRoot: [0n, 0n, 0n, 0n],
   postMerkleRoot: [0n, 0n, 0n, 0n],
   commands: [],
@@ -44,6 +46,10 @@ export const gameSlice = createSlice({
     setLoaded: (state, loaded) => {
       state.loaded = loaded.payload;
     },
+    setMD5: (state, loaded) => {
+      state.md5 = loaded.payload;
+    },
+
     setReadyToSubmit: (state, loaded) => {
       state.readyToSubmit = loaded.payload;
     },
@@ -76,12 +82,13 @@ export const gameSlice = createSlice({
 });
 
 export const selectGameLoaded = (state: RootState) => state.game.loaded;
+export const selectMD5 = (state: RootState) => state.game.md5;
 export const selectReadyToSubmit = (state: RootState) => state.game.readyToSubmit;
 export const selectCommands = (state: RootState) => state.game.commands;
 export const selectPreMerkleRoot = (state: RootState) => state.game.preMerkleRoot;
 export const selectPostMerkleRoot = (state: RootState) => state.game.postMerkleRoot;
 export const selectMsgHash = (state: RootState) => state.game.msgHash;
-export const { setLoaded, appendCommand, setReadyToSubmit } = gameSlice.actions;
+export const { setLoaded, appendCommand, setReadyToSubmit, setMD5 } = gameSlice.actions;
 export const selectMessageToSigned = (state: RootState) => {
     const buf = new Uint8Array(state.game.commands.length * 8);
     state.game.commands.map((v, i) => {
