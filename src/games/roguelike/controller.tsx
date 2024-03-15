@@ -9,15 +9,17 @@ import "./style.scss";
 
 // Controller Related STUFF
 import { Card, Move } from "./card";
-import cheems from "../../images/cheems.jpg";
-import cheemM01 from "../../images/cheems-monster-01.jpg";
-import cheemM02 from "../../images/baltze.jpg";
-import gameover from "../../images/gameover.png";
-import d0 from "../../images/d0.png";
-import d1 from "../../images/d1.png";
-import d2 from "../../images/d2.png";
-import d3 from "../../images/d3.png";
-import d4 from "../../images/d4.png";
+import cheems from "./images/cheems.jpg";
+import cheemM01 from "./images/cheems-monster-01.jpg";
+import cheemM02 from "./images/cheems-monster-02.jpg";
+import gameover from "./images/gameover.png";
+import d0 from "./images/d0.png";
+import d1 from "./images/d1.png";
+import d2 from "./images/d2.png";
+import d3 from "./images/d3.png";
+import d4 from "./images/d4.png";
+
+export const LandingImage = cheems;
 
 
 import {
@@ -31,6 +33,7 @@ import {
   setLoaded,
   appendCommand,
   setReadyToSubmit,
+  setMD5,
 } from "../../data/game";
 
 import { ImageMD5 } from "./js/config";
@@ -79,6 +82,7 @@ export function GameController() {
       const state = JSON.parse(stateStr);
             console.log(":state:", state);
       setState(state);
+      dispatch(setMD5(ImageMD5));
       dispatch(setLoaded(true));
       //drawObjects(objects);
     });
@@ -94,10 +98,6 @@ export function GameController() {
       const state = JSON.parse(stateStr);
             console.log(":state:", state);
       setState(state);
-
-      //gameplay.step(command);
-      //let objs = gameplay.get_objects();
-      //console.log("objs", objs);
     });
 
   }
