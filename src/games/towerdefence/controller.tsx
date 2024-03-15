@@ -75,6 +75,38 @@ function Draggable(props:TowerProp) {
   );
 }
 
+class TileInfo {
+  feature:any;
+  tower:any;
+  index: number;
+  constructor(index: number) {
+    this.index = index;
+    this.feature = null;
+    this.tower = null;
+  }
+}
+
+interface TileInfoProp {
+   tileInfo: TileInfo
+}
+
+const tileWidth = 12;
+const tileHeight = 8;
+const tileSize = tileWidth * tileHeight;
+
+function TileBlock(prop: TileInfoProp) {
+  const tileInfo = prop.tileInfo;
+  if(tileInfo.feature) {
+    return (<div className="droppable-tile">
+        {tileInfo.feature}
+    </div>)
+  } else {
+    return (
+        <Droppable index={tileInfo.index}>{tileInfo.tower}</Droppable>
+    )
+  }
+}
+
 
 export function GameController() {
   // Game Loading Status
@@ -91,7 +123,7 @@ export function GameController() {
   const gameLoaded = useAppSelector(selectGameLoaded);
   const [timer, setTimer] = useState<number>(0);
   const [play, setPlay] = useState<boolean>(false);
-  const [tiles, setTiles] = useState<Array<any>>([]);
+  const [tiles, setTiles] = useState<Array<any>>(new Array(tileSize).fill(new TileInfo(0)).map((value, index)=> new TileInfo(index)));
 
   function initGame(l2account: number) {
     (init as any)().then(() => {
@@ -108,13 +140,13 @@ export function GameController() {
           const feature = tilesData[i].feature;
           if (feature != null) {
               if (feature  == "Bottom") {
-                  tiles[i] = <i className="bi bi-arrow-down-circle"></i>
+                  tiles[i].feature = <i className="bi bi-arrow-down-circle"></i>
               } else if (feature  == "Top") {
-                  tiles[i] = <i className="bi bi-arrow-top-circle"></i>
+                  tiles[i].feature = <i className="bi bi-arrow-top-circle"></i>
               } else if (feature  == "Left") {
-                  tiles[i] = <i className="bi bi-arrow-left-circle"></i>
+                  tiles[i].feature = <i className="bi bi-arrow-left-circle"></i>
               } else if (feature  == "Right") {
-                  tiles[i] = <i className="bi bi-arrow-right-circle"></i>
+                  tiles[i].feature = <i className="bi bi-arrow-right-circle"></i>
               }
           }
       }
@@ -122,6 +154,7 @@ export function GameController() {
       drawTiles(tilesData);
 
       const objects = JSON.parse(objs);
+      console.log("objects", objects);
       drawObjects(objects);
       dispatch(setMD5(ImageMD5));
       dispatch(setLoaded(true));
@@ -142,6 +175,7 @@ export function GameController() {
       drawTiles(tilesData);
 
       const objects = JSON.parse(objs);
+      console.log("objects", objects);
       drawObjects(objects);
       dispatch(setReadyToSubmit(true));
     });
@@ -171,7 +205,7 @@ export function GameController() {
      console.log("event", event);
      console.log("tilesDrop", tiles);
      const t = tiles.slice(0);
-     t[event.over!.id as number] = event.active.data.current!.node;
+     t[event.over!.id as number].tower = event.active.data.current!.node;
      setTiles(t);
      console.log("tilesDrop", t);
    }
@@ -198,7 +232,7 @@ export function GameController() {
           {Array.from({length:8}, (_, j) =>
              <Row className="justify-content-center">
                {Array.from({length: 12}, (_, i) =>
-                 <Col key={i}><Droppable index={j*12+i}>{tiles[j*12+i]}</Droppable></Col>
+               <Col key={i}><TileBlock tileInfo={tiles[j*12+i]}></TileBlock></Col>
                )
                }
              </Row>
