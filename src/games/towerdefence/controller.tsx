@@ -13,8 +13,12 @@ import {DndContext, DragEndEvent} from '@dnd-kit/core';
 // ZKWASM RELATED STUFF
 import { selectCommands, selectMessageToSigned, selectMsgHash, setReadyToSubmit } from "../../data/game";
 
+import cover from "./images/towerdefence.jpg";
+
 import {
   selectL2Account,
+  selectL1Account,
+  loginL2AccountAsync
 } from "../../data/accountSlice";
 
 import {
@@ -37,12 +41,14 @@ import "./style.scss";
 
 interface TileProp {
   index: number;
+  id: string;
   children: React.ReactNode
 }
 
 function Droppable(props: TileProp) {
   const {isOver, setNodeRef} = useDroppable({
-      id: props.index,
+      id: props.id,
+      data:{index: props.index}
   });
 
   return (
@@ -54,33 +60,67 @@ function Droppable(props: TileProp) {
 
 interface TowerProp {
   id: string;
-  children: React.ReactNode
+  index: number;
+  inventory: any;
 }
 
 
 function Draggable(props:TowerProp) {
+  const ele = (() => {
+    if (props.inventory["object"]["Tower"]["direction"] == 'Top') {
+      return <i className="bi bi-arrow-up-square"></i>
+    } else if (props.inventory["object"]["Tower"]["direction"] == 'Bottom') {
+      return <i className="bi bi-arrow-down-square"></i>
+    } else if (props.inventory["object"]["Tower"]["direction"] == 'Left') {
+      return <i className="bi bi-arrow-left-square"></i>
+    } else if (props.inventory["object"]["Tower"]["direction"] == 'Right') {
+      return <i className="bi bi-arrow-right-square"></i>
+    }
+  }) ();
+
+  const tower = props.inventory["object"]["Tower"];
+
+
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
       id: props.id,
-      data: {node: props.children}
+      data: {node: ele, index: props.index}
   });
+
   const style = transform ? {
       transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
-
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-       {props.children}
-    </button>
+    <>
+        {!props.inventory["used"] &&
+            <button ref={setNodeRef} {...listeners} {...attributes} style={style}>
+                {ele}
+                <p>power {tower.power}</p>
+                <p>range {tower.range}</p>
+                <p>cooldown {tower.cooldown}</p>
+            </button>
+        }
+        {props.inventory["used"] &&
+            <button disabled={true}>
+                {ele}
+                <p>power {tower.power}</p>
+                <p>range {tower.range}</p>
+                <p>cooldown {tower.cooldown}</p>
+            </button>
+        }
+
+    </>
   );
 }
 
 class TileInfo {
   feature:any;
   tower:any;
+  id: string;
   index: number;
   constructor(index: number) {
-    this.index = index;
+    this.id = `tile-info-${index}`;
+    this.index = index,
     this.feature = null;
     this.tower = null;
   }
@@ -96,13 +136,21 @@ const tileSize = tileWidth * tileHeight;
 
 function TileBlock(prop: TileInfoProp) {
   const tileInfo = prop.tileInfo;
+  const {isOver, setNodeRef} = useDroppable({
+    id: tileInfo.id,
+    data: tileInfo
+  });
+
   if(tileInfo.feature) {
-    return (<div className="droppable-tile">
+    return (
+    <div ref={setNodeRef} className="droppable-tile">
         {tileInfo.feature}
     </div>)
   } else {
     return (
-        <Droppable index={tileInfo.index}>{tileInfo.tower}</Droppable>
+    <div ref={setNodeRef} className="droppable-tile">
+        {tileInfo.tower}
+    </div>
     )
   }
 }
@@ -124,25 +172,25 @@ export function GameController() {
   const [timer, setTimer] = useState<number>(0);
   const [play, setPlay] = useState<boolean>(false);
   const [tiles, setTiles] = useState<Array<any>>(new Array(tileSize).fill(new TileInfo(0)).map((value, index)=> new TileInfo(index)));
+  const [inventory, setInventory] = useState<Array<any>>([]);
+  const [reward, setReward] = useState<number>(0);
+  const [monsterLeft, setMonsterLeft] = useState<number>(0);
 
   function initGame(l2account: number) {
     (init as any)().then(() => {
       console.log("setting instance");
       console.log(gameplay);
       gameplay.init(BigInt(l2account));
-      const objs = gameplay.get_objects();
-      console.log("objs", objs);
-
-      const tilesStr = gameplay.get_tiles();
-      const tilesData = JSON.parse(tilesStr);
-      console.log("tiles", tilesData);
+      const stateStr = gameplay.get_state();
+      const state = JSON.parse(stateStr);
+      console.log("state", state);
       for (let i=0;i<96;i++) {
-          const feature = tilesData[i].feature;
+          const feature = state.map.tiles[i].feature;
           if (feature != null) {
               if (feature  == "Bottom") {
                   tiles[i].feature = <i className="bi bi-arrow-down-circle"></i>
               } else if (feature  == "Top") {
-                  tiles[i].feature = <i className="bi bi-arrow-top-circle"></i>
+                  tiles[i].feature = <i className="bi bi-arrow-up-circle"></i>
               } else if (feature  == "Left") {
                   tiles[i].feature = <i className="bi bi-arrow-left-circle"></i>
               } else if (feature  == "Right") {
@@ -150,12 +198,9 @@ export function GameController() {
               }
           }
       }
+      setInventory(state.inventory);
       setTiles(tiles);
-      drawTiles(tilesData);
-
-      const objects = JSON.parse(objs);
-      console.log("objects", objects);
-      drawObjects(objects);
+      setMonsterLeft(state.terminates);
       dispatch(setMD5(ImageMD5));
       dispatch(setLoaded(true));
     });
@@ -167,17 +212,31 @@ export function GameController() {
       const command = (0n<<32n);
       dispatch(appendCommand(command));
       gameplay.step(command);
-      const objs = gameplay.get_objects();
-      console.log("objs", objs);
-      const tilesStr = gameplay.get_tiles();
-      const tilesData = JSON.parse(tilesStr);
-      console.log("tiles", tilesData);
-      drawTiles(tilesData);
 
-      const objects = JSON.parse(objs);
-      console.log("objects", objects);
-      drawObjects(objects);
-      dispatch(setReadyToSubmit(true));
+      const stateStr = gameplay.get_state();
+      const state = JSON.parse(stateStr);
+      console.log("state", state);
+      drawTiles(state.map.tiles);
+      drawObjects(state.map.objects);
+      setReward(state.treasure);
+      setMonsterLeft(state.terminates);
+      if(state.terminates == 0) {
+          dispatch(setReadyToSubmit(true));
+      }
+    });
+  }
+
+  function placeTower(index:number, tileIndex: number) {
+    (init as any)().then(() => {
+      let command = BigInt(1);
+      command += (BigInt(index) << 8n);
+      command += (BigInt(tileIndex) << 16n);
+
+      dispatch(appendCommand(command));
+      gameplay.step(command);
+      const stateStr = gameplay.get_state();
+      const state = JSON.parse(stateStr);
+      setInventory(state.inventory);
     });
 
   }
@@ -191,69 +250,93 @@ export function GameController() {
    }, [l2account]);
 
    useEffect(() => {
-     if (l2account && gameLoaded && play && timer < 200) {
+     if (l2account && gameLoaded && play && timer < 200 && monsterLeft != 0) {
              console.log("timer...");
              setTimeout(()=>{
                      stepMove();
                      setTimer(timer+1);
              }, 1000)
      }
-   }, [timer, play]);
+   }, [timer, play, monsterLeft]);
 
 
    function handle_drop(event:DragEndEvent) {
-     console.log("event", event);
-     console.log("tilesDrop", tiles);
      const t = tiles.slice(0);
-     t[event.over!.id as number].tower = event.active.data.current!.node;
-     setTiles(t);
-     console.log("tilesDrop", t);
+     if (event.over!.data) {
+         const index = event.over!.data.current!.index;
+         if (t[index].feature) {
+           return;
+         } else {
+            t[index].tower = event.active.data.current!.node;
+            placeTower(event.active!.data.current!.index, index);
+            setTiles(t);
+         }
+     }
    }
+
+
+  const account = useAppSelector(selectL1Account);
 
    return (
    <>
-     { !play &&
+     {!l2account &&
+       <Container className="mt-5">
+          <div className="load-game">
+              <img src={cover} width="100%"></img>
+              <button className="btn btn-confirm"
+                  onClick={() => dispatch(loginL2AccountAsync(account!))}
+               > Start Play </button>
+          </div>
+       </Container>
+     }
+     {l2account && !play &&
      <DndContext onDragEnd={handle_drop}>
-        <Container>
-          <Draggable id="tower-left" >
-                <i className="bi bi-arrow-left-square"></i>
-          </Draggable>
-          <Draggable id="tower-right" >
-                <i className="bi bi-arrow-right-square"></i>
-          </Draggable>
-          <Draggable id="tower-top" >
-                <i className="bi bi-arrow-up-square"></i>
-          </Draggable>
-          <Draggable id="tower-bottom" >
-                <i className="bi bi-arrow-down-square"></i>
-          </Draggable>
-        </Container>
-        <Container>
-          {Array.from({length:8}, (_, j) =>
+     <Container className="mt-5">
+     <Row className="justify-content-center">
+       <Col>
+               Drag to place your defending tower:
+       </Col>
+     </Row>
+     <Row>
+       <Col>
+          {inventory.map((inventory, i) => {
+            return <Draggable id={`inventory-${i}`} index={i} inventory={inventory}/>
+          })}
+       </Col>
+     </Row>
+        {Array.from({length:8}, (_, j) =>
              <Row className="justify-content-center">
                {Array.from({length: 12}, (_, i) =>
-               <Col key={i}><TileBlock tileInfo={tiles[j*12+i]}></TileBlock></Col>
+               <TileBlock key={i} tileInfo={tiles[j*12+i]}></TileBlock>
                )
                }
              </Row>
-          )}
+        )}
+        <Row>
+           <Button onClick={()=>setPlay(true)}>Confirm</Button>
+        </Row>
         </Container>
      </DndContext>
      }
-     <Container className="mt-5">
-     <Row>
-       <Col>
-           <Button className="float-end" onClick={()=>setPlay(true)}>Play</Button>
-           <Button className="float-end" onClick={()=>setPlay(false)}>Stop</Button>
-           <Button className="float-end" onClick={()=>{return}}>PlaceTower</Button>
-       </Col>
-     </Row>
-     </Container>
-     <Row className="text-center">
+     {l2account && play &&
+     <>
+       <Container className="mt-5">
+       <Row>
          <Col>
-     <canvas id="canvas" height="500" width="740"></canvas>
+             Reward {reward}
          </Col>
-     </Row>
+         <Col>
+             Monster Left {monsterLeft}
+         </Col>
+       </Row>
+       </Container>
+       <Row className="text-center">
+           <Col>
+              <canvas id="canvas" height="500" width="740"></canvas>
+           </Col>
+       </Row>
+     </>
+     }
    </>
    );
 }

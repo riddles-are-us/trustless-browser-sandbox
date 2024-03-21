@@ -7,12 +7,14 @@ function rect(x: number, y: number, color: string, context: CanvasRenderingConte
         context.beginPath();
         const xd = tileWidth/2;
         const yd = tileHeight/2;
+        /*
         context.fillStyle = color;
         context.lineTo(x - xd, y - yd);
         context.lineTo(x + xd, y - yd);
         context.lineTo(x + xd, y + yd);
         context.lineTo(x - xd, y + yd);
         context.stroke();
+        */
 }
 
 

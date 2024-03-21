@@ -28,8 +28,4 @@ export function init(seed: bigint): void;
 /**
 * @returns {string}
 */
-export function get_objects(): string;
-/**
-* @returns {string}
-*/
-export function get_tiles(): string;
+export function get_state(): string;
