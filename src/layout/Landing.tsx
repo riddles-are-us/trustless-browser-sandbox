@@ -46,7 +46,19 @@ export default function Default() {
             </div>
           </div>
         </Row>
-
+        <Row>
+          <div className="game-card-tiny">
+            <img src={LandingImage}>
+            </img>
+            <h4>Damo Game</h4>
+            <div className="game-card-details">
+              Tutorial App, A game to guess the secret number.
+            </div>
+            <div>
+              <a href="/demogame" className="btn btn-game-card-play">play</a>
+            </div>
+          </div>
+        </Row>
 
       </Container>
     )

@@ -1,0 +1,16 @@
+{
+  "name": "demogame_test1",
+  "version": "0.1.0",
+  "files": [
+    "gameplay_bg.wasm",
+    "gameplay.js",
+    "gameplay_bg.js",
+    "gameplay.d.ts"
+  ],
+  "module": "gameplay.js",
+  "types": "gameplay.d.ts",
+  "sideEffects": [
+    "./gameplay.js",
+    "./snippets/*"
+  ]
+}
