@@ -8,6 +8,8 @@ import Col from "react-bootstrap/Col";
 
 import {
   selectL2Account,
+  selectL1Account,
+  loginL2AccountAsync,
 } from "../../data/accountSlice";
 
 import {
@@ -52,6 +54,8 @@ export function GameController() {
   const gameLoaded = useAppSelector(selectGameLoaded);
 
   const [state, setState]  = useState<string>("false");
+  const [currentNumber, setCurrentNumber] = useState(0);
+
 
   function initGame(_l2account: number) {
     (init as any)().then(() => {
@@ -64,16 +68,18 @@ export function GameController() {
         gameplay.step(BigInt(guessNumber));
         const globalstate = gameplay.get_state();
         if (globalstate == true) {
-            setState("🎉 Correct!");
+            setState(`${currentNumber} Correct! 🎉 `);
             dispatch(appendCommand(BigInt(guessNumber)));
             console.log("end guessing");
             dispatch(setReadyToSubmit(true));
         } else {
-            setState("Not correct - try again!");
+            setState(`${currentNumber} not correct - try again!`);
         }
     });
 
   }
+
+  const account = useAppSelector(selectL1Account);
 
   useEffect(() => {
     if (l2account) {
@@ -83,73 +89,72 @@ export function GameController() {
     }
   }, [l2account]);
 
-  const [currentNumber, setCurrentNumber] = useState(0);
 
-    return (
-        <Container className="mt-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div 
-            className="game-container" 
-            style={{
-              position: 'relative',
-              backgroundImage: `url(${bg[0]})`,
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              width: '794px',
-              height: '529px',
-            }}
-          >
-            {/* Tens digit image */}
-            <img 
-              src={overlayNumbers[Math.floor(currentNumber / 10)]}
-              alt={`Tens Digit`} 
-              style={{
-                position: 'absolute',
-                top: '40%', // Center vertically
-                left: '41%', // Center horizontally
-                transform: 'translate(-50%, -50%)',
-                zIndex: 1, 
-              }}
-            />
+  return (
+    <Container className="mt-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div 
+        className="game-container" 
+        style={{
+          position: 'relative',
+          backgroundImage: `url(${bg[0]})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          width: '794px',
+          height: '529px',
+        }}
+      >
+        {/* Tens digit image */}
+        <img 
+          src={overlayNumbers[Math.floor(currentNumber / 10)]}
+          alt={`Tens Digit`} 
+          style={{
+            position: 'absolute',
+            top: '40%', // Center vertically
+            left: '41%', // Center horizontally
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1, 
+          }}
+        />
+  
+        {/* Units digit image */}
+        <img 
+          src={overlayNumbers[currentNumber % 10]}
+          alt={`Units Digit`} 
+          style={{
+            position: 'absolute',
+            top: '40%', // Center vertically
+            left: '59%', // Center horizontally
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1,
+          }}
+        />
+      </div>
       
-            {/* Units digit image */}
-            <img 
-              src={overlayNumbers[currentNumber % 10]}
-              alt={`Units Digit`} 
-              style={{
-                position: 'absolute',
-                top: '40%', // Center vertically
-                left: '59%', // Center horizontally
-                transform: 'translate(-50%, -50%)',
-                zIndex: 1,
-              }}
-            />
-          </div>
-          
-          <input 
-            type="number"
-            min="0"
-            max="99"
-            value={currentNumber}
-            onChange={(e) => {
-              const value = parseInt(e.target.value, 10);
-              if (!isNaN(value) && value >= 0 && value <= 99) {
-                setCurrentNumber(value);
-              }
-            }}
-            className="mt-3"
-            style={{width: '100px', textAlign: 'center'}}
-          />
-    
-          {/* Button to trigger the step function */}
-          <Button className="mt-3" onClick={() => guess_number(currentNumber)}>Guess</Button>
+      <input 
+        type="number"
+        min="0"
+        max="99"
+        value={currentNumber}
+        onChange={(e) => {
+          const value = parseInt(e.target.value, 10);
+          if (!isNaN(value) && value >= 0 && value <= 99) {
+            setCurrentNumber(value);
+          }
+        }}
+        className="mt-3"
+        style={{width: '100px', textAlign: 'center'}}
+      />
 
-        <Col>
-            <h3>Guessed Number {state}</h3>
-        </Col>
+      {/* Button to trigger the step function */}
+      <Button className="mt-3" onClick={() => guess_number(currentNumber)}>Guess</Button>
 
-        </Container>
-      );
+    <Col>
+        <h3>Guessed Number {state}</h3>
+    </Col>
+
+    </Container>
+  );
 
 
 
