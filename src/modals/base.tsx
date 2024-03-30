@@ -1,10 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useState } from "react";
-import {
-  Button,
-  Modal,
-  Spinner,
-} from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import closeIcon from "../assets/main/modal_close.png";
 import { useAppSelector } from "../app/hooks";
 import "./style.scss";
@@ -74,7 +70,7 @@ export function ModalCommon(props: ModalCommonProps) {
         <Modal.Header>
           <div className="left-item">{props.title}</div>
           <a>
-          <img src={closeIcon} className="pull-right" onClick={handleClose}/>
+            <img src={closeIcon} className="pull-right" onClick={handleClose} />
           </a>
         </Modal.Header>
         <Modal.Body className="show-grid">{props.children}</Modal.Body>

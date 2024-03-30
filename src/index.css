@@ -5,7 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-blue) !important;
+  background-image: url('./assets/Background.jpg') !important;
+  background-size: cover; 
+  background-position: center; 
 }
 
 code {
@@ -16,7 +18,7 @@ code {
 #root,
 body,
 html {
-  --bg-blue: #ebdbb2;
+  /* --bg-blue: #ebdbb2; */
   --navbar-bg: #d5c4a1;
   --button-main: #546f80;
   --button-hover: #fabd2f;
