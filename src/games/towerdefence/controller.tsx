@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { ImageMD5 } from "./js/config";
 import { Container } from "react-bootstrap";
-import { loadAllImages } from "./imageUtil";
+// import { loadAllImages } from "./imageUtil";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
 // ZKWASM RELATED STUFF
@@ -263,7 +263,7 @@ export function GameController() {
       const stateStr = gameplay.get_state();
       const state = JSON.parse(stateStr);
       console.log("state", state);
-      await loadAllImages();
+      // await loadAllImages();
       drawTiles(state.map.tiles);
       drawObjects(state.map.objects);
       setReward(state.treasure);
