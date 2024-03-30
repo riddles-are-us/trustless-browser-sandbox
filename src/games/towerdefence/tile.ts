@@ -30,7 +30,6 @@ const tileWidth = 60;
 const tileHeight = 60;
 const width = 12;
 const height = 8;
-let tileChange = true;
 function rect(
   x: number,
   y: number,
@@ -56,16 +55,6 @@ function direction(
   direction: string,
   context: CanvasRenderingContext2D
 ) {
-  // const xd = tileWidth / 2;
-  // const yd = tileHeight / 2;
-  // context.fillStyle = color;
-  // context.lineTo(x - xd + 1, y - yd + 1);
-  // context.lineTo(x + xd - 1, y - yd + 1);
-  // context.lineTo(x + xd - 1, y + yd - 1);
-  // context.lineTo(x - xd + 1, y + yd - 1);
-  // context.fill();
-  // context.fillStyle = "white";
-  // context.fillText(direction, x - 10, y);
   if (direction == "Top") {
     const negateX = 150 - tileWidth - 67;
     const negateY = 150 - tileHeight - 62;
@@ -89,7 +78,6 @@ function direction(
     const negateY = 150 - tileHeight - 70;
     const newX = x - negateX;
     const newY = y - negateY;
-    tileChange = false;
     loadAndDrawImage(tileLeft, newX, newY, context, 55, 45);
   }
 }
