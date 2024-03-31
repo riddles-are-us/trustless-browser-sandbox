@@ -11,11 +11,25 @@ import tileLeft from "./images/tile_left.png";
 import tileRight from "./images/tile_right.png";
 import stage from "./images/stage.png";
 
+const imageCache: any = {
+  drone: droneImage,
+  droneUp: droneUpImage,
+  droneLeft: droneLeftImage,
+  droneRight: droneRightImage,
+  monster: monsterImage,
+  spawn: spawnImage,
+  end: endImage,
+  tileDown: tileDown,
+  tileUp: tileUp,
+  tileLeft: tileLeft,
+  tileRight: tileRight,
+  stage: stage,
+};
+
 const tileWidth = 60;
 const tileHeight = 60;
 const width = 12;
 const height = 8;
-
 function rect(
   x: number,
   y: number,
@@ -39,20 +53,8 @@ function direction(
   x: number,
   y: number,
   direction: string,
-  color: string,
   context: CanvasRenderingContext2D
 ) {
-  context.beginPath();
-  // const xd = tileWidth / 2;
-  // const yd = tileHeight / 2;
-  // context.fillStyle = color;
-  // context.lineTo(x - xd + 1, y - yd + 1);
-  // context.lineTo(x + xd - 1, y - yd + 1);
-  // context.lineTo(x + xd - 1, y + yd - 1);
-  // context.lineTo(x - xd + 1, y + yd - 1);
-  // context.fill();
-  // context.fillStyle = "white";
-  // context.fillText(direction, x - 10, y);
   if (direction == "Top") {
     const negateX = 150 - tileWidth - 67;
     const negateY = 150 - tileHeight - 62;
@@ -92,27 +94,12 @@ export function drawTiles(tiles: any) {
   console.log("drawing Tiles");
   const c = document.getElementById("canvas")! as HTMLCanvasElement;
   const context = c.getContext("2d")!;
-  // Load your background image
-  const backgroundImage = new Image();
-  backgroundImage.src = stage;
-  backgroundImage.onload = function () {
-    // Draw the image, covering the entire canvas
-    context.drawImage(backgroundImage, 0, 0, c.width, c.height);
-
-    // Now you can continue drawing other elements on the canvas
-  };
-  context.clearRect(0, 0, c.width, c.height);
+  loadAndDrawImage(stage, 0, 0, context, c.width, c.height);
   for (let i = 0; i < width; i++) {
     for (let j = 0; j < height; j++) {
       rect(toX(i, j), toY(i, j), "gray", context);
       if (tiles[j * width + i].feature != null) {
-        direction(
-          toX(i, j),
-          toY(i, j),
-          tiles[j * width + i].feature,
-          "gray",
-          context
-        );
+        direction(toX(i, j), toY(i, j), tiles[j * width + i].feature, context);
       }
     }
   }
@@ -121,7 +108,6 @@ export function drawTiles(tiles: any) {
 function drawObject(obj: any, context: CanvasRenderingContext2D) {
   const x = toX(obj.position.x, obj.position.y);
   const y = toY(obj.position.x, obj.position.y);
-  context.beginPath();
   switch (Object.keys(obj.object)[0]) {
     case "Monster": {
       const negateX = 150 - tileWidth - 75;
@@ -182,20 +168,28 @@ function loadAndDrawImage(
   sizeX: number,
   sizeY: number
 ) {
-  const image = new Image();
-  image.src = src;
-  image.onload = () => {
-    context.drawImage(image, x, y, sizeX, sizeY);
-  };
-  image.onerror = () => {
-    console.log("Error loading the image");
-  };
+  if (!imageCache[src]) {
+    // Image not in cache, load and cache it
+    const image = new Image();
+    image.src = src;
+    image.onload = () => {
+      context.drawImage(image, x, y, sizeX, sizeY);
+      imageCache[src] = image; // Cache the loaded image
+    };
+    image.onerror = () => {
+      console.log("Error loading the image", src);
+    };
+  } else {
+    // Image is in cache, use it directly
+    context.drawImage(imageCache[src], x, y, sizeX, sizeY);
+  }
 }
 
 export function drawObjects(objs: Array<any>) {
   console.log("drawing Objects");
   const c = document.getElementById("canvas")! as HTMLCanvasElement;
   const context = c.getContext("2d")!;
+
   for (const obj of objs) {
     drawObject(obj, context);
   }
