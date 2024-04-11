@@ -14,6 +14,7 @@ module.exports = function override(config, env) {
       "http": require.resolve("stream-http"),
       "https": require.resolve("https-browserify"),
       "os": require.resolve("os-browserify"),
+      "vm": false,
       "url": require.resolve("url")
   })
   config.resolve.fallback = fallback;
