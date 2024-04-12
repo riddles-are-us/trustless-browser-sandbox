@@ -3,3 +3,35 @@ div.droppable-tile {
   width: 60px;
   height: 60px;
 }
+.dragable-tile {
+  border: 1px solid gray;
+  width: 130px;
+  height: 150px;
+}
+
+.valid-position {
+  border: 1px solid green;
+  background-color: green;
+  opacity: 0.5;
+}
+.invalid-position {
+  border: 1px solid red;
+  background-color: red;
+  opacity: 0.5;
+}
+.position-indicator {
+  height: 30px;
+  width: 30px;
+  border: 1px solid black;
+}
+
+.item {
+  border: 1px solid black;
+  padding: 5px;
+  height: 30px;
+  width: 30px;
+}
+
+.item-used {
+  background-color: gray;
+}
