@@ -56,25 +56,53 @@ export function drawTiles(tiles: any) {
         }
 }
 
-function drawObject(obj:any, context: CanvasRenderingContext2D) {
+function shift(x:number, y:number, direction: string, frame: number): {x: number, y:number} {
+  let xx = x;
+  let yy = y;
+  switch (direction) {
+    case "Bottom": {
+      yy = yy + (tileHeight/12) * frame;
+      break;
+    }
+    case "Top": {
+      yy = yy - (tileHeight/12) * frame;
+      break;
+    }
+    case "Left": {
+      xx = xx - (tileWidth/12) * frame;
+      break;
+    }
+    case "Right": {
+      xx = xx + (tileWidth/12) * frame;
+      break;
+    }
+  }
+  return {x: xx, y: yy}
+}
+
+function drawObject(obj:any, tiles: Array<any>, context: CanvasRenderingContext2D, frame: number) {
         const x = toX(obj.position.x, obj.position.y);
         const y = toY(obj.position.x, obj.position.y);
         context.beginPath();
+        const tile = tiles[obj.position.x + obj.position.y * width];
         switch (Object.keys(obj.object)[0]) {
           case "Monster": {
             context.fillStyle = "orange";
-            context.arc(x, y, 15, 0, 2 * Math.PI);
+            const motion = shift(x,y,tile.feature, frame); 
+            context.arc(motion.x, motion.y, 15, 0, 2 * Math.PI);
             context.fill();
             context.fillStyle = "white";
             context.fillText(obj.object.Monster.hp, x, y-10);
+            context.fillText(frame.toString(), motion.x, motion.y+10);
             break;
           }
           case "Dropped": {
             context.fillStyle = "blue";
-            context.arc(x, y, 13, 0, 2 * Math.PI);
+            const motion = shift(x,y,tile.feature, frame); 
+            context.arc(motion.x, motion.y, 13, 0, 2 * Math.PI);
             context.fill();
             context.fillStyle = "white";
-            context.fillText(obj.object.Dropped.delta, x, y-10);
+            context.fillText(obj.object.Dropped.delta, motion.x, motion.y-10);
             break;
           }
           case "Tower": {
@@ -100,12 +128,14 @@ function drawObject(obj:any, context: CanvasRenderingContext2D) {
         }
 }
 
-export function drawObjects(objs: Array<any>) {
+export function drawObjects(map: {objects: Array<any>, tiles: Array<any>}, frame: number) {
+        const objs = map.objects;
+        const tiles = map.tiles;
         console.log("drawing Objects");
         const c = document.getElementById("canvas")! as HTMLCanvasElement;
         const context = c.getContext("2d")!;
         for (const obj of objs) {
-          drawObject(obj, context);
+          drawObject(obj, tiles, context, frame);
         }
 }
 

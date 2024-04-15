@@ -11,7 +11,7 @@ import { Container } from "react-bootstrap";
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 
 // ZKWASM RELATED STUFF
-import { selectCommands, selectMessageToSigned, selectMsgHash, setReadyToSubmit } from "../../data/game";
+import { selectReadyToSubmit, selectCommands, selectMessageToSigned, selectMsgHash, setReadyToSubmit } from "../../data/game";
 
 import cover from "./images/towerdefence.jpg";
 
@@ -124,7 +124,7 @@ class TileInfo {
   constructor(index: number) {
     this.id = `tile-info-${index}`;
     this.index = index,
-    this.feature = null;
+      this.feature = null;
     this.tower = null;
     this.spawner = null;
     this.collector = null;
@@ -177,7 +177,10 @@ function TileBlock(prop: TileInfoProp) {
   }
 }
 
+function Monster({monster}: {monster: any}) {
+  <div>ABC</div>
 
+}
 export function GameController() {
   // Game Loading Status
   /* Test merkle root
@@ -191,6 +194,8 @@ export function GameController() {
 
   const l2account = useAppSelector(selectL2Account);
   const gameLoaded = useAppSelector(selectGameLoaded);
+  const gameReadyToSubmit = useAppSelector(selectReadyToSubmit);
+
   const [timer, setTimer] = useState<number>(0);
   const [play, setPlay] = useState<boolean>(false);
   const [tiles, setTiles] = useState<Array<any>>(new Array(tileSize).fill(new TileInfo(0)).map((value, index) => new TileInfo(index)));
@@ -198,6 +203,8 @@ export function GameController() {
   const [valid, setValid] = useState<boolean>(false);
   const [reward, setReward] = useState<number>(0);
   const [monsterLeft, setMonsterLeft] = useState<number>(0);
+  const [lastState, setLastState] = useState<{frame: number; state:any}>({frame: 0, state: null});
+  const [nextState, setNextState] = useState<any>(null);
 
   function initGame(l2account: number) {
     (init as any)().then(() => {
@@ -238,24 +245,52 @@ export function GameController() {
     });
   }
 
-  function stepMove() {
+  function startGame() {
     (init as any)().then(() => {
-      console.log("moving ");
-      const command = (0n << 32n);
-      dispatch(appendCommand(command));
-      gameplay.step(command);
-
+      console.log("start play");
       const stateStr = gameplay.get_state();
       const state = JSON.parse(stateStr);
-      console.log("state", state);
-      drawTiles(state.map.tiles);
-      drawObjects(state.map.objects);
-      setReward(state.treasure);
-      setMonsterLeft(state.terminates);
-      if (state.terminates == 0) {
-        dispatch(setReadyToSubmit(true));
-      }
+      setNextState(state);
+      setPlay(true);
     });
+  }
+
+  function step() {
+      (init as any)().then(() => {
+        if (lastState.frame == 0) { // 12 frame per state change
+          setLastState({
+                  frame: 11,
+                  state: nextState,
+          }); // set the last state
+          console.log("simulating ");
+          const command = (0n << 32n);
+          dispatch(appendCommand(command));
+          gameplay.step(command);
+
+          const stateStr = gameplay.get_state();
+          const state = JSON.parse(stateStr);
+
+          console.log("state", state);
+          setNextState(state);
+
+          if (state.terminates == 0) {
+            dispatch(setReadyToSubmit(true));
+          }
+        } else {
+          setLastState({
+                  ...lastState,
+                  frame: lastState.frame - 1,
+          });
+        }
+        setTimer(timer+1);
+    });
+  }
+
+  function draw() {
+    drawTiles(lastState.state.map.tiles);
+    drawObjects(lastState.state.map, 12 - lastState.frame);
+    setReward(lastState.state.treasure);
+    setMonsterLeft(lastState.state.terminates);
   }
 
   function placeTower(index: number, tileIndex: number) {
@@ -282,14 +317,19 @@ export function GameController() {
   }, [l2account]);
 
   useEffect(() => {
-    if (l2account && gameLoaded && play && timer < 200 && monsterLeft != 0) {
+    if (l2account && gameLoaded && play && !gameReadyToSubmit && monsterLeft != 0) {
       console.log("timer...");
       setTimeout(() => {
-        stepMove();
-        setTimer(timer + 1);
-      }, 1000)
+        step();
+      }, 80)
     }
   }, [timer, play, monsterLeft]);
+
+  useEffect(() => {
+      if(lastState && lastState.state) {
+          draw();
+      }
+  }, [lastState]);
 
 
   function handle_drop(event: DragEndEvent) {
@@ -337,17 +377,15 @@ export function GameController() {
         </Container>
       }
       {l2account && !play &&
-
-
         <DndContext onDragEnd={handle_drop} onDragOver={handle_over}>
-        <DragOverlay>
-        { 
-        <div>
-        {valid && <div className="position-indicator valid-position"></div>}
-        { !valid && <div className="position-indicator invalid-position"></div>}
-        </div>
-        }
-        </DragOverlay>
+          <DragOverlay>
+            {
+              <div>
+                {valid && <div className="position-indicator valid-position"></div>}
+                {!valid && <div className="position-indicator invalid-position"></div>}
+              </div>
+            }
+          </DragOverlay>
           <Container className="mt-5">
             <Row className="mb-5">
               <Col>
@@ -357,8 +395,6 @@ export function GameController() {
                 Monster Left {monsterLeft}
               </Col>
             </Row>
-
-
             {Array.from({ length: 8 }, (_, j) =>
               <Row className="justify-content-center">
                 {Array.from({ length: 12 }, (_, i) =>
@@ -379,7 +415,7 @@ export function GameController() {
             </Row>
             <Row className="justify-content-center mt-5">
               <Col md={2}>
-                <Button onClick={() => setPlay(true)} style={{ width: "100%" }}>Confirm</Button>
+                <Button onClick={() => startGame()} style={{ width: "100%" }}>Confirm</Button>
               </Col>
             </Row>
           </Container>
@@ -403,10 +439,10 @@ export function GameController() {
             </Col>
           </Row>
           <Row className="justify-content-center mt-5">
-              {inventory.map((inventory, i) => {
-                return <Draggable id={`inventory-${i}`} index={i} inventory={inventory} />
-              })}
-            </Row>
+            {inventory.map((inventory, i) => {
+              return <Draggable id={`inventory-${i}`} index={i} inventory={inventory} />
+            })}
+          </Row>
         </>
       }
     </>
