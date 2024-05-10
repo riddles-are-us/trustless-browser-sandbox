@@ -1,14 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* @returns {BigUint64Array}
-*/
-export function clip(): BigUint64Array;
-/**
-* @returns {bigint}
-*/
-export function zkmain(): bigint;
-/**
 * Step function receives a encoded command and changes the global state accordingly
 * @param {bigint} command
 */
@@ -29,3 +21,11 @@ export function init(seed: bigint): void;
 * @returns {string}
 */
 export function get_state(): string;
+/**
+* @returns {BigUint64Array}
+*/
+export function clip(): BigUint64Array;
+/**
+* @returns {bigint}
+*/
+export function zkmain(): bigint;

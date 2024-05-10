@@ -4,6 +4,8 @@ import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Button } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Container } from "react-bootstrap";
+import { ImageMD5 } from "./js/config";
 
 import {
   selectL2Account,
@@ -14,6 +16,7 @@ import {
   setLoaded,
   appendCommand,
   setReadyToSubmit,
+  setMD5,
 } from "../../data/game";
 
 
@@ -31,26 +34,19 @@ export function GameController() {
   const l2account = useAppSelector(selectL2Account);
   const gameLoaded = useAppSelector(selectGameLoaded);
 
-  const [state, setState]  = useState<string>("false");
-
   function initGame(_l2account: number) {
     (init as any)().then(() => {
-            return
+        dispatch(setMD5(ImageMD5));
+        return
     });
   }
 
-  function step(guessNumber: number) {
+  function step(witness: number) {
     (init as any)().then(() => {
-        gameplay.step(BigInt(guessNumber));
-        const globalstate = gameplay.get_state();
-        if (globalstate == true) {
-            setState("true");
-            dispatch(appendCommand(BigInt(guessNumber)));
-            console.log("end guessing");
-            dispatch(setReadyToSubmit(true));
-        } else {
-            setState("false");
-        }
+        //gameplay.step(BigInt(witness));
+        dispatch(setLoaded(true));
+        dispatch(appendCommand(BigInt(witness)));
+        dispatch(setReadyToSubmit(true));
     });
 
   }
@@ -64,27 +60,17 @@ export function GameController() {
   }, [l2account]);
 
   return (
-    <>
+    <Container>
       <Row>
         <Col>
-           <h3>Guess Number</h3>
+           <h3>Signataure Generator</h3>
         </Col>
-
-        <Col>
-           <h3>Guesssed Number {state}</h3>
-        </Col>
-
-        <Col>
-            <Button className="float-end" onClick={()=>step(1)}>Guess 1</Button>
-            <Button className="float-end" onClick={()=>step(2)}>Guess 2</Button>
-            <Button className="float-end" onClick={()=>step(11)}>Guess 11</Button>
-        </Col>
-
       </Row>
-      <Row className="text-center">
-          <Col>
-      <canvas id="canvas" height="500" width="740"></canvas>
-          </Col>
+      <Row>
+        <Col>
+            <Button className="float-end" onClick={()=>step(1)}>Add To Signature</Button>
+        </Col>
       </Row>
-    </>);
+
+    </Container>);
 }

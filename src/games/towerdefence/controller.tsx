@@ -1,5 +1,5 @@
 import init, * as gameplay from "./js";
-import { drawObjects, drawTiles } from "./tile";
+import { drawObjects, drawTiles, drawBullets } from "./tile";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Button, Form } from "react-bootstrap";
@@ -270,7 +270,9 @@ export function GameController() {
           const stateStr = gameplay.get_state();
           const state = JSON.parse(stateStr);
 
-          console.log("state", state);
+          if (state.events.length != 0) {
+            console.log("state", state);
+          }
           setNextState(state);
 
           if (state.terminates == 0) {
@@ -289,6 +291,9 @@ export function GameController() {
   function draw() {
     drawTiles(lastState.state.map.tiles);
     drawObjects(lastState.state.map, 12 - lastState.frame);
+    if(nextState) {
+        drawBullets(nextState.events, 12 - lastState.frame);
+    }
     setReward(lastState.state.treasure);
     setMonsterLeft(lastState.state.terminates);
   }
@@ -318,7 +323,7 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account && gameLoaded && play && !gameReadyToSubmit && monsterLeft != 0) {
-      console.log("timer...");
+      //console.log("timer...");
       setTimeout(() => {
         step();
       }, 80)

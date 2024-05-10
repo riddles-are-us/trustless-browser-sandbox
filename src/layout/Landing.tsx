@@ -24,12 +24,12 @@ export default function Default() {
           <div className="game-card-tiny">
             <img src={LandingImage}>
             </img>
-            <h4>Hello World</h4>
+            <h4>Hellow World for demonstrate signatures</h4>
             <div className="game-card-details">
-            Tutorial App, A Hello World Template
+            Tutorial App, A Hello World application to generate signatures for inputs
             </div>
             <div>
-              <a href="/template" className="btn btn-game-card-play">play</a>
+              <a href="/signature" className="btn btn-game-card-play">play</a>
             </div>
           </div>
         </Row>

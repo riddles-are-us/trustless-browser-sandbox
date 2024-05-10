@@ -42,7 +42,7 @@ function toY(xcor: number, ycor: number): number {
 }
 
 export function drawTiles(tiles: any) {
-        console.log("drawing Tiles");
+        //console.log("drawing Tiles");
         const c = document.getElementById("canvas")! as HTMLCanvasElement;
         const context = c.getContext("2d")!;
         context.clearRect(0, 0, c.width, c.height);
@@ -136,6 +136,24 @@ export function drawObjects(map: {objects: Array<any>, tiles: Array<any>}, frame
         const context = c.getContext("2d")!;
         for (const obj of objs) {
           drawObject(obj, tiles, context, frame);
+        }
+}
+
+
+export function drawBullets(bullets: Array<any>, frame: number) {
+        const c = document.getElementById("canvas")! as HTMLCanvasElement;
+        const context = c.getContext("2d")!;
+        for (const bullet of bullets) {
+          const x1 = toX(bullet["Attack"][0][0], bullet["Attack"][0][1]);
+          const y1 = toY(bullet["Attack"][0][0], bullet["Attack"][0][1]);
+          const x2 = toX(bullet["Attack"][1][0], bullet["Attack"][1][1]);
+          const y2 = toY(bullet["Attack"][1][0], bullet["Attack"][1][1]);
+          const x = ((x2 * frame) + x1 * (12 - frame))/12;
+          const y = ((y2 * frame) + y1 * (12 - frame))/12;
+          context.beginPath();
+          context.fillStyle = "yellow";
+          context.arc(x, y, 3, 0, 2 * Math.PI);
+          context.fill();
         }
 }
 

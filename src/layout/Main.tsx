@@ -9,11 +9,8 @@ import Landing from "./Landing";
 //import { GameController } from "../games/streetpets/controller";
 //import { ImageMD5 } from "../games/streetpets/js/config";
 
-import { GameController as TemplateController } from "../games/sumgame/controller";
-
+import { GameController as TemplateController } from "../games/signature/controller";
 import { GameController as DemoGameController } from "../games/demogame/controller";
-// import { GameController as DemoGameController } from "../games/sumgame/controller";
-
 import { GameController as RogueLikeController } from "../games/roguelike/controller";
 import { GameController as TowerDefenceController } from "../games/towerdefence/controller";
 // import { GameController as DemoGameController } from "../games/demogame/controller";
@@ -33,7 +30,7 @@ export function Main() {
           </Route>
           <Route path="/">
             <Route index element={<Landing/>}/>
-            <Route path="template" element={<TemplateController/>}/>
+            <Route path="signature" element={<TemplateController/>}/>
           </Route>
           <Route path="/">
             <Route index element={<Landing/>}/>
@@ -42,7 +39,7 @@ export function Main() {
           <Route path="/">
               <Route index element={<Landing/>}/>
               <Route path="demogame" element={<DemoGameController/>}/>
-            </Route>
+          </Route>
         </Routes>
       </BrowserRouter>
       <img className="wasm-logo" src={logo}></img>
