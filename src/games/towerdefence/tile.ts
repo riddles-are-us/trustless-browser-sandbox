@@ -3,6 +3,8 @@ const tileHeight = 60;
 const width = 12;
 const height = 8;
 
+import Spirites from "./spirite";
+
 function rect(x: number, y: number, color: string, context: CanvasRenderingContext2D) {
         context.beginPath();
         const xd = tileWidth/2;
@@ -39,6 +41,18 @@ function toX(xcor: number, ycor: number): number {
 
 function toY(xcor: number, ycor: number): number {
         return tileHeight/2 + tileHeight*ycor;
+}
+
+export function inGrid(x: number, y: number): boolean {
+  return (x>0 && y>0 && x<tileWidth * width && y<tileHeight * height);
+}
+
+export function getCor(x: number, y: number): [number, number] {
+  return [Math.floor(x/tileWidth), Math.floor(y/tileHeight)]
+}
+
+export function getTileIndex(x: number, y: number): number {
+  return x + y * width;
 }
 
 export function drawTiles(tiles: any) {
@@ -87,18 +101,21 @@ function drawObject(obj:any, tiles: Array<any>, context: CanvasRenderingContext2
         const tile = tiles[obj.position.x + obj.position.y * width];
         switch (Object.keys(obj.object)[0]) {
           case "Monster": {
+            const motion = shift(x,y,tile.feature, frame);
+            context.fillStyle = "green";
+            // fill hp range
+            context.strokeRect(motion.x-5, motion.y-25, 10, 3);
+            context.fillRect(motion.x-5, motion.y-25, obj.object.Monster.hp , 3);
             context.fillStyle = "orange";
-            const motion = shift(x,y,tile.feature, frame); 
-            context.arc(motion.x, motion.y, 15, 0, 2 * Math.PI);
+            context.arc(motion.x, motion.y, 10, 0, 2 * Math.PI);
             context.fill();
             context.fillStyle = "white";
-            context.fillText(obj.object.Monster.hp, x, y-10);
             context.fillText(frame.toString(), motion.x, motion.y+10);
             break;
           }
           case "Dropped": {
             context.fillStyle = "blue";
-            const motion = shift(x,y,tile.feature, frame); 
+            const motion = shift(x,y,tile.feature, frame);
             context.arc(motion.x, motion.y, 13, 0, 2 * Math.PI);
             context.fill();
             context.fillStyle = "white";
@@ -107,16 +124,37 @@ function drawObject(obj:any, tiles: Array<any>, context: CanvasRenderingContext2
           }
           case "Tower": {
             context.fillStyle = "black";
-            context.arc(x, y, 15, 0, 2 * Math.PI);
-            context.fill();
+            context.drawImage(Spirites.towerSpirites[0],
+              0,
+              0,
+              Spirites.towerSpirites[0].width,
+              Spirites.towerSpirites[0].height,
+              x - tileWidth/2,
+              y - tileHeight/2,
+              tileWidth,
+              tileHeight,
+            );
+            //context.arc(x, y, 15, 0, 2 * Math.PI);
+            //context.fill();
             context.fillStyle = "white";
             context.fillText(obj.object.Tower.count, x, y-10);
             break;
           }
           case "Spawner": {
             context.fillStyle = "white";
-            context.arc(x, y, 10, 0, 2 * Math.PI);
-            context.fill();
+            const spirites = Spirites.caveSpirites;
+            context.drawImage(spirites[0],
+              0,
+              0,
+              spirites[0].width,
+              spirites[0].height,
+              x - tileWidth/2,
+              y - tileHeight/2,
+              tileWidth,
+              tileHeight,
+            );
+            //context.arc(x, y, 10, 0, 2 * Math.PI);
+            //context.fill();
             break;
           }
           case "Collector": {
@@ -131,7 +169,6 @@ function drawObject(obj:any, tiles: Array<any>, context: CanvasRenderingContext2
 export function drawObjects(map: {objects: Array<any>, tiles: Array<any>}, frame: number) {
         const objs = map.objects;
         const tiles = map.tiles;
-        console.log("drawing Objects");
         const c = document.getElementById("canvas")! as HTMLCanvasElement;
         const context = c.getContext("2d")!;
         for (const obj of objs) {

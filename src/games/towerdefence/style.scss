@@ -6,7 +6,7 @@ div.droppable-tile {
 .dragable-tile {
   border: 1px solid gray;
   width: 130px;
-  height: 150px;
+  height: 200px;
 }
 
 .valid-position {
@@ -34,4 +34,8 @@ div.droppable-tile {
 
 .item-used {
   background-color: gray;
+}
+
+canvas {
+  border: 1px solid gray;
 }

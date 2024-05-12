@@ -1,6 +1,6 @@
 import init, * as gameplay from "./js";
-import { drawObjects, drawTiles, drawBullets } from "./tile";
-import React, { useEffect, useRef, useState } from "react";
+import { drawObjects, drawTiles, drawBullets, getTileIndex, getCor, inGrid } from "./tile";
+import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Button, Form } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
@@ -9,6 +9,7 @@ import { ImageMD5 } from "./js/config";
 import { Container } from "react-bootstrap";
 
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
+
 
 // ZKWASM RELATED STUFF
 import { selectReadyToSubmit, selectCommands, selectMessageToSigned, selectMsgHash, setReadyToSubmit } from "../../data/game";
@@ -39,77 +40,40 @@ import "./style.scss";
 //}
 //
 
-interface TileProp {
-  index: number;
-  id: string;
-  children: React.ReactNode
-}
-
-function Droppable(props: TileProp) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: props.id,
-    data: { index: props.index }
-  });
-
-  return (
-    <div ref={setNodeRef} className="droppable-tile">
-      {props.index} - {props.children}
-    </div>
-  );
-}
-
 interface TowerProp {
   id: string;
   index: number;
   inventory: any;
 }
 
-
-function Draggable(props: TowerProp) {
-  const ele = (() => {
-    if (props.inventory["object"]["Tower"]["direction"] == 'Top') {
-      return <i className="bi bi-arrow-up-square"></i>
-    } else if (props.inventory["object"]["Tower"]["direction"] == 'Bottom') {
-      return <i className="bi bi-arrow-down-square"></i>
-    } else if (props.inventory["object"]["Tower"]["direction"] == 'Left') {
-      return <i className="bi bi-arrow-left-square"></i>
-    } else if (props.inventory["object"]["Tower"]["direction"] == 'Right') {
-      return <i className="bi bi-arrow-right-square"></i>
-    }
-  })();
-
-  const tower = props.inventory["object"]["Tower"];
-
-
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: props.id,
-    data: { node: ele, index: props.index }
+function DroppableCanvas({ play, step, render }: { play: boolean; step: () => void; render: () => void }) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: "canvan",
+    data: {}
   });
+  const gameReadyToSubmit = useAppSelector(selectReadyToSubmit);
+  const l2account = useAppSelector(selectL2Account);
+  const [timer, setTimer] = useState<number>(0);
+  const gameLoaded = useAppSelector(selectGameLoaded);
 
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+  useEffect(() => {
+    if (l2account && gameLoaded && play && !gameReadyToSubmit) {
+      //console.log("timer...");
+      setTimeout(() => {
+        step();
+        setTimer(timer + 1);
+        render();
+      }, 80)
+    } else {
+      setTimeout(() => {
+        setTimer(timer + 1); // re-check in 80
+      }, 80)
+    }
+  }, [timer]);
 
   return (
-    <>
-      {!props.inventory["used"] &&
-        <div className="dragable-tile" >
-          <div className="item item-unused" ref={setNodeRef} {...listeners} {...attributes} style={style}>{ele}</div>
-          <div>power {tower.power}</div>
-          <div>range {tower.range}</div>
-          <div>cooldown {tower.cooldown}</div>
-        </div>
-      }
-      {props.inventory["used"] &&
-        <div className="dragable-tile">
-          <div className="item item-used" {...attributes} style={style}>{ele}</div>
-          <div>power {tower.power}</div>
-          <div>range {tower.range}</div>
-          <div>cooldown {tower.cooldown}</div>
-        </div>
-      }
-
-    </>
+    <canvas ref={setNodeRef} id="canvas" height="480" width="720">
+    </canvas>
   );
 }
 
@@ -177,10 +141,22 @@ function TileBlock(prop: TileInfoProp) {
   }
 }
 
-function Monster({monster}: {monster: any}) {
+function Monster({ monster }: { monster: any }) {
   <div>ABC</div>
 
 }
+
+let lastState: { frame: number, state: any } = {
+  frame: 0,
+  state: null
+};
+let nextState: any = null;
+
+function setLastState(state: { frame: number, state: any }) {
+  lastState = state;
+}
+
+
 export function GameController() {
   // Game Loading Status
   /* Test merkle root
@@ -194,109 +170,24 @@ export function GameController() {
 
   const l2account = useAppSelector(selectL2Account);
   const gameLoaded = useAppSelector(selectGameLoaded);
-  const gameReadyToSubmit = useAppSelector(selectReadyToSubmit);
-
-  const [timer, setTimer] = useState<number>(0);
   const [play, setPlay] = useState<boolean>(false);
-  const [tiles, setTiles] = useState<Array<any>>(new Array(tileSize).fill(new TileInfo(0)).map((value, index) => new TileInfo(index)));
   const [inventory, setInventory] = useState<Array<any>>([]);
+  const [treasure, setTreasure] = useState<number>(0);
   const [valid, setValid] = useState<boolean>(false);
-  const [reward, setReward] = useState<number>(0);
   const [monsterLeft, setMonsterLeft] = useState<number>(0);
+  /*
   const [lastState, setLastState] = useState<{frame: number; state:any}>({frame: 0, state: null});
   const [nextState, setNextState] = useState<any>(null);
+   */
 
-  function initGame(l2account: number) {
-    (init as any)().then(() => {
-      console.log("setting instance");
-      console.log(gameplay);
-      gameplay.init(BigInt(l2account));
-      const stateStr = gameplay.get_state();
-      const state = JSON.parse(stateStr);
-      console.log("state", state);
-      for (let i = 0; i < 96; i++) {
-        const feature = state.map.tiles[i].feature;
-        if (feature != null) {
-          if (feature == "Bottom") {
-            tiles[i].feature = <i className="bi bi-arrow-down-circle"></i>
-          } else if (feature == "Top") {
-            tiles[i].feature = <i className="bi bi-arrow-up-circle"></i>
-          } else if (feature == "Left") {
-            tiles[i].feature = <i className="bi bi-arrow-left-circle"></i>
-          } else if (feature == "Right") {
-            tiles[i].feature = <i className="bi bi-arrow-right-circle"></i>
-          }
-        }
-      }
-      for (const obj of state.map.objects) {
-        const i = obj.position.x + obj.position.y * state.map.width;
-        if (obj.object.Collector) {
-          tiles[i].collector = <i className="bi bi-award-fill"></i>
-        }
-        if (obj.object.Spawner) {
-          tiles[i].collector = <i className="bi bi-bug"></i>
-        }
-      }
-      setInventory(state.inventory);
-      setTiles(tiles);
-      setMonsterLeft(state.terminates);
-      dispatch(setMD5(ImageMD5));
-      dispatch(setLoaded(true));
-    });
-  }
-
-  function startGame() {
-    (init as any)().then(() => {
-      console.log("start play");
-      const stateStr = gameplay.get_state();
-      const state = JSON.parse(stateStr);
-      setNextState(state);
-      setPlay(true);
-    });
-  }
-
-  function step() {
-      (init as any)().then(() => {
-        if (lastState.frame == 0) { // 12 frame per state change
-          setLastState({
-                  frame: 11,
-                  state: nextState,
-          }); // set the last state
-          console.log("simulating ");
-          const command = (0n << 32n);
-          dispatch(appendCommand(command));
-          gameplay.step(command);
-
-          const stateStr = gameplay.get_state();
-          const state = JSON.parse(stateStr);
-
-          if (state.events.length != 0) {
-            console.log("state", state);
-          }
-          setNextState(state);
-
-          if (state.terminates == 0) {
-            dispatch(setReadyToSubmit(true));
-          }
-        } else {
-          setLastState({
-                  ...lastState,
-                  frame: lastState.frame - 1,
-          });
-        }
-        setTimer(timer+1);
-    });
-  }
-
-  function draw() {
-    drawTiles(lastState.state.map.tiles);
-    drawObjects(lastState.state.map, 12 - lastState.frame);
-    if(nextState) {
-        drawBullets(nextState.events, 12 - lastState.frame);
+  function setNextState(state: any) {
+    nextState = state;
+    if (nextState.treasure != treasure) {
+      setTreasure(nextState.treasure);
     }
-    setReward(lastState.state.treasure);
-    setMonsterLeft(lastState.state.terminates);
   }
+
+
 
   function placeTower(index: number, tileIndex: number) {
     (init as any)().then(() => {
@@ -309,63 +200,240 @@ export function GameController() {
       const stateStr = gameplay.get_state();
       const state = JSON.parse(stateStr);
       setInventory(state.inventory);
+      setNextState(state);
+      if (!play) {
+        drawCanvas();
+      }
+    });
+  }
+
+  function upgradeInventory(index: number) {
+    (init as any)().then(() => {
+      let command = BigInt(2);
+      command += (BigInt(index) << 8n);
+      dispatch(appendCommand(command));
+      gameplay.step(command);
+      const stateStr = gameplay.get_state();
+      const state = JSON.parse(stateStr);
+      setInventory(state.inventory);
+      setNextState(state);
+    });
+  }
+
+  function Draggable(props: TowerProp) {
+    const ele = (() => {
+      if (props.inventory["object"]["Tower"]["direction"] == 'Top') {
+        return <i className="bi bi-arrow-up-square"></i>
+      } else if (props.inventory["object"]["Tower"]["direction"] == 'Bottom') {
+        return <i className="bi bi-arrow-down-square"></i>
+      } else if (props.inventory["object"]["Tower"]["direction"] == 'Left') {
+        return <i className="bi bi-arrow-left-square"></i>
+      } else if (props.inventory["object"]["Tower"]["direction"] == 'Right') {
+        return <i className="bi bi-arrow-right-square"></i>
+      }
+    })();
+
+    const tower = props.inventory["object"]["Tower"];
+
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+      id: props.id,
+      data: { node: ele, index: props.index }
     });
 
+    const style = transform ? {
+      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    } : undefined;
+
+    const upgrade_cost = props.inventory["cost"] * props.inventory["upgrade_modifier"];
+
+
+
+    return (
+      <>
+        {
+          <div className="dragable-tile" >
+            {props.inventory["cost"] <= nextState.treasure &&
+              <div className="item item-unused" ref={setNodeRef} {...listeners} {...attributes} style={style}>{ele}</div>
+            }
+            {props.inventory["cost"] > nextState.treasure &&
+              <div className="item item-used" {...attributes} style={style}>{ele}</div>
+            }
+            <div>cost {props.inventory["cost"]}</div>
+            <div>power {tower.power}</div>
+            <div>range {tower.range}</div>
+            <div>cooldown {tower.cooldown}</div>
+            <button onClick={() => upgradeInventory(props.index)} disabled={upgrade_cost > nextState.treasure}>upgrade ({upgrade_cost})</button>
+          </div>
+        }
+
+      </>
+    );
   }
+
+
+  function initGame(l2account: number) {
+    (init as any)().then(() => {
+      console.log("setting instance");
+      console.log(gameplay);
+      gameplay.init(BigInt(l2account));
+      const stateStr = gameplay.get_state();
+      const state = JSON.parse(stateStr);
+      console.log("state", state);
+      setNextState(state);
+      setInventory(state.inventory);
+      setMonsterLeft(state.terminates);
+      dispatch(setMD5(ImageMD5));
+      dispatch(setLoaded(true));
+    });
+  }
+
+  function startGame() {
+    (init as any)().then(() => {
+      console.log("start play");
+      setPlay(true);
+    });
+  }
+
+  function step() {
+    (init as any)().then(() => {
+      if (lastState.frame == 0) { // 12 frame per state change
+        setLastState({
+          frame: 11,
+          state: nextState,
+        }); // set the last state
+        console.log("simulating ");
+        const command = (0n << 32n);
+        dispatch(appendCommand(command));
+        gameplay.step(command);
+
+        const stateStr = gameplay.get_state();
+        const state = JSON.parse(stateStr);
+
+        if (state.events.length != 0) {
+          console.log("state", state);
+        }
+        setNextState(state);
+
+        if (state.terminates == 0) {
+          dispatch(setReadyToSubmit(true));
+        }
+      } else {
+        setLastState({
+          ...lastState,
+          frame: lastState.frame - 1,
+        });
+      }
+    });
+  }
+
+  function draw() {
+    drawTiles(lastState.state.map.tiles);
+    drawObjects(lastState.state.map, 12 - lastState.frame);
+    if (nextState) {
+      drawBullets(nextState.events, 12 - lastState.frame);
+    }
+    setMonsterLeft(lastState.state.terminates);
+  }
+
+  function drawPause() {
+    drawTiles(nextState.map.tiles);
+    drawObjects(nextState.map, 0);
+  }
+
+  function drawCanvas() {
+    if (lastState && lastState.state) {
+      draw();
+    } else if (nextState) {
+      drawPause();
+    }
+  }
+
+
 
   useEffect(() => {
     if (l2account) {
       if (gameLoaded == false) {
         initGame(Number(BigInt("0x" + l2account.address)));
+      } else if (!play) {
+        drawCanvas();
       }
     }
-  }, [l2account]);
-
-  useEffect(() => {
-    if (l2account && gameLoaded && play && !gameReadyToSubmit && monsterLeft != 0) {
-      //console.log("timer...");
-      setTimeout(() => {
-        step();
-      }, 80)
-    }
-  }, [timer, play, monsterLeft]);
-
-  useEffect(() => {
-      if(lastState && lastState.state) {
-          draw();
-      }
-  }, [lastState]);
+  }, [l2account, gameLoaded]);
 
 
   function handle_drop(event: DragEndEvent) {
-    const t = tiles.slice(0);
     if (event.over && event.over!.data) {
-      const index = event.over!.data.current!.index;
-      if (t[index].feature) {
-        return;
+      const over_top = event.over.rect.top;
+      const over_left = event.over.rect.left;
+      const src_cy = (
+        event.active.rect.current.translated!.top +
+        event.active.rect.current.translated!.bottom
+      ) / 2;
+      const src_cx = (
+        event.active.rect.current.translated!.left +
+        event.active.rect.current.translated!.right
+      ) / 2;
+      const offset_x = src_cx - over_left;
+      const offset_y = src_cy - over_top;
+      if (inGrid(offset_x, offset_y)) {
+        const cor = getCor(offset_x, offset_y);
+        const index = getTileIndex(cor[0], cor[1]);
+        const feature = nextState.map.tiles[index].feature;
+        if (feature) {
+          return;
+        } else {
+          placeTower(event.active!.data.current!.index, index);
+        }
       } else {
-        t[index].tower = event.active.data.current!.node;
-        placeTower(event.active!.data.current!.index, index);
-        setTiles(t);
-      }
-    }
-  }
-
-  function handle_over(event: DragEndEvent) {
-    const t = tiles.slice(0);
-    if (event.over && event.over!.data) {
-      const index = event.over!.data.current!.index;
-      if (t[index].feature) {
         setValid(false);
-        return;
-      } else {
-        setValid(true);
       }
     } else {
       //setValid(false);
     }
   }
 
+  function handle_over(event: DragEndEvent) {
+    if (event.over && event.over!.data) {
+      const over_top = event.over.rect.top;
+      const over_left = event.over.rect.left;
+      const src_cy = (
+        event.active.rect.current.translated!.top +
+        event.active.rect.current.translated!.bottom
+      ) / 2;
+      const src_cx = (
+        event.active.rect.current.translated!.left +
+        event.active.rect.current.translated!.right
+      ) / 2;
+      const offset_x = src_cx - over_left;
+      const offset_y = src_cy - over_top;
+      if (inGrid(offset_x, offset_y)) {
+        const cor = getCor(offset_x, offset_y);
+        const index = getTileIndex(cor[0], cor[1]);
+        const feature = nextState.map.tiles[index].feature;
+        if (feature) {
+          setValid(false);
+          return;
+        } else {
+          setValid(true);
+        }
+      } else {
+        setValid(false);
+      }
+    } else {
+      //setValid(false);
+    }
+  }
+
+  const Inventory = memo(
+    function ({ inventory }: { inventory: Array<any> }) {
+      return (
+        <>
+          {inventory.map((inventory, i) => {
+            return <Draggable id={`inventory-${i}`} index={i} inventory={inventory} />
+          })}
+        </>
+      );
+    });
 
   const account = useAppSelector(selectL1Account);
 
@@ -381,7 +449,7 @@ export function GameController() {
           </div>
         </Container>
       }
-      {l2account && !play &&
+      {l2account &&
         <DndContext onDragEnd={handle_drop} onDragOver={handle_over}>
           <DragOverlay>
             {
@@ -391,47 +459,10 @@ export function GameController() {
               </div>
             }
           </DragOverlay>
-          <Container className="mt-5">
-            <Row className="mb-5">
-              <Col>
-                Reward {reward}
-              </Col>
-              <Col>
-                Monster Left {monsterLeft}
-              </Col>
-            </Row>
-            {Array.from({ length: 8 }, (_, j) =>
-              <Row className="justify-content-center">
-                {Array.from({ length: 12 }, (_, i) =>
-                  <TileBlock key={i} tileInfo={tiles[j * 12 + i]}></TileBlock>
-                )
-                }
-              </Row>
-            )}
-            <Row className="justify-content-center mt-5">
-              <Col>
-                Drag to place your defending tower:
-              </Col>
-            </Row>
-            <Row className="justify-content-center mt-5">
-              {inventory.map((inventory, i) => {
-                return <Draggable id={`inventory-${i}`} index={i} inventory={inventory} />
-              })}
-            </Row>
-            <Row className="justify-content-center mt-5">
-              <Col md={2}>
-                <Button onClick={() => startGame()} style={{ width: "100%" }}>Confirm</Button>
-              </Col>
-            </Row>
-          </Container>
-        </DndContext>
-      }
-      {l2account && play &&
-        <>
           <Container className="mt-5 mb-5">
             <Row>
               <Col>
-                Reward {reward}
+                Treasure: {treasure}
               </Col>
               <Col>
                 Monster Left {monsterLeft}
@@ -440,16 +471,23 @@ export function GameController() {
           </Container>
           <Row className="text-center">
             <Col>
-              <canvas id="canvas" height="500" width="740"></canvas>
+              <DroppableCanvas play={play} step={step} render={drawCanvas}></DroppableCanvas>
             </Col>
           </Row>
           <Row className="justify-content-center mt-5">
-            {inventory.map((inventory, i) => {
-              return <Draggable id={`inventory-${i}`} index={i} inventory={inventory} />
-            })}
+            <Inventory inventory={inventory}></Inventory>
           </Row>
-        </>
+
+          {!play &&
+            <Row className="justify-content-center mt-5">
+              <Col md={2}>
+                <Button onClick={() => startGame()} style={{ width: "100%" }}>Confirm</Button>
+              </Col>
+            </Row>
+          }
+        </DndContext>
       }
+
     </>
   );
 }
