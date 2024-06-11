@@ -1,0 +1,186 @@
+.player {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  .local {
+    display: flex;
+    align-items: center;
+
+    .localItem {
+      flex: 1;
+      padding: 5px;
+    }
+  }
+
+  .playerIds {
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.main {
+  position: absolute;
+  bottom: 40px;
+  left: 100px;
+  right: 100px;
+  top: 0px;
+  overflow: hidden;
+
+  .creatures {
+    border: 1px solid gray;
+    position: absolute;
+    width: 200px;
+    top: 100px;
+    bottom: 0px;
+    left: 0px;
+    border: 1px solid gray;
+
+    .title {
+      text-align: center;
+      border: 1px solid gray;
+      margin: 20px 0 20px 0;
+    }
+
+    .creatureBox {
+      max-height: 400px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      overflow-y: scroll;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+
+      .creature {
+        width: 90px;
+        height: 100px;
+        border: 1px solid black;
+        box-sizing: border-box;
+        margin-left: 10px;
+        margin-top: 10px;
+
+        .creatureImg {
+          width: 60px;
+          height: 60px;
+          margin: 5px;
+        }
+
+        .objId {
+          width: 80px;
+          margin: auto;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .createObject {
+      position: absolute;
+      bottom: 20px;
+      margin-left: 20px;
+    }
+  }
+
+  .explore {
+    position: absolute;
+    left: 200px;
+    top: 100px;
+    bottom: 0px;
+    right: 300px;
+    border: 1px solid gray;
+
+    .reboot {
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+    }
+
+    .currentModifierIndex {
+      width: 100px;
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform: translate(-50%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .entity {
+      position: relative;
+      bottom: 290px;
+      left: 280px;
+      width: 400px;
+      height: 30px;
+    }
+
+    .exploreBox {
+      height: 300px;
+      position: relative;
+
+      .exploreItem {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    z-index: 10;
+  }
+
+  .program {
+    position: absolute;
+    width: 300px;
+    top: 100px;
+    right: 0px;
+    bottom: 0px;
+    border: 1px solid gray;
+    z-index: 99;
+    overflow-y: scroll;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+
+    .title {
+      text-align: center;
+      border: 1px solid gray;
+    }
+
+    .draggableBox {
+      position: absolute;
+
+      .program {
+        top:0px;
+        position: relative;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+.programInfo {
+  position: relative;
+}
+
+.buttons {
+  margin-top: 20px;
+
+  button {
+    margin-right: 20px;
+  }
+}
+
+.currentActions {
+  margin-top: 20px;
+}

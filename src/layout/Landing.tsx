@@ -59,7 +59,19 @@ export default function Default() {
             </div>
           </div>
         </Row>
-
+        <Row>
+          <div className="game-card-tiny">
+            <img src={LandingImage}>
+            </img>
+            <h4>Mini Server FE</h4>
+            <div className="game-card-details">
+              Tutorial App, a frontend of zkwasm-typescript-mini-server.
+            </div>
+            <div>
+              <a href="/miniserverfe" className="btn btn-game-card-play">play</a>
+            </div>
+          </div>
+        </Row>
       </Container>
     )
 }
