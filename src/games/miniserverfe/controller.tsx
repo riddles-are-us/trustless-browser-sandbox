@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { useAppSelector } from "../../app/hooks";
-import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import { DndContext, useDroppable, DragOverlay } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction, query_config } from "./rpc";
 import { BigInttoHex } from "./utils";
 import { Alert, Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -42,6 +44,7 @@ export function GameController() {
   const [currentModifierIndex, setCurrentModifierIndex] = useState<number>(0);
   const [objEntity, setObjEntity] = useState<Array<number>>([]);
   const l2account = useAppSelector(selectL2Account);
+  const [activeId, setActiveId] = useState("");
   const timer = useRef<NodeJS.Timeout>();
 
   const handleHighlight = (e: any) => {
@@ -162,67 +165,85 @@ export function GameController() {
     );
   }
 
-  const Draggable = memo(
-    (props: any) => {
-      const {attributes, listeners, setNodeRef, transform} = useDraggable({
-        id: props.id
-      });
-      const style = transform ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      } : undefined;
-      return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="program">
-          {props.children}
-        </div>
-      )
-    });
-
-  const DragableModifier = memo(
-    function DragableModifier(props: Modifier) {
+  const ProgramInfo = memo(
+    function ProgramInfo(props: any) {
       const attrArray: any[] = [];
-      {props.entity.map((item, index) => {
+      {props.entity.map((item: any, index: number) => {
         if (item != 0) {
           const obj = {"entity": entityAttributes[index], "item": item};
           attrArray.push(obj);
         }
       })}
-      {props.local.map((item, index) => {
+      {props.local.map((item: any, index: number) => {
         if (item != 0) {
           const obj = {"local": localAttributes[index], "item": item};
           attrArray.push(obj);
         }
       })}
-
       return (
-        <Draggable id={props.name} key={props.name}>
-          <div className="programInfo">
-            <div>{props.name}({props.delay})</div>
-            {
-              Array.from({ length: 3 }).map((_, i) =>
-                <div key={i}>
-                  {
-                    Array.from({ length: 3 }).map((_, j) => {
-                      if(attrArray[i * 3 + j] != undefined) {
-                        const attr = attrArray[i * 3 + j];
-                        if(attr.entity) {
-                          return (
-                            <div key={j}>[{attr.entity}:{attr.item}]</div>
-                          )
-                        } else if(attr.local) {
-                          return (
-                            <div key={j}>[{attr.local}:{attr.item}]</div>
-                          )
-                        }
+        <div className="programInfo">
+          <div>{props.name}({props.delay})</div>
+          {
+            Array.from({ length: 3 }).map((_, i) =>
+              <div key={i}>
+                {
+                  Array.from({ length: 3 }).map((_, j) => {
+                    if(attrArray[i * 3 + j] != undefined) {
+                      const attr = attrArray[i * 3 + j];
+                      if(attr.entity) {
+                        return (
+                          <div key={j}>[{attr.entity}:{attr.item}]</div>
+                        )
+                      } else if(attr.local) {
+                        return (
+                          <div key={j}>[{attr.local}:{attr.item}]</div>
+                        )
                       }
-                    })
-                  }
-                </div>
-              )
-            }
-          </div>
-        </Draggable>
-      );
+                    }
+                  })
+                }
+              </div>
+            )
+          }
+        </div>
+      )
+    }
+  )
+
+  const DragableModifier = memo(
+    function DragableModifier(props: any) {
+      const {attributes, listeners, setNodeRef, transform, transition} = useSortable({
+        id: props.id
+      });
+      const style = {
+        transform: CSS.Transform.toString(transform),
+        transition
+      }
+      return (
+        <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="programItem">
+          <ProgramInfo {...props}></ProgramInfo>
+        </div>
+      )
     });
+
+  function Preview(props: any) {
+    const index = modifiers.findIndex(item => (item[3] == props.id));
+    if(index != -1) {
+      return (
+        <div className="programItem">
+          <ProgramInfo
+            id={activeId}
+            name={modifiers[index][3]}
+            entity = {modifiers[index][1]}
+            local = {modifiers[index][2]}
+            delay = {modifiers[index][0]} /
+          >
+        </div>
+      )
+    } else {
+      return null;
+    }
+  }
 
   function ErrorAlert() {
     return (
@@ -237,15 +258,24 @@ export function GameController() {
     );
   }
 
+  function handleDragStart(event: any) {
+    const {active} = event;
+    setActiveId(active.id);
+  }
+
   function handleDragEnd (event: any) {
     const selected = modifiers.findIndex((item) => item[3] == event.active.id);
-    const newItem = {id: selected, action: modifiers[selected][3]}
-    if(event.over && event.over.id.includes("droppable")) {
-      const index = Number(event.over.id.replace("droppable", ""));
-      const arr = [...dropList];
-      arr[index] = newItem;
-      setDropList(arr);
+    if(selected != -1) {
+      const newItem = {id: selected, action: modifiers[selected][3]};
+      if(event.over && typeof event.over.id == "string" && event.over.id.includes("droppable")) {
+        const index = Number(event.over.id.replace("droppable", ""));
+        console.log(event.over.id)
+        const arr = [...dropList];
+        arr[index] = {id: selected, action: modifiers[selected][3]};
+        setDropList(arr);
+      }
     }
+    setActiveId("");
   }
 
   function reboot() {
@@ -367,7 +397,7 @@ export function GameController() {
 
   return (
     <>
-      <DndContext onDragEnd={(e) => { handleDragEnd(e); }}>
+      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} >
         <Row className="player">
           <Col className="local">
             {
@@ -421,7 +451,7 @@ export function GameController() {
                 {dropList.length != 0 ?
                   dropList.map((item, index) => {
                     return (
-                      <div key={index} id="12134" className="exploreItem">{item.action}</div>
+                      <div key={index} className="exploreItem">{item.action}</div>
                     );
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
@@ -439,13 +469,25 @@ export function GameController() {
           <div className="program">
             <div className="title">PROGRAM</div>
             <div className="draggableBox">
-              { modifiers.map((item, index) => {
-                return (<DragableModifier key={index} name={item[3]}
-                  entity = {item[1]}
-                  local = {item[2]}
-                  delay = {item[0]}
-                />)})
-              }
+              <SortableContext
+                items={modifiers}
+                strategy={verticalListSortingStrategy}
+              >
+                { modifiers.map((item, index) =>
+                    <DragableModifier
+                      key={index}
+                      id={item[3]}
+                      name={item[3]}
+                      entity = {item[1]}
+                      local = {item[2]}
+                      delay = {item[0]}
+                    />
+                  )
+                }
+              </SortableContext>
+              <DragOverlay>
+                <Preview id={activeId} />
+              </DragOverlay>
             </div>
           </div>
         </div>
