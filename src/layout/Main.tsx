@@ -13,7 +13,7 @@ import { GameController as TemplateController } from "../games/signature/control
 import { GameController as DemoGameController } from "../games/demogame/controller";
 import { GameController as RogueLikeController } from "../games/roguelike/controller";
 import { GameController as TowerDefenceController } from "../games/towerdefence/controller";
-// import { GameController as DemoGameController } from "../games/demogame/controller";
+import { GameController as MiniServerFEController } from "../games/miniserverfe/controller";
 import logo from "../images/logo.png";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -39,6 +39,10 @@ export function Main() {
           <Route path="/">
               <Route index element={<Landing/>}/>
               <Route path="demogame" element={<DemoGameController/>}/>
+          </Route>
+          <Route path="/">
+            <Route index element={<Landing/>}/>
+            <Route path="miniserverfe" element={<MiniServerFEController/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
