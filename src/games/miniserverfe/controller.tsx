@@ -368,11 +368,6 @@ export function GameController() {
   return (
     <>
       <DndContext onDragEnd={(e) => { handleDragEnd(e); }}>
-        <div style={{ height: "100vh", left: "50%", transform: "translateX(-50%)", position: "fixed" }}>
-          <div className="col-4 h-50">
-            <ErrorAlert />
-          </div>
-        </div>
         <Row className="player">
           <Col className="local">
             {
@@ -453,6 +448,9 @@ export function GameController() {
               }
             </div>
           </div>
+        </div>
+        <div style={{ left: "50%", transform: "translateX(-50%)", position: "fixed" }}>
+          <ErrorAlert />
         </div>
       </DndContext>
     </>
