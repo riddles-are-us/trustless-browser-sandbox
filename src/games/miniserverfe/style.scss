@@ -147,10 +147,6 @@
     bottom: 0px;
     border: 1px solid gray;
     z-index: 99;
-    overflow-y: scroll;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    overflow-x: hidden;
 
     .title {
       text-align: center;
@@ -158,11 +154,14 @@
     }
 
     .draggableBox {
-      position: absolute;
+      max-height: 500px;
+      overflow-y: scroll;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      overflow-x: hidden;
 
-      .program {
-        top:0px;
-        position: relative;
+      .programItem {
+        border: 1px solid gray;
         font-size: 10px;
       }
     }
