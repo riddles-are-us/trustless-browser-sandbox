@@ -45,20 +45,18 @@ export function GameController() {
   const [parentH, setParentH] = useState(0);
   const [highestBitValue, setHighestBitValue] = useState(0);
   const [haltPosition, setHaltPosition] = useState(0);
-  const [beforeConfirm, setBeforeConfirm] = useState(false);
+  const [isNew, setIsNew] = useState(false);
   const l2account = useAppSelector(selectL2Account);
   const timer = useRef<NodeJS.Timeout>()
   const exploreBoxRef = useRef<HTMLDivElement>(null);
 
   const handleHighlight = (e: any) => {
-    if(highlightedId == "" || highlightedId != e.currentTarget.id) {
-      if(objects[0].object_id.length == 0) {
-        // The first object is empty and will be removed
-        setHighlightedId(String(Number(e.currentTarget.id) - 1));
-      } else {
-        setHighlightedId(e.currentTarget.id);
-      }
+    setIsNew(false);
 
+    if(e.currentTarget.id == "-1") {
+      setHighlightedId("");
+    } else if(highlightedId == "" || highlightedId != e.currentTarget.id) {
+      setHighlightedId(e.currentTarget.id);
       setCurrentModifierIndex(objects[e.currentTarget.id].current_modifier_index);
       setObjEntity(objects[e.currentTarget.id].entity);
       const arr: {id: number, action: string}[]= [];
@@ -66,20 +64,12 @@ export function GameController() {
         arr.push({id: index, action: modifiers[modifier][3]});
       });
       setDropList(arr);
-      setBeforeConfirm(false);
     } else if(highlightedId == e.currentTarget.id){
       setHighlightedId("");
       setCurrentModifierIndex(0);
       setObjEntity([]);
       const arr = new Array(8).fill({"id": 0,"action": "?"});
       setDropList(arr);
-    }
-
-    if(objects[0].object_id.length == 0) {
-      setBeforeConfirm(false);
-      const arr = [...objects];
-      arr.shift();
-      setObjects(arr);
     }
   };
 
@@ -92,38 +82,39 @@ export function GameController() {
         <OverlayTrigger key={index} placement="bottom"
           overlay={<Tooltip id={`tooltip-${index}`}><strong>{objHex}</strong></Tooltip>}
         >
-          <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "none" }}>
+          <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "transparent" }}>
             <img className="creatureImg" src={require("./images/robot.png")} />
             <div className="objId">{ objHex }</div>
+            { isNew && index == 0 && <div className="new">new</div>}
           </div>
         </OverlayTrigger>
       )
     });
 
   const CurrentModifierIndex = memo(
-    function CurrentModifierIndex({robot}: {robot: ObjectProperty[]}) {
-      if(robot.length > 0) {
-        const currentMI = "0x" + BigInt(currentModifierIndex).toString(16);
+    function CurrentModifierIndex(props: any) {
+      const currentMI = "0x" + BigInt(props.currentModifierIndex).toString(16);
+      if(props.currentModifierIndex <= 7) {
+        setHighestBitValue(0);
+        setHaltPosition(0);
+      } else {
         const binaryString = parseInt(currentMI, 16).toString(2);
         const highestBitValue = binaryString.charAt(0) === '1' ? 1 : 0;
         const lastBit = binaryString.charAt(binaryString.length - 1);
+        console.log(binaryString, highestBitValue, lastBit)
         setHighestBitValue(highestBitValue);
         setHaltPosition(Number(lastBit));
-
-        return (
-          <OverlayTrigger key={currentMI} placement="bottom"
-            overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentMI}</strong>.</Tooltip>}
-          >
-            <div className="currentModifierIndex">
-              {currentMI}
-            </div>
-          </OverlayTrigger>
-        )
-      } else {
-        return (
-          <div className="currentModifierIndex"></div>
-        )
       }
+
+      return (
+        <OverlayTrigger key={currentMI} placement="bottom"
+          overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentMI}</strong>.</Tooltip>}
+        >
+          <div className="currentModifierIndex">
+            {currentMI}
+          </div>
+        </OverlayTrigger>
+      )
     });
 
   const ObjectEntity = memo(
@@ -166,7 +157,7 @@ export function GameController() {
     const angleStep = 360 / 8;
     return (
       <div className="exploreBox" ref={exploreBoxRef}>
-        <CurrentModifierIndex robot={objects} />
+        <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
         {children.map((child: any, index: any) => {
           const angle = angleStep * (index - 2);
           const r=200;
@@ -309,6 +300,8 @@ export function GameController() {
   function reboot() {
     const arr = new Array(8).fill({"id": 0,"action": "?"});
     setDropList(arr);
+    setCurrentModifierIndex(0);
+    setObjEntity([]);
   }
 
   function delay(ms: number) {
@@ -319,7 +312,7 @@ export function GameController() {
     for (let i = 0; i< retry; i++) {
       await delay(2000);
       try {
-        queryState();
+        queryState(l2account, highlightedId, objects);
         break;
       } catch(e) {
         continue;
@@ -331,18 +324,20 @@ export function GameController() {
     if(!l2account) {
       setShow(true);
       setError("Please derive processing Key!");
-    } else if(objects.length != 0 && objects[0].object_id.length == 0) {
+    } else if(playerIds == "") {
+      setShow(true);
+      setError("Please wait for getting player id!");
+    } else if(highlightedId == "-1") {
       setShow(true);
       setError("Please confirm!");
     } else {
       setShow(false);
-      const arr1 = [...objects];
-      arr1.unshift({entity:[], object_id:[], modifiers: [], current_modifier_index:0});
-      setObjects(arr1);
-      setHighlightedId("0");
-      setBeforeConfirm(true);
+      setHighlightedId("-1");
       const arr = new Array(8).fill({"id": 0,"action": "?"});
       setDropList(arr);
+      setCurrentModifierIndex(0);
+      setObjEntity([]);
+      setIsNew(false);
     }
   }
 
@@ -352,7 +347,7 @@ export function GameController() {
         return BigInt(Number(item.id));
       });
       const modifiers: bigint = encode_modifier(index);
-      const objIndex = BigInt(objects.length - 1);
+      const objIndex = BigInt(objects.length);
       const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
       await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
       await queryStateWithRetry(3);
@@ -380,7 +375,7 @@ export function GameController() {
     }
   }
 
-  function queryState() {
+  function queryState(l2account: any, highlightedId: string, objects: Array<ObjectProperty>) {
     if(l2account) {
       query_state([], l2account.address).then(res => {
         console.log("Query state", res);
@@ -393,25 +388,36 @@ export function GameController() {
         setPlayerIds(hexString);
 
         setLocalValues(data[0].local);
+        setObjects(data[1].slice().reverse());
 
-        if(highlightedId != "") {
-          if(objects[0].object_id.length == 0 && data[1].length != objects.length - 1) {
-            const index = data[1].length - 1;
-            setObjects(data[1].slice().reverse());
-            setBeforeConfirm(false);
-            setHighlightedId("0");
-            setCurrentModifierIndex(data[1][index].current_modifier_index);
-            setObjEntity(data[1][index].entity);
+        console.log("test highlighted", highlightedId);
+        if(highlightedId != "" && highlightedId != "-1" && !isNew) {
+          console.log(123, highlightedId)
+          setCurrentModifierIndex(objects[Number(highlightedId)].current_modifier_index);
+          setObjEntity(objects[Number(highlightedId)].entity);
 
-            // Set dropList
-            const arr: {id: number, action: string}[]= [];
-            data[1][index].modifiers.map((modifier: number, i: number) => {
-              arr.push({id: i, action: modifiers[modifier][3]});
-            });
-            setDropList(arr);
-          }
-        } else {
-          setObjects(data[1].slice().reverse());
+          // Set dropList
+          const arr: {id: number, action: string}[]= [];
+          objects[Number(highlightedId)].modifiers.map((modifier: number, i: number) => {
+            arr.push({id: i, action: modifiers[modifier][3]});
+          });
+          setDropList(arr);
+        }
+
+        if(highlightedId == "-1" && objects.length < data[1].length) {
+          console.log(125, highlightedId)
+          setHighlightedId("0");
+          const index = data[1].length - 1;
+          setCurrentModifierIndex(data[1][index].current_modifier_index);
+          setObjEntity(data[1][index].entity);
+          setIsNew(true);
+
+          // Set dropList
+          const arr: {id: number, action: string}[]= [];
+          data[1][index].modifiers.map((modifier: number, i: number) => {
+            arr.push({id: i, action: modifiers[modifier][3]});
+          });
+          setDropList(arr);
         }
       }).catch(e => {
         setShow(true);
@@ -459,11 +465,11 @@ export function GameController() {
     }
     timer.current = setInterval(() => {
       if(playerIds != "") {
-        queryState();
+        queryState(l2account, highlightedId, objects);
       }
     }, 3000);
     return () => { clearInterval(timer.current); };
-  }, [l2account, playerIds, highlightedId]);
+  }, [l2account, playerIds, highlightedId, objects]);
 
   return (
     <div className="controller">
@@ -504,6 +510,7 @@ export function GameController() {
           <div className="creatures">
             <div className="title">CREATURES</div>
             <div className="creatureBox">
+              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], current_modifier_index:0}} index={-1} /> }
               {
                 objects.map((item, index) =>
                   <Creature key={index} robot={item} index={index} />
@@ -524,12 +531,13 @@ export function GameController() {
                   dropList.map((item, index) => {
                     let color = "";
                     if(item.action != "?") {
-                      color = "yellow";
-                    }
-                    if(highestBitValue == 1 && haltPosition == index) {
-                      color = "red";
-                    } else if(highestBitValue == 0 && currentModifierIndex == index && item.action != "?") {
-                      color = "green";
+                      if(highestBitValue == 1 && haltPosition == index) {
+                        color = "red";
+                      } else if(highestBitValue == 0 && currentModifierIndex == index) {
+                        color = "green";
+                      } else {
+                        color = "yellow";
+                      }
                     }
 
                     return (
@@ -554,7 +562,7 @@ export function GameController() {
                 }
               </CircleLayout>
             }
-            { beforeConfirm ?
+            { highlightedId == "-1" ?
               <button className="confirm" onClick={() => {confirm();}}>Confirm</button>:
               <button className="reboot" onClick={() => {reboot();}}>Reboot</button>
             }

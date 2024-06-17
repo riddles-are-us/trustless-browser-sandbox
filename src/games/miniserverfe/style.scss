@@ -84,6 +84,12 @@
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+
+          .new {
+            position: relative;
+            top: 20px;
+            color: red;
+          }
         }
       }
 
