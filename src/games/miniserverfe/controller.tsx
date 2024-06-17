@@ -7,9 +7,7 @@ import { query_state, send_transaction, query_config } from "./rpc";
 import { Alert, Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
-import {
-  selectL2Account
-} from "../../data/accountSlice";
+import { selectL2Account } from "../../data/accountSlice";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
@@ -45,6 +43,8 @@ export function GameController() {
   const [activeId, setActiveId] = useState("");
   const [parentW, setParentW] = useState(0);
   const [parentH, setParentH] = useState(0);
+  const [highestBitValue, setHighestBitValue] = useState(0);
+  const [haltPosition, setHaltPosition] = useState(0);
   const [beforeConfirm, setBeforeConfirm] = useState(false);
   const l2account = useAppSelector(selectL2Account);
   const timer = useRef<NodeJS.Timeout>()
@@ -67,7 +67,6 @@ export function GameController() {
       });
       setDropList(arr);
       setBeforeConfirm(false);
-      console.log(e.currentTarget.id, objects[e.currentTarget.id].current_modifier_index, arr);
     } else if(highlightedId == e.currentTarget.id){
       setHighlightedId("");
       setCurrentModifierIndex(0);
@@ -89,7 +88,6 @@ export function GameController() {
       // Convert object_id to hex string
       const objId = robot.object_id.join("");
       const objHex = objId != "" ? "0x" + BigInt(objId).toString(16) : "";
-
       return (
         <OverlayTrigger key={index} placement="bottom"
           overlay={<Tooltip id={`tooltip-${index}`}><strong>{objHex}</strong></Tooltip>}
@@ -106,6 +104,12 @@ export function GameController() {
     function CurrentModifierIndex({robot}: {robot: ObjectProperty[]}) {
       if(robot.length > 0) {
         const currentMI = "0x" + BigInt(currentModifierIndex).toString(16);
+        const binaryString = parseInt(currentMI, 16).toString(2);
+        const highestBitValue = binaryString.charAt(0) === '1' ? 1 : 0;
+        const lastBit = binaryString.charAt(binaryString.length - 1);
+        setHighestBitValue(highestBitValue);
+        setHaltPosition(Number(lastBit));
+
         return (
           <OverlayTrigger key={currentMI} placement="bottom"
             overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentMI}</strong>.</Tooltip>}
@@ -323,7 +327,7 @@ export function GameController() {
     }
   }
 
-  function createObject() {
+  async function createObject() {
     if(!l2account) {
       setShow(true);
       setError("Please derive processing Key!");
@@ -334,9 +338,11 @@ export function GameController() {
       setShow(false);
       const arr1 = [...objects];
       arr1.unshift({entity:[], object_id:[], modifiers: [], current_modifier_index:0});
-      setHighlightedId("0");
       setObjects(arr1);
+      setHighlightedId("0");
       setBeforeConfirm(true);
+      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      setDropList(arr);
     }
   }
 
@@ -350,7 +356,6 @@ export function GameController() {
       const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
       await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
       await queryStateWithRetry(3);
-      setBeforeConfirm(false);
     } catch(e) {
       setShow(true);
       setError("Error at create object " + e);
@@ -388,19 +393,25 @@ export function GameController() {
         setPlayerIds(hexString);
 
         setLocalValues(data[0].local);
-        setObjects(data[1].slice().reverse());
-        if(highlightedId != "") {
-          const objectLen = data[1].length;
-          console.log(data[1][objectLen-1]);
-          setCurrentModifierIndex(data[1][objectLen-1].current_modifier_index);
-          setObjEntity(data[1][objectLen-1].entity);
 
-          // set dropList
-          const arr: {id: number, action: string}[]= [];
-          data[1][objectLen-1].modifiers.map((modifier: number, index: number) => {
-            arr.push({id: index, action: modifiers[modifier][3]});
-          });
-          setDropList(arr);
+        if(highlightedId != "") {
+          if(objects[0].object_id.length == 0 && data[1].length != objects.length - 1) {
+            const index = data[1].length - 1;
+            setObjects(data[1].slice().reverse());
+            setBeforeConfirm(false);
+            setHighlightedId("0");
+            setCurrentModifierIndex(data[1][index].current_modifier_index);
+            setObjEntity(data[1][index].entity);
+
+            // Set dropList
+            const arr: {id: number, action: string}[]= [];
+            data[1][index].modifiers.map((modifier: number, i: number) => {
+              arr.push({id: i, action: modifiers[modifier][3]});
+            });
+            setDropList(arr);
+          }
+        } else {
+          setObjects(data[1].slice().reverse());
         }
       }).catch(e => {
         setShow(true);
@@ -448,11 +459,11 @@ export function GameController() {
     }
     timer.current = setInterval(() => {
       if(playerIds != "") {
-        //queryState();
+        queryState();
       }
     }, 3000);
     return () => { clearInterval(timer.current); };
-  }, [l2account, playerIds]);
+  }, [l2account, playerIds, highlightedId]);
 
   return (
     <div className="controller">
@@ -511,11 +522,21 @@ export function GameController() {
               <CircleLayout>
                 {dropList.length != 0 ?
                   dropList.map((item, index) => {
+                    let color = "";
+                    if(item.action != "?") {
+                      color = "yellow";
+                    }
+                    if(highestBitValue == 1 && haltPosition == index) {
+                      color = "red";
+                    } else if(highestBitValue == 0 && currentModifierIndex == index && item.action != "?") {
+                      color = "green";
+                    }
+
                     return (
                       <OverlayTrigger key={index} placement="bottom"
                       overlay={<Tooltip id={`tooltip-${index}`}><strong>{item.action}</strong></Tooltip>}
                       >
-                        <div key={index} className="exploreItem" style={{backgroundColor: item.action != "?" ? "yellow" : ""}}>
+                        <div key={index} className="exploreItem" style={{backgroundColor: color}}>
                           {item.action}
                         </div>
                       </OverlayTrigger>
