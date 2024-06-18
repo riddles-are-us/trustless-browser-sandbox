@@ -4,13 +4,10 @@ import { DndContext, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction, query_config } from "./rpc";
-import { BigInttoHex } from "./utils";
 import { Alert, Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
-import {
-  selectL2Account
-} from "../../data/accountSlice";
+import { selectL2Account } from "../../data/accountSlice";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
@@ -43,19 +40,36 @@ export function GameController() {
   const [highlightedId, setHighlightedId] = useState("");
   const [currentModifierIndex, setCurrentModifierIndex] = useState<number>(0);
   const [objEntity, setObjEntity] = useState<Array<number>>([]);
-  const l2account = useAppSelector(selectL2Account);
   const [activeId, setActiveId] = useState("");
-  const timer = useRef<NodeJS.Timeout>();
+  const [parentW, setParentW] = useState(0);
+  const [parentH, setParentH] = useState(0);
+  const [highestBitValue, setHighestBitValue] = useState(0);
+  const [haltPosition, setHaltPosition] = useState(0);
+  const [isNew, setIsNew] = useState(false);
+  const l2account = useAppSelector(selectL2Account);
+  const timer = useRef<NodeJS.Timeout>()
+  const exploreBoxRef = useRef<HTMLDivElement>(null);
 
   const handleHighlight = (e: any) => {
-    if(highlightedId == "" || highlightedId != e.currentTarget.id) {
+    setIsNew(false);
+
+    if(e.currentTarget.id == "-1") {
+      setHighlightedId("");
+    } else if(highlightedId == "" || highlightedId != e.currentTarget.id) {
       setHighlightedId(e.currentTarget.id);
       setCurrentModifierIndex(objects[e.currentTarget.id].current_modifier_index);
       setObjEntity(objects[e.currentTarget.id].entity);
+      const arr: {id: number, action: string}[]= [];
+      objects[e.currentTarget.id].modifiers.map((modifier, index) => {
+        arr.push({id: index, action: modifiers[modifier][3]});
+      });
+      setDropList(arr);
     } else if(highlightedId == e.currentTarget.id){
       setHighlightedId("");
       setCurrentModifierIndex(0);
       setObjEntity([]);
+      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      setDropList(arr);
     }
   };
 
@@ -63,38 +77,44 @@ export function GameController() {
     function Creature({robot, index}: {robot: ObjectProperty, index: number}) {
       // Convert object_id to hex string
       const objId = robot.object_id.join("");
-      const objHex = BigInttoHex(BigInt(objId));
-
+      const objHex = objId != "" ? "0x" + BigInt(objId).toString(16) : "";
       return (
         <OverlayTrigger key={index} placement="bottom"
           overlay={<Tooltip id={`tooltip-${index}`}><strong>{objHex}</strong></Tooltip>}
         >
-          <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "none" }}>
+          <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "transparent" }}>
             <img className="creatureImg" src={require("./images/robot.png")} />
             <div className="objId">{ objHex }</div>
+            { isNew && index == 0 && <div className="new">new</div>}
           </div>
         </OverlayTrigger>
       )
     });
 
   const CurrentModifierIndex = memo(
-    function CurrentModifierIndex({robot}: {robot: ObjectProperty[]}) {
-      if(robot.length > 0) {
-        const currentMI = BigInttoHex(BigInt(currentModifierIndex));
-        return (
-          <OverlayTrigger key={currentMI} placement="bottom"
-            overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentMI}</strong>.</Tooltip>}
-          >
-            <div className="currentModifierIndex">
-              {currentMI}
-            </div>
-          </OverlayTrigger>
-        )
+    function CurrentModifierIndex(props: any) {
+      const currentMI = "0x" + BigInt(props.currentModifierIndex).toString(16);
+      if(props.currentModifierIndex <= 7) {
+        setHighestBitValue(0);
+        setHaltPosition(0);
       } else {
-        return (
-          <div className="currentModifierIndex"></div>
-        )
+        const binaryString = parseInt(currentMI, 16).toString(2);
+        const highestBitValue = binaryString.charAt(0) === '1' ? 1 : 0;
+        const lastBit = binaryString.charAt(binaryString.length - 1);
+        console.log(binaryString, highestBitValue, lastBit)
+        setHighestBitValue(highestBitValue);
+        setHaltPosition(Number(lastBit));
       }
+
+      return (
+        <OverlayTrigger key={currentMI} placement="bottom"
+          overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentMI}</strong>.</Tooltip>}
+        >
+          <div className="currentModifierIndex">
+            {currentMI}
+          </div>
+        </OverlayTrigger>
+      )
     });
 
   const ObjectEntity = memo(
@@ -136,13 +156,14 @@ export function GameController() {
   function CircleLayout({ children }: { children: any }) {
     const angleStep = 360 / 8;
     return (
-      <div className="exploreBox">
+      <div className="exploreBox" ref={exploreBoxRef}>
+        <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
         {children.map((child: any, index: any) => {
           const angle = angleStep * (index - 2);
           const r=200;
           const radians = (angle * Math.PI) / 180;
-          const x = 300 + Math.cos(radians) * r;
-          const y = 220 + Math.sin(radians) * r;
+          const x = parentW / 2 - 50 + Math.cos(radians) * r;
+          const y = parentH / 2 - 50  + Math.sin(radians) * r;
           const { setNodeRef } = useDroppable({
             id: "droppable" + index
           });
@@ -266,10 +287,8 @@ export function GameController() {
   function handleDragEnd (event: any) {
     const selected = modifiers.findIndex((item) => item[3] == event.active.id);
     if(selected != -1) {
-      const newItem = {id: selected, action: modifiers[selected][3]};
       if(event.over && typeof event.over.id == "string" && event.over.id.includes("droppable")) {
         const index = Number(event.over.id.replace("droppable", ""));
-        console.log(event.over.id)
         const arr = [...dropList];
         arr[index] = {id: selected, action: modifiers[selected][3]};
         setDropList(arr);
@@ -279,8 +298,10 @@ export function GameController() {
   }
 
   function reboot() {
-    const arr = new Array(8).fill({"id": 0,"action": modifiers[0][3]});
+    const arr = new Array(8).fill({"id": 0,"action": "?"});
     setDropList(arr);
+    setCurrentModifierIndex(0);
+    setObjEntity([]);
   }
 
   function delay(ms: number) {
@@ -291,7 +312,7 @@ export function GameController() {
     for (let i = 0; i< retry; i++) {
       await delay(2000);
       try {
-        queryState();
+        queryState(l2account, highlightedId, objects);
         break;
       } catch(e) {
         continue;
@@ -300,21 +321,36 @@ export function GameController() {
   }
 
   async function createObject() {
+    if(!l2account) {
+      setShow(true);
+      setError("Please derive processing Key!");
+    } else if(playerIds == "") {
+      setShow(true);
+      setError("Please wait for getting player id!");
+    } else if(highlightedId == "-1") {
+      setShow(true);
+      setError("Please confirm!");
+    } else {
+      setShow(false);
+      setHighlightedId("-1");
+      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      setDropList(arr);
+      setCurrentModifierIndex(0);
+      setObjEntity([]);
+      setIsNew(false);
+    }
+  }
+
+  async function confirm() {
     try {
-      if(!l2account) {
-        setShow(true);
-        setError("Please derive processing Key!");
-      } else {
-        setShow(false);
-        const index = dropList.reverse().map((item) => {
-          return BigInt(Number(item.id));
-        });
-        const modifiers: bigint = encode_modifier(index);
-        const objIndex = BigInt(objects.length);
-        const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
-        await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account.address);
-        await queryStateWithRetry(3);
-      }
+      const index = dropList.slice().reverse().map((item) => {
+        return BigInt(Number(item.id));
+      });
+      const modifiers: bigint = encode_modifier(index);
+      const objIndex = BigInt(objects.length);
+      const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
+      await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
+      await queryStateWithRetry(3);
     } catch(e) {
       setShow(true);
       setError("Error at create object " + e);
@@ -339,26 +375,54 @@ export function GameController() {
     }
   }
 
-  function queryState() {
-    try {
-      if(l2account) {
-        query_state([], l2account.address).then(res => {
-          console.log("Query state", res);
-          const data = JSON.parse(res.data);
-          console.log("data", data);
+  function queryState(l2account: any, highlightedId: string, objects: Array<ObjectProperty>) {
+    if(l2account) {
+      query_state([], l2account.address).then(res => {
+        console.log("Query state", res);
+        const data = JSON.parse(res.data);
+        console.log("data", data);
 
-          // Convert player_id to hex string
-          const player_ids = data[0].player_id.join("");
-          const hexString = BigInttoHex(BigInt(player_ids));
-          setPlayerIds(hexString);
+        // Convert player_id to hex string
+        const player_ids = data[0].player_id.join("");
+        const hexString = "0x" + BigInt(player_ids).toString(16);
+        setPlayerIds(hexString);
 
-          setLocalValues(data[0].local);
-          setObjects(data[1]);
-        })
-      }
-    } catch (e) {
-      setShow(true);
-      setError("Error at query state " + e);
+        setLocalValues(data[0].local);
+        setObjects(data[1].slice().reverse());
+
+        console.log("test highlighted", highlightedId);
+        if(highlightedId != "" && highlightedId != "-1" && !isNew) {
+          console.log(123, highlightedId)
+          setCurrentModifierIndex(objects[Number(highlightedId)].current_modifier_index);
+          setObjEntity(objects[Number(highlightedId)].entity);
+
+          // Set dropList
+          const arr: {id: number, action: string}[]= [];
+          objects[Number(highlightedId)].modifiers.map((modifier: number, i: number) => {
+            arr.push({id: i, action: modifiers[modifier][3]});
+          });
+          setDropList(arr);
+        }
+
+        if(highlightedId == "-1" && objects.length < data[1].length) {
+          console.log(125, highlightedId)
+          setHighlightedId("0");
+          const index = data[1].length - 1;
+          setCurrentModifierIndex(data[1][index].current_modifier_index);
+          setObjEntity(data[1][index].entity);
+          setIsNew(true);
+
+          // Set dropList
+          const arr: {id: number, action: string}[]= [];
+          data[1][index].modifiers.map((modifier: number, i: number) => {
+            arr.push({id: i, action: modifiers[modifier][3]});
+          });
+          setDropList(arr);
+        }
+      }).catch(e => {
+        setShow(true);
+        setError("Error at query state " + e);
+      });
     }
   }
 
@@ -370,7 +434,7 @@ export function GameController() {
       setLocalAttributes(data.local_attributes);
       setModifiers(data.modifiers);
       if(dropList.length == 0) {
-        const arr = new Array(8).fill({"id": 0,"action": data.modifiers[0][3]});
+        const arr = new Array(8).fill({"id": 0,"action": "?"});
         setDropList(arr);
       }
     } catch(e) {
@@ -379,8 +443,20 @@ export function GameController() {
     }
   }
 
+  function resizeChange() {
+    if(exploreBoxRef.current) {
+      setParentW(exploreBoxRef.current!.offsetWidth);
+      setParentH(exploreBoxRef.current!.offsetHeight);
+    }
+  }
+
   useEffect(() => {
     queryConfig();
+    if(exploreBoxRef.current) {
+      setParentW(exploreBoxRef.current!.offsetWidth);
+      setParentH(exploreBoxRef.current!.offsetHeight);
+    }
+    window.addEventListener("resize", resizeChange);
   }, []);
 
   useEffect(() => {
@@ -389,15 +465,18 @@ export function GameController() {
     }
     timer.current = setInterval(() => {
       if(playerIds != "") {
-        queryState();
+        queryState(l2account, highlightedId, objects);
       }
     }, 3000);
     return () => { clearInterval(timer.current); };
-  }, [l2account, playerIds]);
+  }, [l2account, playerIds, highlightedId, objects]);
 
   return (
-    <>
-      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} >
+    <div className="controller">
+      <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div style={{ left: "50%", transform: "translateX(-50%)", position: "absolute" }}>
+          <ErrorAlert />
+        </div>
         <Row className="player">
           <Col className="local">
             {
@@ -429,42 +508,64 @@ export function GameController() {
         </Row>
         <div className="main">
           <div className="creatures">
-            <div>
-              <div className="title">CREATURES</div>
-              <div className="creatureBox">
-                {
-                  objects.map((item, index) =>
-                    <Creature key={index} robot={item} index={index} />
-                  )
-                }
-              </div>
-              <div className="createObject">
-                <button onClick={() => { createObject(); }}>
-                  NEW +
-                </button>
-              </div>
+            <div className="title">CREATURES</div>
+            <div className="creatureBox">
+              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], current_modifier_index:0}} index={-1} /> }
+              {
+                objects.map((item, index) =>
+                  <Creature key={index} robot={item} index={index} />
+                )
+              }
+            </div>
+            <div className="createObject">
+              <button onClick={() => {  createObject(); }}>
+                NEW +
+              </button>
             </div>
           </div>
           <div className="explore">
+            {<ObjectEntity robot={objects} />}
             {
               <CircleLayout>
                 {dropList.length != 0 ?
                   dropList.map((item, index) => {
+                    let color = "";
+                    if(item.action != "?") {
+                      if(highestBitValue == 1 && haltPosition == index) {
+                        color = "red";
+                      } else if(highestBitValue == 0 && currentModifierIndex == index) {
+                        color = "green";
+                      } else {
+                        color = "yellow";
+                      }
+                    }
+
                     return (
-                      <div key={index} className="exploreItem">{item.action}</div>
+                      <OverlayTrigger key={index} placement="bottom"
+                      overlay={<Tooltip id={`tooltip-${index}`}><strong>{item.action}</strong></Tooltip>}
+                      >
+                        <div key={index} className="exploreItem" style={{backgroundColor: color}}>
+                          {item.action}
+                        </div>
+                      </OverlayTrigger>
                     );
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
-                    <div key={index} className="exploreItem"></div>
+                    <OverlayTrigger key={index} placement="bottom"
+                    overlay={<Tooltip id={`tooltip-${index}`}><strong>1</strong></Tooltip>}
+                    >
+                      <div key={index} className="exploreItem">
+                        ?
+                      </div>
+                    </OverlayTrigger>
                   )
                 }
               </CircleLayout>
             }
-            {<CurrentModifierIndex robot={objects} />}
-            {<ObjectEntity robot={objects} />}
-            <button className="reboot" onClick={() => {reboot();}}>
-              Reboot
-            </button>
+            { highlightedId == "-1" ?
+              <button className="confirm" onClick={() => {confirm();}}>Confirm</button>:
+              <button className="reboot" onClick={() => {reboot();}}>Reboot</button>
+            }
           </div>
           <div className="program">
             <div className="title">PROGRAM</div>
@@ -491,10 +592,7 @@ export function GameController() {
             </div>
           </div>
         </div>
-        <div style={{ left: "50%", transform: "translateX(-50%)", position: "fixed" }}>
-          <ErrorAlert />
-        </div>
       </DndContext>
-    </>
+    </div>
   )
 }
