@@ -5,9 +5,9 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction, query_config } from "./rpc";
 import { Alert, Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { selectL2Account } from "../../data/accountSlice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
-import { selectL2Account } from "../../data/accountSlice";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
@@ -25,6 +25,12 @@ interface ObjectProperty {
   object_id: Array<string>,
   modifiers: Array<number>,
   current_modifier_index: number,
+}
+
+interface playerProperty {
+  player_id: Array<string>,
+  objects: Array<number>,
+  local: Array<number>
 }
 
 export function GameController() {
@@ -46,32 +52,10 @@ export function GameController() {
   const [highestBitValue, setHighestBitValue] = useState(0);
   const [haltPosition, setHaltPosition] = useState(0);
   const [isNew, setIsNew] = useState(false);
+  const [playerAction, setPlayerAction] = useState<"browsing" | "creating">("browsing");
+  const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
-  const timer = useRef<NodeJS.Timeout>()
   const exploreBoxRef = useRef<HTMLDivElement>(null);
-
-  const handleHighlight = (e: any) => {
-    setIsNew(false);
-
-    if(e.currentTarget.id == "-1") {
-      setHighlightedId("");
-    } else if(highlightedId == "" || highlightedId != e.currentTarget.id) {
-      setHighlightedId(e.currentTarget.id);
-      setCurrentModifierIndex(objects[e.currentTarget.id].current_modifier_index);
-      setObjEntity(objects[e.currentTarget.id].entity);
-      const arr: {id: number, action: string}[]= [];
-      objects[e.currentTarget.id].modifiers.map((modifier, index) => {
-        arr.push({id: index, action: modifiers[modifier][3]});
-      });
-      setDropList(arr);
-    } else if(highlightedId == e.currentTarget.id){
-      setHighlightedId("");
-      setCurrentModifierIndex(0);
-      setObjEntity([]);
-      const arr = new Array(8).fill({"id": 0,"action": "?"});
-      setDropList(arr);
-    }
-  };
 
   const Creature = memo(
     function Creature({robot, index}: {robot: ObjectProperty, index: number}) {
@@ -85,7 +69,7 @@ export function GameController() {
           <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "transparent" }}>
             <img className="creatureImg" src={require("./images/robot.png")} />
             <div className="objId">{ objHex }</div>
-            { isNew && index == 0 && <div className="new">new</div>}
+            { isNew && index == objects.length - 1 && <div className="new">new</div>}
           </div>
         </OverlayTrigger>
       )
@@ -101,7 +85,6 @@ export function GameController() {
         const binaryString = parseInt(currentMI, 16).toString(2);
         const highestBitValue = binaryString.charAt(0) === '1' ? 1 : 0;
         const lastBit = binaryString.charAt(binaryString.length - 1);
-        console.log(binaryString, highestBitValue, lastBit)
         setHighestBitValue(highestBitValue);
         setHaltPosition(Number(lastBit));
       }
@@ -140,51 +123,39 @@ export function GameController() {
       }
     });
 
-  /* The modifier must less than eight */
-  function encode_modifier(modifiers: Array<bigint>) {
-    let c = 0n;
-    for (const m of modifiers) {
-      c = (c << 8n) + m;
-    }
-    return c;
-  }
+  const CircleLayout = memo(
+    function CircleLayout({ children }: { children: any }) {
+      const angleStep = 360 / 8;
+      return (
+        <div className="exploreBox" ref={exploreBoxRef}>
+          <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
+          {children.map((child: any, index: any) => {
+            const angle = angleStep * (index - 2);
+            const r=200;
+            const radians = (angle * Math.PI) / 180;
+            const x = parentW / 2 - 50 + Math.cos(radians) * r;
+            const y = parentH / 2 - 50  + Math.sin(radians) * r;
+            const { setNodeRef } = useDroppable({
+              id: "droppable" + index
+            });
 
-  function createCommand(command: bigint, objindex: bigint) {
-    return (command << 32n) + objindex;
-  }
-
-  function CircleLayout({ children }: { children: any }) {
-    const angleStep = 360 / 8;
-    return (
-      <div className="exploreBox" ref={exploreBoxRef}>
-        <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
-        {children.map((child: any, index: any) => {
-          const angle = angleStep * (index - 2);
-          const r=200;
-          const radians = (angle * Math.PI) / 180;
-          const x = parentW / 2 - 50 + Math.cos(radians) * r;
-          const y = parentH / 2 - 50  + Math.sin(radians) * r;
-          const { setNodeRef } = useDroppable({
-            id: "droppable" + index
-          });
-
-          return (
-            <div
-              ref={setNodeRef}
-              key={index}
-              style={{
-                position: 'absolute',
-                top: `${y}px`,
-                left: `${x}px`
-              }}
-            >
-              {child}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+            return (
+              <div
+                ref={setNodeRef}
+                key={index}
+                style={{
+                  position: 'absolute',
+                  top: `${y}px`,
+                  left: `${x}px`
+                }}
+              >
+                {child}
+              </div>
+            );
+          })}
+        </div>
+      );
+    });
 
   const ProgramInfo = memo(
     function ProgramInfo(props: any) {
@@ -228,8 +199,7 @@ export function GameController() {
           }
         </div>
       )
-    }
-  )
+    });
 
   const DragableModifier = memo(
     function DragableModifier(props: any) {
@@ -247,24 +217,25 @@ export function GameController() {
       )
     });
 
-  function Preview(props: any) {
-    const index = modifiers.findIndex(item => (item[3] == props.id));
-    if(index != -1) {
-      return (
-        <div className="programItem">
-          <ProgramInfo
-            id={activeId}
-            name={modifiers[index][3]}
-            entity = {modifiers[index][1]}
-            local = {modifiers[index][2]}
-            delay = {modifiers[index][0]} /
-          >
-        </div>
-      )
-    } else {
-      return null;
-    }
-  }
+  const Preview = memo(
+    function Preview(props: any) {
+      const index = modifiers.findIndex(item => (item[3] == props.id));
+      if(index != -1) {
+        return (
+          <div className="programItem">
+            <ProgramInfo
+              id={activeId}
+              name={modifiers[index][3]}
+              entity = {modifiers[index][1]}
+              local = {modifiers[index][2]}
+              delay = {modifiers[index][0]} /
+            >
+          </div>
+        )
+      } else {
+        return null;
+      }
+    });
 
   function ErrorAlert() {
     return (
@@ -279,12 +250,50 @@ export function GameController() {
     );
   }
 
+  const handleHighlight = (e: any) => {
+    if(e.currentTarget.id == "-1") {
+      setHighlightedId("");
+    } else if(highlightedId != e.currentTarget.id || highlightedId == "") {
+      console.log(objects, e.currentTarget.id)
+      setHighlightedId(e.currentTarget.id);
+      setCurrentModifierIndex(objects[e.currentTarget.id].current_modifier_index);
+      setObjEntity(objects[e.currentTarget.id].entity);
+      const arr: {id: number, action: string}[]= [];
+      objects[e.currentTarget.id].modifiers.map((modifier, index) => {
+        arr.push({id: index, action: modifiers[modifier][3]});
+      });
+      setDropList(arr);
+    } else if(highlightedId == e.currentTarget.id){
+      setPlayerAction("browsing");
+      setHighlightedId("");
+      setCurrentModifierIndex(0);
+      setObjEntity([]);
+      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      setDropList(arr);
+    }
+    setIsNew(false);
+  };
+
+  /* The modifier must less than eight */
+  function encode_modifier(modifiers: Array<bigint>) {
+    let c = 0n;
+    for (const m of modifiers) {
+      c = (c << 8n) + m;
+    }
+    return c;
+  }
+
+  function createCommand(command: bigint, objindex: bigint) {
+    return (command << 32n) + objindex;
+  }
+
   function handleDragStart(event: any) {
+    setPlayerAction("creating");
     const {active} = event;
     setActiveId(active.id);
   }
 
-  function handleDragEnd (event: any) {
+  function handleDragEnd(event: any) {
     const selected = modifiers.findIndex((item) => item[3] == event.active.id);
     if(selected != -1) {
       if(event.over && typeof event.over.id == "string" && event.over.id.includes("droppable")) {
@@ -298,21 +307,27 @@ export function GameController() {
   }
 
   function reboot() {
+    setPlayerAction("browsing");
     const arr = new Array(8).fill({"id": 0,"action": "?"});
     setDropList(arr);
     setCurrentModifierIndex(0);
     setObjEntity([]);
+    setPlayerAction("browsing");
   }
 
   function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  function waitingForCreation() {
+    // todo! modal
+  }
+
   async function queryStateWithRetry(retry: number) {
     for (let i = 0; i< retry; i++) {
       await delay(2000);
       try {
-        queryState(l2account, highlightedId, objects);
+        queryState();
         break;
       } catch(e) {
         continue;
@@ -320,29 +335,48 @@ export function GameController() {
     }
   }
 
-  async function createObject() {
+  function allowCreateObject() {
     if(!l2account) {
-      setShow(true);
-      setError("Please derive processing Key!");
+      return "Please derive processing Key!";
     } else if(playerIds == "") {
-      setShow(true);
-      setError("Please wait for getting player id!");
+      return "Please wait for getting player id!";
     } else if(highlightedId == "-1") {
-      setShow(true);
-      setError("Please confirm!");
+      return "Please confirm!";
     } else {
-      setShow(false);
-      setHighlightedId("-1");
-      const arr = new Array(8).fill({"id": 0,"action": "?"});
-      setDropList(arr);
-      setCurrentModifierIndex(0);
-      setObjEntity([]);
-      setIsNew(false);
+      return "";
     }
   }
 
+  async function createObject() {
+    const arr = new Array(8).fill({"id": 0,"action": "?"});
+    setDropList(arr);
+    setShow(false);
+    setHighlightedId("-1");
+    setCurrentModifierIndex(0);
+    setObjEntity([]);
+    setIsNew(false);
+  }
+
+  function handleCreateObject() {
+    const res = allowCreateObject();
+    if(res != "") {
+      setShow(true);
+      setError(res);
+    } else {
+      createObject();
+    }
+  }
+
+  function allowConfirm() {
+    if(highlightedId != "-1") {
+      return "Please new object!";
+    } else {
+      return "";
+    }
+  }
   async function confirm() {
     try {
+      setPlayerAction("browsing");
       const index = dropList.slice().reverse().map((item) => {
         return BigInt(Number(item.id));
       });
@@ -357,72 +391,85 @@ export function GameController() {
     }
   }
 
-  
+  function handleConfirm() {
+    const res = allowConfirm();
+    if(res != "") {
+      setShow(true);
+      setError(res);
+    } else {
+      confirm();
+    }
+  }
+
   async function createPlayer() {
     try {
-      if(!l2account) {
-        setShow(true);
-        setError("Please derive processing Key!");
-      } else {
-        setShow(false);
-        const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
-        await send_transaction([insPlayerCmd,0n,0n,0n], l2account.address);
-        await queryStateWithRetry(3);
-      }
+      setShow(false);
+      const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
+      await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
+      await queryStateWithRetry(3);
     } catch(e) {
       setShow(true);
       setError("Error at create player " + e);
     }
   }
 
-  function queryState(l2account: any, highlightedId: string, objects: Array<ObjectProperty>) {
-    if(l2account) {
-      query_state([], l2account.address).then(res => {
-        console.log("Query state", res);
-        const data = JSON.parse(res.data);
-        console.log("data", data);
+  function decodePlayerInfo(playerInfo: playerProperty) {
+    const player_ids = playerInfo.player_id.join("");
+    const hexString = "0x" + BigInt(player_ids).toString(16);
+    setPlayerIds(hexString);
 
-        // Convert player_id to hex string
-        const player_ids = data[0].player_id.join("");
-        const hexString = "0x" + BigInt(player_ids).toString(16);
-        setPlayerIds(hexString);
+    setLocalValues(playerInfo.local);
+  }
 
-        setLocalValues(data[0].local);
-        setObjects(data[1].slice().reverse());
+  async function queryStateWithReboot() {
+    if(playerLoaded() && !playerInAction()) {
+      await queryState();
+    }
+    setInc(inc + 1);
+  }
 
-        console.log("test highlighted", highlightedId);
-        if(highlightedId != "" && highlightedId != "-1" && !isNew) {
-          console.log(123, highlightedId)
-          setCurrentModifierIndex(objects[Number(highlightedId)].current_modifier_index);
-          setObjEntity(objects[Number(highlightedId)].entity);
+  async function queryState() {
+    try {
+      const res = await query_state([], l2account!.address);
+      console.log("Query state", res);
+      const data = JSON.parse(res.data);
+      console.log("data", data);
 
-          // Set dropList
-          const arr: {id: number, action: string}[]= [];
-          objects[Number(highlightedId)].modifiers.map((modifier: number, i: number) => {
-            arr.push({id: i, action: modifiers[modifier][3]});
-          });
-          setDropList(arr);
+      if(playerInAction()) {
+        decodePlayerInfo(data[0]);
+      } else {
+        decodePlayerInfo(data[0]);
+        const newObjectIndex = data[1].length - 1;
+
+        if(data[1].length != objects.length) {
+          setObjects(data[1]);
+
+          if(objects.length != 0) {
+            setHighlightedId(String(newObjectIndex));
+            setCurrentModifierIndex(data[1][newObjectIndex].current_modifier_index);
+            setObjEntity((data[1][Number(newObjectIndex)].entity));
+            setIsNew(true);
+
+            // Set dropList
+            const arr: {id: number, action: string}[]= [];
+            data[1][Number(newObjectIndex)].modifiers.map((modifier: number, i: number) => {
+              arr.push({id: i, action: modifiers[modifier][3]});
+            });
+            setDropList(arr);
+          }
+        } else {
+          if(isNew) {
+            setCurrentModifierIndex(data[1][newObjectIndex].current_modifier_index);
+            setObjects(data[1]);
+            if(data[1][newObjectIndex].current_modifier_index > 7) {
+              setPlayerAction("creating");
+            }
+          }
         }
-
-        if(highlightedId == "-1" && objects.length < data[1].length) {
-          console.log(125, highlightedId)
-          setHighlightedId("0");
-          const index = data[1].length - 1;
-          setCurrentModifierIndex(data[1][index].current_modifier_index);
-          setObjEntity(data[1][index].entity);
-          setIsNew(true);
-
-          // Set dropList
-          const arr: {id: number, action: string}[]= [];
-          data[1][index].modifiers.map((modifier: number, i: number) => {
-            arr.push({id: i, action: modifiers[modifier][3]});
-          });
-          setDropList(arr);
-        }
-      }).catch(e => {
-        setShow(true);
-        setError("Error at query state " + e);
-      });
+      }
+    } catch (e) {
+      setShow(true);
+      setError("Error at query state " + e);
     }
   }
 
@@ -445,16 +492,24 @@ export function GameController() {
 
   function resizeChange() {
     if(exploreBoxRef.current) {
-      setParentW(exploreBoxRef.current!.offsetWidth);
-      setParentH(exploreBoxRef.current!.offsetHeight);
+      setParentW(exploreBoxRef.current.offsetWidth);
+      setParentH(exploreBoxRef.current.offsetHeight);
     }
+  }
+
+  function playerLoaded() {
+    return (playerIds != "");
+  }
+
+  function playerInAction() {
+    return (playerAction != "browsing");
   }
 
   useEffect(() => {
     queryConfig();
     if(exploreBoxRef.current) {
-      setParentW(exploreBoxRef.current!.offsetWidth);
-      setParentH(exploreBoxRef.current!.offsetHeight);
+      setParentW(exploreBoxRef.current.offsetWidth);
+      setParentH(exploreBoxRef.current.offsetHeight);
     }
     window.addEventListener("resize", resizeChange);
   }, []);
@@ -463,13 +518,13 @@ export function GameController() {
     if(playerIds == "" && l2account) {
       createPlayer();
     }
-    timer.current = setInterval(() => {
-      if(playerIds != "") {
-        queryState(l2account, highlightedId, objects);
-      }
-    }, 3000);
-    return () => { clearInterval(timer.current); };
-  }, [l2account, playerIds, highlightedId, objects]);
+  }, [l2account]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      queryStateWithReboot();
+    }, 3000)
+  }, [inc]);
 
   return (
     <div className="controller">
@@ -510,15 +565,15 @@ export function GameController() {
           <div className="creatures">
             <div className="title">CREATURES</div>
             <div className="creatureBox">
-              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], current_modifier_index:0}} index={-1} /> }
               {
                 objects.map((item, index) =>
                   <Creature key={index} robot={item} index={index} />
                 )
               }
+              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], current_modifier_index:0}} index={-1} /> }
             </div>
             <div className="createObject">
-              <button onClick={() => {  createObject(); }}>
+              <button onClick={() => { handleCreateObject() }}>
                 NEW +
               </button>
             </div>
@@ -562,9 +617,9 @@ export function GameController() {
                 }
               </CircleLayout>
             }
-            { highlightedId == "-1" ?
-              <button className="confirm" onClick={() => {confirm();}}>Confirm</button>:
-              <button className="reboot" onClick={() => {reboot();}}>Reboot</button>
+            { dropList.some(item => item.action == "?") ?
+              <button className="reboot" onClick={() => {reboot();}}>Reboot</button>:
+              <button className="confirm" onClick={() => {handleConfirm();}}>Confirm</button>
             }
           </div>
           <div className="program">
