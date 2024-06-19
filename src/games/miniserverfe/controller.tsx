@@ -601,11 +601,26 @@ export function GameController() {
                         color = "yellow";
                       }
                     }
-
+                    const mIndex = modifiers.findIndex(modifier => (modifier[3] == item.action));
                     return (
                       <OverlayTrigger key={index} placement="bottom"
-                      overlay={<Tooltip id={`tooltip-${index}`}><strong>{item.action}</strong></Tooltip>}
-                      >
+                      overlay={<Tooltip id={`tooltip-${index}`}>
+                        {
+                          mIndex != -1 ?
+                          <div className="programItem">
+                            <ProgramInfo
+                              name={modifiers[mIndex][3]}
+                              entity = {modifiers[mIndex][1]}
+                              local = {modifiers[mIndex][2]}
+                              delay = {modifiers[mIndex][0]}
+                            >
+                            </ProgramInfo>
+                          </div> :
+                          <strong>
+                            {item.action}
+                          </strong>
+                        }
+                      </Tooltip>}>
                         <div key={index} className="exploreItem" style={{backgroundColor: color}}>
                           {item.action}
                         </div>
@@ -614,7 +629,7 @@ export function GameController() {
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
                     <OverlayTrigger key={index} placement="bottom"
-                    overlay={<Tooltip id={`tooltip-${index}`}><strong>1</strong></Tooltip>}
+                    overlay={<Tooltip id={`tooltip-${index}`}><strong>?</strong></Tooltip>}
                     >
                       <div key={index} className="exploreItem">
                         ?
