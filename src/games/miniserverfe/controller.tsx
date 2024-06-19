@@ -451,7 +451,7 @@ export function GameController() {
         if(data[1].length != objects.length) {
           setObjects(data[1]);
 
-          if(objects.length != 0) {
+          if(highlightedId != "") {
             setHighlightedId(String(newObjectIndex));
             setCurrentModifierIndex(data[1][newObjectIndex].current_modifier_index);
             setObjEntity((data[1][Number(newObjectIndex)].entity));
