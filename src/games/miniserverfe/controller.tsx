@@ -56,7 +56,7 @@ export function GameController() {
   const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
   const exploreBoxRef = useRef<HTMLDivElement>(null);
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   const Creature = memo(
     function Creature({robot, index}: {robot: ObjectProperty, index: number}) {
       // Convert object_id to hex string
@@ -355,6 +355,13 @@ export function GameController() {
     setCurrentModifierIndex(0);
     setObjEntity([]);
     setIsNew(false);
+
+    // Scroll to bottom
+    setTimeout(() => {
+      if(scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    }, 1000);
   }
 
   function handleCreateObject() {
@@ -564,7 +571,7 @@ export function GameController() {
         <div className="main">
           <div className="creatures">
             <div className="title">CREATURES</div>
-            <div className="creatureBox">
+            <div className="creatureBox" ref={scrollRef}>
               {
                 objects.map((item, index) =>
                   <Creature key={index} robot={item} index={index} />
