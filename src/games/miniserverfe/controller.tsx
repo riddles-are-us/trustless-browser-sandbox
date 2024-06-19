@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction, query_config } from "./rpc";
 import { Alert, Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
+import { CreateObjectModal } from "../../modals/createObject";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 
@@ -54,9 +55,12 @@ export function GameController() {
   const [isNew, setIsNew] = useState(false);
   const [playerAction, setPlayerAction] = useState<"browsing" | "creating">("browsing");
   const [inc, setInc] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
   const l2account = useAppSelector(selectL2Account);
   const exploreBoxRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const Creature = memo(
     function Creature({robot, index}: {robot: ObjectProperty, index: number}) {
       // Convert object_id to hex string
@@ -254,7 +258,6 @@ export function GameController() {
     if(e.currentTarget.id == "-1") {
       setHighlightedId("");
     } else if(highlightedId != e.currentTarget.id || highlightedId == "") {
-      console.log(objects, e.currentTarget.id)
       setHighlightedId(e.currentTarget.id);
       setCurrentModifierIndex(objects[e.currentTarget.id].current_modifier_index);
       setObjEntity(objects[e.currentTarget.id].entity);
@@ -307,20 +310,17 @@ export function GameController() {
   }
 
   function reboot() {
-    setPlayerAction("browsing");
     const arr = new Array(8).fill({"id": 0,"action": "?"});
     setDropList(arr);
     setCurrentModifierIndex(0);
     setObjEntity([]);
     setPlayerAction("browsing");
+    setIsNew(false);
+    setHighlightedId("");
   }
 
   function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  function waitingForCreation() {
-    // todo! modal
   }
 
   async function queryStateWithRetry(retry: number) {
@@ -381,8 +381,10 @@ export function GameController() {
       return "";
     }
   }
+
   async function confirm() {
     try {
+      setShowModal(true);
       setPlayerAction("browsing");
       const index = dropList.slice().reverse().map((item) => {
         return BigInt(Number(item.id));
@@ -470,13 +472,19 @@ export function GameController() {
             setObjects(data[1]);
             if(data[1][newObjectIndex].current_modifier_index > 7) {
               setPlayerAction("creating");
+              setShowModal(false);
+              setMessage("");
             }
           }
         }
       }
     } catch (e) {
-      setShow(true);
-      setError("Error at query state " + e);
+      if(showModal) {
+        setMessage("Error at query state " + e);
+      } else {
+        setShow(true);
+        setError("Error at query state " + e);
+      }
     }
   }
 
@@ -535,6 +543,7 @@ export function GameController() {
 
   return (
     <div className="controller">
+      <CreateObjectModal showModal={showModal} message={message}></CreateObjectModal>
       <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div style={{ left: "50%", transform: "translateX(-50%)", position: "absolute" }}>
           <ErrorAlert />
@@ -601,11 +610,26 @@ export function GameController() {
                         color = "yellow";
                       }
                     }
-
+                    const mIndex = modifiers.findIndex(modifier => (modifier[3] == item.action));
                     return (
                       <OverlayTrigger key={index} placement="bottom"
-                      overlay={<Tooltip id={`tooltip-${index}`}><strong>{item.action}</strong></Tooltip>}
-                      >
+                      overlay={<Tooltip id={`tooltip-${index}`}>
+                        {
+                          mIndex != -1 ?
+                          <div className="programItem">
+                            <ProgramInfo
+                              name={modifiers[mIndex][3]}
+                              entity = {modifiers[mIndex][1]}
+                              local = {modifiers[mIndex][2]}
+                              delay = {modifiers[mIndex][0]}
+                            >
+                            </ProgramInfo>
+                          </div> :
+                          <strong>
+                            {item.action}
+                          </strong>
+                        }
+                      </Tooltip>}>
                         <div key={index} className="exploreItem" style={{backgroundColor: color}}>
                           {item.action}
                         </div>
@@ -614,7 +638,7 @@ export function GameController() {
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
                     <OverlayTrigger key={index} placement="bottom"
-                    overlay={<Tooltip id={`tooltip-${index}`}><strong>1</strong></Tooltip>}
+                    overlay={<Tooltip id={`tooltip-${index}`}><strong>?</strong></Tooltip>}
                     >
                       <div key={index} className="exploreItem">
                         ?
@@ -624,7 +648,8 @@ export function GameController() {
                 }
               </CircleLayout>
             }
-            { dropList.some(item => item.action == "?") ?
+            {
+              dropList.some(item => item.action == "?") || isNew ?
               <button className="reboot" onClick={() => {reboot();}}>Reboot</button>:
               <button className="confirm" onClick={() => {handleConfirm();}}>Confirm</button>
             }
