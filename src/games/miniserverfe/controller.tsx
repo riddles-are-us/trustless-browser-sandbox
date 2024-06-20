@@ -642,7 +642,7 @@ export function GameController() {
                         {
                           mIndex != -1 ?
                           <div className="programItem">
-                            {currentModifierIndex == index && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
+                            {currentModifierIndex == index && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
                             <ProgramInfo
                               name={modifiers[mIndex][3]}
                               entity = {modifiers[mIndex][1]}
