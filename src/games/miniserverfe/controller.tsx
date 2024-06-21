@@ -255,7 +255,7 @@ export function GameController() {
     } else {
       progress = 0;
     }
-    return <ProgressBar variant="info" now={progress} />;
+    return <ProgressBar variant="info" now={progress} style={{marginTop:"10px"}} />;
   }
 
   function ErrorAlert() {
@@ -273,12 +273,10 @@ export function GameController() {
 
   const handleHighlight = (e: any) => {
     if(e.currentTarget.id == "-1") {
-      setPlayerAction("browsing");
       setHighlightedId("");
       const arr = new Array(8).fill({"id": 0,"action": "?"});
       setDropList(arr);
     } else if(highlightedId != e.currentTarget.id || highlightedId == "") {
-      setPlayerAction("creating");
       setHighlightedId(e.currentTarget.id);
       const currentMIndex = getModifierIndex(objects[e.currentTarget.id].modifier_info);
       setCurrentModifierIndex(currentMIndex);
@@ -291,7 +289,6 @@ export function GameController() {
       });
       setDropList(arr);
     } else if(highlightedId == e.currentTarget.id){
-      setPlayerAction("browsing");
       setHighlightedId("");
       setCurrentModifierIndex(0);
       setHaltBit(0);
@@ -303,7 +300,6 @@ export function GameController() {
   };
 
   function handleDragStart(event: any) {
-    setPlayerAction("creating");
     const {active} = event;
     setActiveId(active.id);
   }
@@ -327,7 +323,6 @@ export function GameController() {
     setCurrentModifierIndex(0);
     setHaltBit(0);
     setObjEntity([]);
-    setPlayerAction("browsing");
     setIsNew(false);
     setHighlightedId("");
   }
@@ -369,7 +364,6 @@ export function GameController() {
     setHaltBit(0);
     setObjEntity([]);
     setIsNew(false);
-    setPlayerAction("creating");
 
     // Scroll to bottom
     setTimeout(() => {
@@ -400,7 +394,7 @@ export function GameController() {
   async function confirm() {
     try {
       setShowModal(true);
-      setPlayerAction("browsing");
+      setPlayerAction("creating");
       const index = dropList.slice().reverse().map((item) => {
         return BigInt(item.id);
       });
@@ -472,7 +466,7 @@ export function GameController() {
       if(!playerInAction()) {
         if(data[1].length != objects.length) {
           setObjects(data[1]);
-
+          setPlayerAction("browsing");
           if(highlightedId != "") {
             const lastObjectIndex = data[1].length - 1;
             setShowModal(false);
@@ -637,29 +631,31 @@ export function GameController() {
                     }
                     const mIndex = modifiers.findIndex(modifier => (modifier[3] == item.action));
                     return (
-                      <OverlayTrigger key={index} placement="bottom"
-                      overlay={<Tooltip id={`tooltip-${index}`}>
-                        {
-                          mIndex != -1 ?
-                          <div className="programItem">
-                            {currentModifierIndex == index && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
-                            <ProgramInfo
-                              name={modifiers[mIndex][3]}
-                              entity = {modifiers[mIndex][1]}
-                              local = {modifiers[mIndex][2]}
-                              delay = {modifiers[mIndex][0]}
-                            >
-                            </ProgramInfo>
-                          </div> :
-                          <strong>
+                      <>
+                        <OverlayTrigger key={index} placement="bottom"
+                        overlay={<Tooltip id={`tooltip-${index}`}>
+                          {
+                            mIndex != -1 ?
+                            <div className="programItem">
+                              <ProgramInfo
+                                name={modifiers[mIndex][3]}
+                                entity = {modifiers[mIndex][1]}
+                                local = {modifiers[mIndex][2]}
+                                delay = {modifiers[mIndex][0]}
+                              >
+                              </ProgramInfo>
+                            </div> :
+                            <strong>
+                              {item.action}
+                            </strong>
+                          }
+                        </Tooltip>}>
+                          <div key={index} className="exploreItem" style={{backgroundColor: color}}>
                             {item.action}
-                          </strong>
-                        }
-                      </Tooltip>}>
-                        <div key={index} className="exploreItem" style={{backgroundColor: color}}>
-                          {item.action}
-                        </div>
-                      </OverlayTrigger>
+                          </div>
+                        </OverlayTrigger>
+                        {mIndex != -1 && currentModifierIndex == index && highlightedId != "-1" && highlightedId != "" && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
+                      </>
                     );
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
