@@ -4,9 +4,10 @@ import { DndContext, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction, query_config } from "./rpc";
-import { Alert, Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Alert, Col, Row, OverlayTrigger, Tooltip, ProgressBar } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "../../modals/createObject";
+import { getModifierIndex, getHaltBit, encode_modifier, createCommand, getCounter } from "./helper";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 
@@ -25,7 +26,7 @@ interface ObjectProperty {
   entity: Array<number>,
   object_id: Array<string>,
   modifiers: Array<number>,
-  current_modifier_index: number,
+  modifier_info: number,
 }
 
 interface playerProperty {
@@ -50,7 +51,7 @@ export function GameController() {
   const [activeId, setActiveId] = useState("");
   const [parentW, setParentW] = useState(0);
   const [parentH, setParentH] = useState(0);
-  const [highestBitValue, setHighestBitValue] = useState(0);
+  const [haltBit, setHaltBit] = useState(0);
   const [haltPosition, setHaltPosition] = useState(0);
   const [isNew, setIsNew] = useState(false);
   const [playerAction, setPlayerAction] = useState<"browsing" | "creating">("browsing");
@@ -58,6 +59,7 @@ export function GameController() {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const l2account = useAppSelector(selectL2Account);
+  const [worldTime, setWorldTime] = useState<number>(0);
   const exploreBoxRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -81,24 +83,15 @@ export function GameController() {
 
   const CurrentModifierIndex = memo(
     function CurrentModifierIndex(props: any) {
-      const currentMI = "0x" + BigInt(props.currentModifierIndex).toString(16);
-      if(props.currentModifierIndex <= 7) {
-        setHighestBitValue(0);
-        setHaltPosition(0);
-      } else {
-        const binaryString = parseInt(currentMI, 16).toString(2);
-        const highestBitValue = binaryString.charAt(0) === '1' ? 1 : 0;
-        const lastBit = binaryString.charAt(binaryString.length - 1);
-        setHighestBitValue(highestBitValue);
-        setHaltPosition(Number(lastBit));
-      }
+      const currentMI = props.currentModifierIndex;
+      setHaltPosition(currentMI);
 
       return (
         <OverlayTrigger key={currentMI} placement="bottom"
-          overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentMI}</strong>.</Tooltip>}
+          overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {props.currentModifierIndex}</strong>.</Tooltip>}
         >
           <div className="currentModifierIndex">
-            {currentMI}
+            {props.currentModifierIndex}
           </div>
         </OverlayTrigger>
       )
@@ -241,6 +234,30 @@ export function GameController() {
       }
     });
 
+  const OperateButton = memo(
+    function OperateButton(props: any) {
+      const res = dropList.some(item => item.action == "?");
+
+      if(props.highlightedId == "-1" && !res){
+        return <button className="confirm" onClick={() => {handleConfirm();}}>Confirm</button>;
+      } else {
+        return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
+      }
+    });
+
+  function Progress(props: any) {
+    let progress = 0;
+    const objects = props.objects;
+    const highlightedId = props.highlightedId;
+    if(objects.length > 0 && highlightedId != "-1" && highlightedId != "") {
+      const counter = getCounter(objects[Number(highlightedId)].modifier_info);
+      progress = ((worldTime - counter) / props.delay) * 100;
+    } else {
+      progress = 0;
+    }
+    return <ProgressBar variant="info" now={progress} />;
+  }
+
   function ErrorAlert() {
     return (
       <div>
@@ -256,10 +273,17 @@ export function GameController() {
 
   const handleHighlight = (e: any) => {
     if(e.currentTarget.id == "-1") {
+      setPlayerAction("browsing");
       setHighlightedId("");
+      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      setDropList(arr);
     } else if(highlightedId != e.currentTarget.id || highlightedId == "") {
+      setPlayerAction("creating");
       setHighlightedId(e.currentTarget.id);
-      setCurrentModifierIndex(objects[e.currentTarget.id].current_modifier_index);
+      const currentMIndex = getModifierIndex(objects[e.currentTarget.id].modifier_info);
+      setCurrentModifierIndex(currentMIndex);
+      const haltBit = getHaltBit(objects[e.currentTarget.id].modifier_info);
+      setHaltBit(haltBit);
       setObjEntity(objects[e.currentTarget.id].entity);
       const arr: {id: number, action: string}[]= [];
       objects[e.currentTarget.id].modifiers.map((modifier, index) => {
@@ -270,25 +294,13 @@ export function GameController() {
       setPlayerAction("browsing");
       setHighlightedId("");
       setCurrentModifierIndex(0);
+      setHaltBit(0);
       setObjEntity([]);
       const arr = new Array(8).fill({"id": 0,"action": "?"});
       setDropList(arr);
     }
     setIsNew(false);
   };
-
-  /* The modifier must less than eight */
-  function encode_modifier(modifiers: Array<bigint>) {
-    let c = 0n;
-    for (const m of modifiers) {
-      c = (c << 8n) + m;
-    }
-    return c;
-  }
-
-  function createCommand(command: bigint, objindex: bigint) {
-    return (command << 32n) + objindex;
-  }
 
   function handleDragStart(event: any) {
     setPlayerAction("creating");
@@ -313,6 +325,7 @@ export function GameController() {
     const arr = new Array(8).fill({"id": 0,"action": "?"});
     setDropList(arr);
     setCurrentModifierIndex(0);
+    setHaltBit(0);
     setObjEntity([]);
     setPlayerAction("browsing");
     setIsNew(false);
@@ -353,8 +366,10 @@ export function GameController() {
     setShow(false);
     setHighlightedId("-1");
     setCurrentModifierIndex(0);
+    setHaltBit(0);
     setObjEntity([]);
     setIsNew(false);
+    setPlayerAction("creating");
 
     // Scroll to bottom
     setTimeout(() => {
@@ -387,7 +402,7 @@ export function GameController() {
       setShowModal(true);
       setPlayerAction("browsing");
       const index = dropList.slice().reverse().map((item) => {
-        return BigInt(Number(item.id));
+        return BigInt(item.id);
       });
       const modifiers: bigint = encode_modifier(index);
       const objIndex = BigInt(objects.length);
@@ -426,8 +441,15 @@ export function GameController() {
     const player_ids = playerInfo.player_id.join("");
     const hexString = "0x" + BigInt(player_ids).toString(16);
     setPlayerIds(hexString);
-
     setLocalValues(playerInfo.local);
+  }
+
+  function decodeObjectInfo(objectInfo: ObjectProperty) {
+    setObjEntity(objectInfo.entity);
+    const currentMIndex = getModifierIndex(objectInfo.modifier_info);
+    setCurrentModifierIndex(currentMIndex);
+    const haltBit = getHaltBit(objectInfo.modifier_info);
+    setHaltBit(haltBit);
   }
 
   async function queryStateWithReboot() {
@@ -444,36 +466,39 @@ export function GameController() {
       const data = JSON.parse(res.data);
       console.log("data", data);
 
-      if(playerInAction()) {
-        decodePlayerInfo(data[0]);
-      } else {
-        decodePlayerInfo(data[0]);
-        const newObjectIndex = data[1].length - 1;
+      decodePlayerInfo(data[0]);
+      setWorldTime(data[2]);
 
+      if(!playerInAction()) {
         if(data[1].length != objects.length) {
           setObjects(data[1]);
 
           if(highlightedId != "") {
-            setHighlightedId(String(newObjectIndex));
-            setCurrentModifierIndex(data[1][newObjectIndex].current_modifier_index);
-            setObjEntity((data[1][Number(newObjectIndex)].entity));
+            const lastObjectIndex = data[1].length - 1;
+            setShowModal(false);
+            setMessage("");
             setIsNew(true);
+            setHighlightedId(String(lastObjectIndex));
+            decodeObjectInfo(data[1][lastObjectIndex]);
 
             // Set dropList
             const arr: {id: number, action: string}[]= [];
-            data[1][Number(newObjectIndex)].modifiers.map((modifier: number, i: number) => {
+            data[1][lastObjectIndex].modifiers.map((modifier: number, i: number) => {
               arr.push({id: i, action: modifiers[modifier][3]});
             });
             setDropList(arr);
           }
-        } else {
-          if(isNew) {
-            setCurrentModifierIndex(data[1][newObjectIndex].current_modifier_index);
-            setObjects(data[1]);
-            if(data[1][newObjectIndex].current_modifier_index > 7) {
-              setPlayerAction("creating");
-              setShowModal(false);
-              setMessage("");
+        } else if(data[1].length == objects.length){
+          if(data[1].length > 0) {
+            const lastObjectIndex = data[1].length - 1;
+            if(data[1][lastObjectIndex].modifier_info != objects[lastObjectIndex].modifier_info) {
+              setObjects(data[1]);
+              if(highlightedId != "" && highlightedId != "-1") {
+                const currentMIndex = getModifierIndex(data[1][highlightedId].modifier_info);
+                setCurrentModifierIndex(currentMIndex);
+                const haltBit = getHaltBit(data[1][highlightedId].modifier_info);
+                setHaltBit(haltBit);
+              }
             }
           }
         }
@@ -586,7 +611,7 @@ export function GameController() {
                   <Creature key={index} robot={item} index={index} />
                 )
               }
-              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], current_modifier_index:0}} index={-1} /> }
+              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], modifier_info:0}} index={-1} /> }
             </div>
             <div className="createObject">
               <button onClick={() => { handleCreateObject() }}>
@@ -602,9 +627,9 @@ export function GameController() {
                   dropList.map((item, index) => {
                     let color = "";
                     if(item.action != "?") {
-                      if(highestBitValue == 1 && haltPosition == index) {
+                      if(haltBit == 1 && haltPosition == index) {
                         color = "red";
-                      } else if(highestBitValue == 0 && currentModifierIndex == index) {
+                      } else if(haltBit == 0 && currentModifierIndex == index) {
                         color = "green";
                       } else {
                         color = "yellow";
@@ -617,6 +642,7 @@ export function GameController() {
                         {
                           mIndex != -1 ?
                           <div className="programItem">
+                            {currentModifierIndex == index && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
                             <ProgramInfo
                               name={modifiers[mIndex][3]}
                               entity = {modifiers[mIndex][1]}
@@ -648,11 +674,7 @@ export function GameController() {
                 }
               </CircleLayout>
             }
-            {
-              dropList.some(item => item.action == "?") || isNew ?
-              <button className="reboot" onClick={() => {reboot();}}>Reboot</button>:
-              <button className="confirm" onClick={() => {handleConfirm();}}>Confirm</button>
-            }
+            {<OperateButton highlightedId={highlightedId}></OperateButton>}
           </div>
           <div className="program">
             <div className="title">PROGRAM</div>
