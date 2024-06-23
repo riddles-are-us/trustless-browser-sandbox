@@ -85,7 +85,6 @@ export function GameController() {
   const CurrentModifierIndex = memo(
     function CurrentModifierIndex(props: any) {
       const currentMI = props.currentModifierIndex;
-      setHaltPosition(currentMI);
 
       return (
         <OverlayTrigger key={currentMI} placement="bottom"
@@ -283,6 +282,7 @@ export function GameController() {
       setHighlightedId(e.currentTarget.id);
       const currentMIndex = getModifierIndex(objects[e.currentTarget.id].modifier_info);
       setCurrentModifierIndex(currentMIndex);
+      setHaltPosition(currentMIndex);
       const haltBit = getHaltBit(objects[e.currentTarget.id].modifier_info);
       setHaltBit(haltBit);
       setObjEntity(objects[e.currentTarget.id].entity);
@@ -294,6 +294,7 @@ export function GameController() {
     } else if(highlightedId == e.currentTarget.id){
       setHighlightedId("");
       setCurrentModifierIndex(0);
+      setHaltPosition(0);
       setHaltBit(0);
       setObjEntity([]);
       const arr = new Array(8).fill({"id": 0,"action": "?"});
@@ -372,6 +373,7 @@ export function GameController() {
     setShow(false);
     setHighlightedId("-1");
     setCurrentModifierIndex(0);
+    setHaltPosition(0);
     setHaltBit(0);
     setObjEntity([]);
     setIsNew(false);
@@ -454,6 +456,7 @@ export function GameController() {
     setObjEntity(objectInfo.entity);
     const currentMIndex = getModifierIndex(objectInfo.modifier_info);
     setCurrentModifierIndex(currentMIndex);
+    setHaltPosition(currentMIndex);
     const haltBit = getHaltBit(objectInfo.modifier_info);
     setHaltBit(haltBit);
   }
@@ -510,6 +513,7 @@ export function GameController() {
                 if(highlightedId != "" && highlightedId != "-1") {
                   const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
                   setCurrentModifierIndex(currentMIndex);
+                  setHaltPosition(currentMIndex);
                   const haltBit = getHaltBit(data[1][Number(highlightedId)].modifier_info);
                   setHaltBit(haltBit);
                 }
