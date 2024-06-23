@@ -454,9 +454,7 @@ export function GameController() {
     setObjEntity(objectInfo.entity);
     const currentMIndex = getModifierIndex(objectInfo.modifier_info);
     setCurrentModifierIndex(currentMIndex);
-    console.log("123", objectInfo);
     const haltBit = getHaltBit(objectInfo.modifier_info);
-    console.log("456",haltBit);
     setHaltBit(haltBit);
   }
 
@@ -661,8 +659,8 @@ export function GameController() {
                     }
                     const mIndex = modifiers.findIndex(modifier => (modifier[3] == item.action));
                     return (
-                      <>
-                        <OverlayTrigger key={index} placement="bottom"
+                      <div key={index}>
+                        <OverlayTrigger placement="bottom"
                         overlay={<Tooltip id={`tooltip-${index}`}>
                           {
                             mIndex != -1 ?
@@ -680,12 +678,12 @@ export function GameController() {
                             </strong>
                           }
                         </Tooltip>}>
-                          <div key={index} className="exploreItem" style={{backgroundColor: color}}>
+                          <div className="exploreItem" style={{backgroundColor: color}}>
                             {item.action}
                           </div>
                         </OverlayTrigger>
                         {mIndex != -1 && currentModifierIndex == index && highlightedId != "-1" && highlightedId != "" && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
-                      </>
+                      </div>
                     );
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
