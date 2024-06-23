@@ -39,6 +39,7 @@ export function GameController() {
   const [playerIds, setPlayerIds] = useState("");
   const [objects, setObjects] = useState<Array<ObjectProperty>>([]);
   const [dropList, setDropList] = useState<{id: number, action: string}[]>([]);
+  const [emptyObjDropList, setEmptyObjDropList] = useState<{id: number, action: string}[]>([]);
   const [entityAttributes, setEntityAttributes] = useState<string[]>([]);
   const [localAttributes, setLocalAttributes] = useState<string[]>([]);
   const [localValues, setLocalValues] = useState<number[]>([]);
@@ -54,7 +55,7 @@ export function GameController() {
   const [haltBit, setHaltBit] = useState(0);
   const [haltPosition, setHaltPosition] = useState(0);
   const [isNew, setIsNew] = useState(false);
-  const [playerAction, setPlayerAction] = useState<"browsing" | "creating">("browsing");
+  const [playerAction, setPlayerAction] = useState<"browsing" | "creating" | "rebooting" | "afterRebootBrowsing">("browsing");
   const [inc, setInc] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
@@ -238,10 +239,12 @@ export function GameController() {
     function OperateButton(props: any) {
       const res = dropList.some(item => item.action == "?");
 
-      if(props.highlightedId == "-1" && !res){
+      if(props.haltBit == 1) {
+        return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
+      } else if(props.highlightedId == "-1" && !res){
         return <button className="confirm" onClick={() => {handleConfirm();}}>Confirm</button>;
       } else {
-        return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
+        return <div></div>;
       }
     });
 
@@ -312,30 +315,33 @@ export function GameController() {
         const arr = [...dropList];
         arr[index] = {id: selected, action: modifiers[selected][3]};
         setDropList(arr);
+
+        if(highlightedId == "-1") {
+          setEmptyObjDropList(arr);
+        }
       }
     }
     setActiveId("");
   }
 
-  function reboot() {
-    const arr = new Array(8).fill({"id": 0,"action": "?"});
-    setDropList(arr);
-    setCurrentModifierIndex(0);
-    setHaltBit(0);
-    setObjEntity([]);
-    setIsNew(false);
-    setHighlightedId("");
+  async function reboot() {
+    setShowModal(true);
+    setMessage("Waiting for reboot...");
+    const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(highlightedId));
+    await send_transaction([restartObjectCmd, 0n, 0n, 0n], l2account!.address);
+    setPlayerAction("rebooting");
+    await queryStateWithRetry(3, "rebooting");
   }
 
   function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async function queryStateWithRetry(retry: number) {
+  async function queryStateWithRetry(retry: number, playerAction: string) {
     for (let i = 0; i< retry; i++) {
       await delay(2000);
       try {
-        queryState();
+        queryState(playerAction);
         break;
       } catch(e) {
         continue;
@@ -356,8 +362,13 @@ export function GameController() {
   }
 
   async function createObject() {
-    const arr = new Array(8).fill({"id": 0,"action": "?"});
-    setDropList(arr);
+    if(emptyObjDropList.length != 0) {
+      setDropList([...emptyObjDropList]);
+    } else {
+      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      setDropList(arr);
+    }
+
     setShow(false);
     setHighlightedId("-1");
     setCurrentModifierIndex(0);
@@ -394,7 +405,7 @@ export function GameController() {
   async function confirm() {
     try {
       setShowModal(true);
-      setPlayerAction("creating");
+      setMessage("Waiting for creation...");
       const index = dropList.slice().reverse().map((item) => {
         return BigInt(item.id);
       });
@@ -402,7 +413,8 @@ export function GameController() {
       const objIndex = BigInt(objects.length);
       const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
       await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
-      await queryStateWithRetry(3);
+      setPlayerAction("creating");
+      await queryStateWithRetry(3, "creating");
     } catch(e) {
       setShow(true);
       setError("Error at create object " + e);
@@ -424,7 +436,7 @@ export function GameController() {
       setShow(false);
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
-      await queryStateWithRetry(3);
+      await queryStateWithRetry(3, playerAction);
     } catch(e) {
       setShow(true);
       setError("Error at create player " + e);
@@ -442,59 +454,77 @@ export function GameController() {
     setObjEntity(objectInfo.entity);
     const currentMIndex = getModifierIndex(objectInfo.modifier_info);
     setCurrentModifierIndex(currentMIndex);
+    console.log("123", objectInfo);
     const haltBit = getHaltBit(objectInfo.modifier_info);
+    console.log("456",haltBit);
     setHaltBit(haltBit);
   }
 
-  async function queryStateWithReboot() {
-    if(playerLoaded() && !playerInAction()) {
-      await queryState();
+  async function queryStateWithReboot(playerAction: string) {
+    if(playerLoaded() && !playerInAction(playerAction)) {
+      await queryState(playerAction);
     }
     setInc(inc + 1);
   }
 
-  async function queryState() {
+  async function queryState(playerAction: string) {
     try {
       const res = await query_state([], l2account!.address);
       console.log("Query state", res);
       const data = JSON.parse(res.data);
       console.log("data", data);
-
-      decodePlayerInfo(data[0]);
-      setWorldTime(data[2]);
-
-      if(!playerInAction()) {
-        if(data[1].length != objects.length) {
-          setObjects(data[1]);
-          setPlayerAction("browsing");
-          if(highlightedId != "") {
-            const lastObjectIndex = data[1].length - 1;
-            setShowModal(false);
-            setMessage("");
-            setIsNew(true);
-            setHighlightedId(String(lastObjectIndex));
-            decodeObjectInfo(data[1][lastObjectIndex]);
-
-            // Set dropList
-            const arr: {id: number, action: string}[]= [];
-            data[1][lastObjectIndex].modifiers.map((modifier: number, i: number) => {
-              arr.push({id: i, action: modifiers[modifier][3]});
-            });
-            setDropList(arr);
+      if(playerInAction(playerAction)) {
+        decodePlayerInfo(data[0]);
+        setWorldTime(data[2]);
+        if(data[1].length > 0) {
+          if(playerAction == "creating") {
+            setPlayerAction("browsing");
+          } else if(playerAction == "rebooting") {
+            setPlayerAction("afterRebootBrowsing");
           }
-        } else if(data[1].length == objects.length){
-          if(data[1].length > 0) {
-            const lastObjectIndex = data[1].length - 1;
-            if(data[1][lastObjectIndex].modifier_info != objects[lastObjectIndex].modifier_info) {
-              setObjects(data[1]);
-              if(highlightedId != "" && highlightedId != "-1") {
-                const currentMIndex = getModifierIndex(data[1][highlightedId].modifier_info);
-                setCurrentModifierIndex(currentMIndex);
-                const haltBit = getHaltBit(data[1][highlightedId].modifier_info);
-                setHaltBit(haltBit);
+        }
+      } else if(!playerInAction(playerAction)) {
+        decodePlayerInfo(data[0]);
+        setWorldTime(data[2]);
+
+        if(playerAction == "browsing") {
+          if(data[1].length != objects.length) {
+            setObjects(data[1]);
+            if(highlightedId != "") {
+              const lastObjectIndex = data[1].length - 1;
+              setShowModal(false);
+              setIsNew(true);
+              setHighlightedId(String(lastObjectIndex));
+              decodeObjectInfo(data[1][lastObjectIndex]);
+
+              // Set dropList
+              const arr: {id: number, action: string}[]= [];
+              data[1][lastObjectIndex].modifiers.map((modifier: number, i: number) => {
+                arr.push({id: i, action: modifiers[modifier][3]});
+              });
+              setDropList(arr);
+            }
+          } else if(data[1].length == objects.length){
+            if(data[1].length > 0) {
+              const lastObjectIndex = data[1].length - 1;
+              if(data[1][lastObjectIndex].modifier_info != objects[lastObjectIndex].modifier_info) {
+                setObjects(data[1]);
+                if(highlightedId != "" && highlightedId != "-1") {
+                  const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
+                  setCurrentModifierIndex(currentMIndex);
+                  const haltBit = getHaltBit(data[1][Number(highlightedId)].modifier_info);
+                  setHaltBit(haltBit);
+                }
               }
             }
           }
+        } else if(playerAction == "afterRebootBrowsing") {
+          setObjects(data[1]);
+          setShowModal(false);
+          setIsNew(true);
+          console.log("12", data[1][Number(highlightedId)])
+          decodeObjectInfo(data[1][Number(highlightedId)]);
+          setPlayerAction("browsing");
         }
       }
     } catch (e) {
@@ -535,8 +565,8 @@ export function GameController() {
     return (playerIds != "");
   }
 
-  function playerInAction() {
-    return (playerAction != "browsing");
+  function playerInAction(playerAction: string) {
+    return (playerAction != "browsing" && playerAction != "afterRebootBrowsing");
   }
 
   useEffect(() => {
@@ -556,7 +586,7 @@ export function GameController() {
 
   useEffect(() => {
     setTimeout(() => {
-      queryStateWithReboot();
+      queryStateWithReboot(playerAction);
     }, 3000)
   }, [inc]);
 
@@ -670,7 +700,7 @@ export function GameController() {
                 }
               </CircleLayout>
             }
-            {<OperateButton highlightedId={highlightedId}></OperateButton>}
+            {<OperateButton highlightedId={highlightedId} haltBit={haltBit}></OperateButton>}
           </div>
           <div className="program">
             <div className="title">PROGRAM</div>
