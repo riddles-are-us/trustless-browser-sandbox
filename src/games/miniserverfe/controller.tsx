@@ -524,7 +524,6 @@ export function GameController() {
           setObjects(data[1]);
           setShowModal(false);
           setIsNew(true);
-          console.log("12", data[1][Number(highlightedId)])
           decodeObjectInfo(data[1][Number(highlightedId)]);
           setPlayerAction("browsing");
         }
