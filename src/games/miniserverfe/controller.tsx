@@ -26,7 +26,7 @@ interface ObjectProperty {
   entity: Array<number>,
   object_id: Array<string>,
   modifiers: Array<number>,
-  modifier_info: number,
+  modifier_info: string,
 }
 
 interface playerProperty {
@@ -640,7 +640,7 @@ export function GameController() {
                   <Creature key={index} robot={item} index={index} />
                 )
               }
-              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], modifier_info:0}} index={-1} /> }
+              { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} index={-1} /> }
             </div>
             <div className="createObject">
               <button onClick={() => { handleCreateObject() }}>

@@ -1,22 +1,19 @@
 import BN from "bn.js";
 
-export function getModifierIndex(modifierInfo: number) {
-  const modifierInfoBN = new BN(modifierInfo.toString());
-  const currentMInfoBinary = modifierInfoBN.toString(2, 64);
+export function getModifierIndex(modifierInfo: string) {
+  const currentMInfoBinary = BigInt(modifierInfo).toString(2).padStart(64, "0");
   const currentMIndex = parseInt(currentMInfoBinary.slice(1, 8), 2);
   return currentMIndex;
 }
 
-export function getHaltBit(modifierInfo: number) {
-  const modifierInfoBN = new BN(modifierInfo.toString());
-  const currentMInfoBinary = modifierInfoBN.toString(2, 64);
+export function getHaltBit(modifierInfo: string) {
+  const currentMInfoBinary = BigInt(modifierInfo).toString(2).padStart(64, "0");
   const haltBit = Number(currentMInfoBinary.charAt(0));
   return haltBit;
 }
 
-export function getCounter(modifierInfo: number) {
-  const modifierInfoBN = new BN(modifierInfo.toString());
-  const currentMInfoBinary = modifierInfoBN.toString(2, 64);
+export function getCounter(modifierInfo: string) {
+  const currentMInfoBinary = BigInt(modifierInfo).toString(2).padStart(64, "0");
   const counter = parseInt(currentMInfoBinary.slice(8), 2);
   return counter;
 }
