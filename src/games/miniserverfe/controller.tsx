@@ -76,7 +76,7 @@ export function GameController() {
           <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "transparent" }}>
             <img className="creatureImg" src={require("./images/robot.png")} />
             <div className="objId">{ objHex }</div>
-            { isNew && index == objects.length - 1 && <div className="new">new</div>}
+            { isNew && index == Number(highlightedId) && <div className="new">new</div>}
           </div>
         </OverlayTrigger>
       )
@@ -280,15 +280,16 @@ export function GameController() {
       setDropList(arr);
     } else if(highlightedId != e.currentTarget.id || highlightedId == "") {
       setHighlightedId(e.currentTarget.id);
-      const currentMIndex = getModifierIndex(objects[e.currentTarget.id].modifier_info);
+      const currentObj = objects[e.currentTarget.id];
+      const currentMIndex = getModifierIndex(currentObj.modifier_info);
       setCurrentModifierIndex(currentMIndex);
       setHaltPosition(currentMIndex);
-      const haltBit = getHaltBit(objects[e.currentTarget.id].modifier_info);
+      const haltBit = getHaltBit(currentObj.modifier_info);
       setHaltBit(haltBit);
-      setObjEntity(objects[e.currentTarget.id].entity);
+      setObjEntity(currentObj.entity);
       const arr: {id: number, action: string}[]= [];
-      objects[e.currentTarget.id].modifiers.map((modifier, index) => {
-        arr.push({id: index, action: modifiers[modifier][3]});
+      currentObj.modifiers.map((modifier) => {
+        arr.push({id: modifier, action: modifiers[modifier][3]});
       });
       setDropList(arr);
     } else if(highlightedId == e.currentTarget.id){
@@ -328,8 +329,12 @@ export function GameController() {
   async function reboot() {
     setShowModal(true);
     setMessage("Waiting for reboot...");
+    const index = dropList.slice().reverse().map((item) => {
+      return BigInt(item.id);
+    });
+    const modifiers: bigint = encode_modifier(index);
     const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(highlightedId));
-    await send_transaction([restartObjectCmd, 0n, 0n, 0n], l2account!.address);
+    await send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
     setPlayerAction("rebooting");
     await queryStateWithRetry(3, "rebooting");
   }
@@ -500,15 +505,14 @@ export function GameController() {
 
               // Set dropList
               const arr: {id: number, action: string}[]= [];
-              data[1][lastObjectIndex].modifiers.map((modifier: number, i: number) => {
-                arr.push({id: i, action: modifiers[modifier][3]});
+              data[1][lastObjectIndex].modifiers.map((modifier: number) => {
+                arr.push({id: modifier, action: modifiers[modifier][3]});
               });
               setDropList(arr);
             }
           } else if(data[1].length == objects.length){
             if(data[1].length > 0) {
-              const lastObjectIndex = data[1].length - 1;
-              if(data[1][lastObjectIndex].modifier_info != objects[lastObjectIndex].modifier_info) {
+              if(JSON.stringify(data[1]) != JSON.stringify(objects)) {
                 setObjects(data[1]);
                 if(highlightedId != "" && highlightedId != "-1") {
                   const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
