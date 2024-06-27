@@ -60,6 +60,7 @@ export function GameController() {
   const [inc, setInc] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [currentOperation, setCurrentOperation] = useState<"creation" | "reboot" | "">("creation");
   const l2account = useAppSelector(selectL2Account);
   const [worldTime, setWorldTime] = useState<number>(0);
   const exploreBoxRef = useRef<HTMLDivElement>(null);
@@ -237,22 +238,37 @@ export function GameController() {
 
   const OperateButton = memo(
     function OperateButton(props: any) {
-      const res = dropList.some(item => item.action == "?");
-
+      const res = dropList.some(item => item.action == "");
       if(props.haltBit == 1) {
-        return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
+        if(props.currentOperation == "creation" || props.currentOperation == "reboot") {
+          return <button className="confirm" onClick={() => {confirm();}}>Confirm</button>;
+        } else {
+          return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
+        }
       } else if(props.highlightedId == "-1" && !res){
-        return <button className="confirm" onClick={() => {handleConfirm();}}>Confirm</button>;
+        return <button className="confirm" onClick={() => {confirm();}}>Confirm</button>;
       } else {
         return <div></div>;
       }
     });
 
+  function NewButton(props: any) {
+    if(!props.l2account) {
+      return <div></div>;
+    } else {
+      if(props.highlightedId != "" && props.highlightedId != "-1") {
+        return <button onClick={() => { handleCreateObject(); }}>NEW +</button>;
+      } else {
+        return <div></div>;
+      }
+    }
+  }
+
   function Progress(props: any) {
     let progress = 0;
     const objects = props.objects;
     const highlightedId = props.highlightedId;
-    if(objects.length > 0 && highlightedId != "-1" && highlightedId != "") {
+    if(objects.length > 0 && highlightedId != "-1") {
       const counter = getCounter(objects[Number(highlightedId)].modifier_info);
       progress = ((worldTime - counter) / props.delay) * 100;
     } else {
@@ -275,11 +291,7 @@ export function GameController() {
   }
 
   const handleHighlight = (e: any) => {
-    if(e.currentTarget.id == "-1") {
-      setHighlightedId("");
-      const arr = new Array(8).fill({"id": 0,"action": "?"});
-      setDropList(arr);
-    } else if(highlightedId != e.currentTarget.id || highlightedId == "") {
+    if(e.currentTarget.id != "-1" && highlightedId != e.currentTarget.id) {
       setHighlightedId(e.currentTarget.id);
       const currentObj = objects[e.currentTarget.id];
       const currentMIndex = getModifierIndex(currentObj.modifier_info);
@@ -293,14 +305,7 @@ export function GameController() {
         arr.push({id: modifier, action: modifiers[modifier][3]});
       });
       setDropList(arr);
-    } else if(highlightedId == e.currentTarget.id){
-      setHighlightedId("");
-      setCurrentModifierIndex(0);
-      setHaltPosition(0);
-      setHaltBit(0);
-      setObjEntity([]);
-      const arr = new Array(8).fill({"id": 0,"action": "?"});
-      setDropList(arr);
+      setCurrentOperation("");
     }
     setIsNew(false);
   };
@@ -327,19 +332,6 @@ export function GameController() {
     setActiveId("");
   }
 
-  async function reboot() {
-    setShowModal(true);
-    setMessage("Waiting for reboot...");
-    const index = dropList.slice().reverse().map((item) => {
-      return BigInt(item.id);
-    });
-    const modifiers: bigint = encode_modifier(index);
-    const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(highlightedId));
-    await send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
-    setPlayerAction("rebooting");
-    await queryStateWithRetry(3, "rebooting");
-  }
-
   function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -361,8 +353,6 @@ export function GameController() {
       return "Please derive processing Key!";
     } else if(playerIds == "") {
       return "Please wait for getting player id!";
-    } else if(highlightedId == "-1") {
-      return "Please confirm!";
     } else {
       return "";
     }
@@ -372,7 +362,7 @@ export function GameController() {
     if(emptyObjDropList.length != 0) {
       setDropList([...emptyObjDropList]);
     } else {
-      const arr = new Array(8).fill({"id": 0,"action": "?"});
+      const arr = new Array(8).fill({"id": -1,"action": ""});
       setDropList(arr);
     }
 
@@ -383,6 +373,7 @@ export function GameController() {
     setHaltBit(0);
     setObjEntity([]);
     setIsNew(false);
+    setCurrentOperation("creation");
 
     // Scroll to bottom
     setTimeout(() => {
@@ -402,43 +393,38 @@ export function GameController() {
     }
   }
 
-  function allowConfirm() {
-    if(highlightedId != "-1") {
-      return "Please new object!";
-    } else {
-      return "";
-    }
+  async function reboot() {
+    setCurrentOperation("reboot");
   }
 
   async function confirm() {
     try {
       setShowModal(true);
-      setMessage("Waiting for creation...");
+      const currentMessage = "Waiting for " + currentOperation + "...";
+      setMessage(currentMessage);
       const index = dropList.slice().reverse().map((item) => {
         return BigInt(item.id);
       });
       const modifiers: bigint = encode_modifier(index);
-      const objIndex = BigInt(objects.length);
-      const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
-      await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
-      setPlayerAction("creating");
-      await queryStateWithRetry(3, "creating");
+
+      if(currentOperation == "creation") {
+        const objIndex = BigInt(objects.length);
+        const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
+        await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
+        setPlayerAction("creating");
+        await queryStateWithRetry(3, "creating");
+      } else if(currentOperation == "reboot") {
+        const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(highlightedId));
+        await send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
+        setPlayerAction("rebooting");
+        await queryStateWithRetry(3, "rebooting");
+      }
+      setCurrentOperation("");
     } catch(e) {
       setShow(true);
       setError("Error at create object " + e);
     }
   }
-
-  function handleConfirm() {
-    const res = allowConfirm();
-    if(res != "") {
-      setShow(true);
-      setError(res);
-    } else {
-      confirm();
-    }
-  }
-
   async function createPlayer() {
     try {
       setShow(false);
@@ -498,33 +484,34 @@ export function GameController() {
         setWorldTime(data[2]);
 
         if(playerAction == "browsing") {
-          if(data[1].length != objects.length) {
-            setObjects(data[1]);
-            if(highlightedId != "") {
-              const lastObjectIndex = data[1].length - 1;
-              setShowModal(false);
+          if(data[1].length == 0) {
+            setHighlightedId("-1");
+          } else if(data[1].length != objects.length) {
+            if(objects.length != 0) {
               setIsNew(true);
-              setHighlightedId(String(lastObjectIndex));
-              decodeObjectInfo(data[1][lastObjectIndex]);
-
-              // Set dropList
-              const arr: {id: number, action: string}[]= [];
-              data[1][lastObjectIndex].modifiers.map((modifier: number) => {
-                arr.push({id: modifier, action: modifiers[modifier][3]});
-              });
-              setDropList(arr);
             }
+
+            setObjects(data[1]);
+            const lastObjectIndex = data[1].length - 1;
+            setShowModal(false);
+            setHighlightedId(String(lastObjectIndex));
+            decodeObjectInfo(data[1][lastObjectIndex]);
+
+            // Set dropList
+            const arr: {id: number, action: string}[]= [];
+            data[1][lastObjectIndex].modifiers.map((modifier: number) => {
+              arr.push({id: modifier, action: modifiers[modifier][3]});
+            });
+            setDropList(arr);
           } else if(data[1].length == objects.length){
-            if(data[1].length > 0) {
-              if(JSON.stringify(data[1]) != JSON.stringify(objects)) {
-                setObjects(data[1]);
-                if(highlightedId != "" && highlightedId != "-1") {
-                  const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
-                  setCurrentModifierIndex(currentMIndex);
-                  setHaltPosition(currentMIndex);
-                  const haltBit = getHaltBit(data[1][Number(highlightedId)].modifier_info);
-                  setHaltBit(haltBit);
-                }
+            if(JSON.stringify(data[1]) != JSON.stringify(objects)) {
+              setObjects(data[1]);
+              if(highlightedId != "-1") {
+                const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
+                setCurrentModifierIndex(currentMIndex);
+                setHaltPosition(currentMIndex);
+                const haltBit = getHaltBit(data[1][Number(highlightedId)].modifier_info);
+                setHaltBit(haltBit);
               }
             }
           }
@@ -554,7 +541,7 @@ export function GameController() {
       setLocalAttributes(data.local_attributes);
       setModifiers(data.modifiers);
       if(dropList.length == 0) {
-        const arr = new Array(8).fill({"id": 0,"action": "?"});
+        const arr = new Array(8).fill({"id": -1,"action": ""});
         setDropList(arr);
       }
     } catch(e) {
@@ -647,19 +634,18 @@ export function GameController() {
               { highlightedId == "-1" && <Creature key={-1} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} index={-1} /> }
             </div>
             <div className="createObject">
-              <button onClick={() => { handleCreateObject() }}>
-                NEW +
-              </button>
+            {<NewButton l2account={l2account} highlightedId={highlightedId} />}
             </div>
           </div>
           <div className="explore">
+            <div className="tip">{<div>Please drag modifiers to fill the 8 grids!</div>}</div>
             {<ObjectEntity robot={objects} />}
             {
               <CircleLayout>
                 {dropList.length != 0 ?
                   dropList.map((item, index) => {
                     let color = "";
-                    if(item.action != "?") {
+                    if(item.action != "") {
                       if(haltBit == 1 && haltPosition == index) {
                         color = "red";
                       } else if(haltBit == 0 && currentModifierIndex == index) {
@@ -693,23 +679,22 @@ export function GameController() {
                             {item.action}
                           </div>
                         </OverlayTrigger>
-                        {mIndex != -1 && currentModifierIndex == index && highlightedId != "-1" && highlightedId != "" && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
+                        {mIndex != -1 && currentModifierIndex == index && highlightedId != "-1" && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
                       </div>
                     );
                   }) :
                   Array.from({ length: 8 }).map((_, index) =>
                     <OverlayTrigger key={index} placement="bottom"
-                    overlay={<Tooltip id={`tooltip-${index}`}><strong>?</strong></Tooltip>}
+                    overlay={<Tooltip id={`tooltip-${index}`}><strong></strong></Tooltip>}
                     >
                       <div key={index} className="exploreItem">
-                        ?
                       </div>
                     </OverlayTrigger>
                   )
                 }
               </CircleLayout>
             }
-            {<OperateButton highlightedId={highlightedId} haltBit={haltBit}></OperateButton>}
+            {<OperateButton highlightedId={highlightedId} haltBit={haltBit} currentOperation={currentOperation}></OperateButton>}
           </div>
           <div className="program">
             <div className="title">PROGRAM</div>
