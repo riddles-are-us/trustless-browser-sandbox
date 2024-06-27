@@ -1,5 +1,3 @@
-import BN from "bn.js";
-
 export function getModifierIndex(modifierInfo: string) {
   const currentMInfoBinary = BigInt(modifierInfo).toString(2).padStart(64, "0");
   const currentMIndex = parseInt(currentMInfoBinary.slice(1, 8), 2);
