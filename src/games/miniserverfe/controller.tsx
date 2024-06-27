@@ -8,6 +8,7 @@ import { Alert, Col, Row, OverlayTrigger, Tooltip, ProgressBar } from "react-boo
 import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "../../modals/createObject";
 import { getModifierIndex, getHaltBit, encode_modifier, createCommand, getCounter } from "./helper";
+import { query, LeHexBN } from "./sign";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 
@@ -441,6 +442,12 @@ export function GameController() {
   async function createPlayer() {
     try {
       setShow(false);
+      // Get player id
+      const data = query(l2account!.address);
+      const playerId = new LeHexBN(data.pkx).toU64Array().join("");
+      const playerIdHex = "0x" + BigInt(playerId).toString(16);
+      setPlayerIds(playerIdHex);
+
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
       await queryStateWithRetry(3, playerAction);
@@ -451,9 +458,6 @@ export function GameController() {
   }
 
   function decodePlayerInfo(playerInfo: playerProperty) {
-    const player_ids = playerInfo.player_id.join("");
-    const hexString = "0x" + BigInt(player_ids).toString(16);
-    setPlayerIds(hexString);
     setLocalValues(playerInfo.local);
   }
 
