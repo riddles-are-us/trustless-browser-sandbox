@@ -479,7 +479,7 @@ export function GameController() {
             setPlayerAction("afterRebootBrowsing");
           }
         }
-      } else if(!playerInAction()) {
+      } else {
         decodePlayerInfo(data[0]);
         setWorldTime(data[2]);
 
@@ -506,6 +506,7 @@ export function GameController() {
             } else if(data[1].length == objects.length){
               if(JSON.stringify(data[1]) != JSON.stringify(objects)) {
                 setObjects(data[1]);
+                setShowModal(false);
                 if(highlightedId != "-1") {
                   const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
                   setCurrentModifierIndex(currentMIndex);
