@@ -239,7 +239,7 @@ export function GameController() {
   const OperateButton = memo(
     function OperateButton(props: any) {
       const res = dropList.some(item => item.action == "");
-      if(props.currentOperation == "creation" || props.currentOperation == "reboot") {
+      if(!res && (props.currentOperation == "creation" || props.currentOperation == "reboot")) {
         return <button className="confirm" onClick={() => {confirm();}}>Confirm</button>;
       } else if(props.currentOperation == "" && props.highlightedId != "-1" && props.highlightedId != ""){
         return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
