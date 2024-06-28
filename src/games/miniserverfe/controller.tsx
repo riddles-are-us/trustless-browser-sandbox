@@ -62,6 +62,7 @@ export function GameController() {
   const [currentOperation, setCurrentOperation] = useState<"creation" | "reboot" | "">("");
   const l2account = useAppSelector(selectL2Account);
   const [worldTime, setWorldTime] = useState<number>(0);
+  const [showTips, setShowTips] = useState(false);
   const exploreBoxRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -288,6 +289,7 @@ export function GameController() {
 
   const handleHighlight = (e: any) => {
     if(e.currentTarget.id != "-1") {
+      setShowTips(false);
       setHighlightedId(e.currentTarget.id);
       const currentObj = objects[e.currentTarget.id];
       const currentMIndex = getModifierIndex(currentObj.modifier_info);
@@ -331,11 +333,11 @@ export function GameController() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async function queryStateWithRetry(retry: number, playerAction: string) {
+  async function queryStateWithRetry(retry: number) {
     for (let i = 0; i< retry; i++) {
       await delay(2000);
       try {
-        queryState(playerAction);
+        queryState();
         break;
       } catch(e) {
         continue;
@@ -360,7 +362,7 @@ export function GameController() {
       const arr = new Array(8).fill({"id": -1,"action": ""});
       setDropList(arr);
     }
-
+    setShowTips(true);
     setShow(false);
     setHighlightedId("-1");
     setCurrentModifierIndex(0);
@@ -410,12 +412,12 @@ export function GameController() {
         const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
         await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
         setPlayerAction("creating");
-        await queryStateWithRetry(3, "creating");
+        await queryStateWithRetry(3);
       } else if(currentOperation == "reboot") {
         const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(highlightedId));
         await send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
         setPlayerAction("rebooting");
-        await queryStateWithRetry(3, "rebooting");
+        await queryStateWithRetry(3);
       }
       setCurrentOperation("");
     } catch(e) {
@@ -434,7 +436,7 @@ export function GameController() {
 
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
-      await queryStateWithRetry(3, playerAction);
+      await queryStateWithRetry(3);
     } catch(e) {
       setShow(true);
       setError("Error at create player " + e);
@@ -454,20 +456,20 @@ export function GameController() {
     setHaltBit(haltBit);
   }
 
-  async function queryStateWithReboot(playerAction: string) {
-    if(playerLoaded() && !playerInAction(playerAction)) {
-      await queryState(playerAction);
+  async function queryStateWithReboot() {
+    if(playerLoaded()) {
+      await queryState();
     }
     setInc(inc + 1);
   }
 
-  async function queryState(playerAction: string) {
+  async function queryState() {
     try {
       const res = await query_state([], l2account!.address);
       console.log("Query state", res);
       const data = JSON.parse(res.data);
       console.log("data", data);
-      if(playerInAction(playerAction)) {
+      if(playerInAction()) {
         decodePlayerInfo(data[0]);
         setWorldTime(data[2]);
         if(data[1].length > 0) {
@@ -477,21 +479,27 @@ export function GameController() {
             setPlayerAction("afterRebootBrowsing");
           }
         }
-      } else if(!playerInAction(playerAction)) {
+      } else if(!playerInAction()) {
         decodePlayerInfo(data[0]);
         setWorldTime(data[2]);
 
         if(playerAction == "browsing") {
           if(data[1].length != 0) {
             if(data[1].length != objects.length) {
+              let newObjIndex = 0;
+              if(highlightedId == "-1") {
+                newObjIndex = data[1].length - 1;
+              } else {
+                newObjIndex = 0;
+              }
+              setHighlightedId(String(newObjIndex));
+              decodeObjectInfo(data[1][newObjIndex]);
               setObjects(data[1]);
               setShowModal(false);
-              setHighlightedId("0");
-              decodeObjectInfo(data[1][0]);
 
               // Set dropList
               const arr: {id: number, action: string}[]= [];
-              data[1][0].modifiers.map((modifier: number) => {
+              data[1][newObjIndex].modifiers.map((modifier: number) => {
                 arr.push({id: modifier, action: modifiers[modifier][3]});
               });
               setDropList(arr);
@@ -553,7 +561,7 @@ export function GameController() {
     return (playerIds != "");
   }
 
-  function playerInAction(playerAction: string) {
+  function playerInAction() {
     return (playerAction != "browsing" && playerAction != "afterRebootBrowsing");
   }
 
@@ -574,7 +582,7 @@ export function GameController() {
 
   useEffect(() => {
     setTimeout(() => {
-      queryStateWithReboot(playerAction);
+      queryStateWithReboot();
     }, 3000)
   }, [inc]);
 
@@ -630,7 +638,9 @@ export function GameController() {
             </div>
           </div>
           <div className="explore">
-            <div className="tip">{<div>Please drag modifiers to fill the 8 grids!</div>}</div>
+            <div className="tip">
+              {showTips && <div>Please drag modifiers to fill the 8 grids to create objects!</div>}
+            </div>
             {<ObjectEntity robot={objects} />}
             {
               <CircleLayout>
