@@ -399,7 +399,11 @@ export function GameController() {
     try {
       setShowModal(true);
       const currentMessage = "Waiting for " + currentOperation + "...";
-      setMessage(currentMessage);
+      if(currentOperation == "") {
+        setMessage("Waiting for creation...");
+      } else {
+        setMessage(currentMessage);
+      }
       const index = dropList.slice().reverse().map((item) => {
         return BigInt(item.id);
       });
