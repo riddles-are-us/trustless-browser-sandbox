@@ -60,7 +60,7 @@ export function GameController() {
   const [inc, setInc] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
-  const [currentOperation, setCurrentOperation] = useState<"creation" | "reboot" | "">("creation");
+  const [currentOperation, setCurrentOperation] = useState<"creation" | "reboot" | "">("");
   const l2account = useAppSelector(selectL2Account);
   const [worldTime, setWorldTime] = useState<number>(0);
   const exploreBoxRef = useRef<HTMLDivElement>(null);
@@ -239,12 +239,10 @@ export function GameController() {
   const OperateButton = memo(
     function OperateButton(props: any) {
       const res = dropList.some(item => item.action == "");
-      if(props.haltBit == 1) {
-        if(props.currentOperation == "creation" || props.currentOperation == "reboot") {
-          return <button className="confirm" onClick={() => {confirm();}}>Confirm</button>;
-        } else {
-          return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
-        }
+      if(props.currentOperation == "creation" || props.currentOperation == "reboot") {
+        return <button className="confirm" onClick={() => {confirm();}}>Confirm</button>;
+      } else if(props.currentOperation == "" && props.highlightedId != "-1" && props.highlightedId != ""){
+        return <button className="reboot" onClick={() => {reboot();}}>Reboot</button>;
       } else if(props.highlightedId == "-1" && !res){
         return <button className="confirm" onClick={() => {confirm();}}>Confirm</button>;
       } else {
@@ -291,7 +289,7 @@ export function GameController() {
   }
 
   const handleHighlight = (e: any) => {
-    if(e.currentTarget.id != "-1" && highlightedId != e.currentTarget.id) {
+    if(e.currentTarget.id != "-1") {
       setHighlightedId(e.currentTarget.id);
       const currentObj = objects[e.currentTarget.id];
       const currentMIndex = getModifierIndex(currentObj.modifier_info);
@@ -407,7 +405,7 @@ export function GameController() {
       });
       const modifiers: bigint = encode_modifier(index);
 
-      if(currentOperation == "creation") {
+      if(currentOperation == "creation" || currentOperation == "") {
         const objIndex = BigInt(objects.length);
         const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
         await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
@@ -648,7 +646,7 @@ export function GameController() {
                     if(item.action != "") {
                       if(haltBit == 1 && haltPosition == index) {
                         color = "red";
-                      } else if(haltBit == 0 && currentModifierIndex == index) {
+                      } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {
                         color = "green";
                       } else {
                         color = "yellow";
@@ -679,7 +677,7 @@ export function GameController() {
                             {item.action}
                           </div>
                         </OverlayTrigger>
-                        {mIndex != -1 && currentModifierIndex == index && highlightedId != "-1" && haltBit == 0 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
+                        {mIndex != -1 && currentModifierIndex == index && highlightedId != "-1" && haltBit != 1 && <Progress highlightedId={highlightedId} objects={objects} delay={modifiers[mIndex][0]} />}
                       </div>
                     );
                   }) :
