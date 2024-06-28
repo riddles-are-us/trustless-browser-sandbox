@@ -252,7 +252,7 @@ export function GameController() {
     if(!props.l2account) {
       return <div></div>;
     } else {
-      if(props.highlightedId != "" && props.highlightedId != "-1") {
+      if(props.highlightedId == "" || props.highlightedId != "-1") {
         return <button onClick={() => { handleCreateObject(); }}>NEW +</button>;
       } else {
         return <div></div>;
@@ -482,30 +482,29 @@ export function GameController() {
         setWorldTime(data[2]);
 
         if(playerAction == "browsing") {
-          if(data[1].length == 0) {
-            setHighlightedId("-1");
-          } else if(data[1].length != objects.length) {
-            setObjects(data[1]);
-            const lastObjectIndex = data[1].length - 1;
-            setShowModal(false);
-            setHighlightedId(String(lastObjectIndex));
-            decodeObjectInfo(data[1][lastObjectIndex]);
-
-            // Set dropList
-            const arr: {id: number, action: string}[]= [];
-            data[1][lastObjectIndex].modifiers.map((modifier: number) => {
-              arr.push({id: modifier, action: modifiers[modifier][3]});
-            });
-            setDropList(arr);
-          } else if(data[1].length == objects.length){
-            if(JSON.stringify(data[1]) != JSON.stringify(objects)) {
+          if(data[1].length != 0) {
+            if(data[1].length != objects.length) {
               setObjects(data[1]);
-              if(highlightedId != "-1") {
-                const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
-                setCurrentModifierIndex(currentMIndex);
-                setHaltPosition(currentMIndex);
-                const haltBit = getHaltBit(data[1][Number(highlightedId)].modifier_info);
-                setHaltBit(haltBit);
+              setShowModal(false);
+              setHighlightedId("0");
+              decodeObjectInfo(data[1][0]);
+
+              // Set dropList
+              const arr: {id: number, action: string}[]= [];
+              data[1][0].modifiers.map((modifier: number) => {
+                arr.push({id: modifier, action: modifiers[modifier][3]});
+              });
+              setDropList(arr);
+            } else if(data[1].length == objects.length){
+              if(JSON.stringify(data[1]) != JSON.stringify(objects)) {
+                setObjects(data[1]);
+                if(highlightedId != "-1") {
+                  const currentMIndex = getModifierIndex(data[1][Number(highlightedId)].modifier_info);
+                  setCurrentModifierIndex(currentMIndex);
+                  setHaltPosition(currentMIndex);
+                  const haltBit = getHaltBit(data[1][Number(highlightedId)].modifier_info);
+                  setHaltBit(haltBit);
+                }
               }
             }
           }
