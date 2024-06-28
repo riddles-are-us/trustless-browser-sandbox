@@ -55,7 +55,6 @@ export function GameController() {
   const [parentH, setParentH] = useState(0);
   const [haltBit, setHaltBit] = useState(0);
   const [haltPosition, setHaltPosition] = useState(0);
-  const [isNew, setIsNew] = useState(false);
   const [playerAction, setPlayerAction] = useState<"browsing" | "creating" | "rebooting" | "afterRebootBrowsing">("browsing");
   const [inc, setInc] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -78,7 +77,6 @@ export function GameController() {
           <div className="creature" key={index} id={String(index)} onClick={(e) => {handleHighlight(e);}} style={{ backgroundColor: String(index) === highlightedId ? "yellow" : "transparent" }}>
             <img className="creatureImg" src={require("./images/robot.png")} />
             <div className="objId">{ objHex }</div>
-            { isNew && index == Number(highlightedId) && <div className="new">new</div>}
           </div>
         </OverlayTrigger>
       )
@@ -305,7 +303,6 @@ export function GameController() {
       setDropList(arr);
       setCurrentOperation("");
     }
-    setIsNew(false);
   };
 
   function handleDragStart(event: any) {
@@ -370,7 +367,6 @@ export function GameController() {
     setHaltPosition(0);
     setHaltBit(0);
     setObjEntity([]);
-    setIsNew(false);
     setCurrentOperation("creation");
 
     // Scroll to bottom
@@ -489,10 +485,6 @@ export function GameController() {
           if(data[1].length == 0) {
             setHighlightedId("-1");
           } else if(data[1].length != objects.length) {
-            if(objects.length != 0) {
-              setIsNew(true);
-            }
-
             setObjects(data[1]);
             const lastObjectIndex = data[1].length - 1;
             setShowModal(false);
@@ -520,7 +512,6 @@ export function GameController() {
         } else if(playerAction == "afterRebootBrowsing") {
           setObjects(data[1]);
           setShowModal(false);
-          setIsNew(true);
           decodeObjectInfo(data[1][Number(highlightedId)]);
           setPlayerAction("browsing");
         }
