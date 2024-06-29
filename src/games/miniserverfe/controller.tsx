@@ -18,6 +18,7 @@ import {ProgramInfo} from './modifier';
 import {CreateButton} from './opbutton';
 import {ErrorAlert} from './error';
 import {Explore} from './explore';
+import {getConfig} from "./thunk";
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
@@ -209,6 +210,7 @@ export function GameController() {
     if(playerIds == "" && l2account) {
       createPlayer();
     }
+    dispatch(getConfig());
   }, [l2account]);
 
   useEffect(() => {
