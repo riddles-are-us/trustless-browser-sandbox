@@ -3,6 +3,7 @@ import { send_transaction } from "./rpc";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectL2Account } from "../../data/accountSlice";
 import {selectExternal, setErrorMessage, setSelectedCreatureIndex, setUserActivity, setViewerActivity} from "./thunk";
+import React from "react";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
@@ -83,10 +84,8 @@ export function CreateButton({objects}: {objects: Array<any>}) {
   if (external.viewerActivity == "monitoringResult") {
     return <></>;
   } else if (external.userActivity == "browsing") {
-    return <button onClick={() => { handleCreateObject(objects.length); }}>NEW +</button>;
-
+    return <button className="createButton" onClick={() => { handleCreateObject(objects.length); }}>NEW +</button>;
   } else {
     return <div></div>;
   }
 }
-
