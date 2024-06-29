@@ -205,6 +205,9 @@ export function NewProveTask(props: NewWASMImageProps) {
           </div>
 
           <div className="key-line">
+          <div className="cap">Msg</div><div className="info">{msgHash} </div>
+          </div>
+          <div className="key-line">
           <div className="cap">PublicKey-X</div><div className="info">{sigWitness[0]} </div>
           </div>
           <div className="key-line">

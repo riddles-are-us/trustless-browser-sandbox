@@ -3,6 +3,7 @@ import statusReducer from '../data/statusSlice';
 import accountReducer from '../data/accountSlice';
 import endpointReducer from "../data/endpoint";
 import gameReducer from "../data/game";
+import clientReducer from "../games/miniserverfe/thunk";
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -25,6 +26,7 @@ export const store = configureStore({
     account: accountReducer,
     endpoint: endpointReducer,
     game: gameReducer,
+    client: clientReducer,
   },
 });
 

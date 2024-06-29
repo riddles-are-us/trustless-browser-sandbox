@@ -79,7 +79,7 @@ export function Transaction(prop: IProp) {
   return (
     <>
       <Row>
-          <h3>Create the proof of your game play</h3>
+          <h3>Create the proof of your game plays</h3>
           <p>MerkleRoot:</p>
              <div>
                 <span className="badge text-bg-info">{`xxx`}</span>
@@ -95,6 +95,9 @@ export function Transaction(prop: IProp) {
          }
           </div>
 
+          <div>
+          <span>HashedMessage:</span><span>{msgToSign} </span>
+          </div>
           <div>
           <span>PublicKey-X:</span><span>{sigWitness[0]} </span>
           </div>
