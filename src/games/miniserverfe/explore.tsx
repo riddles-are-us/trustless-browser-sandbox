@@ -141,7 +141,7 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
                 }
               }
               const mIndex = item;
-              if (mIndex!=null) {
+              if (mIndex!=null && modifiersInfo && modifiersInfo[mIndex]) {
                 return (
                   <div key={index}>
                     <OverlayTrigger placement="bottom" overlay= {
@@ -156,6 +156,7 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
                     { mIndex
                         && currentModifierIndex == index
                         && haltBit != 1
+                        && objects.length != 0
                         && <Progress objects={objects} delay={modifiersInfo[mIndex!][0]} />}
                   </div>
                 );

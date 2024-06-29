@@ -63,7 +63,7 @@ export function GameController() {
   const DragableModifier = memo(
     function DragableModifier(props: any) {
       const {attributes, listeners, setNodeRef, transform, transition} = useSortable({
-        id: props.index
+        id: props.id
       });
       const style = {
         transform: CSS.Transform.toString(transform),
@@ -76,22 +76,23 @@ export function GameController() {
       )
     });
 
-   function Preview({index}: {index: number | null}) {
-      if(index) {
-        return (
-          <div className="programItem">
-            <ProgramInfo
-              name={modifiersInfo[index][3]}
-              entity = {modifiersInfo[index][1]}
-              local = {modifiersInfo[index][2]}
-              delay = {modifiersInfo[index][0]} /
-            >
-          </div>
-        )
-      } else {
-        return null;
-      }
+  function Preview({index}: {index: number | null}) {
+    if(index != null && modifiersInfo && modifiersInfo[index]) {
+      const preview = true;
+      return (
+        <div className="programItem">
+          <ProgramInfo
+            name={modifiersInfo[index][3]}
+            entity = {modifiersInfo[index][1]}
+            local = {modifiersInfo[index][2]}
+            delay = {modifiersInfo[index][0]} /
+          >
+        </div>
+      )
+    } else {
+      return null;
     }
+  }
 
   useEffect(() => {
     const cIndex = external.getSelectedIndex()
@@ -108,7 +109,6 @@ export function GameController() {
       }
     }
   }, [external]);
-
 
   function handleDragStart(event: any) {
     const {active} = event;
@@ -285,7 +285,7 @@ export function GameController() {
                   { modifiersInfo.map((item, index) =>
                       <DragableModifier
                         key={index}
-                        id={item[3]}
+                        id={String(index)}
                         name={item[3]}
                         entity = {item[1]}
                         local = {item[2]}

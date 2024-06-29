@@ -1,11 +1,12 @@
+import React from "react";
 import {useAppSelector} from "../../app/hooks";
 import {selectEntityAttributes, selectLocalAttributes} from "./thunk";
 
 export interface Modifier {
-   delay: number,
-   entity: Array<number>,
-   local: Array<number>,
-   name: string,
+  delay: number,
+  entity: Array<number>,
+  local: Array<number>,
+  name: string,
 }
 
 export function ProgramInfo(
@@ -14,18 +15,19 @@ export function ProgramInfo(
   const attrArray: any[] = [];
   const entityAttributes = useAppSelector(selectEntityAttributes);
   const localAttributes = useAppSelector(selectLocalAttributes);
-  {entity.map((item: any, index: number) => {
+
+  entity.map((item: any, index: number) => {
     if (item != 0) {
       const obj = {"entity": entityAttributes[index], "item": item};
       attrArray.push(obj);
     }
-  })}
-  {local.map((item: any, index: number) => {
+  })
+  local.map((item: any, index: number) => {
     if (item != 0) {
       const obj = {"local": localAttributes[index], "item": item};
       attrArray.push(obj);
     }
-  })}
+  })
   return (
     <div className="programInfo">
       <div>{name}({delay})</div>
