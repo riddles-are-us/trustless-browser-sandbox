@@ -7,6 +7,7 @@ import {EntityAttributes} from './creature';
 import {getCounter, getHaltBit, getModifierIndex} from './helper';
 import {OverlayTrigger, ProgressBar, Tooltip} from 'react-bootstrap';
 import {ProgramInfo} from './modifier';
+import { ObjectProperty } from './types';
 
 export function CircleLayout(
         { children }: {children: any}) {
@@ -32,7 +33,7 @@ export function CircleLayout(
     const angleStep = 360 / 8;
     return (
       <div className="exploreBox" ref={exploreBoxRef}>
-        {children.map((child: any, index: any) => {
+        {children.map((child: any, index: number) => {
           const angle = angleStep * (index - 2);
           const r=200;
           const radians = (angle * Math.PI) / 180;
@@ -61,21 +62,21 @@ export function CircleLayout(
 }
 
 const CurrentModifierIndex = memo(
-  function CurrentModifierIndex(props: any) {
-    const currentMI = props.currentModifierIndex;
+  function CurrentModifierIndex({currentModifierIndex}: {currentModifierIndex: number}) {
+    const currentMI = currentModifierIndex;
     return (
       <OverlayTrigger key={currentMI} placement="bottom"
-        overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {props.currentModifierIndex}</strong>.</Tooltip>}
+        overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentModifierIndex}</strong>.</Tooltip>}
       >
         <div className="currentModifierIndex">
-          {props.currentModifierIndex}
+          {currentModifierIndex}
         </div>
       </OverlayTrigger>
     )
   });
 
 
-function Progress({objects, delay}: {objects: Array<any>, delay: number}) {
+function Progress({objects, delay}: {objects: Array<ObjectProperty>, delay: number}) {
   let progress = 0;
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
@@ -85,8 +86,7 @@ function Progress({objects, delay}: {objects: Array<any>, delay: number}) {
   return <ProgressBar variant="info" now={progress} style={{marginTop:"10px"}} />;
 }
 
-
-export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: Array<number|null>}) {
+export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, modifiers: Array<number | null>}) {
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
   const modifiersInfo = useAppSelector(selectModifier);
@@ -94,10 +94,10 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
     if (mIndex) {
       return (<div className="programItem">
         <ProgramInfo
-          name={modifiersInfo[mIndex][3]}
-          entity = {modifiersInfo[mIndex][1]}
-          local = {modifiersInfo[mIndex][2]}
-          delay = {modifiersInfo[mIndex][0]}
+          name={modifiersInfo[mIndex].name}
+          entity = {modifiersInfo[mIndex].entity}
+          local = {modifiersInfo[mIndex].local}
+          delay = {modifiersInfo[mIndex].delay}
         />
       </div>)
     } else {
@@ -128,9 +128,9 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
       {
         <CircleLayout>
           {
-            displayModifiers.map((item, index) => {
+            displayModifiers.map((mIndex, index) => {
               let color = "";
-              if(item) {
+              if(mIndex) {
                 if(haltBit == 1 && currentModifierIndex == index) {
                   color = "red";
                 } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {
@@ -139,7 +139,6 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
                   color = "yellow";
                 }
               }
-              const mIndex = item;
               if (mIndex!=null && modifiersInfo && modifiersInfo[mIndex]) {
                 return (
                   <div key={index}>
@@ -149,14 +148,14 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
                       </Tooltip>
                     }>
                       <div className="exploreItem" style={{backgroundColor: color}}>
-                        {modifiersInfo[mIndex][3]}
+                        {modifiersInfo[mIndex].name}
                       </div>
                     </OverlayTrigger>
                     { mIndex
                         && currentModifierIndex == index
                         && haltBit != 1
                         && objects.length != 0
-                        && <Progress objects={objects} delay={modifiersInfo[mIndex!][0]} />}
+                        && <Progress objects={objects} delay={modifiersInfo[mIndex!].delay} />}
                   </div>
                 );
               } else {
@@ -189,4 +188,3 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
     );
   }
 }
-
