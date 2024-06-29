@@ -5,7 +5,7 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectEntityAttributes, selectExternal, setSelectedCreatureIndex, setUserActivity} from './thunk';
 
 interface externalState {
-   selectedCreatureIndex: number,
+  selectedCreatureIndex: number,
 }
 
 function CreatureTitleTooltip({name}: {name: string}) {
@@ -20,9 +20,9 @@ export function Creature({robot, index}: {robot: ObjectProperty, index: number})
   const beenCreated = robot.object_id.length != 0;
   let objContent = "";
   if (beenCreated) {
-      objContent = BigInt(objId).toString(16);
+    objContent = BigInt(objId).toString(16);
   } else {
-      objContent = "Creating";
+    objContent = "Creating";
   }
 
   const isSelected = external.selectedCreatureIndex == index;
@@ -59,7 +59,7 @@ export function EntityAttributes({robot}: {robot: ObjectProperty}) {
     <div className="entity">
       {
         robot.entity.map((item, index) => {
-           return <span key={index}>{entitiesInfo[index]}: {item} </span>;
+          return <span key={index}>{entitiesInfo[index]}: {item} </span>;
         })
       }
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, memo } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { ConfirmButton } from './opbutton';
 import {useAppSelector} from '../../app/hooks';
-import {selectEntityAttributes, selectExternal, selectGlobalTimer, selectLocalAttributes, selectModifier} from './thunk';
+import {selectExternal, selectGlobalTimer, selectModifier} from './thunk';
 import {EntityAttributes} from './creature';
 import {getCounter, getHaltBit, getModifierIndex} from './helper';
 import {OverlayTrigger, ProgressBar, Tooltip} from 'react-bootstrap';
@@ -109,57 +109,57 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
   if (selectedIndex != null) {
     let currentObj = objects[selectedIndex];
     if (external.userActivity == "creating") {
-        currentObj = {entity:[], object_id:[], modifiers: [], modifier_info:"0"}
+      currentObj = {entity:[], object_id:[], modifiers: [], modifier_info:"0"}
     }
 
     const currentModifierIndex = getModifierIndex(currentObj.modifier_info);
     const haltBit = getHaltBit(currentObj.modifier_info);
 
     return (<div className="explore">
-            <div className="tip">
-               {<div>Please drag modifiers to fill the 8 grids!</div>}
-            </div>
-            {<EntityAttributes robot={currentObj} />}
+      <div className="tip">
+          {<div>Please drag modifiers to fill the 8 grids!</div>}
+      </div>
+      {<EntityAttributes robot={currentObj} />}
 
-            <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
-            {
-              <CircleLayout>
-                {
-                  modifiers.map((item, index) => {
-                    let color = "";
-                    if(item) {
-                      if(haltBit == 1 && currentModifierIndex == index) {
-                        color = "red";
-                      } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {
-                        color = "green";
-                      } else {
-                        color = "yellow";
-                      }
-                    }
-                    const mIndex = item;
-                    return (
-                      <div key={index}>
-                        <OverlayTrigger placement="bottom" overlay= {
-                            <Tooltip id={`tooltip-${index}`}>
-                                <ModifierTooltipInfo mIndex = {mIndex}/>
-                            </Tooltip>
-                        }>
-                          <div className="exploreItem" style={{backgroundColor: color}}>
-                            {modifiersInfo[mIndex][3]}
-                          </div>
-                        </OverlayTrigger>
-                        { mIndex
-                              && currentModifierIndex == index
-                              && haltBit != 1
-                              && <Progress objects={objects} delay={modifiersInfo[mIndex!][0]} />}
-                      </div>
-                    );
-                  })
+      <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
+      {
+        <CircleLayout>
+          {
+            modifiers.map((item, index) => {
+              let color = "";
+              if(item) {
+                if(haltBit == 1 && currentModifierIndex == index) {
+                  color = "red";
+                } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {
+                  color = "green";
+                } else {
+                  color = "yellow";
                 }
-              </CircleLayout>
-            }
-            {<ConfirmButton modifiers={modifiers}></ConfirmButton>}
-          </div>
+              }
+              const mIndex = item;
+              return (
+                <div key={index}>
+                  <OverlayTrigger placement="bottom" overlay= {
+                    <Tooltip id={`tooltip-${index}`}>
+                      <ModifierTooltipInfo mIndex = {mIndex}/>
+                    </Tooltip>
+                  }>
+                    <div className="exploreItem" style={{backgroundColor: color}}>
+                      {modifiersInfo[mIndex][3]}
+                    </div>
+                  </OverlayTrigger>
+                  { mIndex
+                      && currentModifierIndex == index
+                      && haltBit != 1
+                      && <Progress objects={objects} delay={modifiersInfo[mIndex!][0]} />}
+                </div>
+              );
+            })
+          }
+        </CircleLayout>
+      }
+      {<ConfirmButton modifiers={modifiers}></ConfirmButton>}
+    </div>
   );
   } else {
     return(
