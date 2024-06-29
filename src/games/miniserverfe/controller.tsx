@@ -3,13 +3,14 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction } from "./rpc";
-import { Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "./createObject";
 import { createCommand } from "./helper";
 import { query, LeHexBN } from "./sign";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
+import "../style.scss";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { selectExternal, selectLocalAttributes, selectModifier, setErrorMessage, setViewerActivity, setUserActivity, setGlobalTimer } from './thunk';
 import { ObjectProperty} from './types';
@@ -19,6 +20,10 @@ import {CreateButton} from './opbutton';
 import {ErrorAlert} from './error';
 import {Explore} from './explore';
 import {getConfig} from "./thunk";
+
+import cover from "./images/miniserver.png";
+
+import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
@@ -219,6 +224,8 @@ export function GameController() {
     }, 3000)
   }, [inc]);
 
+  const account = useAppSelector(selectL1Account);
+
   if (l2account) {
     return (
       <div className="controller">
@@ -301,6 +308,15 @@ export function GameController() {
       </div>
     )
   } else {
-    return <></>
+    return (
+      <Container className="mt-5">
+        <div className="load-game">
+          <img src={cover} width="100%"></img>
+          <button className="btn btn-confirm"
+            onClick={() => dispatch(loginL2AccountAsync(account!))}
+          > Start Play </button>
+        </div>
+      </Container>
+    )
   }
 }
