@@ -11,15 +11,21 @@ export function ProgramInfo(
 
   if(entity) {
     entity.map((value: number, index: number) => {
-      const obj = {"attrName": entityAttributes[index], "value": value};
-      attrArray.push(obj);
+      // skip render the entity attribute whose value is 0
+      if(value != 0) {
+        const obj = {"attrName": entityAttributes[index], "value": value};
+        attrArray.push(obj);
+      }
     })
   }
 
   if(local) {
     local.map((value: number, index: number) => {
-      const obj = {"attrName": localAttributes[index], "value": value};
-      attrArray.push(obj);
+      // skip render the local attribute whose value is 0
+      if(value != 0) {
+        const obj = {"attrName": localAttributes[index], "value": value};
+        attrArray.push(obj);
+      }
     })
   }
   return (
