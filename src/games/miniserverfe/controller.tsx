@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { query_state, send_transaction } from "./rpc";
 import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
@@ -63,7 +64,7 @@ export function GameController() {
   const DragableModifier = memo(
     function DragableModifier(props: any) {
       const {attributes, listeners, setNodeRef, transform, transition} = useSortable({
-        id: props.index
+        id: props.id
       });
       const style = {
         transform: CSS.Transform.toString(transform),
@@ -76,22 +77,23 @@ export function GameController() {
       )
     });
 
-   function Preview({index}: {index: number | null}) {
-      if(index) {
-        return (
-          <div className="programItem">
-            <ProgramInfo
-              name={modifiersInfo[index][3]}
-              entity = {modifiersInfo[index][1]}
-              local = {modifiersInfo[index][2]}
-              delay = {modifiersInfo[index][0]} /
-            >
-          </div>
-        )
-      } else {
-        return null;
-      }
+  function Preview({index}: {index: number | null}) {
+    if(index != null && modifiersInfo && modifiersInfo[index]) {
+      console.log(modifiersInfo[index])
+      return (
+        <div className="programItem">
+          <ProgramInfo
+            name={modifiersInfo[index].name}
+            entity = {modifiersInfo[index].entity}
+            local = {modifiersInfo[index].local}
+            delay = {modifiersInfo[index].delay} /
+          >
+        </div>
+      )
+    } else {
+      return null;
     }
+  }
 
   useEffect(() => {
     const cIndex = external.getSelectedIndex()
@@ -109,18 +111,17 @@ export function GameController() {
     }
   }, [external]);
 
-
-  function handleDragStart(event: any) {
+  function handleDragStart(event: DragStartEvent) {
     const {active} = event;
-    setDraggingModifierIndex(active.id);
+    setDraggingModifierIndex(Number(active.id));
   }
 
-  function handleDragEnd(event: any) {
+  function handleDragEnd(event: DragEndEvent) {
     const selected = event.active.id;
     if(event.over && typeof event.over.id == "string" && event.over.id.includes("droppable")) {
       const index = Number(event.over.id.replace("droppable", ""));
       const arr = [...dropList];
-      arr[index] = selected;
+      arr[index] = Number(selected);
       setDropList(arr);
       setCacheObjDropList(arr);
     }
@@ -279,17 +280,17 @@ export function GameController() {
               <div className="title">PROGRAM</div>
               <div className="draggableBox">
                 <SortableContext
-                  items={modifiersInfo}
+                  items={modifiersInfo.map((_, index) => index)}
                   strategy={verticalListSortingStrategy}
                 >
-                  { modifiersInfo.map((item, index) =>
+                  { modifiersInfo.map((modifier, index) =>
                       <DragableModifier
                         key={index}
-                        id={item[3]}
-                        name={item[3]}
-                        entity = {item[1]}
-                        local = {item[2]}
-                        delay = {item[0]}
+                        id={String(index)}
+                        name={modifier.name}
+                        entity = {modifier.entity}
+                        local = {modifier.local}
+                        delay = {modifier.delay}
                       />
                     )
                   }

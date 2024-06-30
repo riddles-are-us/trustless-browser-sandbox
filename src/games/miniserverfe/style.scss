@@ -119,28 +119,24 @@
         padding-left: 50px;
       }
 
-      .reboot, .confirm {
-        margin: 5% 0 0 10%;
+      .currentModifierIndex {
+        position: relative;
+        width: 100px;
+        height: 30px;
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
       }
 
       .exploreBox {
         height: 80%;
         width: 100%;
         position: relative;
-
-        .currentModifierIndex {
-          position: relative;
-          width: 100px;
-          height: 30px;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          text-align: center;
-        }
-
+        top: -30px;
         .exploreItem {
           width: 100px;
           height: 100px;
@@ -149,6 +145,15 @@
           justify-content: center;
           align-items: center;
         }
+      }
+
+      .createButton {
+        position: relative;
+        top: -30px;
+      }
+
+      .reboot, .confirm, .createButton {
+        margin: 0% 0 0 10%;
       }
     }
 

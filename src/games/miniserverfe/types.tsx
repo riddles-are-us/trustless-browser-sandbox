@@ -5,31 +5,36 @@ export interface ObjectProperty {
   modifier_info: string,
 }
 
-export class ExternalState {
-    selectedCreatureIndex: number | null;
-    userActivity: "browsing" | "creating" | "rebooting";
-    // idle -> queryingUpdate, queryingUpdate -> moniteringResut, moniteringResut-> queryingUpdate
-    viewerActivity: "monitoringResult" | "queryingUpdate" | "idle" | "queryConfig";
-    errorMessage: string;
-
-    constructor() {
-      this.selectedCreatureIndex = null;
-      this.userActivity = "browsing",
-      this.viewerActivity = "idle",
-      this.errorMessage = ""
-    }
-
-    isMonitorResult() {
-      return (this.viewerActivity == "monitoringResult");
-    }
-
-    hasError() {
-      return (this.errorMessage != "");
-    }
-
-    getSelectedIndex(): number | null{
-      return this.selectedCreatureIndex;
-    }
+export interface Modifier {
+  delay: number,
+  entity: Array<number>,
+  local: Array<number>,
+  name: string,
 }
 
+export class ExternalState {
+  selectedCreatureIndex: number | null;
+  userActivity: "browsing" | "creating" | "rebooting";
+  // idle -> queryingUpdate, queryingUpdate -> moniteringResut, moniteringResut-> queryingUpdate
+  viewerActivity: "monitoringResult" | "queryingUpdate" | "idle" | "queryConfig";
+  errorMessage: string;
 
+  constructor() {
+    this.selectedCreatureIndex = null;
+    this.userActivity = "browsing",
+    this.viewerActivity = "idle",
+    this.errorMessage = ""
+  }
+
+  isMonitorResult() {
+    return (this.viewerActivity == "monitoringResult");
+  }
+
+  hasError() {
+    return (this.errorMessage != "");
+  }
+
+  getSelectedIndex(): number | null{
+    return this.selectedCreatureIndex;
+  }
+}

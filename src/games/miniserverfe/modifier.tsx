@@ -1,31 +1,27 @@
+import React from "react";
 import {useAppSelector} from "../../app/hooks";
 import {selectEntityAttributes, selectLocalAttributes} from "./thunk";
-
-export interface Modifier {
-   delay: number,
-   entity: Array<number>,
-   local: Array<number>,
-   name: string,
-}
 
 export function ProgramInfo(
         {name, entity, local, delay}:
         {name: string, entity: Array<number>, local: Array<number>, delay: number}) {
-  const attrArray: any[] = [];
+  const attrArray: Array<{"attrName": string, "value": number}> = [];
   const entityAttributes = useAppSelector(selectEntityAttributes);
   const localAttributes = useAppSelector(selectLocalAttributes);
-  {entity.map((item: any, index: number) => {
-    if (item != 0) {
-      const obj = {"entity": entityAttributes[index], "item": item};
+
+  if(entity) {
+    entity.map((value: number, index: number) => {
+      const obj = {"attrName": entityAttributes[index], "value": value};
       attrArray.push(obj);
-    }
-  })}
-  {local.map((item: any, index: number) => {
-    if (item != 0) {
-      const obj = {"local": localAttributes[index], "item": item};
+    })
+  }
+
+  if(local) {
+    local.map((value: number, index: number) => {
+      const obj = {"attrName": localAttributes[index], "value": value};
       attrArray.push(obj);
-    }
-  })}
+    })
+  }
   return (
     <div className="programInfo">
       <div>{name}({delay})</div>
@@ -36,15 +32,9 @@ export function ProgramInfo(
               Array.from({ length: 3 }).map((_, j) => {
                 if(attrArray[i * 3 + j] != undefined) {
                   const attr = attrArray[i * 3 + j];
-                  if(attr.entity) {
-                    return (
-                      <div key={j}>[{attr.entity}:{attr.item}]</div>
-                    )
-                  } else if(attr.local) {
-                    return (
-                      <div key={j}>[{attr.local}:{attr.item}]</div>
-                    )
-                  }
+                  return (
+                    <div key={j}>[{attr.attrName}:{attr.value}]</div>
+                  )
                 }
               })
             }
@@ -54,4 +44,3 @@ export function ProgramInfo(
     </div>
   )
 }
-

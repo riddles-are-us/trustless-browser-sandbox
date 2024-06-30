@@ -3,6 +3,8 @@ import { send_transaction } from "./rpc";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectL2Account } from "../../data/accountSlice";
 import {selectExternal, setErrorMessage, setSelectedCreatureIndex, setUserActivity, setViewerActivity} from "./thunk";
+import { ObjectProperty } from './types';
+import React from "react";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
@@ -72,7 +74,7 @@ export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
 }
 
 
-export function CreateButton({objects}: {objects: Array<any>}) {
+export function CreateButton({objects}: {objects: Array<ObjectProperty>}) {
   const dispatch = useAppDispatch();
   function handleCreateObject(len: number) {
     dispatch(setSelectedCreatureIndex(len));
@@ -83,10 +85,8 @@ export function CreateButton({objects}: {objects: Array<any>}) {
   if (external.viewerActivity == "monitoringResult") {
     return <></>;
   } else if (external.userActivity == "browsing") {
-    return <button onClick={() => { handleCreateObject(objects.length); }}>NEW +</button>;
-
+    return <button className="createButton" onClick={() => { handleCreateObject(objects.length); }}>NEW +</button>;
   } else {
     return <div></div>;
   }
 }
-
