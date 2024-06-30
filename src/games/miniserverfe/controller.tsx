@@ -80,9 +80,8 @@ export function GameController() {
 
   function Preview({index}: {index: number | null}) {
     if(index != null && modifiersInfo && modifiersInfo[index]) {
-      console.log(modifiersInfo[index])
       return (
-        <div className="programItem">
+        <div className="preview">
           <ProgramInfo
             name={modifiersInfo[index].name}
             entity = {modifiersInfo[index].entity}
