@@ -65,7 +65,7 @@ export function GameController() {
   const DragableModifier = memo(
     function DragableModifier(props: any) {
       const {attributes, listeners, setNodeRef, transform, transition} = useSortable({
-        id: props.id
+        id: props.index
       });
       const style = {
         transform: CSS.Transform.toString(transform),
@@ -288,7 +288,7 @@ export function GameController() {
                   { modifiersInfo.map((modifier, index) =>
                       <DragableModifier
                         key={index}
-                        id={String(index)}
+                        index={String(index)}
                         name={modifier.name}
                         entity = {modifier.entity}
                         local = {modifier.local}
