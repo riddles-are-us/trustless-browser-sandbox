@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { query_config } from './rpc';
 import { RootState } from "../../app/store";
 import { ExternalState, Modifier } from './types';
+import { decodeModifiers } from './helper';
 
 export const getConfig= createAsyncThunk(
   'client/getConfig',
@@ -60,23 +61,7 @@ export const clientSlice = createSlice({
         state.external.viewerActivity = "idle";
         state.entityAttributes = c.payload.entity_attributes;
         state.localAttributes = c.payload.local_attributes;
-        //state.modifiers = c.payload.modifiers;
-        // set state.modifiers
-        let delay: number;
-        let entity: Array<number>;
-        let local: Array<number>;
-        let name: string;
-        const modifierArray: Modifier[] = [];
-        const modifiers = c.payload.modifiers;
-        for(let i=0; i<modifiers.length; i++) {
-          delay = modifiers[i][0];
-          entity = modifiers[i][1];
-          local = modifiers[i][2];
-          name = modifiers[i][3];
-          console.log("1234", delay,entity,local,name)
-          modifierArray.push({"delay": delay, "entity": entity, "local": local, "name": name});
-        }
-        state.modifiers = modifierArray;
+        state.modifiers = decodeModifiers(c.payload.modifiers);
         console.log("query config fulfilled");
       })
   },
