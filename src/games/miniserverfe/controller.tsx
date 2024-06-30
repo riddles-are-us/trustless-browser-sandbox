@@ -25,6 +25,7 @@ import {getConfig} from "./thunk";
 import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
+import Loading from './load';
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
@@ -153,8 +154,8 @@ export function GameController() {
   }
 
   async function queryStateWithReboot() {
-    if(playerLoaded()) {
-      await queryState(external.viewerActivity);
+    if (l2account) {
+        await queryState(external.viewerActivity);
     }
     setInc(inc + 1);
   }
@@ -163,10 +164,9 @@ export function GameController() {
     try {
       const playerAction = external.userActivity;
       const res = await query_state([], l2account!.address);
-      console.log("Query state", res);
-      const data = JSON.parse(res.data);
-      console.log("data", data);
 
+      const data = JSON.parse(res.data);
+      console.log("query state data", data);
       if(playerAction == "creating") {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
@@ -187,6 +187,10 @@ export function GameController() {
           dispatch(setViewerActivity("queryingUpdate"));
         }
         setObjects(data[1]);
+      } else if(playerAction == "loading") {
+        decodePlayerInfo(data[0]);
+        dispatch(setGlobalTimer(data[2]));
+        dispatch(setUserActivity("browsing"));
       } else {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
@@ -200,18 +204,20 @@ export function GameController() {
         }
          */
     } catch (e) {
-      dispatch(setErrorMessage("Error at query state " + e));
+      if (e == "QueryStateError") {
+        await createPlayer();
+      } else {
+        dispatch(setErrorMessage("Error at query state " + e));
+      }
     }
   }
 
-  function playerLoaded() {
-    return (playerIds != "");
+  function clientLoaded() {
+    return (external.userActivity!="loading");
+
   }
 
   useEffect(() => {
-    if(playerIds == "" && l2account) {
-      createPlayer();
-    }
     dispatch(getConfig());
   }, [l2account]);
 
@@ -223,7 +229,7 @@ export function GameController() {
 
   const account = useAppSelector(selectL1Account);
 
-  if (l2account) {
+  if (l2account && clientLoaded()) {
     return (
       <div className="controller">
         <CreateObjectModal/>
@@ -251,11 +257,11 @@ export function GameController() {
               }
             </Col>
             <Col xs={3}>
-              <OverlayTrigger key={playerIds} placement="bottom"
-                overlay={<Tooltip id={`tooltip-${playerIds}`}><strong>{playerIds}</strong>.</Tooltip>}
+              <OverlayTrigger key={l2account!.address} placement="bottom"
+                overlay={<Tooltip id={`tooltip-${playerIds}`}><strong>{l2account!.address}</strong>.</Tooltip>}
               >
                 <div className="playerIds">
-                  playerIds: {playerIds}
+                  playerIds: {l2account!.address}
                 </div>
               </OverlayTrigger>
             </Col>
@@ -304,6 +310,10 @@ export function GameController() {
         </DndContext>
       </div>
     )
+  } else if (l2account) {
+    return (<Container className="mt-5">
+                <Loading/>
+      </Container>)
   } else {
     return (
       <Container className="mt-5">

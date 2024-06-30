@@ -37,11 +37,13 @@ export async function query_state(cmd: Array<bigint>, prikey: string) {
     if (response.status === 201) {
       const jsonResponse = response.data;
       return jsonResponse;
-    } else {
+    } else if (response.status == 500) {
       throw "QueryStateError";
+    } else {
+      throw "UnknownError";
     }
   } catch (error) {
-    throw "QueryStateError " + error;
+    throw "UnknownError";
   }
 }
 

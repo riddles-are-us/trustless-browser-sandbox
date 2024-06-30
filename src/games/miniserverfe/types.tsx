@@ -14,14 +14,14 @@ export interface Modifier {
 
 export class ExternalState {
   selectedCreatureIndex: number | null;
-  userActivity: "browsing" | "creating" | "rebooting";
+  userActivity: "browsing" | "creating" | "rebooting" | "loading";
   // idle -> queryingUpdate, queryingUpdate -> moniteringResut, moniteringResut-> queryingUpdate
   viewerActivity: "monitoringResult" | "queryingUpdate" | "idle" | "queryConfig";
   errorMessage: string;
 
   constructor() {
     this.selectedCreatureIndex = null;
-    this.userActivity = "browsing",
+    this.userActivity = "loading",
     this.viewerActivity = "idle",
     this.errorMessage = ""
   }
