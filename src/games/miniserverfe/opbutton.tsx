@@ -19,53 +19,52 @@ function modifiersAreFullfilled(modifier: Array<number|null>) {
   return true;
 }
 
-async function confirmActivity(modifiers: Array<number>) {
-  const dispatch = useAppDispatch();
-  const l2account = useAppSelector(selectL2Account);
-  const mslice = modifiers.slice();
-  const external = useAppSelector(selectExternal);
-  const selectedId = external.selectedCreatureIndex;
-  const activity = external.userActivity;
-  try {
-    //setExternalState("monitoringResult");
-    const index = mslice.reverse().map((id) => {
-      return BigInt(id);
-    });
-    const modifiers: bigint = encode_modifier(index);
-
-    if(activity == "creating") {
-      const objIndex = BigInt(selectedId!);
-      const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
-      await send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
-      //await queryStateWithRetry(3, "creating");
-    } else if(activity == "rebooting") {
-      const objIndex = BigInt(selectedId!);
-      const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(objIndex));
-      await send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
-      //await queryStateWithRetry(3, "rebooting");
-    }
-    dispatch(setViewerActivity("monitoringResult"));
-  } catch(e) {
-    dispatch(setErrorMessage(`confirm ${activity} error`));
-  }
-}
 
 
 export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
   const external = useAppSelector(selectExternal);
   const dispatch = useAppDispatch();
+  const l2account = useAppSelector(selectL2Account);
+  const selectedId = external.selectedCreatureIndex;
+  const activity = external.userActivity;
+
+  function confirmActivity(modifiers: Array<number>) {
+    const mslice = modifiers.slice();
+    try {
+      //setExternalState("monitoringResult");
+      const index = mslice.reverse().map((id) => {
+        return BigInt(id);
+      });
+      const modifiers: bigint = encode_modifier(index);
+      if(activity == "creating") {
+        const objIndex = BigInt(selectedId!);
+        const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
+        send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
+      } else if(activity == "rebooting") {
+        const objIndex = BigInt(selectedId!);
+        const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(objIndex));
+        send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
+      }
+      dispatch(setViewerActivity("monitoringResult"));
+    } catch(e) {
+      dispatch(setErrorMessage(`confirm ${activity} error`));
+    }
+  }
+
+  function handleReboot() {
+      dispatch(setUserActivity("rebooting"))
+  }
+
   if (external.userActivity == "browsing") {
-    if(external.getSelectedIndex()){
-      return <button className="reboot" onClick={() => {
-          dispatch(setUserActivity("rebooting"))
-      }}>Reboot</button>;
+    if(external.getSelectedIndex() != null){
+      return <button className="reboot" onClick={handleReboot}>Reboot</button>;
     } else {
       return <></>
     }
   } else {
     if (modifiersAreFullfilled(modifiers)) {
         return <button className="confirm" onClick={() => {
-                confirmActivity(modifiers.map((x)=>x!));
+            confirmActivity(modifiers.map((x)=>x!));
         }}>Confirm</button>;
     } else {
         return <span>Not all modifiers fullfilled</span>;

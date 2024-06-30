@@ -31,6 +31,7 @@ export function Creature({robot, index}: {robot: ObjectProperty, index: number})
     if (isSelected)  {
       return;
     } else {
+      dispatch(setUserActivity("browsing"));
       dispatch(setSelectedCreatureIndex(index));
     }
   }

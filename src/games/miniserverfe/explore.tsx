@@ -130,7 +130,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
           {
             displayModifiers.map((mIndex, index) => {
               let color = "";
-              if(mIndex) {
+              if(mIndex!=null) {
                 if(haltBit == 1 && currentModifierIndex == index) {
                   color = "red";
                 } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {

@@ -129,10 +129,6 @@ export function GameController() {
     setDraggingModifierIndex(null);
   }
 
-  function delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async function createPlayer() {
     try {
       // Get player id
