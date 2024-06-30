@@ -86,7 +86,7 @@ function Progress({objects, delay}: {objects: Array<any>, delay: number}) {
 }
 
 
-export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: Array<number>}) {
+export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: Array<number|null>}) {
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
   const modifiersInfo = useAppSelector(selectModifier);
@@ -105,12 +105,16 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
     }
   }
 
+  let displayModifiers = modifiers;
 
   if (selectedIndex != null) {
     let currentObj = objects[selectedIndex];
     if (external.userActivity == "creating") {
-      currentObj = {entity:[], object_id:[], modifiers: [], modifier_info:"0"}
-    }
+      currentObj = {entity:[], object_id:[], modifiers: [], modifier_info:"0"};
+    } else if (external.userActivity == "browsing") {
+      displayModifiers = currentObj.modifiers;
+    } // else is rebooting, empty clause
+
 
     const currentModifierIndex = getModifierIndex(currentObj.modifier_info);
     const haltBit = getHaltBit(currentObj.modifier_info);
@@ -125,7 +129,7 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
       {
         <CircleLayout>
           {
-            modifiers.map((item, index) => {
+            displayModifiers.map((item, index) => {
               let color = "";
               if(item) {
                 if(haltBit == 1 && currentModifierIndex == index) {
@@ -137,23 +141,37 @@ export function Explore({objects, modifiers}: {objects: Array<any>, modifiers: A
                 }
               }
               const mIndex = item;
-              return (
-                <div key={index}>
-                  <OverlayTrigger placement="bottom" overlay= {
-                    <Tooltip id={`tooltip-${index}`}>
-                      <ModifierTooltipInfo mIndex = {mIndex}/>
-                    </Tooltip>
-                  }>
-                    <div className="exploreItem" style={{backgroundColor: color}}>
-                      {modifiersInfo[mIndex][3]}
-                    </div>
-                  </OverlayTrigger>
-                  { mIndex
-                      && currentModifierIndex == index
-                      && haltBit != 1
-                      && <Progress objects={objects} delay={modifiersInfo[mIndex!][0]} />}
-                </div>
-              );
+              if (mIndex!=null) {
+                return (
+                  <div key={index}>
+                    <OverlayTrigger placement="bottom" overlay= {
+                      <Tooltip id={`tooltip-${index}`}>
+                        <ModifierTooltipInfo mIndex = {mIndex}/>
+                      </Tooltip>
+                    }>
+                      <div className="exploreItem" style={{backgroundColor: color}}>
+                        {modifiersInfo[mIndex][3]}
+                      </div>
+                    </OverlayTrigger>
+                    { mIndex
+                        && currentModifierIndex == index
+                        && haltBit != 1
+                        && <Progress objects={objects} delay={modifiersInfo[mIndex!][0]} />}
+                  </div>
+                );
+              } else {
+                return (
+                  <div key={index}>
+                    <OverlayTrigger placement="bottom" overlay= {
+                      <Tooltip id={`tooltip-${index}`}>
+                              Not Assigned
+                      </Tooltip>
+                    }>
+                    <div className="exploreItem" style={{backgroundColor: color}}></div>
+                    </OverlayTrigger>
+                  </div>
+                );
+              }
             })
           }
         </CircleLayout>

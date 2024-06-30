@@ -8,9 +8,9 @@ const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
 const CMD_RESTART_OBJECT = 3n;
 
-function modifiersAreFullfilled(modifier: Array<number>) {
+function modifiersAreFullfilled(modifier: Array<number|null>) {
   for (let i=0; i<8; i++) {
-    if (!modifier[i]) {
+    if (modifier[i] == null) {
       return false;
     }
   }
@@ -49,7 +49,7 @@ async function confirmActivity(modifiers: Array<number>) {
 }
 
 
-export function ConfirmButton({modifiers}: {modifiers: Array<number>}) {
+export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
   const external = useAppSelector(selectExternal);
   const dispatch = useAppDispatch();
   if (external.userActivity == "browsing") {
@@ -62,7 +62,9 @@ export function ConfirmButton({modifiers}: {modifiers: Array<number>}) {
     }
   } else {
     if (modifiersAreFullfilled(modifiers)) {
-        return <button className="confirm" onClick={() => {confirmActivity(modifiers);}}>Confirm</button>;
+        return <button className="confirm" onClick={() => {
+                confirmActivity(modifiers.map((x)=>x!));
+        }}>Confirm</button>;
     } else {
         return <span>Not all modifiers fullfilled</span>;
     }

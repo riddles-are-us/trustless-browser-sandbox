@@ -21,7 +21,7 @@ import {ErrorAlert} from './error';
 import {Explore} from './explore';
 import {getConfig} from "./thunk";
 
-import cover from "./images/miniserver.png";
+import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
 
@@ -47,8 +47,8 @@ export function GameController() {
 
 
   // modified modifier array
-  const [dropList, setDropList] = useState<number[]>([]);
-  const [emptyObjDropList, setEmptyObjDropList] = useState<number[]>([]);
+  const [dropList, setDropList] = useState<Array<number|null>>([null, null, null, null, null, null, null, null]);
+  const [cacheDropList, setCacheObjDropList] = useState<Array<number|null>>([]);
 
   const [draggingModifierIndex, setDraggingModifierIndex] = useState<number|null>(null);
 
@@ -93,14 +93,11 @@ export function GameController() {
       }
     }
 
-        /*
   useEffect(() => {
-    let cIndex = external.getSelectedIndex()
+    const cIndex = external.getSelectedIndex()
     if (cIndex) {
       if (external.userActivity == "creating") {
-         if(emptyObjDropList.length != 0) {
-             setDropList([...emptyObjDropList]);
-         }
+        setDropList([...cacheDropList]);
       } else {
           const currentObj = objects[cIndex];
           const arr: number[]= [];
@@ -111,7 +108,6 @@ export function GameController() {
       }
     }
   }, [external]);
-         */
 
 
   function handleDragStart(event: any) {
@@ -126,7 +122,7 @@ export function GameController() {
       const arr = [...dropList];
       arr[index] = selected;
       setDropList(arr);
-      setEmptyObjDropList(arr);
+      setCacheObjDropList(arr);
     }
     setDraggingModifierIndex(null);
   }
