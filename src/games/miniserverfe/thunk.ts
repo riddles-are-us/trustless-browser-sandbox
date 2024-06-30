@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { query_config } from './rpc';
-import { RootState, store } from "../../app/store";
+import { RootState } from "../../app/store";
 import { ExternalState } from './types';
 
 export const getConfig= createAsyncThunk(

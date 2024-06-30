@@ -8,10 +8,10 @@ export function ErrorAlert() {
   if (errorMessage) {
     return (
       <div>
-          <Alert variant="danger" onClose={() => dispatch(setErrorMessage(""))} dismissible style={{width: "200px"}}>
-            <Alert.Heading>Error</Alert.Heading>
-            <p>{errorMessage}</p>
-          </Alert>
+        <Alert variant="danger" onClose={() => dispatch(setErrorMessage(""))} dismissible style={{width: "200px"}}>
+          <Alert.Heading>Error</Alert.Heading>
+          <p>{errorMessage}</p>
+        </Alert>
       </div>
     );
   } else {

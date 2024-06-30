@@ -1,4 +1,4 @@
-import { encode_modifier, createCommand, getCounter } from "./helper";
+import { encode_modifier, createCommand } from "./helper";
 import { send_transaction } from "./rpc";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectL2Account } from "../../data/accountSlice";

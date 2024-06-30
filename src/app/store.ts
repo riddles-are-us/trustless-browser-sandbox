@@ -17,7 +17,8 @@ export const store = configureStore({
           "status.config.latest_server_checksum",
           "game.preMerkleRoot",
           "game.postMerkleRoot",
-          "account.l2account"
+          "account.l2account",
+          "client.external"
         ],
       },
     }),

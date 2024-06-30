@@ -2,10 +2,9 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import {selectExternal} from "./thunk";
-import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {useAppSelector} from "../../app/hooks";
 
 export function CreateObjectModal() {
-  const dispatch = useAppDispatch();
   const external = useAppSelector(selectExternal);
   const message = external.userActivity;
   const show = external.viewerActivity == "monitoringResult"
