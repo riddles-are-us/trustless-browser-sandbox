@@ -83,7 +83,8 @@ export function CreateButton({objects}: {objects: Array<ObjectProperty>}) {
   const external = useAppSelector(selectExternal);
   if (external.viewerActivity == "monitoringResult") {
     return <></>;
-  } else if (external.userActivity == "browsing") {
+  } else if (external.userActivity != "creating"
+      && external.viewerActivity != "idle") {
     return <button className="createButton" onClick={() => { handleCreateObject(objects.length); }}>NEW +</button>;
   } else {
     return <div></div>;

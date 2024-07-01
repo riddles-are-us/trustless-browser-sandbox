@@ -138,7 +138,6 @@ export function GameController() {
 
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
-      dispatch(setViewerActivity("queryingUpdate"));
     } catch(e) {
       dispatch(setErrorMessage("Error at create player " + e));
     }
@@ -190,6 +189,10 @@ export function GameController() {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         setObjects(data[1]);
+
+        if (external.viewerActivity == "idle") {
+          dispatch(setViewerActivity("queryingUpdate"));
+        }
       } /* Very hard to handle after rebooting status
          else if(playerAction == "afterRebootBrowsing") {
           setObjects(data[1]);
