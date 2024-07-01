@@ -3,7 +3,7 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { query_state, send_transaction } from "./rpc";
+import { query_state } from "./rpc";
 import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "./createObject";
@@ -20,7 +20,7 @@ import {ProgramInfo} from './modifier';
 import {CreateButton} from './opbutton';
 import {ErrorAlert} from './error';
 import {Explore} from './explore';
-import {getConfig} from "./thunk";
+import {getConfig, sendTransaction} from "./thunk";
 
 import cover from "./images/cover.jpg";
 
@@ -137,7 +137,7 @@ export function GameController() {
       setPlayerIds(playerIdHex);
 
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
-      await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
+      dispatch(sendTransaction({cmd: [insPlayerCmd, 0n, 0n, 0n], prikey: l2account!.address}));
     } catch(e) {
       dispatch(setErrorMessage("Error at create player " + e));
     }
@@ -190,7 +190,7 @@ export function GameController() {
         dispatch(setGlobalTimer(data[2]));
         setObjects(data[1]);
 
-        if (external.viewerActivity == "idle") {
+        if (clientAction == "idle") {
           dispatch(setViewerActivity("queryingUpdate"));
         }
       } /* Very hard to handle after rebooting status

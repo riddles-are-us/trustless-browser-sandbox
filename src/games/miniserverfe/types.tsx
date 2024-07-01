@@ -38,3 +38,13 @@ export class ExternalState {
     return this.selectedCreatureIndex;
   }
 }
+
+export interface SendTransactionRes {
+  success: boolean;
+  jobid: string | undefined;
+}
+
+export interface SendTransactionParams {
+  cmd: Array<bigint>;
+  prikey: string;
+}
