@@ -81,7 +81,7 @@ export function CreateButton({objects}: {objects: Array<ObjectProperty>}) {
   }
 
   const external = useAppSelector(selectExternal);
-  if (external.viewerActivity == "monitoringResult") {
+  if (external.isMonitorResult()) {
     return <></>;
   } else if (external.userActivity != "creating"
       && external.viewerActivity != "idle") {
