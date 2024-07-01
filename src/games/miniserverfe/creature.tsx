@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React from 'react';
 import { ObjectProperty } from './types';
-import { Alert, Col, Row, OverlayTrigger, Tooltip, ProgressBar } from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectEntityAttributes, selectExternal, setSelectedCreatureIndex, setUserActivity} from './thunk';
 
@@ -8,9 +8,13 @@ interface externalState {
   selectedCreatureIndex: number,
 }
 
-function CreatureTitleTooltip({name}: {name: string}) {
-  return <Tooltip id={`tooltip-${name}`}><strong>{name}</strong></Tooltip>
-}
+const CreatureTitleTooltip = ({name, objContent}: {name: string, objContent: string}) => {
+  return (
+    <Tooltip id={`tooltip-${name}`}>
+      <strong>{objContent}</strong>
+    </Tooltip>
+  )
+};
 
 export function Creature({robot, index}: {robot: ObjectProperty, index: number}) {
   const dispatch = useAppDispatch();
@@ -38,7 +42,7 @@ export function Creature({robot, index}: {robot: ObjectProperty, index: number})
   if ((external.userActivity != "creating" && beenCreated) || external.userActivity == "creating") {
     return (
       <OverlayTrigger key={index} placement="bottom"
-        overlay={<CreatureTitleTooltip name={index.toString()}></CreatureTitleTooltip>}
+        overlay={CreatureTitleTooltip({name: index.toString(), objContent: objContent})}
       >
         <div className="creature" key={index} id={String(index)}
                 onClick={() => {handleClick(index);}}
