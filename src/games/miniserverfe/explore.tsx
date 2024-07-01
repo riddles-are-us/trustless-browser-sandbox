@@ -63,10 +63,9 @@ export function CircleLayout(
 
 const CurrentModifierIndex = memo(
   function CurrentModifierIndex({currentModifierIndex}: {currentModifierIndex: number}) {
-    const currentMI = currentModifierIndex;
     return (
-      <OverlayTrigger key={currentMI} placement="bottom"
-        overlay={<Tooltip id={`tooltip-${currentMI}`}><strong>currentModifierIndex: {currentModifierIndex}</strong>.</Tooltip>}
+      <OverlayTrigger placement="bottom"
+        overlay={<Tooltip id={`tooltip-${currentModifierIndex}`}><strong>currentModifierIndex: {currentModifierIndex}</strong>.</Tooltip>}
       >
         <div className="currentModifierIndex">
           {currentModifierIndex}
@@ -76,14 +75,22 @@ const CurrentModifierIndex = memo(
   });
 
 
-function Progress({objects, delay}: {objects: Array<ObjectProperty>, delay: number}) {
+function Progress({objects, delay, haltBit, currentModifierIndex, index}: {objects: Array<ObjectProperty>, delay: number, haltBit: number, currentModifierIndex: number, index: number}) {
   let progress = 0;
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
   const globalTime = useAppSelector(selectGlobalTimer);
-  const counter = getCounter(objects[selectedIndex!].modifier_info);
-  progress = ((globalTime - counter) / delay) * 100;
-  return <ProgressBar variant="info" now={progress} style={{marginTop:"10px"}} />;
+  if(objects.length != 0
+       && objects.length > selectedIndex!
+       && haltBit == 0
+       && currentModifierIndex == index) {
+    const counter = getCounter(objects[selectedIndex!].modifier_info);
+    progress = ((globalTime - counter) / delay) * 100;
+
+    return <ProgressBar variant="info" now={progress} style={{marginTop:"10px"}} />;
+  } else {
+    return <></>
+  }
 }
 
 export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, modifiers: Array<number | null>}) {
@@ -91,7 +98,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
   const selectedIndex = external.getSelectedIndex();
   const modifiersInfo = useAppSelector(selectModifier);
   function ModifierTooltipInfo({mIndex}: {mIndex: number | null}) {
-    if (mIndex) {
+    if (mIndex != null) {
       return (<div className="programItem">
         <ProgramInfo
           name={modifiersInfo[mIndex].name}
@@ -151,11 +158,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
                         {modifiersInfo[mIndex].name}
                       </div>
                     </OverlayTrigger>
-                    { mIndex
-                        && currentModifierIndex == index
-                        && haltBit != 1
-                        && objects.length != 0
-                        && <Progress objects={objects} delay={modifiersInfo[mIndex!].delay} />}
+                    {<Progress objects={objects} delay={modifiersInfo[mIndex!].delay} haltBit={haltBit} currentModifierIndex={currentModifierIndex} index={index} />}
                   </div>
                 );
               } else {
