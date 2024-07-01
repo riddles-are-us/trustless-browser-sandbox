@@ -4,11 +4,17 @@ import accountReducer from '../data/accountSlice';
 import endpointReducer from "../data/endpoint";
 import gameReducer from "../data/game";
 import clientReducer from "../games/miniserverfe/thunk";
+
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['acccount/deriveL2Account/fulfilled'],
+        ignoredActions: [
+          'acccount/deriveL2Account/fulfilled',
+          'client/sendTransaction/pending',
+          'client/sendTransaction/rejected',
+          'client/sendTransaction/fulfilled'
+        ],
         ignoredActionPaths: ['payload.web3','payload.seed', 'payload.injector'],
         ignoredPaths: [
           "acccount/fetchAccount/fulfilled",
