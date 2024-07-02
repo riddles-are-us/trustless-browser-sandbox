@@ -82,7 +82,7 @@ function Progress({objects, delay, haltBit, currentModifierIndex, index}: {objec
   const globalTime = useAppSelector(selectGlobalTimer);
   if(objects.length != 0
        && objects.length > selectedIndex!
-       && haltBit == 0
+       && haltBit != 1
        && currentModifierIndex == index) {
     const counter = getCounter(objects[selectedIndex!].modifier_info);
     progress = ((globalTime - counter) / delay) * 100;
