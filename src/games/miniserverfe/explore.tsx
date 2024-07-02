@@ -139,8 +139,12 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
               let color = "";
               if(mIndex!=null) {
                 if(haltBit == 1 && currentModifierIndex == index) {
-                  color = "red";
-                } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {
+                  if (external.userActivity == "rebooting") {
+                    color = "green";
+                  } else {
+                    color = "red";
+                  }
+                } else if(haltBit != 1 && currentModifierIndex == index) {
                   color = "green";
                 } else {
                   color = "yellow";
