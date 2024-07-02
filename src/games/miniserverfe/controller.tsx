@@ -65,7 +65,7 @@ export function GameController() {
   const DragableModifier = memo(
     function DragableModifier(props: any) {
       const {attributes, listeners, setNodeRef, transform, transition} = useSortable({
-        id: props.id
+        id: props.index
       });
       const style = {
         transform: CSS.Transform.toString(transform),
@@ -80,9 +80,8 @@ export function GameController() {
 
   function Preview({index}: {index: number | null}) {
     if(index != null && modifiersInfo && modifiersInfo[index]) {
-      console.log(modifiersInfo[index])
       return (
-        <div className="programItem">
+        <div className="preview">
           <ProgramInfo
             name={modifiersInfo[index].name}
             entity = {modifiersInfo[index].entity}
@@ -139,7 +138,6 @@ export function GameController() {
 
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
-      dispatch(setViewerActivity("queryingUpdate"));
     } catch(e) {
       dispatch(setErrorMessage("Error at create player " + e));
     }
@@ -191,6 +189,10 @@ export function GameController() {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         setObjects(data[1]);
+
+        if (external.viewerActivity == "idle") {
+          dispatch(setViewerActivity("queryingUpdate"));
+        }
       } /* Very hard to handle after rebooting status
          else if(playerAction == "afterRebootBrowsing") {
           setObjects(data[1]);
@@ -288,7 +290,7 @@ export function GameController() {
                   { modifiersInfo.map((modifier, index) =>
                       <DragableModifier
                         key={index}
-                        id={String(index)}
+                        index={String(index)}
                         name={modifier.name}
                         entity = {modifier.entity}
                         local = {modifier.local}

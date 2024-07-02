@@ -1,6 +1,7 @@
 import {Alert} from "react-bootstrap";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectExternal, setErrorMessage} from "./thunk";
+import React from "react";
 
 export function ErrorAlert() {
   const dispatch = useAppDispatch();

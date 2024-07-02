@@ -125,6 +125,7 @@
         height: 30px;
         left: 50%;
         top: 40%;
+        z-index: 1;
         transform: translate(-50%, -50%);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -178,6 +179,11 @@
         .programItem {
           border: 1px solid gray;
           font-size: 10px;
+        }
+
+        .preview > .programInfo {
+          display: inline-block;
+          border: 1px solid gray;
         }
       }
     }
