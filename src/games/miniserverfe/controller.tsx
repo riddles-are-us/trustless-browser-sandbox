@@ -215,6 +215,21 @@ export function GameController() {
 
   }
 
+  function changeScrollRef() {
+    // Scroll to bottom
+    setTimeout(() => {
+      if(scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    }, 1000);
+  }
+
+  useEffect(() => {
+    if (external.userActivity === "creating") {
+      changeScrollRef();
+    }
+  }, [external.userActivity]);
+
   useEffect(() => {
     dispatch(getConfig());
   }, [l2account]);
