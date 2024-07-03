@@ -4,7 +4,11 @@ import "./gameplay.css";
 const Gameplay = () => {
   return (
     <div className="container">
-      <div className="top">Top (200px height)</div>
+      <div className="top">
+        <div className="top-left"></div>
+        <div className="top-middle"></div>
+        <div className="top-right"></div>
+      </div>
       <div className="middle-container">
         <div className="left">Left (200px width)</div>
         <div className="main">Main (centered)</div>
