@@ -10,9 +10,17 @@ const Gameplay = () => {
         <div className="top-right"></div>
       </div>
       <div className="middle-container">
-        <div className="left">Left (200px width)</div>
+        <div className="left">
+          <div className="left-top"></div>
+          <div className="left-middle"></div>
+          <div className="left-bottom"></div>
+        </div>
         <div className="main">Main (centered)</div>
-        <div className="right">Right (200px width)</div>
+        <div className="right">
+          <div className="right-top"></div>
+          <div className="right-middle"></div>
+          <div className="right-bottom"></div>
+        </div>
       </div>
     </div>
   );

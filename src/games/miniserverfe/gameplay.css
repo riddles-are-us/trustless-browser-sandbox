@@ -10,6 +10,7 @@ body, html, #root, .container {
     width: 100%;
     display: flex;
     font-size: 24px;
+    z-index: 10;
 }
 
 .top-left, .top-right, .top-middle {
@@ -33,7 +34,6 @@ body, html, #root, .container {
     flex-grow: 1;
     background-image: url('./images/backgrounds/top_mid.png');
     background-repeat: repeat-x;
-    background-size: auto 100%;
 }
 
 .middle-container {
@@ -43,13 +43,13 @@ body, html, #root, .container {
 }
 
 .left, .right {
-    width: 200px;
-    background-color: lightcoral;
-    text-align: center;
-    font-size: 24px;
+    width: 191px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    background-color: lightcoral;
+    position: relative;
+    top: -50px;
+    height: calc(100% + 50px);
 }
 
 .main {
@@ -60,4 +60,55 @@ body, html, #root, .container {
     align-items: center;
     justify-content: center;
     font-size: 24px;
+    position: relative;
+    top: -50px;
+    height: calc(100% + 50px);
+}
+
+.left-top, .left-middle, .left-bottom {
+    width: 100%;
+    background-size: contain;
+}
+
+.left-top {
+    height: 268px;
+    background-image: url('./images/backgrounds/left_top.png');
+    background-repeat: no-repeat;
+}
+
+.left-bottom {
+    height: 268px;
+    background-image: url('./images/backgrounds/left_bottom.png');
+    background-repeat: no-repeat;
+}
+
+.left-middle {
+    width: 191px;
+    flex-grow: 1;
+    background-image: url('./images/backgrounds/left_mid.png');
+    background-repeat: repeat-y;
+}
+
+.right-top, .right-middle, .right-bottom {
+    width: 100%;
+    background-size: contain;
+}
+
+.right-top {
+    height: 268px;
+    background-image: url('./images/backgrounds/right_top.png');
+    background-repeat: no-repeat;
+}
+
+.right-bottom {
+    height: 268px;
+    background-image: url('./images/backgrounds/right_bottom.png');
+    background-repeat: no-repeat;
+}
+
+.right-middle {
+    width: 191px;
+    flex-grow: 1;
+    background-image: url('./images/backgrounds/right_mid.png');
+    background-repeat: repeat-y;
 }
