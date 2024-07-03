@@ -20,7 +20,7 @@ import {ProgramInfo} from './modifier';
 import {CreateButton} from './opbutton';
 import {ErrorAlert} from './error';
 import {Explore} from './explore';
-import {getConfig, sendTransaction} from "./thunk";
+import {getConfig, sendTransaction, setSelectedCreatureIndex} from "./thunk";
 
 import cover from "./images/cover.jpg";
 
@@ -192,6 +192,10 @@ export function GameController() {
 
         if (clientAction == "idle") {
           dispatch(setViewerActivity("queryingUpdate"));
+
+          if (data[1].length != 0) {
+            dispatch(setSelectedCreatureIndex(0));
+          }
         }
       } /* Very hard to handle after rebooting status
          else if(playerAction == "afterRebootBrowsing") {
