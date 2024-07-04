@@ -75,11 +75,13 @@ const CurrentModifierIndex = memo(
   });
 
 
-function Progress({objects, delay, haltBit, currentModifierIndex, index}: {objects: Array<ObjectProperty>, delay: number, haltBit: number, currentModifierIndex: number, index: number}) {
+function Progress({objects, mIndex, haltBit, currentModifierIndex, index}: {objects: Array<ObjectProperty>, mIndex: number, haltBit: number, currentModifierIndex: number, index: number}) {
   let progress = 0;
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
   const globalTime = useAppSelector(selectGlobalTimer);
+  const modifiersInfo = useAppSelector(selectModifier);
+  const delay = modifiersInfo[mIndex].delay;
   if(objects.length != 0
        && objects.length > selectedIndex!
        && haltBit != 1
@@ -162,7 +164,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
                         {modifiersInfo[mIndex].name}
                       </div>
                     </OverlayTrigger>
-                    {<Progress objects={objects} delay={modifiersInfo[mIndex!].delay} haltBit={haltBit} currentModifierIndex={currentModifierIndex} index={index} />}
+                    {<Progress objects={objects} mIndex={mIndex} haltBit={haltBit} currentModifierIndex={currentModifierIndex} index={index} />}
                   </div>
                 );
               } else {
