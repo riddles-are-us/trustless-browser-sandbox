@@ -241,7 +241,7 @@ export function GameController() {
   useEffect(() => {
     setTimeout(() => {
       queryStateWithReboot();
-    }, 3000)
+    }, 1000)
   }, [inc]);
 
   const account = useAppSelector(selectL1Account);
