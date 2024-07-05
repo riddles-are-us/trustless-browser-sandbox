@@ -251,7 +251,7 @@ export function GameController() {
       <div className="controller">
         <CreateObjectModal/>
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div style={{ left: "50%", transform: "translateX(-50%)", position: "absolute" }}>
+          <div className="errorAlert">
             <ErrorAlert/>
           </div>
           <Row className="player">
