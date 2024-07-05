@@ -130,7 +130,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
 
     return (<div className="explore">
       <div className="tip">
-          {<div>Please drag modifiers to fill the 8 grids!</div>}
+        {<div>Please drag modifiers to fill the 8 grids to create creature!</div>}
       </div>
       {<EntityAttributes robot={currentObj} />}
       <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
