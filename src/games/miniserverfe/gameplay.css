@@ -1,4 +1,5 @@
 body, html, #root, .container {
+    min-width: 1000px;
     height: 100%;
     margin: 0;
     display: flex;
