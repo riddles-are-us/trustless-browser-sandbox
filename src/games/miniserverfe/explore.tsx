@@ -118,8 +118,10 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
 
   if (selectedIndex != null) {
     let currentObj = objects[selectedIndex];
+    let tips = "";
     if (external.userActivity == "creating") {
       currentObj = {entity:[], object_id:[], modifiers: [], modifier_info:"0"};
+      tips = "Please drag modifiers to fill the 8 grids to create creature!";
     } else if (external.userActivity == "browsing") {
       displayModifiers = currentObj.modifiers;
     } // else is rebooting, empty clause
@@ -130,7 +132,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
 
     return (<div className="explore">
       <div className="tip">
-        {<div>Please drag modifiers to fill the 8 grids to create creature!</div>}
+        <div>{tips}</div>
       </div>
       {<EntityAttributes robot={currentObj} />}
       <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
