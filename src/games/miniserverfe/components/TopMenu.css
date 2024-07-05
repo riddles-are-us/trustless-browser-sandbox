@@ -1,0 +1,30 @@
+.top {
+    height: 110px;
+    width: 100%;
+    display: flex;
+    font-size: 24px;
+    z-index: 10;
+}
+
+.top-left, .top-right, .top-middle {
+    height: 100%;
+    background-size: contain;
+}
+
+.top-left {
+    width: 480px;
+    background-image: url('../images/backgrounds/top_left.png');
+    background-repeat: no-repeat;
+}
+
+.top-right {
+    width: 480px;
+    background-image: url('../images/backgrounds/top_right.png');
+    background-repeat: no-repeat;
+}
+
+.top-middle {
+    flex-grow: 1;
+    background-image: url('../images/backgrounds/top_mid.png');
+    background-repeat: repeat-x;
+}

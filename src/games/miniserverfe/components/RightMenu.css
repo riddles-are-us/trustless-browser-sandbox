@@ -1,0 +1,41 @@
+.right {
+    width: 191px;
+    display: flex;
+    flex-direction: column;
+    background-color: lightcoral;
+    position: relative;
+    top: -50px;
+    height: calc(100% + 50px);
+}
+
+.right-top, .right-middle, .right-bottom {
+    width: 100%;
+    background-size: contain;
+}
+
+.right-top {
+    height: 268px;
+    background-image: url('../images/backgrounds/right_top.png');
+    background-repeat: no-repeat;
+}
+
+.right-middle {
+    width: 191px;
+    flex-grow: 1;
+    background-image: url('../images/backgrounds/right_mid.png');
+    background-repeat: repeat-y;
+}
+
+.right-bottom {
+    height: 268px;
+    background-image: url('../images/backgrounds/right_bottom.png');
+    background-repeat: no-repeat;
+}
+
+.right-corner-bar {
+    position: absolute;
+    bottom: 0px;
+    left: -4px;
+    width: 70px;
+    z-index: 10;
+}

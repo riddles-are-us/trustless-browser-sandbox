@@ -1,0 +1,50 @@
+.left {
+    width: 191px;
+    display: flex;
+    flex-direction: column;
+    background-color: lightcoral;
+    position: relative;
+    top: -50px;
+    height: calc(100% + 50px);
+}
+
+.left-top, .left-middle, .left-bottom {
+    width: 100%;
+    background-size: contain;
+}
+
+.left-top {
+    height: 268px;
+    background-image: url('../images/backgrounds/left_top.png');
+    background-repeat: no-repeat;
+}
+
+.left-middle {
+    width: 191px;
+    flex-grow: 1;
+    background-image: url('../images/backgrounds/left_mid.png');
+    background-repeat: repeat-y;
+}
+
+.left-bottom {
+    height: 268px;
+    background-image: url('../images/backgrounds/left_bottom.png');
+    background-repeat: no-repeat;
+}
+
+.left-corner-bar {
+    position: absolute;
+    bottom: 0px;
+    right: -4px;
+    width: 70px;
+    z-index: 10;
+}
+
+.left-middle-bar {
+    position: absolute;
+    top: calc(50% + 25px);
+    transform: translateY(-50%);
+    right: -4px;
+    width: 40px;
+    z-index: 10;
+}
