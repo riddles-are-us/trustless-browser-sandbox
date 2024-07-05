@@ -3,8 +3,9 @@ import "./MainMenu.css";
 
 const MainMenu = () => {
   return (
-    <div className="main">
-      <div className="square"></div>
+    <div className="main-background">
+      <div className="main-content">
+      </div>
     </div>
   );
 };

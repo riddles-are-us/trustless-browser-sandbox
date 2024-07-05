@@ -1,4 +1,4 @@
-.main {
+.main-background {
     width: calc(100% - 191px * 2);
     flex: 1;
     background-color: lightgreen;
@@ -12,12 +12,12 @@
     height: calc(100% + 50px);
 }
 
-.square {
+.main-content {
     height: 90%;
     width: fit-content;
-    max-height: 90%;
-    max-height: 600px;
-    max-width: 600px;
+    min-height: 500px;
+    min-width: 500px;
+    max-height: min(90%, calc((100vw - 191px * 2) * 0.9));
     aspect-ratio: 1 / 1;
     background-color: lightblue;
 }
