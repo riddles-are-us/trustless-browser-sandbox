@@ -8,6 +8,7 @@ import display from "../images/MainMenu/display.png";
 import "./MainMenu.css";
 import MainMenuProgressBar from "./MainMenuProgressBar";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
+import MainMenuBot from "./MainMenuBot";
 
 const MainMenu = () => {
   return (
@@ -17,6 +18,9 @@ const MainMenu = () => {
         <img src={display} className="main-display-image" />
         <MainMenuProgressBar />
         <MainMenuSelectingFrame />
+        {[...Array(8).keys()].map((order) => (
+          <MainMenuBot order={order} />
+        ))}
         <img src={confirmButtonImage} className="main-button-image" />
       </div>
     </div>

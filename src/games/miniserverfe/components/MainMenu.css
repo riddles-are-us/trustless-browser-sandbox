@@ -15,8 +15,8 @@
 .main-content {
     height: 90%;
     width: fit-content;
-    min-height: 500px;
-    min-width: 500px;
+    min-height: 556px;
+    min-width: 556px;
     max-height: min(90%, calc((100vw - 191px * 2) * 0.9));
     aspect-ratio: 1 / 1;
     background-color: lightblue;
