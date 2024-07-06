@@ -7,6 +7,7 @@ import rebootButtonHoverImage from "../images/MainMenu/reboot_hover.png";
 import display from "../images/MainMenu/display.png";
 import "./MainMenu.css";
 import MainMenuProgressBar from "./MainMenuProgressBar";
+import MainMenuArrow from "./MainMenuArrow";
 
 const MainMenu = () => {
   return (
@@ -15,6 +16,7 @@ const MainMenu = () => {
         <img src={circle} className="main-circle-background" />
         <img src={display} className="main-display-image" />
         <MainMenuProgressBar />
+        <MainMenuArrow />
         <img src={confirmButtonImage} className="main-button-image" />
       </div>
     </div>

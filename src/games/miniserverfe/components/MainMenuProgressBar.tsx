@@ -1,6 +1,6 @@
 import React from "react";
-import progressBarBackground from "../images/progress_bar.png";
-import progressBarCover from "../images/highlight.png";
+import progressBarBackground from "../images/MainMenu/progress_bar.png";
+import progressBarCover from "../images/MainMenu/highlight.png";
 import "./MainMenuProgressBar.css";
 
 const MainMenuProgressBar = () => {
