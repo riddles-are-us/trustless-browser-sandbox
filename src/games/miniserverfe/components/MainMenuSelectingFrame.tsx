@@ -9,15 +9,15 @@ const MainMenuSelectingFrame = () => {
   const rotation = order * 45 + 22.5;
   const angle = 90 - rotation;
 
-  const arrowRadius = 15;
-  const arrowYPosition = 50 - Math.sin((angle * Math.PI) / 180) * arrowRadius;
-  const arrowXPposition = 50 + Math.cos((angle * Math.PI) / 180) * arrowRadius;
-
   const selectingFrameRadius = 31.5;
   const selectingFrameYPosition =
     50 - Math.sin((angle * Math.PI) / 180) * selectingFrameRadius;
   const selectingFrameXPosition =
     50 + Math.cos((angle * Math.PI) / 180) * selectingFrameRadius;
+
+  const arrowRadius = 15;
+  const arrowYPosition = 50 - Math.sin((angle * Math.PI) / 180) * arrowRadius;
+  const arrowXPposition = 50 + Math.cos((angle * Math.PI) / 180) * arrowRadius;
   return (
     <>
       <div
