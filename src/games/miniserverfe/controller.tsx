@@ -59,6 +59,7 @@ export function GameController() {
   //const exploreBoxRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const [localSelectedCreatureIndex, setLocalSelectedCreatureIndex] = useState<number | null>(null);
 
   const localAttributes = useAppSelector(selectLocalAttributes);
 
@@ -110,6 +111,15 @@ export function GameController() {
       }
     }
   }, [external]);
+
+  const handleClickCreature = (index: number) => {
+    setLocalSelectedCreatureIndex(index);
+    if(external.selectedCreatureIndex != index) {
+      dispatch(setUserActivity("browsing"));
+      dispatch(setSelectedCreatureIndex(index));
+    }
+  };
+  const isSelected = (index: number) => localSelectedCreatureIndex === index;
 
   function handleDragStart(event: DragStartEvent) {
     const {active} = event;
@@ -195,6 +205,7 @@ export function GameController() {
 
           if (data[1].length != 0) {
             dispatch(setSelectedCreatureIndex(0));
+            setLocalSelectedCreatureIndex(0);
           }
         }
       } /* Very hard to handle after rebooting status
@@ -289,10 +300,10 @@ export function GameController() {
               <div className="creatureBox" ref={scrollRef}>
                 {
                   objects.map((item, index) =>
-                    <Creature key={index} robot={item} index={index} />
+                    <Creature key={index} robot={item} index={index} isSelected={isSelected(index)} clickHandler={handleClickCreature} />
                   )
                 }
-                <Creature key={objects.length} index = {objects.length} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} />
+                <Creature key={objects.length} index = {objects.length} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} isSelected={isSelected(objects.length)} clickHandler={handleClickCreature} />
               </div>
               <div className="createObject">
               {<CreateButton objects={objects} />}

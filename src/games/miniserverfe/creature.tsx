@@ -16,7 +16,7 @@ const CreatureTitleTooltip = ({name, objContent}: {name: string, objContent: str
   )
 };
 
-export function Creature({robot, index}: {robot: ObjectProperty, index: number}) {
+export function Creature({robot, index, isSelected, clickHandler}: {robot: ObjectProperty, index: number, isSelected: boolean, clickHandler: (index: number) => void}) {
   const dispatch = useAppDispatch();
   const external = useAppSelector(selectExternal);
   // Convert object_id to hex string
@@ -29,23 +29,13 @@ export function Creature({robot, index}: {robot: ObjectProperty, index: number})
     objContent = "Creating";
   }
 
-  const isSelected = external.selectedCreatureIndex == index;
-
-  function handleClick(index: number) {
-    if (isSelected)  {
-      return;
-    } else {
-      dispatch(setUserActivity("browsing"));
-      dispatch(setSelectedCreatureIndex(index));
-    }
-  }
   if ((external.userActivity != "creating" && beenCreated) || external.userActivity == "creating") {
     return (
       <OverlayTrigger key={index} placement="bottom"
         overlay={CreatureTitleTooltip({name: index.toString(), objContent: objContent})}
       >
         <div className="creature" key={index} id={String(index)}
-                onClick={() => {handleClick(index);}}
+                onClick={() => {clickHandler(index);}}
                 style={{ backgroundColor: isSelected ? "yellow" : "transparent" }}>
           <img className="creatureImg" src={require("./images/robot.png")} />
           <div className="objId">{ objContent }</div>
