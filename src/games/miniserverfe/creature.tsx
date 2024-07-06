@@ -1,8 +1,8 @@
 import React from 'react';
 import { ObjectProperty } from './types';
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectEntityAttributes, selectExternal, setSelectedCreatureIndex, setUserActivity} from './thunk';
+import {useAppSelector} from '../../app/hooks';
+import {selectEntityAttributes, selectExternal} from './thunk';
 
 interface externalState {
   selectedCreatureIndex: number,
@@ -17,7 +17,6 @@ const CreatureTitleTooltip = ({name, objContent}: {name: string, objContent: str
 };
 
 export function Creature({robot, index, isSelected, clickHandler}: {robot: ObjectProperty, index: number, isSelected: boolean, clickHandler: (index: number) => void}) {
-  const dispatch = useAppDispatch();
   const external = useAppSelector(selectExternal);
   // Convert object_id to hex string
   const objId = robot.object_id.join("");
