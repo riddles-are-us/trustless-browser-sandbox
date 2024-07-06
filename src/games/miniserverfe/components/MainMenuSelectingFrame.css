@@ -1,0 +1,29 @@
+.main-selecting-frame-container {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 36%;
+    height: 36%;
+}
+
+.main-selecting-frame-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+}
+
+.main-arrow-container {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 8%;
+    height: 6.4%;
+}
+
+.main-arrow-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+}
