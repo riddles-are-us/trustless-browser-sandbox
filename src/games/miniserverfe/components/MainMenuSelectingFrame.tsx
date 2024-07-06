@@ -4,8 +4,11 @@ import selectingFrame from "../images/MainMenu/selecting_frame.png";
 
 import "./MainMenuSelectingFrame.css";
 
-const MainMenuSelectingFrame = () => {
-  const order = 0;
+interface Props {
+  order: number;
+}
+
+const MainMenuSelectingFrame = ({ order }: Props) => {
   const rotation = order * 45 + 22.5;
   const angle = 90 - rotation;
 
