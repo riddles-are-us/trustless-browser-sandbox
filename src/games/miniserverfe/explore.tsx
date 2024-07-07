@@ -75,14 +75,16 @@ const CurrentModifierIndex = memo(
   });
 
 
-function Progress({objects, delay, haltBit, currentModifierIndex, index}: {objects: Array<ObjectProperty>, delay: number, haltBit: number, currentModifierIndex: number, index: number}) {
+function Progress({objects, mIndex, haltBit, currentModifierIndex, index}: {objects: Array<ObjectProperty>, mIndex: number, haltBit: number, currentModifierIndex: number, index: number}) {
   let progress = 0;
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
   const globalTime = useAppSelector(selectGlobalTimer);
+  const modifiersInfo = useAppSelector(selectModifier);
+  const delay = modifiersInfo[mIndex].delay;
   if(objects.length != 0
        && objects.length > selectedIndex!
-       && haltBit == 0
+       && haltBit != 1
        && currentModifierIndex == index) {
     const counter = getCounter(objects[selectedIndex!].modifier_info);
     progress = ((globalTime - counter) / delay) * 100;
@@ -116,8 +118,10 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
 
   if (selectedIndex != null) {
     let currentObj = objects[selectedIndex];
+    let tips = "";
     if (external.userActivity == "creating") {
       currentObj = {entity:[], object_id:[], modifiers: [], modifier_info:"0"};
+      tips = "Please drag modifiers to fill the 8 grids to create creature!";
     } else if (external.userActivity == "browsing") {
       displayModifiers = currentObj.modifiers;
     } // else is rebooting, empty clause
@@ -128,7 +132,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
 
     return (<div className="explore">
       <div className="tip">
-          {<div>Please drag modifiers to fill the 8 grids!</div>}
+        <div>{tips}</div>
       </div>
       {<EntityAttributes robot={currentObj} />}
       <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
@@ -139,8 +143,12 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
               let color = "";
               if(mIndex!=null) {
                 if(haltBit == 1 && currentModifierIndex == index) {
-                  color = "red";
-                } else if((haltBit == 0 || haltBit == 2) && currentModifierIndex == index) {
+                  if (external.userActivity == "rebooting") {
+                    color = "green";
+                  } else {
+                    color = "red";
+                  }
+                } else if(haltBit != 1 && currentModifierIndex == index) {
                   color = "green";
                 } else {
                   color = "yellow";
@@ -158,7 +166,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
                         {modifiersInfo[mIndex].name}
                       </div>
                     </OverlayTrigger>
-                    {<Progress objects={objects} delay={modifiersInfo[mIndex!].delay} haltBit={haltBit} currentModifierIndex={currentModifierIndex} index={index} />}
+                    {<Progress objects={objects} mIndex={mIndex} haltBit={haltBit} currentModifierIndex={currentModifierIndex} index={index} />}
                   </div>
                 );
               } else {
