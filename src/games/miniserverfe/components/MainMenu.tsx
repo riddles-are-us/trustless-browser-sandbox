@@ -11,26 +11,27 @@ import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
 import MainMenuBot from "./MainMenuBot";
 
 const MainMenu = () => {
-  const [selectingFrame, setSelectingFrame] = useState(0);
+  // for demo
+  // const [selectingFrame, setSelectingFrame] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSelectingFrame((prevSelectingFrame) => (prevSelectingFrame + 1) % 8);
-    }, 500); // Change interval to 1000ms (1 second)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setSelectingFrame((prevSelectingFrame) => (prevSelectingFrame + 1) % 8);
+  //   }, 500);
 
-    return () => clearInterval(interval); // Cleanup the interval on component unmount
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div className="main-background">
       <div className="main-content">
         <img src={circle} className="main-circle-background" />
-        <img src={display} className="main-display-image" />
-        <MainMenuProgressBar />
-        <MainMenuSelectingFrame order={selectingFrame} />
+        <MainMenuSelectingFrame order={0 /*selectingFrame*/} />
         {[...Array(8).keys()].map((order) => (
           <MainMenuBot order={order} />
         ))}
+        <img src={display} className="main-display-image" />
+        <MainMenuProgressBar />
         <img src={confirmButtonImage} className="main-button-image" />
       </div>
     </div>

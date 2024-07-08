@@ -2,7 +2,7 @@
     position: absolute;
     transform: translate(-50%, -50%);
     width: 36%;
-    height: 36%;
+    height: 27.3%;
 }
 
 .main-selecting-frame-image {
@@ -16,8 +16,8 @@
 .main-arrow-container {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 8%;
-    height: 6.4%;
+    width: 10.6%;
+    height: 5.5%;
 }
 
 .main-arrow-image {

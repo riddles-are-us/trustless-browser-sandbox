@@ -12,13 +12,13 @@ const MainMenuSelectingFrame = ({ order }: Props) => {
   const rotation = order * 45 + 22.5;
   const angle = 90 - rotation;
 
-  const selectingFrameRadius = 31.5;
+  const selectingFrameRadius = 30;
   const selectingFrameYPosition =
     50 - Math.sin((angle * Math.PI) / 180) * selectingFrameRadius;
   const selectingFrameXPosition =
     50 + Math.cos((angle * Math.PI) / 180) * selectingFrameRadius;
 
-  const arrowRadius = 15;
+  const arrowRadius = 13.5;
   const arrowYPosition = 50 - Math.sin((angle * Math.PI) / 180) * arrowRadius;
   const arrowXPposition = 50 + Math.cos((angle * Math.PI) / 180) * arrowRadius;
   return (
