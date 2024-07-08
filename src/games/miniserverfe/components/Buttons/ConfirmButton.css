@@ -1,6 +1,9 @@
-.confirm_button{
-    width: 15.6%;
-    height: 14.8%;
+.confirm-button-position{
     bottom: 7%;
     left: 10%;
+}
+
+.confirm-button-scale{
+    width: 15.6%;
+    height: 14.8%;
 }

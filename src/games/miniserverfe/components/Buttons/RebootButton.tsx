@@ -8,7 +8,8 @@ const RebootButton = () => {
   return (
     <ImageButton
       isDisabled={false}
-      className="reboot_button"
+      positionClass="reboot-button-position"
+      scaleClass="reboot-button-scale"
       defaultImagePath={rebootButtonImage}
       hoverImagePath={rebootButtonHoverImage}
       clickedImagePath={rebootButtonHoverImage}

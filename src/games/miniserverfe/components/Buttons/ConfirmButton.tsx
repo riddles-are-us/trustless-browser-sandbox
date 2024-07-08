@@ -8,7 +8,8 @@ const ConfirmButton = () => {
   return (
     <ImageButton
       isDisabled={false}
-      className="confirm_button"
+      positionClass="confirm-button-position"
+      scaleClass="confirm-button-scale"
       defaultImagePath={confirmButtonImage}
       hoverImagePath={confirmButtonHoverImage}
       clickedImagePath={confirmButtonHoverImage}

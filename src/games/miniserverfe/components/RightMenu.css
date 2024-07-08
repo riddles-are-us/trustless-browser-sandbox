@@ -32,6 +32,16 @@
     background-repeat: no-repeat;
 }
 
+.right-up-button-position{
+    bottom: calc(5.5% - 25px);
+    left: 30%;
+}
+
+.right-down-button-position{
+    bottom: calc(5.5% - 25px);
+    left: 80%;
+}
+
 .right-corner-bar {
     position: absolute;
     bottom: 0px;

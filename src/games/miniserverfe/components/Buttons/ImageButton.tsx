@@ -3,7 +3,8 @@ import "./ImageButton.css";
 
 interface Props {
   isDisabled: boolean;
-  className: string;
+  positionClass: string;
+  scaleClass: string;
   defaultImagePath: string;
   hoverImagePath: string;
   clickedImagePath: string;
@@ -11,8 +12,9 @@ interface Props {
 }
 
 const ImageButton = ({
-  isDisabled: isDisabled,
-  className,
+  isDisabled,
+  positionClass,
+  scaleClass,
   defaultImagePath,
   hoverImagePath,
   clickedImagePath,
@@ -48,7 +50,7 @@ const ImageButton = ({
 
   return (
     <button
-      className={`image-button ${className}`}
+      className={`image-button ${positionClass} ${scaleClass}`}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}

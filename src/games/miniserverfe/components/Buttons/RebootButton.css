@@ -1,6 +1,9 @@
-.reboot_button{
-    width: 15.6%;
-    height: 14.8%;
+.reboot-button-position{
     bottom: 7%;
     left: 10%;
+}
+
+.reboot-button-scale{
+    width: 15.6%;
+    height: 14.8%;
 }

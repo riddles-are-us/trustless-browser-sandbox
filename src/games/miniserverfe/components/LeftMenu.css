@@ -32,12 +32,21 @@
     background-repeat: no-repeat;
 }
 
+.left-up-button-position{
+    bottom: calc(5.5% - 25px);
+    left: 60%;
+}
+
+.left-down-button-position{
+    bottom: calc(5.5% - 25px);
+    left: 75%;
+}
+
 .left-corner-bar {
     position: absolute;
     bottom: 0px;
     right: -4px;
     width: 70px;
-    z-index: 10;
 }
 
 .left-middle-bar {
@@ -46,5 +55,4 @@
     transform: translateY(-50%);
     right: -4px;
     width: 40px;
-    z-index: 10;
 }
