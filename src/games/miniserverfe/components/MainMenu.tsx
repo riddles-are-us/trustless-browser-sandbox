@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import circle from "../images/MainMenu/circle.png";
-import confirmButtonImage from "../images/MainMenu/confirm.png";
-import confirmButtonHoverImage from "../images/MainMenu/confirm_hover.png";
-import rebootButtonImage from "../images/MainMenu/reboot.png";
-import rebootButtonHoverImage from "../images/MainMenu/reboot_hover.png";
 import display from "../images/MainMenu/display.png";
-import "./MainMenu.css";
 import MainMenuProgressBar from "./MainMenuProgressBar";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
 import MainMenuBot from "./MainMenuBot";
+import ConfirmButton from "./Buttons/ConfirmButton";
+import "./MainMenu.css";
 
 const MainMenu = () => {
   // for demo
@@ -26,13 +23,13 @@ const MainMenu = () => {
     <div className="main-background">
       <div className="main-content">
         <img src={circle} className="main-circle-background" />
+        <ConfirmButton />
         <MainMenuSelectingFrame order={0 /*selectingFrame*/} />
         {[...Array(8).keys()].map((order) => (
           <MainMenuBot order={order} />
         ))}
         <img src={display} className="main-display-image" />
         <MainMenuProgressBar />
-        <img src={confirmButtonImage} className="main-button-image" />
       </div>
     </div>
   );

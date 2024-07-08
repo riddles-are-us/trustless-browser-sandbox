@@ -41,11 +41,3 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
-.main-button-image{
-    position: absolute;
-    width: 15.6%;
-    height: 14.8%;
-    bottom: 14%;
-    left: 2%;
-}
