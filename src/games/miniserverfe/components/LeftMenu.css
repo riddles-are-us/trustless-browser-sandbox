@@ -32,6 +32,11 @@
     background-repeat: no-repeat;
 }
 
+.left-new-button-position{
+    bottom: calc(4% - 25px);
+    left: 25%;
+}
+
 .left-up-button-position{
     bottom: calc(5.5% - 25px);
     left: 60%;
