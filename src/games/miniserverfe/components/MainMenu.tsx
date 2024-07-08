@@ -6,6 +6,7 @@ import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
 import MainMenuBot from "./MainMenuBot";
 import ConfirmButton from "./Buttons/ConfirmButton";
 import "./MainMenu.css";
+import RebootButton from "./Buttons/RebootButton";
 
 const MainMenu = () => {
   // for demo
@@ -24,6 +25,7 @@ const MainMenu = () => {
       <div className="main-content">
         <img src={circle} className="main-circle-background" />
         <ConfirmButton />
+        {/* <RebootButton /> */}
         <MainMenuSelectingFrame order={0 /*selectingFrame*/} />
         {[...Array(8).keys()].map((order) => (
           <MainMenuBot order={order} />
