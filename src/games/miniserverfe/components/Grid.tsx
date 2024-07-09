@@ -1,5 +1,6 @@
 import React from "react";
 import "./Grid.css";
+import Creature from "./Creature";
 
 interface Props {
   elementWidth: number;
@@ -24,12 +25,11 @@ const Grid = ({
         gridTemplateRows: `repeat(${rowCount}, 1fr)`,
       }}
     >
-      {}
-      <div>1 of 2</div>
-      <div>2 of 2</div>
-      <div>1 of 3</div>
-      <div>2 of 3</div>
-      <div>3 of 3</div>
+      <Creature />
+      <Creature />
+      <Creature />
+      <Creature />
+      <Creature />
     </div>
   );
 };
