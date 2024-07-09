@@ -32,6 +32,15 @@
     background-repeat: no-repeat;
 }
 
+.left-grid{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: calc(100% - 150px);
+    top: 50%;
+    left: 45%;
+}
+
 .left-new-button-position{
     bottom: calc(4% - 25px);
     left: 25%;
