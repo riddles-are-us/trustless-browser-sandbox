@@ -32,6 +32,11 @@
     background-repeat: no-repeat;
 }
 
+.right-page-number-position{
+    bottom: calc(5.5% - 25px);
+    left: 55%;
+}
+
 .right-up-button-position{
     bottom: calc(5.5% - 25px);
     left: 30%;
@@ -47,5 +52,4 @@
     bottom: 0px;
     left: -4px;
     width: 70px;
-    z-index: 10;
 }
