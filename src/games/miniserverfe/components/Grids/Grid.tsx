@@ -1,12 +1,12 @@
 import React from "react";
 import "./Grid.css";
-import Creature from "./Creature";
 
 interface Props {
   elementWidth: number;
   elementHeight: number;
   columnCount: number;
   rowCount: number;
+  elements: Array<JSX.Element>;
 }
 
 const Grid = ({
@@ -14,22 +14,20 @@ const Grid = ({
   elementHeight,
   columnCount,
   rowCount,
+  elements,
 }: Props) => {
+  console.log(elementWidth * columnCount);
   return (
     <div
       className="grid-contianer"
       style={{
-        width: `${elementWidth * columnCount}px)`,
-        height: `${elementHeight * rowCount}px)`,
+        width: `${elementWidth * columnCount}px`,
+        height: `${elementHeight * rowCount}px`,
         gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
         gridTemplateRows: `repeat(${rowCount}, 1fr)`,
       }}
     >
-      <Creature />
-      <Creature />
-      <Creature />
-      <Creature />
-      <Creature />
+      {elements.map((element) => element)}
     </div>
   );
 };
