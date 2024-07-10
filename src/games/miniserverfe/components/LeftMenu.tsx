@@ -5,7 +5,7 @@ import "./LeftMenu.css";
 import UpButton from "./Buttons/UpButton";
 import DownButton from "./Buttons/DownButton";
 import NewButton from "./Buttons/NewButton";
-import Grid from "./Grids/Grid";
+import Grid from "./Grid";
 import Creature from "./Creature";
 
 const LeftMenu = () => {
@@ -18,8 +18,8 @@ const LeftMenu = () => {
   };
   const creatureGridElementWidth = 75;
   const creatureGridElementHeight = 90;
-  const CreatureGridColumnCount = 2;
-  const CreatureGridRowCount = Math.floor(
+  const creatureGridColumnCount = 2;
+  const creatureGridRowCount = Math.floor(
     creatureGridHeight / creatureGridElementHeight
   );
 
@@ -42,8 +42,8 @@ const LeftMenu = () => {
         <Grid
           elementWidth={creatureGridElementWidth}
           elementHeight={creatureGridElementHeight}
-          columnCount={CreatureGridColumnCount}
-          rowCount={CreatureGridRowCount}
+          columnCount={creatureGridColumnCount}
+          rowCount={creatureGridRowCount}
           elements={[<Creature />, <Creature />, <Creature />]}
         />
       </div>
