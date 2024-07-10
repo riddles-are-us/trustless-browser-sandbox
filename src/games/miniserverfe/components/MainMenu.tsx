@@ -26,7 +26,7 @@ const MainMenu = () => {
         <img src={circle} className="main-circle-background" />
         <ConfirmButton />
         {/* <RebootButton /> */}
-        <MainMenuSelectingFrame order={0 /*selectingFrame*/} />
+        <MainMenuSelectingFrame order={0 /*selectingFrame*/} isStop={true} />
         {[...Array(8).keys()].map((order) => (
           <MainMenuBot order={order} />
         ))}

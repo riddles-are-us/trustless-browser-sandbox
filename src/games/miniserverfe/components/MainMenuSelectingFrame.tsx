@@ -1,14 +1,16 @@
 import React from "react";
 import arrow from "../images/MainMenu/arrow.png";
 import selectingFrame from "../images/MainMenu/selecting_frame.png";
+import selectingFrameStop from "../images/MainMenu/selecting_frame_red.png";
 
 import "./MainMenuSelectingFrame.css";
 
 interface Props {
   order: number;
+  isStop: boolean;
 }
 
-const MainMenuSelectingFrame = ({ order }: Props) => {
+const MainMenuSelectingFrame = ({ order, isStop }: Props) => {
   const rotation = order * 45 + 22.5;
   const angle = 90 - rotation;
 
@@ -31,7 +33,7 @@ const MainMenuSelectingFrame = ({ order }: Props) => {
         }}
       >
         <img
-          src={selectingFrame}
+          src={isStop ? selectingFrameStop : selectingFrame}
           className="main-selecting-frame-image"
           style={{ transform: `translate(-50%, -50%) rotate(${rotation}deg)` }}
         />
