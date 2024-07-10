@@ -39,3 +39,9 @@ html {
   src: url("./assets/fonts/AveriaSerifLibre-Bold.ttf");
   font-weight: 700;
 }
+
+@font-face {
+  font-family: "mishmash";
+  src: url("./assets/fonts/mishmash.ttf");
+  font-weight: 700;
+}

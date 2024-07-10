@@ -18,7 +18,7 @@ const PageNumber = ({ page, maxPage, positionClass }: Props) => {
 
       <p
         className={`page-number-text ${positionClass}`}
-      >{`${page} / ${maxPage}`}</p>
+      >{`${page}/${maxPage}`}</p>
     </>
   );
 };
