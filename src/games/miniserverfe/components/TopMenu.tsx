@@ -17,6 +17,7 @@ import CognisurgeIcon from "../images/Icons/Cognisurge.png";
 import VitalshieldIcon from "../images/Icons/Vitalshield.png";
 import FlexonixIcon from "../images/Icons/Flexonix.png";
 import SmallResourceDisplay from "./SmallResourceDisplay";
+import AccountInfo from "./AccountInfo";
 
 const TopMenu = () => {
   return (
@@ -24,6 +25,7 @@ const TopMenu = () => {
       <div className="top-left"></div>
       <div className="top-middle"></div>
       <div className="top-right"></div>
+      <AccountInfo />
       <MediumResourceDisplay
         order={0}
         iconImagePath={CrystalIcon}
