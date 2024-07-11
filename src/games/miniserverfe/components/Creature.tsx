@@ -8,6 +8,7 @@ const Creature = () => {
     <div className="creature-container">
       <img src={creatureBackground} className="creature-background" />
       <img src={bot} className="creature-image" />
+      <p className="creature-text">ROBOT</p>
     </div>
   );
 };
