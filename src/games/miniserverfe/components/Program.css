@@ -13,11 +13,27 @@
     height: 100%;
 }
 
-.program-image {
+.program-text {
     position: absolute;
-    top: 48%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 10px;
+    overflow: auto;
+    text-align: center;
+    line-height: 100%;
+    margin: 0px;
     width: 70%;
-    height: 70%;
+    height: 15%;
+    font-family: "mishmash";
+    color: white;
+}
+
+.program-resource-grid{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 58px;
+    height: 36px;
+    top: 60%;
+    left: 50%;
 }

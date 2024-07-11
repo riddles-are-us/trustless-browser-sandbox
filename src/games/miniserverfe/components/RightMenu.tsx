@@ -40,7 +40,6 @@ const RightMenu = () => {
         maxPage={8}
         positionClass={"right-page-number-position"}
       />
-      <UpButton positionClass={"right-up-button-position"} />
       <div ref={programGridRef} className="right-program-grid">
         <Grid
           elementWidth={programGridElementWidth}
@@ -51,6 +50,7 @@ const RightMenu = () => {
         />
       </div>
       <img src={rightCornerBar} className="right-corner-bar" />
+      <UpButton positionClass={"right-up-button-position"} />
       <DownButton positionClass={"right-down-button-position"} />
     </div>
   );
