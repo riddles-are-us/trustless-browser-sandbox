@@ -1,10 +1,10 @@
 import { encode_modifier, createCommand } from "./helper";
-import { send_transaction } from "./rpc";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectL2Account } from "../../data/accountSlice";
 import {selectExternal, setErrorMessage, setSelectedCreatureIndex, setUserActivity, setViewerActivity} from "./thunk";
 import { ObjectProperty } from './types';
 import React from "react";
+import { sendTransaction } from "./thunk";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
@@ -39,11 +39,11 @@ export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
       if(activity == "creating") {
         const objIndex = BigInt(selectedId!);
         const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
-        send_transaction([insObjectCmd, modifiers, 0n, 0n], l2account!.address);
+        dispatch(sendTransaction({cmd: [insObjectCmd, modifiers, 0n, 0n], prikey: l2account!.address}));
       } else if(activity == "rebooting") {
         const objIndex = BigInt(selectedId!);
         const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(objIndex));
-        send_transaction([restartObjectCmd, modifiers, 0n, 0n], l2account!.address);
+        dispatch(sendTransaction({cmd: [restartObjectCmd, modifiers, 0n, 0n], prikey: l2account!.address}));
       }
       dispatch(setViewerActivity("monitoringResult"));
     } catch(e) {

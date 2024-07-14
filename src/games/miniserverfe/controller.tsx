@@ -3,7 +3,7 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { query_state, send_transaction } from "./rpc";
+import { query_state } from "./rpc";
 import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "./createObject";
@@ -20,7 +20,7 @@ import {ProgramInfo} from './modifier';
 import {CreateButton} from './opbutton';
 import {ErrorAlert} from './error';
 import {Explore} from './explore';
-import {getConfig} from "./thunk";
+import {getConfig, sendTransaction, setSelectedCreatureIndex} from "./thunk";
 
 import cover from "./images/cover.jpg";
 
@@ -137,7 +137,7 @@ export function GameController() {
       setPlayerIds(playerIdHex);
 
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
-      await send_transaction([insPlayerCmd,0n,0n,0n], l2account!.address);
+      dispatch(sendTransaction({cmd: [insPlayerCmd, 0n, 0n, 0n], prikey: l2account!.address}));
     } catch(e) {
       dispatch(setErrorMessage("Error at create player " + e));
     }
@@ -190,8 +190,12 @@ export function GameController() {
         dispatch(setGlobalTimer(data[2]));
         setObjects(data[1]);
 
-        if (external.viewerActivity == "idle") {
+        if (clientAction == "idle") {
           dispatch(setViewerActivity("queryingUpdate"));
+
+          if (data[1].length != 0) {
+            dispatch(setSelectedCreatureIndex(0));
+          }
         }
       } /* Very hard to handle after rebooting status
          else if(playerAction == "afterRebootBrowsing") {
@@ -215,6 +219,21 @@ export function GameController() {
 
   }
 
+  function changeScrollRef() {
+    // Scroll to bottom
+    setTimeout(() => {
+      if(scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    }, 1000);
+  }
+
+  useEffect(() => {
+    if (external.userActivity === "creating") {
+      changeScrollRef();
+    }
+  }, [external.userActivity]);
+
   useEffect(() => {
     dispatch(getConfig());
   }, [l2account]);
@@ -222,7 +241,7 @@ export function GameController() {
   useEffect(() => {
     setTimeout(() => {
       queryStateWithReboot();
-    }, 3000)
+    }, 1000)
   }, [inc]);
 
   const account = useAppSelector(selectL1Account);
@@ -232,7 +251,7 @@ export function GameController() {
       <div className="controller">
         <CreateObjectModal/>
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div style={{ left: "50%", transform: "translateX(-50%)", position: "absolute" }}>
+          <div className="errorAlert">
             <ErrorAlert/>
           </div>
           <Row className="player">

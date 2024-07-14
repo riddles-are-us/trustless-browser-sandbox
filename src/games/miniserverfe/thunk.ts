@@ -1,17 +1,33 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { query_config } from './rpc';
+import { query_config, send_transaction } from './rpc';
 import { RootState } from "../../app/store";
-import { ExternalState, Modifier } from './types';
+import { ExternalState, Modifier, SendTransactionParams, SendTransactionRes } from './types';
 import { decodeModifiers } from './helper';
 
-export const getConfig= createAsyncThunk(
+export const getConfig = createAsyncThunk(
   'client/getConfig',
-  async (thunkApi) => {
+  async () => {
     const res = await query_config();
     const data = JSON.parse(res.data);
     return data;
   }
 )
+export const sendTransaction = createAsyncThunk<
+  SendTransactionRes,
+  SendTransactionParams,
+  { rejectValue: string }
+>(
+  'client/sendTransaction',
+  async (params: {cmd: Array<bigint>, prikey: string }, { rejectWithValue }) => {
+    try {
+      const { cmd, prikey } = params;
+      const res = await send_transaction(cmd, prikey);
+      return res;
+    } catch (err: any) {
+      return rejectWithValue(err);
+    }
+  }
+);
 
 interface ClientState {
   localAttributes: string[];
@@ -42,7 +58,6 @@ export const clientSlice = createSlice({
     setSelectedCreatureIndex: (state, loaded) => {
       state.external.selectedCreatureIndex = loaded.payload;
     },
-
     setViewerActivity: (state, loaded) => {
       state.external.viewerActivity = loaded.payload;
     },
@@ -64,6 +79,12 @@ export const clientSlice = createSlice({
         state.modifiers = decodeModifiers(c.payload.modifiers);
         console.log("query config fulfilled");
       })
+      .addCase(sendTransaction.rejected, (state, c) => {
+        if (c.payload) {
+          state.external.errorMessage = c.payload;
+        }
+        console.log("send transaction rejected");
+      });
   },
 });
 
