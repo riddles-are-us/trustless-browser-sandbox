@@ -9,23 +9,32 @@ import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "./createObject";
 import { createCommand } from "./helper";
 import { query, LeHexBN } from "./sign";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { selectExternal, selectLocalAttributes, selectModifier, setErrorMessage, setViewerActivity, setUserActivity, setGlobalTimer } from './thunk';
-import { ObjectProperty} from './types';
-import { Creature } from './creature';
-import {ProgramInfo} from './modifier';
-import {CreateButton} from './opbutton';
-import {ErrorAlert} from './error';
-import {Explore} from './explore';
-import {getConfig, sendTransaction, setSelectedCreatureIndex} from "./thunk";
+import {
+  selectExternal,
+  selectLocalAttributes,
+  selectModifier,
+  setErrorMessage,
+  setViewerActivity,
+  setUserActivity,
+  setGlobalTimer,
+} from "./thunk";
+import { ObjectProperty } from "./types";
+import { Creature } from "./creature";
+import { ProgramInfo } from "./modifier";
+import { CreateButton } from "./opbutton";
+import { ErrorAlert } from "./error";
+import { Explore } from "./explore";
+import { getConfig, sendTransaction, setSelectedCreatureIndex } from "./thunk";
 
 import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
 import Loading from './load';
+import Gameplay from "./Gameplay";
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
@@ -247,86 +256,87 @@ export function GameController() {
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
-    return (
-      <div className="controller">
-        <CreateObjectModal/>
-        <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div className="errorAlert">
-            <ErrorAlert/>
-          </div>
-          <Row className="player">
-            <Col className="local">
-              {
-                localAttributes.map((item, index) => {
-                  return (
-                    <OverlayTrigger key={index} placement="bottom"
-                      overlay={<Tooltip id={`tooltip-${index}`}><strong>{item}</strong></Tooltip>}
-                    >
-                    <div className="localItem" key={index}>{item}:
-                      {
-                        localValues.length !=0 ? <span className="value">{localValues[index]}</span> :
-                        <span className="value">0</span>
-                      }
-                    </div>
-                    </OverlayTrigger>
-                  )
-                })
-              }
-            </Col>
-            <Col xs={3}>
-              <OverlayTrigger key={l2account!.address} placement="bottom"
-                overlay={<Tooltip id={`tooltip-${playerIds}`}><strong>{l2account!.address}</strong>.</Tooltip>}
-              >
-                <div className="playerIds">
-                  playerIds: {l2account!.address}
-                </div>
-              </OverlayTrigger>
-            </Col>
-          </Row>
-          <div className="main">
-            <div className="creatures">
-              <div className="title">CREATURES</div>
-              <div className="creatureBox" ref={scrollRef}>
-                {
-                  objects.map((item, index) =>
-                    <Creature key={index} robot={item} index={index} />
-                  )
-                }
-                <Creature key={objects.length} index = {objects.length} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} />
-              </div>
-              <div className="createObject">
-              {<CreateButton objects={objects} />}
-              </div>
-            </div>
-            <Explore objects={objects} modifiers={dropList}/>
-            <div className="program">
-              <div className="title">PROGRAM</div>
-              <div className="draggableBox">
-                <SortableContext
-                  items={modifiersInfo.map((_, index) => index)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  { modifiersInfo.map((modifier, index) =>
-                      <DragableModifier
-                        key={index}
-                        index={String(index)}
-                        name={modifier.name}
-                        entity = {modifier.entity}
-                        local = {modifier.local}
-                        delay = {modifier.delay}
-                      />
-                    )
-                  }
-                </SortableContext>
-                <DragOverlay>
-                  <Preview index={draggingModifierIndex} />
-                </DragOverlay>
-              </div>
-            </div>
-          </div>
-        </DndContext>
-      </div>
-    )
+    return <Gameplay />;
+    // return (
+    //   <div className="controller">
+    //     <CreateObjectModal/>
+    //     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    //       <div className="errorAlert">
+    //         <ErrorAlert/>
+    //       </div>
+    //       <Row className="player">
+    //         <Col className="local">
+    //           {
+    //             localAttributes.map((item, index) => {
+    //               return (
+    //                 <OverlayTrigger key={index} placement="bottom"
+    //                   overlay={<Tooltip id={`tooltip-${index}`}><strong>{item}</strong></Tooltip>}
+    //                 >
+    //                 <div className="localItem" key={index}>{item}:
+    //                   {
+    //                     localValues.length !=0 ? <span className="value">{localValues[index]}</span> :
+    //                     <span className="value">0</span>
+    //                   }
+    //                 </div>
+    //                 </OverlayTrigger>
+    //               )
+    //             })
+    //           }
+    //         </Col>
+    //         <Col xs={3}>
+    //           <OverlayTrigger key={l2account!.address} placement="bottom"
+    //             overlay={<Tooltip id={`tooltip-${playerIds}`}><strong>{l2account!.address}</strong>.</Tooltip>}
+    //           >
+    //             <div className="playerIds">
+    //               playerIds: {l2account!.address}
+    //             </div>
+    //           </OverlayTrigger>
+    //         </Col>
+    //       </Row>
+    //       <div className="main">
+    //         <div className="creatures">
+    //           <div className="title">CREATURES</div>
+    //           <div className="creatureBox" ref={scrollRef}>
+    //             {
+    //               objects.map((item, index) =>
+    //                 <Creature key={index} robot={item} index={index} />
+    //               )
+    //             }
+    //             <Creature key={objects.length} index = {objects.length} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} />
+    //           </div>
+    //           <div className="createObject">
+    //           {<CreateButton objects={objects} />}
+    //           </div>
+    //         </div>
+    //         <Explore objects={objects} modifiers={dropList}/>
+    //         <div className="program">
+    //           <div className="title">PROGRAM</div>
+    //           <div className="draggableBox">
+    //             <SortableContext
+    //               items={modifiersInfo.map((_, index) => index)}
+    //               strategy={verticalListSortingStrategy}
+    //             >
+    //               { modifiersInfo.map((modifier, index) =>
+    //                   <DragableModifier
+    //                     key={index}
+    //                     index={String(index)}
+    //                     name={modifier.name}
+    //                     entity = {modifier.entity}
+    //                     local = {modifier.local}
+    //                     delay = {modifier.delay}
+    //                   />
+    //                 )
+    //               }
+    //             </SortableContext>
+    //             <DragOverlay>
+    //               <Preview index={draggingModifierIndex} />
+    //             </DragOverlay>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </DndContext>
+    //   </div>
+    // )
   } else if (l2account) {
     return (<Container className="mt-5">
                 <Loading/>

@@ -17,6 +17,7 @@ import { selectMD5, selectGameLoaded } from "../data/game";
 interface IProps {
   currency: number;
   handleRestart: () => void;
+  showNavBar: boolean;
 }
 
 export function MainNavBar(props: IProps) {
@@ -31,7 +32,7 @@ export function MainNavBar(props: IProps) {
     dispatch(loginL1AccountAsync());
   }, []);
 
-  return (
+  return props.showNavBar ? (
     <Navbar style={{ zIndex: "1000" }}>
       <Container className="justify-content-md-between">
         <Navbar.Brand>
@@ -102,5 +103,5 @@ export function MainNavBar(props: IProps) {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
+  ) : null;
 }

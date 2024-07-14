@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./style.scss";
 import { MainNavBar } from "../components/Nav";
@@ -15,34 +15,50 @@ import { GameController as RogueLikeController } from "../games/roguelike/contro
 import { GameController as TowerDefenceController } from "../games/towerdefence/controller";
 import { GameController as MiniServerFEController } from "../games/miniserverfe/controller";
 import logo from "../images/logo.png";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import Gameplay from "../games/miniserverfe/Gameplay";
 
+const MINI_SERVER_FE_PATH = "miniserverfe";
+
+function MainNavBarIsShow() {
+  const location = useLocation();
+  const showNavBar = location.pathname !== `/${MINI_SERVER_FE_PATH}`;
+
+  return showNavBar ? (
+    <MainNavBar currency={0} handleRestart={() => {}} showNavBar={true} />
+  ) : (
+    <MainNavBar currency={0} handleRestart={() => {}} showNavBar={false} />
+  );
+}
 
 export function Main() {
   return (
     <>
-      <MainNavBar currency={0} handleRestart={()=>{}}></MainNavBar>
       <BrowserRouter>
+        <MainNavBarIsShow />
         <Routes>
           <Route path="/">
-            <Route index element={<Landing/>}/>
-            <Route path="roguelike" element={<RogueLikeController/>}/>
+            <Route index element={<Landing />} />
+            <Route path="roguelike" element={<RogueLikeController />} />
           </Route>
           <Route path="/">
-            <Route index element={<Landing/>}/>
-            <Route path="signature" element={<TemplateController/>}/>
+            <Route index element={<Landing />} />
+            <Route path="signature" element={<TemplateController />} />
           </Route>
           <Route path="/">
-            <Route index element={<Landing/>}/>
-            <Route path="towerdefence" element={<TowerDefenceController/>}/>
+            <Route index element={<Landing />} />
+            <Route path="towerdefence" element={<TowerDefenceController />} />
           </Route>
           <Route path="/">
-              <Route index element={<Landing/>}/>
-              <Route path="demogame" element={<DemoGameController/>}/>
+            <Route index element={<Landing />} />
+            <Route path="demogame" element={<DemoGameController />} />
           </Route>
           <Route path="/">
-            <Route index element={<Landing/>}/>
-            <Route path="miniserverfe" element={<MiniServerFEController/>}/>
+            <Route index element={<Landing />} />
+            <Route
+              path={MINI_SERVER_FE_PATH}
+              element={<MiniServerFEController />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
