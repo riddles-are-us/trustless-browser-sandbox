@@ -31,7 +31,6 @@ import Loading from './load';
 const CMD_INSTALL_PLAYER = 1n;
 
 interface playerProperty {
-  player_id: Array<string>,
   objects: Array<number>,
   local: Array<number>
 }
@@ -157,12 +156,13 @@ export function GameController() {
   async function queryState(clientAction: string) {
     try {
       const playerAction = external.userActivity;
+
       const res = await query_state([], l2account!.address);
 
       const data = JSON.parse(res.data);
       console.log("query state data", data);
       if(playerAction == "creating") {
-        decodePlayerInfo(data[0]);
+        decodePlayerInfo(data[0].data);
         dispatch(setGlobalTimer(data[2]));
         if (clientAction == "monitoringResult") {
           if(data[1].length == external.getSelectedIndex()! + 1) {
@@ -174,7 +174,7 @@ export function GameController() {
           setObjects(data[1]);
         }
       } else if(playerAction == "rebooting") {
-        decodePlayerInfo(data[0]);
+        decodePlayerInfo(data[0].data);
         dispatch(setGlobalTimer(data[2]));
         if (clientAction == "monitoringResult") {
           dispatch(setUserActivity("browsing"));
@@ -182,11 +182,11 @@ export function GameController() {
         }
         setObjects(data[1]);
       } else if(playerAction == "loading") {
-        decodePlayerInfo(data[0]);
+        decodePlayerInfo(data[0].data);
         dispatch(setGlobalTimer(data[2]));
         dispatch(setUserActivity("browsing"));
       } else {
-        decodePlayerInfo(data[0]);
+        decodePlayerInfo(data[0].data);
         dispatch(setGlobalTimer(data[2]));
         setObjects(data[1]);
 
