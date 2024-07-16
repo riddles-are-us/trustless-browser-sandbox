@@ -24,6 +24,13 @@ function MainNavBarIsShow() {
   const location = useLocation();
   const showNavBar = location.pathname !== `/${MINI_SERVER_FE_PATH}`;
 
+  return showNavBar ? <img className="wasm-logo" src={logo}></img> : null;
+}
+
+function WasmLogoIsShow() {
+  const location = useLocation();
+  const showNavBar = location.pathname !== `/${MINI_SERVER_FE_PATH}`;
+
   return showNavBar ? (
     <MainNavBar currency={0} handleRestart={() => {}} showNavBar={true} />
   ) : (
@@ -61,8 +68,8 @@ export function Main() {
             />
           </Route>
         </Routes>
+        <WasmLogoIsShow />
       </BrowserRouter>
-      <img className="wasm-logo" src={logo}></img>
     </>
   );
 }
