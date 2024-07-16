@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
-import { DndContext, DragOverlay } from '@dnd-kit/core';
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
+import React, { useState, useEffect, useRef, memo } from "react";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { query_state } from "./rpc";
 import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
@@ -33,109 +37,31 @@ import { getConfig, sendTransaction, setSelectedCreatureIndex } from "./thunk";
 import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
-import Loading from './load';
+import Loading from "./load";
 import Gameplay from "./Gameplay";
+import OldGameplay from "./OldGameplay";
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
 interface playerProperty {
-  player_id: Array<string>,
-  objects: Array<number>,
-  local: Array<number>
+  player_id: Array<string>;
+  objects: Array<number>;
+  local: Array<number>;
 }
 
 export function GameController() {
-
   const dispatch = useAppDispatch();
   const external = useAppSelector(selectExternal);
-  const modifiersInfo = useAppSelector(selectModifier);
 
   // player related information
   const [playerIds, setPlayerIds] = useState("");
   const [localValues, setLocalValues] = useState<number[]>([]);
   const [objects, setObjects] = useState<Array<ObjectProperty>>([]);
 
-
-  // modified modifier array
-  const [dropList, setDropList] = useState<Array<number|null>>([null, null, null, null, null, null, null, null]);
-  const [cacheDropList, setCacheObjDropList] = useState<Array<number|null>>([]);
-
-  const [draggingModifierIndex, setDraggingModifierIndex] = useState<number|null>(null);
-
   const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
   //const exploreBoxRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-
-  const localAttributes = useAppSelector(selectLocalAttributes);
-
-  const DragableModifier = memo(
-    function DragableModifier(props: any) {
-      const {attributes, listeners, setNodeRef, transform, transition} = useSortable({
-        id: props.index
-      });
-      const style = {
-        transform: CSS.Transform.toString(transform),
-        transition
-      }
-      return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="programItem">
-          <ProgramInfo {...props}></ProgramInfo>
-        </div>
-      )
-    });
-
-  function Preview({index}: {index: number | null}) {
-    if(index != null && modifiersInfo && modifiersInfo[index]) {
-      return (
-        <div className="preview">
-          <ProgramInfo
-            name={modifiersInfo[index].name}
-            entity = {modifiersInfo[index].entity}
-            local = {modifiersInfo[index].local}
-            delay = {modifiersInfo[index].delay} /
-          >
-        </div>
-      )
-    } else {
-      return null;
-    }
-  }
-
-  useEffect(() => {
-    const cIndex = external.getSelectedIndex()
-    if (cIndex) {
-      if (external.userActivity == "creating") {
-        setDropList([...cacheDropList]);
-      } else {
-          const currentObj = objects[cIndex];
-          const arr: number[]= [];
-          currentObj.modifiers.map((modifier) => {
-            arr.push(modifier);
-          });
-          setDropList(arr);
-      }
-    }
-  }, [external]);
-
-  function handleDragStart(event: DragStartEvent) {
-    const {active} = event;
-    setDraggingModifierIndex(Number(active.id));
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const selected = event.active.id;
-    if(event.over && typeof event.over.id == "string" && event.over.id.includes("droppable")) {
-      const index = Number(event.over.id.replace("droppable", ""));
-      const arr = [...dropList];
-      arr[index] = Number(selected);
-      setDropList(arr);
-      setCacheObjDropList(arr);
-    }
-    setDraggingModifierIndex(null);
-  }
 
   async function createPlayer() {
     try {
@@ -146,8 +72,13 @@ export function GameController() {
       setPlayerIds(playerIdHex);
 
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
-      dispatch(sendTransaction({cmd: [insPlayerCmd, 0n, 0n, 0n], prikey: l2account!.address}));
-    } catch(e) {
+      dispatch(
+        sendTransaction({
+          cmd: [insPlayerCmd, 0n, 0n, 0n],
+          prikey: l2account!.address,
+        })
+      );
+    } catch (e) {
       dispatch(setErrorMessage("Error at create player " + e));
     }
   }
@@ -158,7 +89,7 @@ export function GameController() {
 
   async function queryStateWithReboot() {
     if (l2account) {
-        await queryState(external.viewerActivity);
+      await queryState(external.viewerActivity);
     }
     setInc(inc + 1);
   }
@@ -170,11 +101,11 @@ export function GameController() {
 
       const data = JSON.parse(res.data);
       console.log("query state data", data);
-      if(playerAction == "creating") {
+      if (playerAction == "creating") {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         if (clientAction == "monitoringResult") {
-          if(data[1].length == external.getSelectedIndex()! + 1) {
+          if (data[1].length == external.getSelectedIndex()! + 1) {
             dispatch(setUserActivity("browsing"));
             dispatch(setViewerActivity("queryingUpdate"));
             setObjects(data[1]);
@@ -182,7 +113,7 @@ export function GameController() {
         } else {
           setObjects(data[1]);
         }
-      } else if(playerAction == "rebooting") {
+      } else if (playerAction == "rebooting") {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         if (clientAction == "monitoringResult") {
@@ -190,7 +121,7 @@ export function GameController() {
           dispatch(setViewerActivity("queryingUpdate"));
         }
         setObjects(data[1]);
-      } else if(playerAction == "loading") {
+      } else if (playerAction == "loading") {
         decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         dispatch(setUserActivity("browsing"));
@@ -224,24 +155,8 @@ export function GameController() {
   }
 
   function clientLoaded() {
-    return (external.userActivity!="loading");
-
+    return external.userActivity != "loading";
   }
-
-  function changeScrollRef() {
-    // Scroll to bottom
-    setTimeout(() => {
-      if(scrollRef.current) {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-      }
-    }, 1000);
-  }
-
-  useEffect(() => {
-    if (external.userActivity === "creating") {
-      changeScrollRef();
-    }
-  }, [external.userActivity]);
 
   useEffect(() => {
     dispatch(getConfig());
@@ -250,107 +165,41 @@ export function GameController() {
   useEffect(() => {
     setTimeout(() => {
       queryStateWithReboot();
-    }, 1000)
+    }, 1000);
   }, [inc]);
 
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
-    return <Gameplay />;
-    // return (
-    //   <div className="controller">
-    //     <CreateObjectModal/>
-    //     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-    //       <div className="errorAlert">
-    //         <ErrorAlert/>
-    //       </div>
-    //       <Row className="player">
-    //         <Col className="local">
-    //           {
-    //             localAttributes.map((item, index) => {
-    //               return (
-    //                 <OverlayTrigger key={index} placement="bottom"
-    //                   overlay={<Tooltip id={`tooltip-${index}`}><strong>{item}</strong></Tooltip>}
-    //                 >
-    //                 <div className="localItem" key={index}>{item}:
-    //                   {
-    //                     localValues.length !=0 ? <span className="value">{localValues[index]}</span> :
-    //                     <span className="value">0</span>
-    //                   }
-    //                 </div>
-    //                 </OverlayTrigger>
-    //               )
-    //             })
-    //           }
-    //         </Col>
-    //         <Col xs={3}>
-    //           <OverlayTrigger key={l2account!.address} placement="bottom"
-    //             overlay={<Tooltip id={`tooltip-${playerIds}`}><strong>{l2account!.address}</strong>.</Tooltip>}
-    //           >
-    //             <div className="playerIds">
-    //               playerIds: {l2account!.address}
-    //             </div>
-    //           </OverlayTrigger>
-    //         </Col>
-    //       </Row>
-    //       <div className="main">
-    //         <div className="creatures">
-    //           <div className="title">CREATURES</div>
-    //           <div className="creatureBox" ref={scrollRef}>
-    //             {
-    //               objects.map((item, index) =>
-    //                 <Creature key={index} robot={item} index={index} />
-    //               )
-    //             }
-    //             <Creature key={objects.length} index = {objects.length} robot={{entity:[], object_id:[], modifiers: [], modifier_info:"0"}} />
-    //           </div>
-    //           <div className="createObject">
-    //           {<CreateButton objects={objects} />}
-    //           </div>
-    //         </div>
-    //         <Explore objects={objects} modifiers={dropList}/>
-    //         <div className="program">
-    //           <div className="title">PROGRAM</div>
-    //           <div className="draggableBox">
-    //             <SortableContext
-    //               items={modifiersInfo.map((_, index) => index)}
-    //               strategy={verticalListSortingStrategy}
-    //             >
-    //               { modifiersInfo.map((modifier, index) =>
-    //                   <DragableModifier
-    //                     key={index}
-    //                     index={String(index)}
-    //                     name={modifier.name}
-    //                     entity = {modifier.entity}
-    //                     local = {modifier.local}
-    //                     delay = {modifier.delay}
-    //                   />
-    //                 )
-    //               }
-    //             </SortableContext>
-    //             <DragOverlay>
-    //               <Preview index={draggingModifierIndex} />
-    //             </DragOverlay>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </DndContext>
-    //   </div>
-    // )
+    // return <Gameplay />;
+    return (
+      <OldGameplay
+        playerIds={playerIds}
+        address={l2account?.address}
+        localValues={localValues}
+        objects={objects}
+      />
+    );
   } else if (l2account) {
-    return (<Container className="mt-5">
-                <Loading/>
-      </Container>)
+    return (
+      <Container className="mt-5">
+        <Loading />
+      </Container>
+    );
   } else {
     return (
       <Container className="mt-5">
         <div className="load-game">
           <img src={cover} width="100%"></img>
-          <button className="btn btn-confirm"
+          <button
+            className="btn btn-confirm"
             onClick={() => dispatch(loginL2AccountAsync(account!))}
-          > Start Play </button>
+          >
+            {" "}
+            Start Play{" "}
+          </button>
         </div>
       </Container>
-    )
+    );
   }
 }
