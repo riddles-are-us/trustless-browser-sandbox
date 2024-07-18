@@ -57,7 +57,6 @@ export function GameController() {
 
   // player related information
   const [playerIds, setPlayerIds] = useState("");
-  const [localValues, setLocalValues] = useState<number[]>([]);
   const [objects, setObjects] = useState<Array<ObjectProperty>>([]);
 
   const [inc, setInc] = useState(0);
@@ -85,7 +84,6 @@ export function GameController() {
   }
 
   function decodePlayerInfo(playerInfo: playerProperty) {
-    setLocalValues(playerInfo.local);
     dispatch(setResources({ resources: playerInfo.local }));
   }
 
@@ -178,7 +176,6 @@ export function GameController() {
       <Gameplay
         playerIds={playerIds}
         address={l2account?.address}
-        localValues={localValues}
         objects={objects}
       />
     );
@@ -186,7 +183,7 @@ export function GameController() {
     //   <OldGameplay
     //     playerIds={playerIds}
     //     address={l2account?.address}
-    //     localValues={localValues}
+    // localValues={[1, 1, 1, 1, 1, 1, 1, 1]}
     //     objects={objects}
     //   />
     // );

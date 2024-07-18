@@ -90,7 +90,7 @@ export const clientSlice = createSlice({
 
 export const selectExternal = (state: RootState) => state.client.external;
 export const selectGlobalTimer = (state: RootState) => state.client.globalTimer;
-export const selectLocalAttributes = (state: RootState) => state.client.localAttributes;
+export const selectLocalAttributes = (state: RootState) => state.client.localAttributes; // delete it after finish automata
 export const selectEntityAttributes = (state: RootState) => state.client.entityAttributes;
 export const selectModifier = (state: RootState) => state.client.modifiers;
 export const { setGlobalTimer, setViewerActivity, setErrorMessage, setSelectedCreatureIndex, setUserActivity} = clientSlice.actions;

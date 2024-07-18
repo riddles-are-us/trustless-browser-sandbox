@@ -18,11 +18,7 @@ import { CreateObjectModal } from "../createObject";
 import "../style.scss";
 import "../../style.scss";
 import { useAppSelector } from "../../../app/hooks";
-import {
-  selectExternal,
-  selectLocalAttributes,
-  selectModifier,
-} from "../thunk";
+import { selectExternal, selectModifier } from "../thunk";
 import { ObjectProperty } from "../types";
 import { Creature } from "../creature";
 import { ProgramInfo } from "../modifier";
@@ -33,14 +29,12 @@ import { Explore } from "../explore";
 interface Props {
   playerIds: string;
   address: string;
-  localValues: number[];
   objects: Array<ObjectProperty>;
 }
 
-const Gameplay = ({ playerIds, address, localValues, objects }: Props) => {
+const Gameplay = ({ playerIds, address, objects }: Props) => {
   const external = useAppSelector(selectExternal);
   const modifiersInfo = useAppSelector(selectModifier);
-  const localAttributes = useAppSelector(selectLocalAttributes);
   const [draggingModifierIndex, setDraggingModifierIndex] = useState<
     number | null
   >(null);
@@ -172,30 +166,6 @@ const Gameplay = ({ playerIds, address, localValues, objects }: Props) => {
         </div>
 
         <Row className="player">
-          <Col className="local">
-            {localAttributes.map((item, index) => {
-              return (
-                <OverlayTrigger
-                  key={index}
-                  placement="bottom"
-                  overlay={
-                    <Tooltip id={`tooltip-${index}`}>
-                      <strong>{item}</strong>
-                    </Tooltip>
-                  }
-                >
-                  <div className="localItem" key={index}>
-                    {item}:
-                    {localValues.length != 0 ? (
-                      <span className="value">{localValues[index]}</span>
-                    ) : (
-                      <span className="value">0</span>
-                    )}
-                  </div>
-                </OverlayTrigger>
-              );
-            })}
-          </Col>
           <Col xs={3}>
             <OverlayTrigger
               key={address}
