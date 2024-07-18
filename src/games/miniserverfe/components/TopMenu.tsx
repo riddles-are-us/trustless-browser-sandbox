@@ -19,78 +19,116 @@ import FlexonixIcon from "../images/Icons/Flexonix.png";
 import SmallResourceDisplay from "./SmallResourceDisplay";
 import AccountInfo from "./AccountInfo";
 
-const TopMenu = () => {
+interface Props {
+  crystalAmount: number;
+  interstellarMineralAmount: number;
+  biomassAmount: number;
+  quantumFoamAmount: number;
+  necrodermisAmount: number;
+  alienFloralAmount: number;
+  spiceMelangeAmount: number;
+  titaniumAmount: number;
+  enercoreAmount: number;
+  nexiumAmount: number;
+  swiftexAmount: number;
+  cognisurgeAmount: number;
+  vitalshieldAmount: number;
+  flexonixAmount: number;
+  address: string;
+}
+
+const TopMenu = ({
+  crystalAmount,
+  interstellarMineralAmount,
+  biomassAmount,
+  quantumFoamAmount,
+  necrodermisAmount,
+  alienFloralAmount,
+  spiceMelangeAmount,
+  titaniumAmount,
+  enercoreAmount,
+  nexiumAmount,
+  swiftexAmount,
+  cognisurgeAmount,
+  vitalshieldAmount,
+  flexonixAmount,
+  address,
+}: Props) => {
   return (
     <div className="top">
       <div className="top-left"></div>
       <div className="top-middle"></div>
       <div className="top-right"></div>
-      <AccountInfo />
+      <AccountInfo address={address} />
       <MediumResourceDisplay
         order={0}
         iconImagePath={CrystalIcon}
-        amount={999}
+        amount={crystalAmount}
       />
       <MediumResourceDisplay
         order={1}
         iconImagePath={InterstellarMineralIcon}
-        amount={999}
+        amount={interstellarMineralAmount}
       />
       <MediumResourceDisplay
         order={2}
         iconImagePath={BiomassIcon}
-        amount={999}
+        amount={biomassAmount}
       />
       <MediumResourceDisplay
         order={3}
         iconImagePath={QuantumFoamIcon}
-        amount={999}
+        amount={quantumFoamAmount}
       />
       <MediumResourceDisplay
         order={4}
         iconImagePath={NecrodermisIcon}
-        amount={999}
+        amount={necrodermisAmount}
       />
       <MediumResourceDisplay
         order={5}
         iconImagePath={AlienFloralIcon}
-        amount={999}
+        amount={alienFloralAmount}
       />
       <MediumResourceDisplay
         order={6}
         iconImagePath={SpiceMelangeIcon}
-        amount={999}
+        amount={spiceMelangeAmount}
       />
       <MediumResourceDisplay
         order={7}
         iconImagePath={TitaniumIcon}
-        amount={999}
+        amount={titaniumAmount}
       />
       <SmallResourceDisplay
         order={0}
         iconImagePath={EnercoreIcon}
-        amount={999}
+        amount={enercoreAmount}
       />
-      <SmallResourceDisplay order={1} iconImagePath={NexiumIcon} amount={999} />
+      <SmallResourceDisplay
+        order={1}
+        iconImagePath={NexiumIcon}
+        amount={nexiumAmount}
+      />
       <SmallResourceDisplay
         order={2}
         iconImagePath={SwiftexIcon}
-        amount={999}
+        amount={swiftexAmount}
       />
       <SmallResourceDisplay
         order={3}
         iconImagePath={CognisurgeIcon}
-        amount={999}
+        amount={cognisurgeAmount}
       />
       <SmallResourceDisplay
         order={4}
         iconImagePath={VitalshieldIcon}
-        amount={999}
+        amount={vitalshieldAmount}
       />
       <SmallResourceDisplay
         order={5}
         iconImagePath={FlexonixIcon}
-        amount={999}
+        amount={flexonixAmount}
       />
     </div>
   );

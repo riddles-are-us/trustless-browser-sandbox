@@ -171,15 +171,22 @@ export function GameController() {
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
-    // return <Gameplay />;
     return (
-      <OldGameplay
+      <Gameplay
         playerIds={playerIds}
         address={l2account?.address}
         localValues={localValues}
         objects={objects}
       />
     );
+    // return (
+    //   <OldGameplay
+    //     playerIds={playerIds}
+    //     address={l2account?.address}
+    //     localValues={localValues}
+    //     objects={objects}
+    //   />
+    // );
   } else if (l2account) {
     return (
       <Container className="mt-5">

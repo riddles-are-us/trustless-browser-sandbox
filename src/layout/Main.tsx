@@ -16,7 +16,6 @@ import { GameController as TowerDefenceController } from "../games/towerdefence/
 import { GameController as MiniServerFEController } from "../games/miniserverfe/controller";
 import logo from "../images/logo.png";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import Gameplay from "../games/miniserverfe/Gameplay";
 
 const MINI_SERVER_FE_PATH = "miniserverfe";
 
