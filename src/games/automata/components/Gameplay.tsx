@@ -1,9 +1,9 @@
 import "./Gameplay.css";
 
-import TopMenu from "./components/TopMenu";
-import LeftMenu from "./components/LeftMenu";
-import RightMenu from "./components/RightMenu";
-import MainMenu from "./components/MainMenu";
+import TopMenu from "./TopMenu";
+import LeftMenu from "./LeftMenu";
+import RightMenu from "./RightMenu";
+import MainMenu from "./MainMenu";
 import { useState, useEffect, useRef, memo } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import {
@@ -14,17 +14,21 @@ import {
 import { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CreateObjectModal } from "./createObject";
-import "./style.scss";
+import { CreateObjectModal } from "../createObject";
 import "../style.scss";
-import { useAppSelector } from "../../app/hooks";
-import { selectExternal, selectLocalAttributes, selectModifier } from "./thunk";
-import { ObjectProperty } from "./types";
-import { Creature } from "./creature";
-import { ProgramInfo } from "./modifier";
-import { CreateButton } from "./opbutton";
-import { ErrorAlert } from "./error";
-import { Explore } from "./explore";
+import "../../style.scss";
+import { useAppSelector } from "../../../app/hooks";
+import {
+  selectExternal,
+  selectLocalAttributes,
+  selectModifier,
+} from "../thunk";
+import { ObjectProperty } from "../types";
+import { Creature } from "../creature";
+import { ProgramInfo } from "../modifier";
+import { CreateButton } from "../opbutton";
+import { ErrorAlert } from "../error";
+import { Explore } from "../explore";
 
 interface Props {
   playerIds: string;
@@ -148,27 +152,9 @@ const Gameplay = ({ playerIds, address, localValues, objects }: Props) => {
     }
   }, [external.userActivity]);
 
-  console.log(localValues);
-
   return (
     <>
-      <TopMenu
-        crystalAmount={localValues[0]}
-        interstellarMineralAmount={localValues[1]}
-        biomassAmount={localValues[2]}
-        quantumFoamAmount={localValues[3]}
-        necrodermisAmount={localValues[4]}
-        alienFloralAmount={localValues[5]}
-        spiceMelangeAmount={localValues[6]}
-        titaniumAmount={localValues[7]}
-        enercoreAmount={localValues[0]}
-        nexiumAmount={localValues[0]}
-        swiftexAmount={localValues[0]}
-        cognisurgeAmount={localValues[0]}
-        vitalshieldAmount={localValues[0]}
-        flexonixAmount={localValues[0]}
-        address={address}
-      />
+      <TopMenu address={address} />
       <div className="middle-container">
         <LeftMenu />
         <MainMenu />

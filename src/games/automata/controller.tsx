@@ -38,9 +38,10 @@ import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
 import Loading from "./load";
-import Gameplay from "./Gameplay";
+import Gameplay from "./components/Gameplay";
 import OldGameplay from "./OldGameplay";
 
+import { setResources } from "../../data/automata";
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
@@ -85,6 +86,7 @@ export function GameController() {
 
   function decodePlayerInfo(playerInfo: playerProperty) {
     setLocalValues(playerInfo.local);
+    dispatch(setResources({ resources: playerInfo.local }));
   }
 
   async function queryStateWithReboot() {
@@ -172,22 +174,22 @@ export function GameController() {
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
-    // return (
-    //   <Gameplay
-    //     playerIds={playerIds}
-    //     address={l2account?.address}
-    //     localValues={localValues}
-    //     objects={objects}
-    //   />
-    // );
     return (
-      <OldGameplay
+      <Gameplay
         playerIds={playerIds}
         address={l2account?.address}
         localValues={localValues}
         objects={objects}
       />
     );
+    // return (
+    //   <OldGameplay
+    //     playerIds={playerIds}
+    //     address={l2account?.address}
+    //     localValues={localValues}
+    //     objects={objects}
+    //   />
+    // );
   } else if (l2account) {
     return (
       <Container className="mt-5">

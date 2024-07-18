@@ -18,42 +18,77 @@ import VitalshieldIcon from "../images/Icons/Vitalshield.png";
 import FlexonixIcon from "../images/Icons/Flexonix.png";
 import SmallResourceDisplay from "./SmallResourceDisplay";
 import AccountInfo from "./AccountInfo";
+import { useAppSelector } from "../../../app/hooks";
+
+import {
+  selectCrystalAmount,
+  selectInterstellarMineralAmount,
+  selectBiomassAmount,
+  selectQuantumFoamAmount,
+  selectNecrodermisAmount,
+  selectAlienFloralAmount,
+  selectSpiceMelangeAmount,
+  selectTitaniumAmount,
+  selectEnercoreAmount,
+  selectNexiumAmount,
+  selectSwiftexAmount,
+  selectCognisurgeAmount,
+  selectVitalshieldAmount,
+  selectFlexonixAmount,
+} from "../../../data/automata";
 
 interface Props {
-  crystalAmount: number;
-  interstellarMineralAmount: number;
-  biomassAmount: number;
-  quantumFoamAmount: number;
-  necrodermisAmount: number;
-  alienFloralAmount: number;
-  spiceMelangeAmount: number;
-  titaniumAmount: number;
-  enercoreAmount: number;
-  nexiumAmount: number;
-  swiftexAmount: number;
-  cognisurgeAmount: number;
-  vitalshieldAmount: number;
-  flexonixAmount: number;
+  //   crystalAmount: number;
+  //   interstellarMineralAmount: number;
+  //   biomassAmount: number;
+  //   quantumFoamAmount: number;
+  //   necrodermisAmount: number;
+  //   alienFloralAmount: number;
+  //   spiceMelangeAmount: number;
+  //   titaniumAmount: number;
+  //   enercoreAmount: number;
+  //   nexiumAmount: number;
+  //   swiftexAmount: number;
+  //   cognisurgeAmount: number;
+  //   vitalshieldAmount: number;
+  //   flexonixAmount: number;
   address: string;
 }
 
 const TopMenu = ({
-  crystalAmount,
-  interstellarMineralAmount,
-  biomassAmount,
-  quantumFoamAmount,
-  necrodermisAmount,
-  alienFloralAmount,
-  spiceMelangeAmount,
-  titaniumAmount,
-  enercoreAmount,
-  nexiumAmount,
-  swiftexAmount,
-  cognisurgeAmount,
-  vitalshieldAmount,
-  flexonixAmount,
+  // crystalAmount,
+  // interstellarMineralAmount,
+  // biomassAmount,
+  // quantumFoamAmount,
+  // necrodermisAmount,
+  // alienFloralAmount,
+  // spiceMelangeAmount,
+  // titaniumAmount,
+  // enercoreAmount,
+  // nexiumAmount,
+  // swiftexAmount,
+  // cognisurgeAmount,
+  // vitalshieldAmount,
+  // flexonixAmount,
   address,
 }: Props) => {
+  const crystalAmount = useAppSelector(selectCrystalAmount);
+  const interstellarMineralAmount = useAppSelector(
+    selectInterstellarMineralAmount
+  );
+  const biomassAmount = useAppSelector(selectBiomassAmount);
+  const quantumFoamAmount = useAppSelector(selectQuantumFoamAmount);
+  const necrodermisAmount = useAppSelector(selectNecrodermisAmount);
+  const alienFloralAmount = useAppSelector(selectAlienFloralAmount);
+  const spiceMelangeAmount = useAppSelector(selectSpiceMelangeAmount);
+  const titaniumAmount = useAppSelector(selectTitaniumAmount);
+  const enercoreAmount = useAppSelector(selectEnercoreAmount);
+  const nexiumAmount = useAppSelector(selectNexiumAmount);
+  const swiftexAmount = useAppSelector(selectSwiftexAmount);
+  const cognisurgeAmount = useAppSelector(selectCognisurgeAmount);
+  const vitalshieldAmount = useAppSelector(selectVitalshieldAmount);
+  const flexonixAmount = useAppSelector(selectFlexonixAmount);
+
   return (
     <div className="top">
       <div className="top-left"></div>

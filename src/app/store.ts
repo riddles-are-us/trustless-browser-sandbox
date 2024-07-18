@@ -4,6 +4,7 @@ import accountReducer from '../data/accountSlice';
 import endpointReducer from "../data/endpoint";
 import gameReducer from "../data/game";
 import clientReducer from "../games/miniserverfe/thunk";
+import automataReducer from "../data/automata";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
@@ -34,6 +35,7 @@ export const store = configureStore({
     endpoint: endpointReducer,
     game: gameReducer,
     client: clientReducer,
+    automata: automataReducer,
   },
 });
 
