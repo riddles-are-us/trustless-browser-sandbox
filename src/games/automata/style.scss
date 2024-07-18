@@ -1,0 +1,201 @@
+.controller {
+  height: 100vh;
+  position: relative;
+
+  .errorAlert {
+    left: "50%";
+    transform: "translateX(-50%)";
+    position: "absolute";
+
+    .alertContent {
+      width: "200px";
+    }
+  }
+
+  .player {
+    height: 10%;
+    min-height: 30px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+
+    .local {
+      display: flex;
+      align-items: center;
+
+      .localItem {
+        flex: 1;
+        padding: 5px;
+      }
+    }
+
+    .playerIds {
+      width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .main {
+    height: 80%;
+    width: 80%;
+    margin-left: 10%;
+    margin-left: 10%;
+    overflow: hidden;
+    display: flex;
+
+    .creatures {
+      height: 100%;
+      width: 20%;
+      border: 1px solid gray;
+
+      .title {
+        text-align: center;
+        border: 1px solid gray;
+        margin: 5% 0 5% 0;
+      }
+
+      .creatureBox {
+        height: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        align-items: center;
+        text-align: center;
+        overflow-y: scroll;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+
+        .creature {
+          width: 45%;
+          height: 130px;
+          border: 1px solid black;
+          box-sizing: border-box;
+          margin-left: 10px;
+          margin-top: 10px;
+          position: relative;
+
+          .creatureImg {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            top: 20px;
+          }
+
+          .objId {
+            width: 80px;
+            height: 25px;
+            position: relative;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .new {
+            position: relative;
+            top: 20px;
+            color: red;
+          }
+        }
+      }
+
+      .createObject {
+        height: 5%;
+        margin-top: 5%;
+        display: grid;
+        place-items: center;
+      }
+    }
+
+    .explore {
+      height: 100%;
+      width: 60%;
+      border: 1px solid gray;
+      position: relative;
+
+      .entity {
+        height: 5%;
+        width: 450px;
+        margin-left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .tip {
+        height: 5%;
+        padding-left: 10px;
+      }
+
+      .currentModifierIndex {
+        position: relative;
+        width: 100px;
+        height: 30px;
+        left: 50%;
+        top: 40%;
+        z-index: 1;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      .exploreBox {
+        height: 80%;
+        width: 100%;
+        position: relative;
+        top: -30px;
+        .exploreItem {
+          width: 100px;
+          height: 100px;
+          border: 1px solid black;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .createButton {
+        position: relative;
+        top: -30px;
+      }
+
+      .reboot, .confirm, .createButton {
+        margin: 0% 0 0 10%;
+      }
+    }
+
+    .program {
+      height: 100%;
+      width: 20%;
+      border: 1px solid gray;
+
+      .title {
+        text-align: center;
+        border: 1px solid gray;
+        margin: 5% 0 5% 0;
+      }
+
+      .draggableBox {
+        max-height: 90%;
+        overflow-y: scroll;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        overflow-x: hidden;
+
+        .programItem {
+          border: 1px solid gray;
+          font-size: 10px;
+        }
+
+        .preview > .programInfo {
+          display: inline-block;
+          border: 1px solid gray;
+        }
+      }
+    }
+  }
+}

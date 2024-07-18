@@ -14,27 +14,28 @@ import { GameController as DemoGameController } from "../games/demogame/controll
 import { GameController as RogueLikeController } from "../games/roguelike/controller";
 import { GameController as TowerDefenceController } from "../games/towerdefence/controller";
 import { GameController as MiniServerFEController } from "../games/miniserverfe/controller";
+import { GameController as AutomataController } from "../games/automata/controller";
 import logo from "../images/logo.png";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-const MINI_SERVER_FE_PATH = "miniserverfe";
+const AUTOMATA_PATH = "automata";
 
 function MainNavBarIsShow() {
   const location = useLocation();
-  const showNavBar = location.pathname !== `/${MINI_SERVER_FE_PATH}`;
-
-  return showNavBar ? <img className="wasm-logo" src={logo}></img> : null;
-}
-
-function WasmLogoIsShow() {
-  const location = useLocation();
-  const showNavBar = location.pathname !== `/${MINI_SERVER_FE_PATH}`;
+  const showNavBar = location.pathname !== `/${AUTOMATA_PATH}`;
 
   return showNavBar ? (
     <MainNavBar currency={0} handleRestart={() => {}} showNavBar={true} />
   ) : (
     <MainNavBar currency={0} handleRestart={() => {}} showNavBar={false} />
   );
+}
+
+function WasmLogoIsShow() {
+  const location = useLocation();
+  const showNavBar = location.pathname !== `/${AUTOMATA_PATH}`;
+
+  return showNavBar ? <img className="wasm-logo" src={logo}></img> : null;
 }
 
 export function Main() {
@@ -61,11 +62,13 @@ export function Main() {
           </Route>
           <Route path="/">
             <Route index element={<Landing />} />
-            <Route
-              path={MINI_SERVER_FE_PATH}
-              element={<MiniServerFEController />}
-            />
+            <Route path="miniserverfe" element={<MiniServerFEController />} />
           </Route>
+          <Route path="/">
+            <Route index element={<Landing />} />
+            <Route path={AUTOMATA_PATH} element={<AutomataController />} />
+          </Route>
+          AutomataController
         </Routes>
         <WasmLogoIsShow />
       </BrowserRouter>

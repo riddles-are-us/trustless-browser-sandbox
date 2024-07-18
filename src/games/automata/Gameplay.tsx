@@ -1,9 +1,9 @@
 import "./Gameplay.css";
+
 import TopMenu from "./components/TopMenu";
 import LeftMenu from "./components/LeftMenu";
-import MainMenu from "./components/MainMenu";
 import RightMenu from "./components/RightMenu";
-
+import MainMenu from "./components/MainMenu";
 import { useState, useEffect, useRef, memo } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import {
