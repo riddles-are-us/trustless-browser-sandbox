@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -7,38 +7,18 @@ import {
 } from "@dnd-kit/sortable";
 import { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { query_state } from "./rpc";
-import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
-import { selectL2Account } from "../../data/accountSlice";
+import { Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CreateObjectModal } from "./createObject";
-import { createCommand } from "./helper";
-import { query, LeHexBN } from "./sign";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 import "../style.scss";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import {
-  selectExternal,
-  selectLocalAttributes,
-  selectModifier,
-  setErrorMessage,
-  setViewerActivity,
-  setUserActivity,
-  setGlobalTimer,
-} from "./thunk";
+import { useAppSelector } from "../../app/hooks";
+import { selectExternal, selectLocalAttributes, selectModifier } from "./thunk";
 import { ObjectProperty } from "./types";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
 import { CreateButton } from "./opbutton";
 import { ErrorAlert } from "./error";
 import { Explore } from "./explore";
-import { getConfig, sendTransaction, setSelectedCreatureIndex } from "./thunk";
-
-import cover from "./images/cover.jpg";
-
-import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
-import Loading from "./load";
-import Gameplay from "./Gameplay";
 
 interface Props {
   playerIds: string;
@@ -208,6 +188,7 @@ const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {
             </OverlayTrigger>
           </Col>
         </Row>
+
         <div className="main">
           <div className="creatures">
             <div className="title">CREATURES</div>
