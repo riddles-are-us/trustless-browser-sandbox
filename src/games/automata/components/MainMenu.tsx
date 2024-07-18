@@ -27,8 +27,8 @@ const MainMenu = () => {
         <ConfirmButton />
         {/* <RebootButton /> */}
         <MainMenuSelectingFrame order={0 /*selectingFrame*/} isStop={true} />
-        {[...Array(8).keys()].map((order) => (
-          <MainMenuBot order={order} />
+        {[...Array(8).keys()].map((order, index) => (
+          <MainMenuBot key={index} order={order} />
         ))}
         <img src={display} className="main-display-image" />
         <MainMenuProgressBar />

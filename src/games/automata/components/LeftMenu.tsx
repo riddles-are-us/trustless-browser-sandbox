@@ -7,6 +7,8 @@ import DownButton from "./Buttons/DownButton";
 import NewButton from "./Buttons/NewButton";
 import Grid from "./Grid";
 import Creature from "./Creature";
+import { useAppSelector } from "../../../app/hooks";
+import { selectCreatures } from "../../../data/automata";
 
 const LeftMenu = () => {
   const [creatureGridHeight, setCreatureGridHeight] = useState(0);
@@ -22,6 +24,9 @@ const LeftMenu = () => {
   const creatureGridRowCount = Math.floor(
     creatureGridHeight / creatureGridElementHeight
   );
+
+  const creatures = useAppSelector(selectCreatures);
+  console.log(creatures);
 
   useEffect(() => {
     updateCreatureGridHeight();
@@ -44,7 +49,13 @@ const LeftMenu = () => {
           elementHeight={creatureGridElementHeight}
           columnCount={creatureGridColumnCount}
           rowCount={creatureGridRowCount}
-          elements={[<Creature />, <Creature />, <Creature />]}
+          elements={creatures.map((creature, index) => (
+            <Creature
+              key={index}
+              isCreating={creature.object_id.length == 0}
+              botId={creature.object_id.join("")}
+            />
+          ))}
         />
       </div>
       <img src={leftMiddleBar} className="left-middle-bar" />

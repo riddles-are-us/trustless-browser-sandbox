@@ -1,6 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState, store } from "../app/store";
 
+export interface CreatureModel {
+    entity: Array<number>;
+    object_id: Array<string>;
+    modifiers: Array<number>;
+    modifier_info: string;
+  }
+
 interface AutomataState {
   crystalAmount: number;
   interstellarMineralAmount: number;
@@ -16,6 +23,7 @@ interface AutomataState {
   cognisurgeAmount: number;
   vitalshieldAmount: number;
   flexonixAmount: number;
+  creatures: Array<CreatureModel>;
 }
 
 const initialState: AutomataState = {
@@ -33,6 +41,7 @@ const initialState: AutomataState = {
   cognisurgeAmount: 0,
   vitalshieldAmount: 0,
   flexonixAmount: 0,
+  creatures: [],
 };
 
 export const automataSlice = createSlice({
@@ -48,6 +57,9 @@ export const automataSlice = createSlice({
       state.alienFloralAmount = action.payload.resources[5];
       state.spiceMelangeAmount = action.payload.resources[6];
       state.titaniumAmount = action.payload.resources[7];
+    },
+    setCreatures: (state, action) => {
+        state.creatures = action.payload.creatures;
     }
   }
 });
@@ -66,7 +78,7 @@ export const selectSwiftexAmount = (state: RootState) => state.automata.swiftexA
 export const selectCognisurgeAmount = (state: RootState) => state.automata.cognisurgeAmount;
 export const selectVitalshieldAmount = (state: RootState) => state.automata.vitalshieldAmount;
 export const selectFlexonixAmount = (state: RootState) => state.automata.flexonixAmount;
+export const selectCreatures = (state: RootState) => state.automata.creatures;
 
-
-export const { setResources } = automataSlice.actions;
+export const { setResources, setCreatures } = automataSlice.actions;
 export default automataSlice.reducer;

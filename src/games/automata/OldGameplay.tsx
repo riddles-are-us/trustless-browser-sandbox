@@ -13,7 +13,7 @@ import "./style.scss";
 import "../style.scss";
 import { useAppSelector } from "../../app/hooks";
 import { selectExternal, selectLocalAttributes, selectModifier } from "./thunk";
-import { ObjectProperty } from "./types";
+import { CreatureModel } from "../../data/automata";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
 import { CreateButton } from "./opbutton";
@@ -24,7 +24,7 @@ interface Props {
   playerIds: string;
   address: string;
   localValues: number[];
-  objects: Array<ObjectProperty>;
+  objects: Array<CreatureModel>;
 }
 
 const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {

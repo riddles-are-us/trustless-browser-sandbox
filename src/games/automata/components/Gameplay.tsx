@@ -19,17 +19,17 @@ import "../style.scss";
 import "../../style.scss";
 import { useAppSelector } from "../../../app/hooks";
 import { selectExternal, selectModifier } from "../thunk";
-import { ObjectProperty } from "../types";
 import { Creature } from "../creature";
 import { ProgramInfo } from "../modifier";
 import { CreateButton } from "../opbutton";
 import { ErrorAlert } from "../error";
 import { Explore } from "../explore";
+import { CreatureModel } from "../../../data/automata";
 
 interface Props {
   playerIds: string;
   address: string;
-  objects: Array<ObjectProperty>;
+  objects: Array<CreatureModel>;
 }
 
 const Gameplay = ({ playerIds, address, objects }: Props) => {
@@ -165,7 +165,7 @@ const Gameplay = ({ playerIds, address, objects }: Props) => {
           <ErrorAlert />
         </div>
 
-        <Row className="player">
+        {/* <Row className="player">
           <Col xs={3}>
             <OverlayTrigger
               key={address}
@@ -179,7 +179,7 @@ const Gameplay = ({ playerIds, address, objects }: Props) => {
               <div className="playerIds">playerIds: {address}</div>
             </OverlayTrigger>
           </Col>
-        </Row>
+        </Row> */}
 
         <div className="main">
           <div className="creatures">
@@ -203,6 +203,7 @@ const Gameplay = ({ playerIds, address, objects }: Props) => {
               {<CreateButton objects={objects} />}
             </div>
           </div>
+
           <Explore objects={objects} modifiers={dropList} />
           <div className="program">
             <div className="title">PROGRAM</div>

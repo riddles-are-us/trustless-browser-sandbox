@@ -26,7 +26,7 @@ import {
   setUserActivity,
   setGlobalTimer,
 } from "./thunk";
-import { ObjectProperty } from "./types";
+import { CreatureModel } from "../../data/automata";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
 import { CreateButton } from "./opbutton";
@@ -41,7 +41,7 @@ import Loading from "./load";
 import Gameplay from "./components/Gameplay";
 import OldGameplay from "./OldGameplay";
 
-import { setResources } from "../../data/automata";
+import { setResources, setCreatures } from "../../data/automata";
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
@@ -57,7 +57,7 @@ export function GameController() {
 
   // player related information
   const [playerIds, setPlayerIds] = useState("");
-  const [objects, setObjects] = useState<Array<ObjectProperty>>([]);
+  const [objects, setObjects] = useState<Array<CreatureModel>>([]);
 
   const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
@@ -99,50 +99,51 @@ export function GameController() {
       const playerAction = external.userActivity;
 
       const res = await query_state([], l2account!.address);
+      const datas = JSON.parse(res.data);
+      const [player, creatures, globalTimer] = datas;
+      console.log("query state data", datas);
 
-      const data = JSON.parse(res.data);
-      console.log("query state data", data);
       if (playerAction == "creating") {
-        decodePlayerInfo(data[0]);
-        dispatch(setGlobalTimer(data[2]));
+        decodePlayerInfo(player);
+        dispatch(setGlobalTimer(globalTimer));
         if (clientAction == "monitoringResult") {
-          if (data[1].length == external.getSelectedIndex()! + 1) {
+          if (creatures.length == external.getSelectedIndex()! + 1) {
             dispatch(setUserActivity("browsing"));
             dispatch(setViewerActivity("queryingUpdate"));
-            setObjects(data[1]);
+            dispatch(setCreatures({ creatures }));
           }
         } else {
-          setObjects(data[1]);
+          dispatch(setCreatures({ creatures }));
         }
       } else if (playerAction == "rebooting") {
-        decodePlayerInfo(data[0]);
-        dispatch(setGlobalTimer(data[2]));
+        decodePlayerInfo(player);
+        dispatch(setGlobalTimer(globalTimer));
         if (clientAction == "monitoringResult") {
           dispatch(setUserActivity("browsing"));
           dispatch(setViewerActivity("queryingUpdate"));
         }
-        setObjects(data[1]);
+        dispatch(setCreatures({ creatures }));
       } else if (playerAction == "loading") {
-        decodePlayerInfo(data[0]);
-        dispatch(setGlobalTimer(data[2]));
+        decodePlayerInfo(player);
+        dispatch(setGlobalTimer(globalTimer));
         dispatch(setUserActivity("browsing"));
       } else {
-        decodePlayerInfo(data[0]);
-        dispatch(setGlobalTimer(data[2]));
-        setObjects(data[1]);
+        decodePlayerInfo(player);
+        dispatch(setGlobalTimer(globalTimer));
+        dispatch(setCreatures({ creatures }));
 
         if (clientAction == "idle") {
           dispatch(setViewerActivity("queryingUpdate"));
 
-          if (data[1].length != 0) {
+          if (creatures.length != 0) {
             dispatch(setSelectedCreatureIndex(0));
           }
         }
       } /* Very hard to handle after rebooting status
          else if(playerAction == "afterRebootBrowsing") {
-          setObjects(data[1]);
+          dispatch(setCreatures({creatures}));
           setShowModal(false);
-          decodeObjectInfo(data[1][Number(highlightedId)]);
+          decodeObjectInfo(creatures[Number(highlightedId)]);
           setPlayerAction("browsing");
         }
          */

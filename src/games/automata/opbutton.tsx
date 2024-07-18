@@ -1,8 +1,14 @@
 import { encode_modifier, createCommand } from "./helper";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectL2Account } from "../../data/accountSlice";
-import {selectExternal, setErrorMessage, setSelectedCreatureIndex, setUserActivity, setViewerActivity} from "./thunk";
-import { ObjectProperty } from './types';
+import {
+  selectExternal,
+  setErrorMessage,
+  setSelectedCreatureIndex,
+  setUserActivity,
+  setViewerActivity,
+} from "./thunk";
+import { CreatureModel } from "../../data/automata";
 import React from "react";
 import { sendTransaction } from "./thunk";
 
@@ -10,8 +16,8 @@ const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
 const CMD_RESTART_OBJECT = 3n;
 
-function modifiersAreFullfilled(modifier: Array<number|null>) {
-  for (let i=0; i<8; i++) {
+function modifiersAreFullfilled(modifier: Array<number | null>) {
+  for (let i = 0; i < 8; i++) {
     if (modifier[i] == null) {
       return false;
     }
@@ -19,9 +25,11 @@ function modifiersAreFullfilled(modifier: Array<number|null>) {
   return true;
 }
 
-
-
-export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
+export function ConfirmButton({
+  modifiers,
+}: {
+  modifiers: Array<number | null>;
+}) {
   const external = useAppSelector(selectExternal);
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
@@ -36,44 +44,67 @@ export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
         return BigInt(id);
       });
       const modifiers: bigint = encode_modifier(index);
-      if(activity == "creating") {
+      if (activity == "creating") {
         const objIndex = BigInt(selectedId!);
         const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
-        dispatch(sendTransaction({cmd: [insObjectCmd, modifiers, 0n, 0n], prikey: l2account!.address}));
-      } else if(activity == "rebooting") {
+        dispatch(
+          sendTransaction({
+            cmd: [insObjectCmd, modifiers, 0n, 0n],
+            prikey: l2account!.address,
+          })
+        );
+      } else if (activity == "rebooting") {
         const objIndex = BigInt(selectedId!);
-        const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(objIndex));
-        dispatch(sendTransaction({cmd: [restartObjectCmd, modifiers, 0n, 0n], prikey: l2account!.address}));
+        const restartObjectCmd = createCommand(
+          CMD_RESTART_OBJECT,
+          BigInt(objIndex)
+        );
+        dispatch(
+          sendTransaction({
+            cmd: [restartObjectCmd, modifiers, 0n, 0n],
+            prikey: l2account!.address,
+          })
+        );
       }
       dispatch(setViewerActivity("monitoringResult"));
-    } catch(e) {
+    } catch (e) {
       dispatch(setErrorMessage(`confirm ${activity} error`));
     }
   }
 
   function handleReboot() {
-      dispatch(setUserActivity("rebooting"))
+    dispatch(setUserActivity("rebooting"));
   }
 
   if (external.userActivity == "browsing") {
-    if(external.getSelectedIndex() != null){
-      return <button className="reboot" onClick={handleReboot}>Reboot</button>;
+    if (external.getSelectedIndex() != null) {
+      return (
+        <button className="reboot" onClick={handleReboot}>
+          Reboot
+        </button>
+      );
     } else {
-      return <></>
+      return <></>;
     }
   } else {
     if (modifiersAreFullfilled(modifiers)) {
-        return <button className="confirm" onClick={() => {
-            confirmActivity(modifiers.map((x)=>x!));
-        }}>Confirm</button>;
+      return (
+        <button
+          className="confirm"
+          onClick={() => {
+            confirmActivity(modifiers.map((x) => x!));
+          }}
+        >
+          Confirm
+        </button>
+      );
     } else {
-        return <span>Not all modifiers fullfilled</span>;
+      return <span>Not all modifiers fullfilled</span>;
     }
   }
 }
 
-
-export function CreateButton({objects}: {objects: Array<ObjectProperty>}) {
+export function CreateButton({ objects }: { objects: Array<CreatureModel> }) {
   const dispatch = useAppDispatch();
   function handleCreateObject(len: number) {
     dispatch(setSelectedCreatureIndex(len));
@@ -83,9 +114,20 @@ export function CreateButton({objects}: {objects: Array<ObjectProperty>}) {
   const external = useAppSelector(selectExternal);
   if (external.isMonitorResult()) {
     return <></>;
-  } else if (external.userActivity != "creating"
-      && external.viewerActivity != "idle") {
-    return <button className="createButton" onClick={() => { handleCreateObject(objects.length); }}>NEW +</button>;
+  } else if (
+    external.userActivity != "creating" &&
+    external.viewerActivity != "idle"
+  ) {
+    return (
+      <button
+        className="createButton"
+        onClick={() => {
+          handleCreateObject(objects.length);
+        }}
+      >
+        NEW +
+      </button>
+    );
   } else {
     return <div></div>;
   }
