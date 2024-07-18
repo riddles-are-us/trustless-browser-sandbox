@@ -45,8 +45,9 @@ import OldGameplay from "./OldGameplay";
 const CMD_INSTALL_PLAYER = 1n;
 
 interface playerProperty {
-  objects: Array<number>,
-  local: Array<number>
+  player_id: Array<string>;
+  objects: Array<number>;
+  local: Array<number>;
 }
 
 export function GameController() {
@@ -101,8 +102,8 @@ export function GameController() {
 
       const data = JSON.parse(res.data);
       console.log("query state data", data);
-      if(playerAction == "creating") {
-        decodePlayerInfo(data[0].data);
+      if (playerAction == "creating") {
+        decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         if (clientAction == "monitoringResult") {
           if (data[1].length == external.getSelectedIndex()! + 1) {
@@ -113,20 +114,20 @@ export function GameController() {
         } else {
           setObjects(data[1]);
         }
-      } else if(playerAction == "rebooting") {
-        decodePlayerInfo(data[0].data);
+      } else if (playerAction == "rebooting") {
+        decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         if (clientAction == "monitoringResult") {
           dispatch(setUserActivity("browsing"));
           dispatch(setViewerActivity("queryingUpdate"));
         }
         setObjects(data[1]);
-      } else if(playerAction == "loading") {
-        decodePlayerInfo(data[0].data);
+      } else if (playerAction == "loading") {
+        decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         dispatch(setUserActivity("browsing"));
       } else {
-        decodePlayerInfo(data[0].data);
+        decodePlayerInfo(data[0]);
         dispatch(setGlobalTimer(data[2]));
         setObjects(data[1]);
 
@@ -171,22 +172,22 @@ export function GameController() {
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
-    return (
-      <Gameplay
-        playerIds={playerIds}
-        address={l2account?.address}
-        localValues={localValues}
-        objects={objects}
-      />
-    );
     // return (
-    //   <OldGameplay
+    //   <Gameplay
     //     playerIds={playerIds}
     //     address={l2account?.address}
     //     localValues={localValues}
     //     objects={objects}
     //   />
     // );
+    return (
+      <OldGameplay
+        playerIds={playerIds}
+        address={l2account?.address}
+        localValues={localValues}
+        objects={objects}
+      />
+    );
   } else if (l2account) {
     return (
       <Container className="mt-5">
