@@ -28,6 +28,7 @@ const initialState: StatusState = {
     },
     chain_info_list: [],
     deployments: [],
+    /*
     topup_token_params: {
       token_address: "",
       network_id: 0,
@@ -38,6 +39,7 @@ const initialState: StatusState = {
       symbol: ""
     },
     subscription_plans: [],
+    */
   },
 };
 
