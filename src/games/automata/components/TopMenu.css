@@ -1,6 +1,6 @@
 .top {
-    height: 110px;
-    min-height: 110px;
+    height: calc(round(down, calc(20vh) / 11, 1px) * 11);
+    min-height: calc(round(down, calc(20vh) / 11, 1px) * 11);
     width: 100%;
     display: flex;
     font-size: 24px;
@@ -13,15 +13,17 @@
 }
 
 .top-left {
-    width: 480px;
+    width: fit-content;
     background-image: url('../images/backgrounds/top_left.png');
     background-repeat: no-repeat;
+    aspect-ratio: 48 / 11;
 }
 
 .top-right {
-    width: 480px;
+    width: fit-content;
     background-image: url('../images/backgrounds/top_right.png');
     background-repeat: no-repeat;
+    aspect-ratio: 48 / 11;
 }
 
 .top-middle {
