@@ -8,7 +8,9 @@ body, html, #root {
 }
 
 .middle-container {
+    position: absolute;
     display: flex;
-    flex: 1;
     width: 100%;
+    top: calc(round(down, calc(10vh), 1px));
+    height: calc(100vh - calc(round(down, calc(20vh) / 11, 1px) * 11) + round(down, calc(10vh), 1px));
 }

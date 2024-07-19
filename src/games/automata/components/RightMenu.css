@@ -1,11 +1,10 @@
 .right {
-    width: 191px;
+    width: calc(round(down, calc(20vh) / 11, 1px) * 19);
     display: flex;
     flex-direction: column;
-    background-color: lightcoral;
     position: relative;
-    top: -50px;
-    height: calc(100% + 50px);
+    height: 100%;
+    background-image: url('../images/backgrounds/bg.png');
 }
 
 .right-top, .right-middle, .right-bottom {
@@ -14,20 +13,21 @@
 }
 
 .right-top {
-    height: 268px;
+    height: fit-content;
+    aspect-ratio: 1 / 1;
     background-image: url('../images/backgrounds/right_top.png');
     background-repeat: no-repeat;
 }
 
 .right-middle {
-    width: 191px;
     flex-grow: 1;
     background-image: url('../images/backgrounds/right_mid.png');
     background-repeat: repeat-y;
 }
 
 .right-bottom {
-    height: 268px;
+    height: fit-content;
+    aspect-ratio: 1 / 1;
     background-image: url('../images/backgrounds/right_bottom.png');
     background-repeat: no-repeat;
 }
@@ -60,5 +60,7 @@
     position: absolute;
     bottom: 0px;
     left: -4px;
-    width: 70px;
+    height: 10.9vh;
+    aspect-ratio: 1 / 1;
+    z-index: 9;
 }
