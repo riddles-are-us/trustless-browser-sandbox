@@ -1,6 +1,6 @@
 .top {
-    height: calc(round(down, calc(20vh) / 11, 1px) * 11);
-    min-height: calc(round(down, calc(20vh) / 11, 1px) * 11);
+    height: 110px;
+    min-height: 110px;
     width: 100%;
     display: flex;
     font-size: 24px;
@@ -13,21 +13,22 @@
 }
 
 .top-left {
-    width: fit-content;
-    aspect-ratio: 48 / 11;
+    width: 480px;
+    height: 110px;
     background-image: url('../images/backgrounds/top_left.png');
     background-repeat: no-repeat;
 }
 
 .top-right {
-    width: fit-content;
-    aspect-ratio: 48 / 11;
+    width: 480px;
+    height: 110px;
     background-image: url('../images/backgrounds/top_right.png');
     background-repeat: no-repeat;
 }
 
 .top-middle {
     flex-grow: 1;
+    height: 110px;
     background-image: url('../images/backgrounds/top_mid.png');
     background-repeat: repeat-x;
 }

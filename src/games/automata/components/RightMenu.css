@@ -1,20 +1,19 @@
 .right {
-    width: calc(round(down, calc(20vh) / 11, 1px) * 19);
+    width: 190px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
-    height: 100%;
     background-image: url('../images/backgrounds/bg.png');
 }
 
 .right-top, .right-middle, .right-bottom {
-    width: 100%;
+    width: 190px;
     background-size: contain;
 }
 
 .right-top {
-    height: fit-content;
-    aspect-ratio: 1 / 1;
+    height: 190px;
     background-image: url('../images/backgrounds/right_top.png');
     background-repeat: no-repeat;
 }
@@ -26,8 +25,7 @@
 }
 
 .right-bottom {
-    height: fit-content;
-    aspect-ratio: 1 / 1;
+    height: 190px;
     background-image: url('../images/backgrounds/right_bottom.png');
     background-repeat: no-repeat;
 }
@@ -58,9 +56,8 @@
 
 .right-corner-bar {
     position: absolute;
+    width: 60px;
+    height: 60px;
     bottom: 0px;
-    left: -4px;
-    height: 10.9vh;
-    aspect-ratio: 1 / 1;
-    z-index: 9;
+    left: -2px;
 }
