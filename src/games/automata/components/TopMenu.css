@@ -14,16 +14,16 @@
 
 .top-left {
     width: fit-content;
+    aspect-ratio: 48 / 11;
     background-image: url('../images/backgrounds/top_left.png');
     background-repeat: no-repeat;
-    aspect-ratio: 48 / 11;
 }
 
 .top-right {
     width: fit-content;
+    aspect-ratio: 48 / 11;
     background-image: url('../images/backgrounds/top_right.png');
     background-repeat: no-repeat;
-    aspect-ratio: 48 / 11;
 }
 
 .top-middle {

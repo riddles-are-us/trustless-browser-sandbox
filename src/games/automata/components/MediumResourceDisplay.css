@@ -1,9 +1,9 @@
 .medium-resource-display-container {
     position: absolute;
-    top: 25px;
+    top: 5%;
     transform: translate(-50%, -50%);
-    width: 48px;
-    height: 17px;
+    height: 3.07%;
+    aspect-ratio: 96 / 34;
 }
 
 .medium-resource-display-background {

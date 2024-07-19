@@ -13,7 +13,7 @@ const MediumResourceDisplay = ({ order, iconImagePath, amount }: Props) => {
     <div
       className="medium-resource-display-container"
       style={{
-        left: `${70 + 100 * order}px`,
+        left: `${9 * order + 9}%`,
       }}
     >
       <img src={background} className="medium-resource-display-background" />

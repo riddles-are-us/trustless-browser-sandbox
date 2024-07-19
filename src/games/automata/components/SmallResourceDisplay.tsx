@@ -13,7 +13,7 @@ const SmallResourceDisplay = ({ order, iconImagePath, amount }: Props) => {
     <div
       className="small-resource-display-container"
       style={{
-        left: `${350 + 80 * order}px`,
+        left: `${33 + order * 8}%`,
       }}
     >
       <img src={background} className="small-resource-display-background" />
