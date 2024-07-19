@@ -29,12 +29,7 @@ import {
   selectAlienFloralAmount,
   selectSpiceMelangeAmount,
   selectTitaniumAmount,
-  selectEnercoreAmount,
-  selectNexiumAmount,
-  selectSwiftexAmount,
-  selectCognisurgeAmount,
-  selectVitalshieldAmount,
-  selectFlexonixAmount,
+  selectSelectedCreature,
 } from "../../../data/automata";
 
 interface Props {
@@ -82,12 +77,7 @@ const TopMenu = ({
   const alienFloralAmount = useAppSelector(selectAlienFloralAmount);
   const spiceMelangeAmount = useAppSelector(selectSpiceMelangeAmount);
   const titaniumAmount = useAppSelector(selectTitaniumAmount);
-  const enercoreAmount = useAppSelector(selectEnercoreAmount);
-  const nexiumAmount = useAppSelector(selectNexiumAmount);
-  const swiftexAmount = useAppSelector(selectSwiftexAmount);
-  const cognisurgeAmount = useAppSelector(selectCognisurgeAmount);
-  const vitalshieldAmount = useAppSelector(selectVitalshieldAmount);
-  const flexonixAmount = useAppSelector(selectFlexonixAmount);
+  const selectedCreature = useAppSelector(selectSelectedCreature);
 
   return (
     <div className="top">
@@ -138,32 +128,32 @@ const TopMenu = ({
       <SmallResourceDisplay
         order={0}
         iconImagePath={EnercoreIcon}
-        amount={enercoreAmount}
+        amount={selectedCreature?.entity[0] ?? 0}
       />
       <SmallResourceDisplay
         order={1}
         iconImagePath={NexiumIcon}
-        amount={nexiumAmount}
+        amount={selectedCreature?.entity[1] ?? 0}
       />
       <SmallResourceDisplay
         order={2}
         iconImagePath={SwiftexIcon}
-        amount={swiftexAmount}
+        amount={selectedCreature?.entity[2] ?? 0}
       />
       <SmallResourceDisplay
         order={3}
         iconImagePath={CognisurgeIcon}
-        amount={cognisurgeAmount}
+        amount={selectedCreature?.entity[3] ?? 0}
       />
       <SmallResourceDisplay
         order={4}
         iconImagePath={VitalshieldIcon}
-        amount={vitalshieldAmount}
+        amount={selectedCreature?.entity[4] ?? 0}
       />
       <SmallResourceDisplay
         order={5}
         iconImagePath={FlexonixIcon}
-        amount={flexonixAmount}
+        amount={selectedCreature?.entity[5] ?? 0}
       />
     </div>
   );

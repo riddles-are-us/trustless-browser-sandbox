@@ -70,12 +70,6 @@ interface AutomataState {
     alienFloralAmount: number;
     spiceMelangeAmount: number;
     titaniumAmount: number;
-    enercoreAmount: number;
-    nexiumAmount: number;
-    swiftexAmount: number;
-    cognisurgeAmount: number;
-    vitalshieldAmount: number;
-    flexonixAmount: number;
     creatures: Array<CreatureModel>;
 }
 
@@ -92,12 +86,6 @@ const initialState: AutomataState = {
     alienFloralAmount: 0,
     spiceMelangeAmount: 0,
     titaniumAmount: 0,
-    enercoreAmount: 0,
-    nexiumAmount: 0,
-    swiftexAmount: 0,
-    cognisurgeAmount: 0,
-    vitalshieldAmount: 0,
-    flexonixAmount: 0,
     creatures: [],
 };
 
@@ -210,13 +198,12 @@ export const selectNecrodermisAmount = (state: RootState) => state.automata.necr
 export const selectAlienFloralAmount = (state: RootState) => state.automata.alienFloralAmount;
 export const selectSpiceMelangeAmount = (state: RootState) => state.automata.spiceMelangeAmount;
 export const selectTitaniumAmount = (state: RootState) => state.automata.titaniumAmount;
-export const selectEnercoreAmount = (state: RootState) => state.automata.enercoreAmount;
-export const selectNexiumAmount = (state: RootState) => state.automata.nexiumAmount;
-export const selectSwiftexAmount = (state: RootState) => state.automata.swiftexAmount;
-export const selectCognisurgeAmount = (state: RootState) => state.automata.cognisurgeAmount;
-export const selectVitalshieldAmount = (state: RootState) => state.automata.vitalshieldAmount;
-export const selectFlexonixAmount = (state: RootState) => state.automata.flexonixAmount;
 export const selectCreatures = (state: RootState) => state.automata.creatures;
 
+export const selectSelectedCreature = (state: RootState) => 
+    state.automata.external.selectedCreatureIndex != null
+        ? state.automata.creatures[state.automata.external.selectedCreatureIndex]
+        : null;
+    
 export const { setGlobalTimer, setViewerActivity, setErrorMessage, setSelectedCreatureIndex, setUserActivity, setResources, setCreatures } = automataSlice.actions;
 export default automataSlice.reducer;
