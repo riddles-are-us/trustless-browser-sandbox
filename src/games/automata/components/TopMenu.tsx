@@ -32,41 +32,7 @@ import {
   selectSelectedCreature,
 } from "../../../data/automata";
 
-interface Props {
-  //   crystalAmount: number;
-  //   interstellarMineralAmount: number;
-  //   biomassAmount: number;
-  //   quantumFoamAmount: number;
-  //   necrodermisAmount: number;
-  //   alienFloralAmount: number;
-  //   spiceMelangeAmount: number;
-  //   titaniumAmount: number;
-  //   enercoreAmount: number;
-  //   nexiumAmount: number;
-  //   swiftexAmount: number;
-  //   cognisurgeAmount: number;
-  //   vitalshieldAmount: number;
-  //   flexonixAmount: number;
-  address: string;
-}
-
-const TopMenu = ({
-  // crystalAmount,
-  // interstellarMineralAmount,
-  // biomassAmount,
-  // quantumFoamAmount,
-  // necrodermisAmount,
-  // alienFloralAmount,
-  // spiceMelangeAmount,
-  // titaniumAmount,
-  // enercoreAmount,
-  // nexiumAmount,
-  // swiftexAmount,
-  // cognisurgeAmount,
-  // vitalshieldAmount,
-  // flexonixAmount,
-  address,
-}: Props) => {
+const TopMenu = () => {
   const crystalAmount = useAppSelector(selectCrystalAmount);
   const interstellarMineralAmount = useAppSelector(
     selectInterstellarMineralAmount
@@ -84,7 +50,7 @@ const TopMenu = ({
       <div className="top-left"></div>
       <div className="top-middle"></div>
       <div className="top-right"></div>
-      <AccountInfo address={address} />
+      <AccountInfo />
       <MediumResourceDisplay
         order={0}
         iconImagePath={CrystalIcon}

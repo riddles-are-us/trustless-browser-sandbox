@@ -13,7 +13,6 @@ import {
 } from "@dnd-kit/sortable";
 import { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { Col, Row, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CreateObjectModal } from "../createObject";
 import "../style.scss";
 import "../../style.scss";
@@ -151,7 +150,7 @@ const Gameplay = ({ playerIds, address, objects }: Props) => {
 
   return (
     <>
-      <TopMenu address={address} />
+      <TopMenu />
       <div className="middle-container">
         <LeftMenu />
         <MainMenu />

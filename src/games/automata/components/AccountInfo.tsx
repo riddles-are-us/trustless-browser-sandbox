@@ -1,17 +1,22 @@
 import React from "react";
 import "./AccountInfo.css";
 import account_info from "../images/backgrounds/account_info.png";
+import { useAppSelector } from "../../../app/hooks";
+import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
 
-interface Props {
-  address: string;
-}
+const AccountInfo = () => {
+  const account = useAppSelector(selectL1Account);
+  const l2account = useAppSelector(selectL2Account);
 
-const AccountInfo = ({ address }: Props) => {
   return (
     <div className="account-info-container">
       <img src={account_info} className={"account-info-background"}></img>
-      <p className={"account-info-account-text"}>{`Account  : ${address}`}</p>
-      <p className={"account-info-key-text"}>{`Key      : KEY`}</p>
+      <p
+        className={"account-info-account-text"}
+      >{`Account  : ${account?.address}`}</p>
+      <p
+        className={"account-info-key-text"}
+      >{`Key      : ${l2account?.address}`}</p>
       <p className={"account-info-player-id-text"}>{`PlayerId : ID`}</p>
     </div>
   );
