@@ -10,9 +10,9 @@ const AccountInfo = ({ address }: Props) => {
   return (
     <div className="account-info-container">
       <img src={account_info} className={"account-info-background"}></img>
-      <p className={"account-info-account-text"}>{`Account : ${address}`}</p>
-      <p className={"account-info-key-text"}>{`Key : KEY`}</p>
-      <p className={"account-info-player-id-text"}>{`Player Id : ID`}</p>
+      <p className={"account-info-account-text"}>{`Account  : ${address}`}</p>
+      <p className={"account-info-key-text"}>{`Key      : KEY`}</p>
+      <p className={"account-info-player-id-text"}>{`PlayerId : ID`}</p>
     </div>
   );
 };
