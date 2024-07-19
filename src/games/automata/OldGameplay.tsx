@@ -12,7 +12,7 @@ import { CreateObjectModal } from "./createObject";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector } from "../../app/hooks";
-import { selectExternal, selectLocalAttributes, selectModifier } from "./thunk";
+import { selectExternal, selectModifier } from "../../data/automata";
 import { CreatureModel } from "../../data/automata";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
@@ -30,7 +30,7 @@ interface Props {
 const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {
   const external = useAppSelector(selectExternal);
   const modifiersInfo = useAppSelector(selectModifier);
-  const localAttributes = useAppSelector(selectLocalAttributes);
+  const localAttributes: string[] = [];
   const [draggingModifierIndex, setDraggingModifierIndex] = useState<
     number | null
   >(null);

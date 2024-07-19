@@ -3,11 +3,10 @@ import { CreatureModel } from "../../data/automata";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  selectEntityAttributes,
   selectExternal,
   setSelectedCreatureIndex,
   setUserActivity,
-} from "./thunk";
+} from "../../data/automata";
 
 interface externalState {
   selectedCreatureIndex: number;
@@ -89,7 +88,7 @@ export function Creature({
 }
 
 export function EntityAttributes({ robot }: { robot: CreatureModel }) {
-  const entitiesInfo = useAppSelector(selectEntityAttributes);
+  const entitiesInfo: string[] = [];
   return (
     <div className="entity">
       {robot.entity.map((item, index) => {

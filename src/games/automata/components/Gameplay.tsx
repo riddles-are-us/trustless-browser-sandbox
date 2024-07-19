@@ -18,13 +18,16 @@ import { CreateObjectModal } from "../createObject";
 import "../style.scss";
 import "../../style.scss";
 import { useAppSelector } from "../../../app/hooks";
-import { selectExternal, selectModifier } from "../thunk";
 import { Creature } from "../creature";
 import { ProgramInfo } from "../modifier";
 import { CreateButton } from "../opbutton";
 import { ErrorAlert } from "../error";
 import { Explore } from "../explore";
-import { CreatureModel } from "../../../data/automata";
+import {
+  selectExternal,
+  selectModifier,
+  CreatureModel,
+} from "../../../data/automata";
 
 interface Props {
   playerIds: string;

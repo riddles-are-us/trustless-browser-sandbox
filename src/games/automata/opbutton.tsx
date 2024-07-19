@@ -7,10 +7,10 @@ import {
   setSelectedCreatureIndex,
   setUserActivity,
   setViewerActivity,
-} from "./thunk";
-import { CreatureModel } from "../../data/automata";
+  sendTransaction,
+  CreatureModel,
+} from "../../data/automata";
 import React from "react";
-import { sendTransaction } from "./thunk";
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;

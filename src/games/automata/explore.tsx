@@ -2,12 +2,16 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { ConfirmButton } from "./opbutton";
 import { useAppSelector } from "../../app/hooks";
-import { selectExternal, selectGlobalTimer, selectModifier } from "./thunk";
 import { EntityAttributes } from "./creature";
 import { getCounter, getHaltBit, getModifierIndex } from "./helper";
 import { OverlayTrigger, ProgressBar, Tooltip } from "react-bootstrap";
 import { ProgramInfo } from "./modifier";
-import { CreatureModel } from "../../data/automata";
+import {
+  selectExternal,
+  selectGlobalTimer,
+  selectModifier,
+  CreatureModel,
+} from "../../data/automata";
 
 export function CircleLayout({ children }: { children: any }) {
   const exploreBoxRef = useRef<HTMLDivElement>(null);

@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React from 'react';
-import { Modal } from 'react-bootstrap';
-import {selectExternal} from "./thunk";
-import {useAppSelector} from "../../app/hooks";
+import React from "react";
+import { Modal } from "react-bootstrap";
+import { selectExternal } from "../../data/automata";
+import { useAppSelector } from "../../app/hooks";
 
 export function CreateObjectModal() {
   const external = useAppSelector(selectExternal);
@@ -13,7 +13,7 @@ export function CreateObjectModal() {
       <Modal.Header>
         <Modal.Title>Waiting for creation</Modal.Title>
       </Modal.Header>
-      <Modal.Body>{ message }</Modal.Body>
+      <Modal.Body>{message}</Modal.Body>
     </Modal>
   );
 }

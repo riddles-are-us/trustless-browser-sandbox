@@ -30,19 +30,3 @@ export function encode_modifier(modifiers: Array<bigint>) {
 export function createCommand(command: bigint, objindex: bigint) {
   return (command << 32n) + objindex;
 }
-
-export function decodeModifiers(modifiers: any) {
-  let delay: number;
-  let entity: Array<number>;
-  let local: Array<number>;
-  let name: string;
-  const modifierArray: Modifier[] = [];
-  for(let i=0; i<modifiers.length; i++) {
-    delay = modifiers[i][0];
-    entity = modifiers[i][1];
-    local = modifiers[i][2];
-    name = modifiers[i][3];
-    modifierArray.push({"delay": delay, "entity": entity, "local": local, "name": name});
-  }
-  return modifierArray;
-}

@@ -1,6 +1,6 @@
-import {Alert} from "react-bootstrap";
-import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {selectExternal, setErrorMessage} from "./thunk";
+import { Alert } from "react-bootstrap";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectExternal, setErrorMessage } from "../../data/automata";
 import React from "react";
 
 export function ErrorAlert() {
@@ -9,15 +9,18 @@ export function ErrorAlert() {
   if (errorMessage) {
     return (
       <div>
-        <Alert variant="danger" onClose={() => dispatch(setErrorMessage(""))} dismissible className="alertContent">
+        <Alert
+          variant="danger"
+          onClose={() => dispatch(setErrorMessage(""))}
+          dismissible
+          className="alertContent"
+        >
           <Alert.Heading>Error</Alert.Heading>
           <p>{errorMessage}</p>
         </Alert>
       </div>
     );
   } else {
-     return <></>
+    return <></>;
   }
 }
-
-

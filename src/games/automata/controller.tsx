@@ -17,22 +17,12 @@ import { query, LeHexBN } from "./sign";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import {
-  selectExternal,
-  selectLocalAttributes,
-  selectModifier,
-  setErrorMessage,
-  setViewerActivity,
-  setUserActivity,
-  setGlobalTimer,
-} from "./thunk";
 import { CreatureModel } from "../../data/automata";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
 import { CreateButton } from "./opbutton";
 import { ErrorAlert } from "./error";
 import { Explore } from "./explore";
-import { getConfig, sendTransaction, setSelectedCreatureIndex } from "./thunk";
 
 import cover from "./images/cover.jpg";
 
@@ -41,7 +31,18 @@ import Loading from "./load";
 import Gameplay from "./components/Gameplay";
 import OldGameplay from "./OldGameplay";
 
-import { setResources, setCreatures } from "../../data/automata";
+import {
+  selectExternal,
+  setErrorMessage,
+  setViewerActivity,
+  setUserActivity,
+  setGlobalTimer,
+  getConfig,
+  sendTransaction,
+  setSelectedCreatureIndex,
+  setResources,
+  setCreatures,
+} from "../../data/automata";
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
