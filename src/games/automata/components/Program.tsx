@@ -23,6 +23,8 @@ const Program = ({ onSelect }: Props) => {
           rowCount={3}
           elements={[
             <TinyResourceDisplay iconImagePath={EnercoreIcon} amount={5} />,
+            <TinyResourceDisplay iconImagePath={EnercoreIcon} amount={2} />,
+            <TinyResourceDisplay iconImagePath={EnercoreIcon} amount={-3} />,
           ]}
         />
       </div>
