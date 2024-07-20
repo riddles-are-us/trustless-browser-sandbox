@@ -1,10 +1,10 @@
 .account-info-container{
     position: absolute;
-    left: 89%;
-    top: 4.5%;
-    transform: translate(-50%, -50%);
-    height: 10.56%;
-    aspect-ratio: 405 / 117;
+    width: 202px;
+    height: 58px;
+    right: 10px;
+    top: 0px;
+    /* transform: translate(-50%, -50%); */
 }
 
 .account-info-background {
@@ -18,13 +18,12 @@
 
 .account-info-account-text, .account-info-key-text, .account-info-player-id-text{
     position: absolute;
-    /* text-align: center; */
-    font-size: 35%;
+    font-size: 8px;
     margin: 0;
     color: white;
     left: 2.5%;
     width: 95%;
-    height: 25%;
+    height: 8px;
     font-family: "mishmash";
     color: #5CFFFF;
     white-space: break-spaces;

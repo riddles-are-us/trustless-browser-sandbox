@@ -3,6 +3,7 @@ import "./AccountInfo.css";
 import account_info from "../images/backgrounds/account_info.png";
 import { useAppSelector } from "../../../app/hooks";
 import { selectL1Account, selectL2Account } from "../../../data/accountSlice";
+import { addressAbbreviation } from "../../../utils/address";
 
 const AccountInfo = () => {
   const account = useAppSelector(selectL1Account);
@@ -13,10 +14,11 @@ const AccountInfo = () => {
       <img src={account_info} className={"account-info-background"}></img>
       <p
         className={"account-info-account-text"}
-      >{`Account  : ${account?.address}`}</p>
-      <p
-        className={"account-info-key-text"}
-      >{`Key      : ${l2account?.address}`}</p>
+      >{`Account  : ${addressAbbreviation(account?.address ?? "", 12)}`}</p>
+      <p className={"account-info-key-text"}>{`Key      : ${addressAbbreviation(
+        l2account?.address ?? "",
+        12
+      )}`}</p>
       <p className={"account-info-player-id-text"}>{`PlayerId : ID`}</p>
     </div>
   );
