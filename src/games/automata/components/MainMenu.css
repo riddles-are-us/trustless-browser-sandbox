@@ -1,5 +1,6 @@
-.main-background {
-    width: calc(100% - 191px * 2);
+.main {
+    height: 100%;
+    width: calc(100% - 190px * 2);
     flex: 1;
     background-color: lightgreen;
     text-align: center;
@@ -8,19 +9,42 @@
     justify-content: center;
     font-size: 24px;
     position: relative;
-    top: -50px;
-    height: calc(100% + 50px);
+    z-index: 3;
 }
 
 .main-content {
-    height: 90%;
+    height: 100%;
     width: fit-content;
-    min-height: 556px;
-    min-width: 556px;
-    max-height: min(90%, calc((100vw - 191px * 2) * 0.9));
-    aspect-ratio: 1 / 1;
+    min-height: 512px;
+    min-width: 550px;
+    max-height: min(100%, calc((100vw - 190px * 2) *  486 / 550));
+    aspect-ratio: 550 / 486;
     background-color: lightblue;
     position: relative;
+}
+
+.main-info-container{
+    position: absolute;
+    width: 37%;
+    aspect-ratio: 407 / 251;
+    left: 2.5%;
+    top: 2.5%;
+}
+
+.main-info-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.main-circle-container {
+    position: absolute;
+    width: 88.4%;
+    height: 100%;
+    right: 2.5%;
 }
 
 .main-circle-background {

@@ -6,7 +6,7 @@ import "./RebootButton.css";
 
 const RebootButton = () => {
   return (
-    <div className="reboot-button-scale">
+    <div className="reboot-button">
       <ImageButton
         isDisabled={false}
         defaultImagePath={rebootButtonImage}

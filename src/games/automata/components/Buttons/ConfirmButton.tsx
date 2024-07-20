@@ -6,7 +6,7 @@ import "./ConfirmButton.css";
 
 const ConfirmButton = () => {
   return (
-    <div className="confirm-button-scale">
+    <div className="confirm-button">
       <ImageButton
         isDisabled={false}
         defaultImagePath={confirmButtonImage}

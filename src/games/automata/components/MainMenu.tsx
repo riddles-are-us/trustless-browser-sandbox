@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import circle from "../images/MainMenu/circle.png";
+import circleBackground from "../images/backgrounds/circle.png";
+import infoBackground from "../images/backgrounds/info_frame.png";
 import display from "../images/MainMenu/display.png";
 import MainMenuProgressBar from "./MainMenuProgressBar";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
@@ -21,17 +22,22 @@ const MainMenu = () => {
   // }, []);
 
   return (
-    <div className="main-background">
+    <div className="main">
       <div className="main-content">
-        <img src={circle} className="main-circle-background" />
-        <ConfirmButton />
-        {/* <RebootButton /> */}
-        <MainMenuSelectingFrame order={0 /*selectingFrame*/} isStop={true} />
-        {[...Array(8).keys()].map((order, index) => (
-          <MainMenuBot key={index} order={order} />
-        ))}
-        <img src={display} className="main-display-image" />
-        <MainMenuProgressBar />
+        <div className="main-info-container">
+          <img src={infoBackground} className="main-info-background" />
+        </div>
+        <div className="main-circle-container">
+          <img src={circleBackground} className="main-circle-background" />
+          <ConfirmButton />
+          {/* <RebootButton /> */}
+          <MainMenuSelectingFrame order={0 /*selectingFrame*/} isStop={true} />
+          {[...Array(8).keys()].map((order, index) => (
+            <MainMenuBot key={index} order={order} />
+          ))}
+          <img src={display} className="main-display-image" />
+          <MainMenuProgressBar />
+        </div>
       </div>
     </div>
   );
