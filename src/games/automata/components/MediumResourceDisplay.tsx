@@ -10,12 +10,7 @@ interface Props {
 
 const MediumResourceDisplay = ({ order, iconImagePath, amount }: Props) => {
   return (
-    <div
-      className="medium-resource-display-container"
-      style={{
-        left: `${9 * order + 9}%`,
-      }}
-    >
+    <div className="medium-resource-display-container">
       <img src={background} className="medium-resource-display-background" />
       <img src={iconImagePath} className="medium-resource-display-image" />
       <p className="medium-resource-display-text">{amount.toString()}</p>
