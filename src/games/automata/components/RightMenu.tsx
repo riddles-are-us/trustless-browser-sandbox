@@ -46,7 +46,11 @@ const RightMenu = () => {
           elementHeight={programGridElementHeight}
           columnCount={programGridColumnCount}
           rowCount={programGridRowCount}
-          elements={[<Program />, <Program />, <Program />]}
+          elements={[
+            <Program key={0} />,
+            <Program key={1} />,
+            <Program key={2} />,
+          ]}
         />
       </div>
       <img src={rightCornerBar} className="right-corner-bar" />

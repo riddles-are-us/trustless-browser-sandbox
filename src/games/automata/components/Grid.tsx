@@ -16,7 +16,6 @@ const Grid = ({
   rowCount,
   elements,
 }: Props) => {
-  console.log(elementWidth * columnCount);
   return (
     <div
       className="grid-contianer"

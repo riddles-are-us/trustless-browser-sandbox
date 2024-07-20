@@ -26,7 +26,6 @@ const LeftMenu = () => {
   );
 
   const creatures = useAppSelector(selectCreatures);
-  console.log(creatures);
 
   useEffect(() => {
     updateCreatureGridHeight();
