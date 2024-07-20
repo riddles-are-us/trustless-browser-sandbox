@@ -6,9 +6,13 @@ import TinyResourceDisplay from "./TinyResourceDisplay";
 
 import EnercoreIcon from "../images/Icons/Enercore.png";
 
-const Program = () => {
+interface Props {
+  onSelect: () => void;
+}
+
+const Program = ({ onSelect }: Props) => {
   return (
-    <div className="program-container">
+    <div className="program-container" onClick={onSelect}>
       <img src={programBackground} className="program-background" />
       <p className="program-text">ROBOT</p>
       <div className="program-resource-grid">

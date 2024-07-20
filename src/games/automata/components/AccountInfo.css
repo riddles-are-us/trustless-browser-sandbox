@@ -27,6 +27,7 @@
     font-family: "mishmash";
     color: #5CFFFF;
     white-space: break-spaces;
+    pointer-events: none;
 }
 
 .account-info-account-text{

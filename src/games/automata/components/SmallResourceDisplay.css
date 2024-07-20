@@ -35,4 +35,5 @@
     width: 40px;
     height: 12px;
     font-family: "mishmash";
+    pointer-events: none;
 }

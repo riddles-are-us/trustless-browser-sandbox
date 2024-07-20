@@ -47,9 +47,24 @@ const RightMenu = () => {
           columnCount={programGridColumnCount}
           rowCount={programGridRowCount}
           elements={[
-            <Program key={0} />,
-            <Program key={1} />,
-            <Program key={2} />,
+            <Program
+              key={0}
+              onSelect={() => {
+                console.log(0);
+              }}
+            />,
+            <Program
+              key={1}
+              onSelect={() => {
+                console.log(1);
+              }}
+            />,
+            <Program
+              key={2}
+              onSelect={() => {
+                console.log(2);
+              }}
+            />,
           ]}
         />
       </div>

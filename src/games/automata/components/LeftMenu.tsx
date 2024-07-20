@@ -53,6 +53,9 @@ const LeftMenu = () => {
               key={index}
               isCreating={creature.object_id.length == 0}
               botId={creature.object_id.join("")}
+              onSelect={() => {
+                console.log(index);
+              }}
             />
           ))}
         />
