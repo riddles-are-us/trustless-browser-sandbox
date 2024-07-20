@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import circleBackground from "../images/backgrounds/circle.png";
-import infoBackground from "../images/backgrounds/info_frame.png";
 import display from "../images/MainMenu/display.png";
 import MainMenuProgressBar from "./MainMenuProgressBar";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
@@ -8,6 +7,7 @@ import MainMenuBot from "./MainMenuBot";
 import ConfirmButton from "./Buttons/ConfirmButton";
 import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
+import DiffResourcesInfo from "./DiffResourcesInfo";
 
 const MainMenu = () => {
   // for demo
@@ -25,7 +25,7 @@ const MainMenu = () => {
     <div className="main">
       <div className="main-content">
         <div className="main-info-container">
-          <img src={infoBackground} className="main-info-background" />
+          <DiffResourcesInfo />
         </div>
         <div className="main-circle-container">
           <img src={circleBackground} className="main-circle-background" />

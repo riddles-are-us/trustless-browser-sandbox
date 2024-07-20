@@ -1,0 +1,8 @@
+.diff-resources-info-grid{
+    width: 90%;
+    height: 85%;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}

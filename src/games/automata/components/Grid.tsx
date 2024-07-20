@@ -2,16 +2,16 @@ import React from "react";
 import "./Grid.css";
 
 interface Props {
-  elementWidth: number;
-  elementHeight: number;
+  elementWidth?: number | null;
+  elementHeight?: number | null;
   columnCount: number;
   rowCount: number;
   elements: Array<JSX.Element>;
 }
 
 const Grid = ({
-  elementWidth,
-  elementHeight,
+  elementWidth = null,
+  elementHeight = null,
   columnCount,
   rowCount,
   elements,
@@ -20,8 +20,10 @@ const Grid = ({
     <div
       className="grid-contianer"
       style={{
-        width: `${elementWidth * columnCount}px`,
-        height: `${elementHeight * rowCount}px`,
+        width:
+          elementWidth == null ? "100%" : `${elementWidth * columnCount}px`,
+        height:
+          elementHeight == null ? "100%" : `${elementHeight * rowCount}px`,
         gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
         gridTemplateRows: `repeat(${rowCount}, 1fr)`,
       }}
