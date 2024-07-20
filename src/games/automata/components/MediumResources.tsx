@@ -20,7 +20,6 @@ import {
   selectAlienFloralAmount,
   selectSpiceMelangeAmount,
   selectTitaniumAmount,
-  selectSelectedCreature,
 } from "../../../data/automata";
 
 const MediumResources = () => {

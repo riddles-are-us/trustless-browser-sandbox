@@ -10,12 +10,7 @@ interface Props {
 
 const SmallResourceDisplay = ({ order, iconImagePath, amount }: Props) => {
   return (
-    <div
-      className="small-resource-display-container"
-      style={{
-        left: `${33 + order * 8}%`,
-      }}
-    >
+    <div className="small-resource-display-container">
       <img src={background} className="small-resource-display-background" />
       <img src={iconImagePath} className="small-resource-display-image" />
       <p className="small-resource-display-text">{amount.toString()}</p>
