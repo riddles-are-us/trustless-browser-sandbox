@@ -16,4 +16,5 @@
     height: 25px;
     font-family: "mishmash";
     color: #5CFFFF;
+    pointer-events: none;
 }

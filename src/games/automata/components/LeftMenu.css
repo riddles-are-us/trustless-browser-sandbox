@@ -5,6 +5,7 @@
     flex-direction: column;
     position: relative;
     background-image: url('../images/backgrounds/bg.png');
+    z-index: 5;
 }
 
 .left-top, .left-middle, .left-bottom {
@@ -40,18 +41,21 @@
 }
 
 .left-new-button-position{
-    bottom: calc(4% - 25px);
-    left: 25%;
+    position: absolute;
+    bottom: 15px;
+    left: 10px;
 }
 
 .left-up-button-position{
-    bottom: calc(5.5% - 25px);
-    left: 60%;
+    position: absolute;
+    bottom: 20px;
+    left: 110px;
 }
 
 .left-down-button-position{
-    bottom: calc(5.5% - 25px);
-    left: 75%;
+    position: absolute;
+    bottom: 20px;
+    left: 140px;
 }
 
 .left-corner-bar {

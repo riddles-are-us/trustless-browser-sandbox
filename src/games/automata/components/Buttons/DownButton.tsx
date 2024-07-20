@@ -5,21 +5,17 @@ import downButtonHoverImage from "../../images/Buttons/Down/down_hover.png";
 import downButtonClickImage from "../../images/Buttons/Down/down_click.png";
 import "./DownButton.css";
 
-interface Props {
-  positionClass: string;
-}
-
-const DownButton = ({ positionClass }: Props) => {
+const DownButton = () => {
   return (
-    <ImageButton
-      isDisabled={false}
-      positionClass={positionClass}
-      scaleClass="down-button-scale"
-      defaultImagePath={downButtonImage}
-      hoverImagePath={downButtonHoverImage}
-      clickedImagePath={downButtonClickImage}
-      disabledImagePath={downButtonImage}
-    />
+    <div className="down-button-scale">
+      <ImageButton
+        isDisabled={false}
+        defaultImagePath={downButtonImage}
+        hoverImagePath={downButtonHoverImage}
+        clickedImagePath={downButtonClickImage}
+        disabledImagePath={downButtonImage}
+      />
+    </div>
   );
 };
 

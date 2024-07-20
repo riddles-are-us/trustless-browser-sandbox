@@ -5,21 +5,17 @@ import newButtonHoverImage from "../../images/Buttons/New/new_hover.png";
 import newButtonClickImage from "../../images/Buttons/New/new_click.png";
 import "./NewButton.css";
 
-interface Props {
-  positionClass: string;
-}
-
-const NewButton = ({ positionClass }: Props) => {
+const NewButton = () => {
   return (
-    <ImageButton
-      isDisabled={false}
-      positionClass={positionClass}
-      scaleClass="new-button-scale"
-      defaultImagePath={newButtonImage}
-      hoverImagePath={newButtonHoverImage}
-      clickedImagePath={newButtonClickImage}
-      disabledImagePath={newButtonImage}
-    />
+    <div className="new-button-scale">
+      <ImageButton
+        isDisabled={false}
+        defaultImagePath={newButtonImage}
+        hoverImagePath={newButtonHoverImage}
+        clickedImagePath={newButtonClickImage}
+        disabledImagePath={newButtonImage}
+      />
+    </div>
   );
 };
 

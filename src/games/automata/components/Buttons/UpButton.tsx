@@ -5,21 +5,17 @@ import upButtonHoverImage from "../../images/Buttons/Up/up_hover.png";
 import upButtonClickImage from "../../images/Buttons/Up/up_click.png";
 import "./UpButton.css";
 
-interface Props {
-  positionClass: string;
-}
-
-const UpButton = ({ positionClass }: Props) => {
+const UpButton = () => {
   return (
-    <ImageButton
-      isDisabled={false}
-      positionClass={positionClass}
-      scaleClass="up-button-scale"
-      defaultImagePath={upButtonImage}
-      hoverImagePath={upButtonHoverImage}
-      clickedImagePath={upButtonClickImage}
-      disabledImagePath={upButtonImage}
-    />
+    <div className="up-button-scale">
+      <ImageButton
+        isDisabled={false}
+        defaultImagePath={upButtonImage}
+        hoverImagePath={upButtonHoverImage}
+        clickedImagePath={upButtonClickImage}
+        disabledImagePath={upButtonImage}
+      />
+    </div>
   );
 };
 

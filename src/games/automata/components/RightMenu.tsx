@@ -69,8 +69,14 @@ const RightMenu = () => {
         />
       </div>
       <img src={rightCornerBar} className="right-corner-bar" />
-      <UpButton positionClass={"right-up-button-position"} />
-      <DownButton positionClass={"right-down-button-position"} />
+
+      <div className="right-up-button-position">
+        <UpButton />
+      </div>
+
+      <div className="right-down-button-position">
+        <DownButton />
+      </div>
     </div>
   );
 };

@@ -6,15 +6,15 @@ import "./ConfirmButton.css";
 
 const ConfirmButton = () => {
   return (
-    <ImageButton
-      isDisabled={false}
-      positionClass="confirm-button-position"
-      scaleClass="confirm-button-scale"
-      defaultImagePath={confirmButtonImage}
-      hoverImagePath={confirmButtonHoverImage}
-      clickedImagePath={confirmButtonHoverImage}
-      disabledImagePath={confirmButtonImage}
-    />
+    <div className="confirm-button-scale">
+      <ImageButton
+        isDisabled={false}
+        defaultImagePath={confirmButtonImage}
+        hoverImagePath={confirmButtonHoverImage}
+        clickedImagePath={confirmButtonHoverImage}
+        disabledImagePath={confirmButtonImage}
+      />
+    </div>
   );
 };
 

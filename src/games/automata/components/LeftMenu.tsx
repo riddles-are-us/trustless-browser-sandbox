@@ -40,8 +40,7 @@ const LeftMenu = () => {
       <div className="left-top"></div>
       <div className="left-middle"></div>
       <div className="left-bottom"></div>
-      <NewButton positionClass={"left-new-button-position"} />
-      <UpButton positionClass={"left-up-button-position"} />
+
       <div ref={creatureGridRef} className="left-creature-grid">
         <Grid
           elementWidth={creatureGridElementWidth}
@@ -60,9 +59,19 @@ const LeftMenu = () => {
           ))}
         />
       </div>
+
       <img src={leftMiddleBar} className="left-middle-bar" />
       <img src={leftCornerBar} className="left-corner-bar" />
-      <DownButton positionClass={"left-down-button-position"} />
+
+      <div className="left-new-button-position">
+        <NewButton />
+      </div>
+      <div className="left-up-button-position">
+        <UpButton />
+      </div>
+      <div className="left-down-button-position">
+        <DownButton />
+      </div>
     </div>
   );
 };

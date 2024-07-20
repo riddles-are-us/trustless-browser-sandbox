@@ -6,15 +6,15 @@ import "./RebootButton.css";
 
 const RebootButton = () => {
   return (
-    <ImageButton
-      isDisabled={false}
-      positionClass="reboot-button-position"
-      scaleClass="reboot-button-scale"
-      defaultImagePath={rebootButtonImage}
-      hoverImagePath={rebootButtonHoverImage}
-      clickedImagePath={rebootButtonHoverImage}
-      disabledImagePath={rebootButtonImage}
-    />
+    <div className="reboot-button-scale">
+      <ImageButton
+        isDisabled={false}
+        defaultImagePath={rebootButtonImage}
+        hoverImagePath={rebootButtonHoverImage}
+        clickedImagePath={rebootButtonHoverImage}
+        disabledImagePath={rebootButtonImage}
+      />
+    </div>
   );
 };
 
