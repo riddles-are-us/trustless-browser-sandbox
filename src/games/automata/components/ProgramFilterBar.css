@@ -1,0 +1,22 @@
+.program-filter-bar-container{
+    width: 55px;
+    height: 377px;
+}
+
+.program-filter-bar-background{
+    position: absolute;
+    right: 0px;
+    width: 22px;
+    height: 377px;
+}
+
+.program-filter-bar-filters-container{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55px;
+    height: 405px;
+}

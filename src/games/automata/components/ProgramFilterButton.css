@@ -1,0 +1,43 @@
+.program-filter-bar-filter-container{
+    position: relative;
+    width: 55px;
+    height: 27px;
+}
+
+.program-filter-bar-filter-selecting-background{
+    position: absolute;
+    width: 55px;
+    height: 27px;
+}
+
+.program-filter-bar-filter-background{
+    position: absolute;
+    width: 54px;
+    height: 26px;
+}
+
+.program-filter-bar-filter-icon{
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+}
+
+.program-filter-bar-filter-text {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 10px;
+    line-height: 10px;
+    margin: 0px;
+    color: white;
+    width: 20px;
+    height: 10px;
+    font-family: "mishmash";
+    color: black;
+    pointer-events: none;
+}

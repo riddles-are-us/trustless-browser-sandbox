@@ -6,6 +6,7 @@ import DownButton from "./Buttons/DownButton";
 import PageNumber from "./PageNumber";
 import Grid from "./Grid";
 import Program from "./Program";
+import ProgramFilterBar from "./ProgramFilterBar";
 
 const RightMenu = () => {
   const [programGridHeight, setProgramGridHeight] = useState(0);
@@ -69,7 +70,9 @@ const RightMenu = () => {
         />
       </div>
       <img src={rightCornerBar} className="right-corner-bar" />
-
+      <div className="right-program-filter-bar-position">
+        <ProgramFilterBar />
+      </div>
       <div className="right-up-button-position">
         <UpButton />
       </div>
