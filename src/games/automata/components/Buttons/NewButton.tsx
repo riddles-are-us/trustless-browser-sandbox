@@ -14,6 +14,9 @@ const NewButton = () => {
         hoverImagePath={newButtonHoverImage}
         clickedImagePath={newButtonClickImage}
         disabledImagePath={newButtonImage}
+        onClick={() => {
+          /**/
+        }}
       />
     </div>
   );

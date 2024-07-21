@@ -4,7 +4,7 @@ import progressBarCover from "../images/MainMenu/highlight.png";
 import "./MainMenuProgressBar.css";
 
 const MainMenuProgressBar = () => {
-  const progress = 0.7;
+  const progress = 70;
 
   return (
     <div className="main-progress-bar-container">
@@ -15,7 +15,7 @@ const MainMenuProgressBar = () => {
       <div className="main-progress-container">
         <div
           className="main-progress-sector"
-          style={{ width: `${progress * 100}%` }}
+          style={{ width: `${progress}%` }}
         ></div>
       </div>
       <img src={progressBarCover} className="main-progress-bar-cover" />

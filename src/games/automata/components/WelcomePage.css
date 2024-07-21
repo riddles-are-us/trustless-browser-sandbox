@@ -1,0 +1,43 @@
+body, html, #root {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.welcome-page-container{
+    height: 100%;
+    width: fit-content;
+    max-height: min(100%, calc(100vw *  1080 / 1920));
+    aspect-ratio: 1920 / 1080;
+    background-color: lightblue;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.welcome-page-background{
+    height: 100%;
+    width: 100%;
+    background-image: url('../images/backgrounds/welcome.png');
+    background-size: contain;
+}
+
+.welcome-page-background-filter{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+.welcome-page-play-button{
+    position: absolute;
+    width: 16%;
+    height: 14.5%;
+    top: 47%;
+    left: 36.5%;
+    transform: translate(-50%, -50%);
+}

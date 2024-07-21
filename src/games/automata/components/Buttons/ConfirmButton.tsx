@@ -13,6 +13,9 @@ const ConfirmButton = () => {
         hoverImagePath={confirmButtonHoverImage}
         clickedImagePath={confirmButtonHoverImage}
         disabledImagePath={confirmButtonImage}
+        onClick={() => {
+          /**/
+        }}
       />
     </div>
   );

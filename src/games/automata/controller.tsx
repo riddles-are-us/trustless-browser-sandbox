@@ -27,7 +27,6 @@ import { Explore } from "./explore";
 import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
-import Loading from "./load";
 import Gameplay from "./components/Gameplay";
 import OldGameplay from "./OldGameplay";
 
@@ -43,6 +42,7 @@ import {
   setResources,
   setCreatures,
 } from "../../data/automata";
+import WelcomePage from "./components/WelcomePage";
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
@@ -171,6 +171,20 @@ export function GameController() {
     }, 1000);
   }, [inc]);
 
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (l2account) {
+        setProgress((p) => Math.min(p + 10, 100)); // 2% progress every 100ms for a total of 5 seconds
+      }
+    }, 100);
+    return () => {
+      clearInterval(interval);
+      setProgress(0);
+    };
+  }, [l2account]);
+
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
@@ -189,26 +203,14 @@ export function GameController() {
     //     objects={objects}
     //   />
     // );
-  } else if (l2account) {
-    return (
-      <Container className="mt-5">
-        <Loading />
-      </Container>
-    );
   } else {
     return (
-      <Container className="mt-5">
-        <div className="load-game">
-          <img src={cover} width="100%"></img>
-          <button
-            className="btn btn-confirm"
-            onClick={() => dispatch(loginL2AccountAsync(account!))}
-          >
-            {" "}
-            Start Play{" "}
-          </button>
-        </div>
-      </Container>
+      <>
+        <WelcomePage
+          progress={progress}
+          onClick={() => dispatch(loginL2AccountAsync(account!))}
+        />
+      </>
     );
   }
 }

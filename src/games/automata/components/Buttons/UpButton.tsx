@@ -14,6 +14,9 @@ const UpButton = () => {
         hoverImagePath={upButtonHoverImage}
         clickedImagePath={upButtonClickImage}
         disabledImagePath={upButtonImage}
+        onClick={() => {
+          /**/
+        }}
       />
     </div>
   );

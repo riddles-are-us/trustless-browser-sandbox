@@ -13,6 +13,9 @@ const RebootButton = () => {
         hoverImagePath={rebootButtonHoverImage}
         clickedImagePath={rebootButtonHoverImage}
         disabledImagePath={rebootButtonImage}
+        onClick={() => {
+          /**/
+        }}
       />
     </div>
   );

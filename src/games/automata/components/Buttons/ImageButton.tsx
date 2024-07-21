@@ -7,6 +7,7 @@ interface Props {
   hoverImagePath: string;
   clickedImagePath: string;
   disabledImagePath: string;
+  onClick: () => void;
 }
 
 const ImageButton = ({
@@ -15,6 +16,7 @@ const ImageButton = ({
   hoverImagePath,
   clickedImagePath,
   disabledImagePath,
+  onClick,
 }: Props) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -22,6 +24,7 @@ const ImageButton = ({
   const handleMouseDown = () => {
     if (!isDisabled) {
       setIsClicked(true);
+      onClick();
     }
   };
 

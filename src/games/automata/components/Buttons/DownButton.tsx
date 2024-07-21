@@ -14,6 +14,9 @@ const DownButton = () => {
         hoverImagePath={downButtonHoverImage}
         clickedImagePath={downButtonClickImage}
         disabledImagePath={downButtonImage}
+        onClick={() => {
+          /**/
+        }}
       />
     </div>
   );

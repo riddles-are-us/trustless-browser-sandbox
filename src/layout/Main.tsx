@@ -68,7 +68,6 @@ export function Main() {
             <Route index element={<Landing />} />
             <Route path={AUTOMATA_PATH} element={<AutomataController />} />
           </Route>
-          AutomataController
         </Routes>
         <WasmLogoIsShow />
       </BrowserRouter>
