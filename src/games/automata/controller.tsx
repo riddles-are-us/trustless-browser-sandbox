@@ -102,10 +102,10 @@ export function GameController() {
       const res = await query_state([], l2account!.address);
       const datas = JSON.parse(res.data);
       const [player, creatures, globalTimer] = datas;
-      console.log("query state data", datas);
+      //console.log("query state data", datas.data);
 
       if (playerAction == "creating") {
-        decodePlayerInfo(player);
+        decodePlayerInfo(player.data);
         dispatch(setGlobalTimer(globalTimer));
         if (clientAction == "monitoringResult") {
           if (creatures.length == external.getSelectedIndex()! + 1) {
@@ -117,7 +117,7 @@ export function GameController() {
           dispatch(setCreatures({ creatures }));
         }
       } else if (playerAction == "rebooting") {
-        decodePlayerInfo(player);
+        decodePlayerInfo(player.data);
         dispatch(setGlobalTimer(globalTimer));
         if (clientAction == "monitoringResult") {
           dispatch(setUserActivity("browsing"));
@@ -125,11 +125,11 @@ export function GameController() {
         }
         dispatch(setCreatures({ creatures }));
       } else if (playerAction == "loading") {
-        decodePlayerInfo(player);
+        decodePlayerInfo(player.data);
         dispatch(setGlobalTimer(globalTimer));
         dispatch(setUserActivity("browsing"));
       } else {
-        decodePlayerInfo(player);
+        decodePlayerInfo(player.data);
         dispatch(setGlobalTimer(globalTimer));
         dispatch(setCreatures({ creatures }));
 
