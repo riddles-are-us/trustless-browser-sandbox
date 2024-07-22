@@ -48,14 +48,7 @@ const LeftMenu = () => {
           columnCount={creatureGridColumnCount}
           rowCount={creatureGridRowCount}
           elements={creatures.map((creature, index) => (
-            <Creature
-              key={index}
-              isCreating={creature.object_id.length == 0}
-              botId={creature.object_id.join("")}
-              onSelect={() => {
-                console.log(index);
-              }}
-            />
+            <Creature key={index} index={index} creature={creature} />
           ))}
         />
       </div>
