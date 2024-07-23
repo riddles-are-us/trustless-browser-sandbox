@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from "../app/store";
-import { query_config, send_transaction } from '../games/automata/rpc';
+import { RootState } from "../../app/store";
+import { query_config, send_transaction } from '../../games/automata/rpc';
 
 export interface Modifier {
     delay: number;
@@ -10,7 +10,6 @@ export interface Modifier {
 }
 
 class ExternalState {
-    selectedCreatureIndex: number | null;
     userActivity: "browsing" | "creating" | "rebooting" | "loading";
     // idle -> queryingUpdate, queryingUpdate -> moniteringResut, moniteringResut-> queryingUpdate
     viewerActivity:
@@ -21,7 +20,6 @@ class ExternalState {
     errorMessage: string;
 
     constructor() {
-        this.selectedCreatureIndex = null;
         (this.userActivity = "loading"),
         (this.viewerActivity = "idle"),
         (this.errorMessage = "");
@@ -33,10 +31,6 @@ class ExternalState {
 
     hasError() {
         return this.errorMessage != "";
-    }
-
-    getSelectedIndex(): number | null {
-        return this.selectedCreatureIndex;
     }
 }
 
@@ -50,43 +44,16 @@ interface SendTransactionParams {
     prikey: string;
 }
 
-export interface CreatureModel {
-    entity: Array<number>;
-    object_id: Array<string>;
-    modifiers: Array<number>;
-    modifier_info: string;
-}
-
-interface AutomataState {
+interface PropertyState {
     modifiers: Modifier[];
     external: ExternalState;
     globalTimer: number,
-
-    crystalAmount: number;
-    interstellarMineralAmount: number;
-    biomassAmount: number;
-    quantumFoamAmount: number;
-    necrodermisAmount: number;
-    alienFloralAmount: number;
-    spiceMelangeAmount: number;
-    titaniumAmount: number;
-    creatures: Array<CreatureModel>;
 }
 
-const initialState: AutomataState = {
+const initialState: PropertyState = {
     external: new ExternalState(),
     modifiers: [],
     globalTimer: 0,
-
-    crystalAmount: 0,
-    interstellarMineralAmount: 0,
-    biomassAmount: 0,
-    quantumFoamAmount: 0,
-    necrodermisAmount: 0,
-    alienFloralAmount: 0,
-    spiceMelangeAmount: 0,
-    titaniumAmount: 0,
-    creatures: [],
 };
 
 
@@ -132,8 +99,8 @@ export function decodeModifiers(modifiers: any) {
     return modifierArray;
 }
 
-export const automataSlice = createSlice({
-    name: 'automata',
+export const propertiesSlice = createSlice({
+    name: 'properties',
     initialState,
     reducers: {
         setUserActivity: (state, loaded) => {
@@ -142,28 +109,12 @@ export const automataSlice = createSlice({
         setGlobalTimer: (state, loaded) => {
           state.globalTimer = loaded.payload;
         },
-        setSelectedCreatureIndex: (state, loaded) => {
-          state.external.selectedCreatureIndex = loaded.payload;
-        },
         setViewerActivity: (state, loaded) => {
           state.external.viewerActivity = loaded.payload;
         },
         setErrorMessage: (state, loaded) => {
           state.external.errorMessage = loaded.payload;
         },
-        setResources: (state, action) => {
-            state.crystalAmount = action.payload.resources[0];
-            state.interstellarMineralAmount = action.payload.resources[1];
-            state.biomassAmount = action.payload.resources[2];
-            state.quantumFoamAmount = action.payload.resources[3];
-            state.necrodermisAmount = action.payload.resources[4];
-            state.alienFloralAmount = action.payload.resources[5];
-            state.spiceMelangeAmount = action.payload.resources[6];
-            state.titaniumAmount = action.payload.resources[7];
-        },
-        setCreatures: (state, action) => {
-            state.creatures = action.payload.creatures;
-        }
     },
 
   extraReducers: (builder) => {
@@ -187,23 +138,9 @@ export const automataSlice = createSlice({
   },
 });
 
-export const selectExternal = (state: RootState) => state.automata.external;
-export const selectGlobalTimer = (state: RootState) => state.automata.globalTimer;
-export const selectModifier = (state: RootState) => state.automata.modifiers;
-export const selectCrystalAmount = (state: RootState) => state.automata.crystalAmount;
-export const selectInterstellarMineralAmount = (state: RootState) => state.automata.interstellarMineralAmount;
-export const selectBiomassAmount = (state: RootState) => state.automata.biomassAmount;
-export const selectQuantumFoamAmount = (state: RootState) => state.automata.quantumFoamAmount;
-export const selectNecrodermisAmount = (state: RootState) => state.automata.necrodermisAmount;
-export const selectAlienFloralAmount = (state: RootState) => state.automata.alienFloralAmount;
-export const selectSpiceMelangeAmount = (state: RootState) => state.automata.spiceMelangeAmount;
-export const selectTitaniumAmount = (state: RootState) => state.automata.titaniumAmount;
-export const selectCreatures = (state: RootState) => state.automata.creatures;
-
-export const selectSelectedCreature = (state: RootState) => 
-    state.automata.external.selectedCreatureIndex != null
-        ? state.automata.creatures[state.automata.external.selectedCreatureIndex]
-        : null;
+export const selectExternal = (state: RootState) => state.automata.properties.external;
+export const selectGlobalTimer = (state: RootState) => state.automata.properties.globalTimer;
+export const selectModifier = (state: RootState) => state.automata.properties.modifiers;
     
-export const { setGlobalTimer, setViewerActivity, setErrorMessage, setSelectedCreatureIndex, setUserActivity, setResources, setCreatures } = automataSlice.actions;
-export default automataSlice.reducer;
+export const { setGlobalTimer, setViewerActivity, setErrorMessage, setUserActivity } = propertiesSlice.actions;
+export default propertiesSlice.reducer;

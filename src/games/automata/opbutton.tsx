@@ -4,12 +4,15 @@ import { selectL2Account } from "../../data/accountSlice";
 import {
   selectExternal,
   setErrorMessage,
-  setSelectedCreatureIndex,
   setUserActivity,
   setViewerActivity,
   sendTransaction,
+} from "../../data/automata/properties";
+import {
+  setSelectedCreatureIndex,
   CreatureModel,
-} from "../../data/automata";
+  selectSelectedCreatureIndex,
+} from "../../data/automata/creatures";
 import React from "react";
 
 const CMD_INSTALL_PLAYER = 1n;
@@ -31,9 +34,10 @@ export function ConfirmButton({
   modifiers: Array<number | null>;
 }) {
   const external = useAppSelector(selectExternal);
+
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
-  const selectedId = external.selectedCreatureIndex;
+  const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const activity = external.userActivity;
 
   function confirmActivity(modifiers: Array<number>) {
@@ -45,7 +49,7 @@ export function ConfirmButton({
       });
       const modifiers: bigint = encode_modifier(index);
       if (activity == "creating") {
-        const objIndex = BigInt(selectedId!);
+        const objIndex = BigInt(selectedCreatureIndex!);
         const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
         dispatch(
           sendTransaction({
@@ -54,7 +58,7 @@ export function ConfirmButton({
           })
         );
       } else if (activity == "rebooting") {
-        const objIndex = BigInt(selectedId!);
+        const objIndex = BigInt(selectedCreatureIndex!);
         const restartObjectCmd = createCommand(
           CMD_RESTART_OBJECT,
           BigInt(objIndex)
@@ -77,7 +81,7 @@ export function ConfirmButton({
   }
 
   if (external.userActivity == "browsing") {
-    if (external.getSelectedIndex() != null) {
+    if (selectedCreatureIndex != null) {
       return (
         <button className="reboot" onClick={handleReboot}>
           Reboot

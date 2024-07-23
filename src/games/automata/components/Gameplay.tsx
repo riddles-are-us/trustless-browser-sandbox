@@ -25,8 +25,11 @@ import { Explore } from "../explore";
 import {
   selectExternal,
   selectModifier,
+} from "../../../data/automata/properties";
+import {
+  selectSelectedCreature,
   CreatureModel,
-} from "../../../data/automata";
+} from "../../../data/automata/creatures";
 
 interface Props {
   playerIds: string;
@@ -36,6 +39,7 @@ interface Props {
 
 const Gameplay = ({ playerIds, address, objects }: Props) => {
   const external = useAppSelector(selectExternal);
+  const selectedCreature = useAppSelector(selectSelectedCreature);
   const modifiersInfo = useAppSelector(selectModifier);
   const [draggingModifierIndex, setDraggingModifierIndex] = useState<
     number | null
@@ -58,20 +62,18 @@ const Gameplay = ({ playerIds, address, objects }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const cIndex = external.getSelectedIndex();
-    if (cIndex) {
+    if (selectedCreature) {
       if (external.userActivity == "creating") {
         setDropList([...cacheDropList]);
       } else {
-        const currentObj = objects[cIndex];
         const arr: number[] = [];
-        currentObj.modifiers.map((modifier) => {
+        selectedCreature.modifiers.map((modifier) => {
           arr.push(modifier);
         });
         setDropList(arr);
       }
     }
-  }, [external]);
+  }, [selectedCreature]);
 
   function Preview({ index }: { index: number | null }) {
     if (index != null && modifiersInfo && modifiersInfo[index]) {

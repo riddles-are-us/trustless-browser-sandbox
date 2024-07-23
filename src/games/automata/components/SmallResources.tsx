@@ -8,7 +8,7 @@ import FlexonixIcon from "../images/Icons/Flexonix.png";
 import SmallResourceDisplay from "./SmallResourceDisplay";
 import { useAppSelector } from "../../../app/hooks";
 
-import { selectSelectedCreature } from "../../../data/automata";
+import { selectSelectedCreature } from "../../../data/automata/creatures";
 import "./SmallResources.css";
 
 const SmallResources = () => {

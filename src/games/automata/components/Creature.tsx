@@ -2,12 +2,12 @@ import React from "react";
 import "./Creature.css";
 import creatureBackground from "../images/backgrounds/creature_frame.png";
 import bot from "../images/CreatureBots/idle_robot.png";
+import { setUserActivity } from "../../../data/automata/properties";
 import {
   CreatureModel,
-  selectExternal,
   setSelectedCreatureIndex,
-  setUserActivity,
-} from "../../../data/automata";
+  selectSelectedCreatureIndex,
+} from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface Props {
@@ -17,8 +17,8 @@ interface Props {
 
 const Creature = ({ index, creature }: Props) => {
   const dispatch = useAppDispatch();
-  const external = useAppSelector(selectExternal);
-  const isSelected = external.selectedCreatureIndex == index;
+  const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
+  const isSelected = selectedCreatureIndex == index;
 
   const onSelect = (index: number) => {
     if (isSelected) {

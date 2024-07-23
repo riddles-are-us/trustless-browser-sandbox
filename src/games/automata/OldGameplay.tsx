@@ -12,8 +12,11 @@ import { CreateObjectModal } from "./createObject";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector } from "../../app/hooks";
-import { selectExternal, selectModifier } from "../../data/automata";
-import { CreatureModel } from "../../data/automata";
+import { selectExternal, selectModifier } from "../../data/automata/properties";
+import {
+  CreatureModel,
+  selectSelectedCreature,
+} from "../../data/automata/creatures";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
 import { CreateButton } from "./opbutton";
@@ -52,14 +55,13 @@ const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const cIndex = external.getSelectedIndex();
-    if (cIndex) {
+    const selectedCreature = useAppSelector(selectSelectedCreature);
+    if (selectedCreature) {
       if (external.userActivity == "creating") {
         setDropList([...cacheDropList]);
       } else {
-        const currentObj = objects[cIndex];
         const arr: number[] = [];
-        currentObj.modifiers.map((modifier) => {
+        selectedCreature.modifiers.map((modifier) => {
           arr.push(modifier);
         });
         setDropList(arr);

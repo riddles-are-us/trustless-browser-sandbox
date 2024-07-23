@@ -1,12 +1,15 @@
 import React from "react";
-import { CreatureModel } from "../../data/automata";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   selectExternal,
-  setSelectedCreatureIndex,
   setUserActivity,
-} from "../../data/automata";
+} from "../../data/automata/properties";
+import {
+  setSelectedCreatureIndex,
+  CreatureModel,
+  selectSelectedCreatureIndex,
+} from "../../data/automata/creatures";
 
 interface externalState {
   selectedCreatureIndex: number;
@@ -45,7 +48,8 @@ export function Creature({
     objContent = "Creating";
   }
 
-  const isSelected = external.selectedCreatureIndex == index;
+  const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
+  const isSelected = selectedCreatureIndex == index;
 
   function handleClick(index: number) {
     if (isSelected) {

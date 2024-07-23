@@ -1,6 +1,9 @@
 import { Alert } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectExternal, setErrorMessage } from "../../data/automata";
+import {
+  selectExternal,
+  setErrorMessage,
+} from "../../data/automata/properties";
 import React from "react";
 
 export function ErrorAlert() {

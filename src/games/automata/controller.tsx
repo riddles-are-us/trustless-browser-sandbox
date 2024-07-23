@@ -17,7 +17,6 @@ import { query, LeHexBN } from "./sign";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { CreatureModel } from "../../data/automata";
 import { Creature } from "./creature";
 import { ProgramInfo } from "./modifier";
 import { CreateButton } from "./opbutton";
@@ -29,6 +28,7 @@ import cover from "./images/cover.jpg";
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
 import Gameplay from "./components/Gameplay";
 import OldGameplay from "./OldGameplay";
+import WelcomePage from "./components/WelcomePage";
 
 import {
   selectExternal,
@@ -38,11 +38,15 @@ import {
   setGlobalTimer,
   getConfig,
   sendTransaction,
+} from "../../data/automata/properties";
+import {
   setSelectedCreatureIndex,
-  setResources,
   setCreatures,
-} from "../../data/automata";
-import WelcomePage from "./components/WelcomePage";
+  CreatureModel,
+  selectSelectedCreatureIndex,
+} from "../../data/automata/creatures";
+import { setResources } from "../../data/automata/resources";
+
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
@@ -108,7 +112,10 @@ export function GameController() {
         decodePlayerInfo(player.data);
         dispatch(setGlobalTimer(globalTimer));
         if (clientAction == "monitoringResult") {
-          if (creatures.length == external.getSelectedIndex()! + 1) {
+          const selectedCreatureIndex = useAppSelector(
+            selectSelectedCreatureIndex
+          );
+          if (creatures.length == selectedCreatureIndex! + 1) {
             dispatch(setUserActivity("browsing"));
             dispatch(setViewerActivity("queryingUpdate"));
             dispatch(setCreatures({ creatures }));

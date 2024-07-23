@@ -20,7 +20,7 @@ import {
   selectAlienFloralAmount,
   selectSpiceMelangeAmount,
   selectTitaniumAmount,
-} from "../../../data/automata";
+} from "../../../data/automata/resources";
 
 const MediumResources = () => {
   const crystalAmount = useAppSelector(selectCrystalAmount);

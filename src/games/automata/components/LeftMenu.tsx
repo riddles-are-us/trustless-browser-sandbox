@@ -8,7 +8,7 @@ import NewButton from "./Buttons/NewButton";
 import Grid from "./Grid";
 import Creature from "./Creature";
 import { useAppSelector } from "../../../app/hooks";
-import { selectCreatures } from "../../../data/automata";
+import { selectCreatures } from "../../../data/automata/creatures";
 
 const LeftMenu = () => {
   const [creatureGridHeight, setCreatureGridHeight] = useState(0);

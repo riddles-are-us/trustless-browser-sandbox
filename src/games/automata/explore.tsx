@@ -10,8 +10,12 @@ import {
   selectExternal,
   selectGlobalTimer,
   selectModifier,
+} from "../../data/automata/properties";
+import {
   CreatureModel,
-} from "../../data/automata";
+  selectSelectedCreature,
+  selectSelectedCreatureIndex,
+} from "../../data/automata/creatures";
 
 export function CircleLayout({ children }: { children: any }) {
   const exploreBoxRef = useRef<HTMLDivElement>(null);
@@ -98,17 +102,17 @@ function Progress({
 }) {
   let progress = 0;
   const external = useAppSelector(selectExternal);
-  const selectedIndex = external.getSelectedIndex();
+  const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const globalTime = useAppSelector(selectGlobalTimer);
   const modifiersInfo = useAppSelector(selectModifier);
   const delay = modifiersInfo[mIndex].delay;
   if (
     objects.length != 0 &&
-    objects.length > selectedIndex! &&
+    objects.length > selectedCreatureIndex! &&
     haltBit != 1 &&
     currentModifierIndex == index
   ) {
-    const counter = getCounter(objects[selectedIndex!].modifier_info);
+    const counter = getCounter(objects[selectedCreatureIndex!].modifier_info);
     progress = ((globalTime - counter) / delay) * 100;
 
     return (
@@ -131,7 +135,7 @@ export function Explore({
   modifiers: Array<number | null>;
 }) {
   const external = useAppSelector(selectExternal);
-  const selectedIndex = external.getSelectedIndex();
+  const selectedCreature = useAppSelector(selectSelectedCreature);
   const modifiersInfo = useAppSelector(selectModifier);
   function ModifierTooltipInfo({ mIndex }: { mIndex: number | null }) {
     if (mIndex != null) {
@@ -152,11 +156,11 @@ export function Explore({
 
   let displayModifiers = modifiers;
 
-  if (selectedIndex != null) {
-    let currentObj = objects[selectedIndex];
+  if (selectedCreature != null) {
     let tips = "";
+    let creature = selectedCreature;
     if (external.userActivity == "creating") {
-      currentObj = {
+      creature = {
         entity: [],
         object_id: [],
         modifiers: [],
@@ -164,18 +168,18 @@ export function Explore({
       };
       tips = "Please drag modifiers to fill the 8 grids to create creature!";
     } else if (external.userActivity == "browsing") {
-      displayModifiers = currentObj.modifiers;
+      displayModifiers = creature.modifiers;
     } // else is rebooting, empty clause
 
-    const currentModifierIndex = getModifierIndex(currentObj.modifier_info);
-    const haltBit = getHaltBit(currentObj.modifier_info);
+    const currentModifierIndex = getModifierIndex(creature.modifier_info);
+    const haltBit = getHaltBit(creature.modifier_info);
 
     return (
       <div className="explore">
         <div className="tip">
           <div>{tips}</div>
         </div>
-        {<EntityAttributes robot={currentObj} />}
+        {<EntityAttributes robot={creature} />}
         <CurrentModifierIndex currentModifierIndex={currentModifierIndex} />
         {
           <CircleLayout>
