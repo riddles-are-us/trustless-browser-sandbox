@@ -1,19 +1,28 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { query_config, send_transaction } from './rpc';
+import { ZKWasmAppRpc } from "zkwasm-ts-server";
 import { RootState } from "../../app/store";
 import { ExternalState, Modifier, SendTransactionParams, SendTransactionRes } from './types';
 import { decodeModifiers } from './helper';
 
+const rpc = new ZKWasmAppRpc("http://localhost:3000");
+
 export const getConfig = createAsyncThunk(
   'client/getConfig',
   async () => {
-    const res = await query_config();
-    const data = JSON.parse(res.data);
+    // Get the configuration response
+    const res = await rpc.query_config();
+
+    // Parse the response to ensure it is a plain JSON object
+    const parsedRes = JSON.parse(JSON.stringify(res));
+
+    // Extract the data from the parsed response
+    const data = JSON.parse(parsedRes.data);
+
     return data;
   }
 )
 export const sendTransaction = createAsyncThunk<
-  SendTransactionRes,
+  number,
   SendTransactionParams,
   { rejectValue: string }
 >(
@@ -21,7 +30,7 @@ export const sendTransaction = createAsyncThunk<
   async (params: {cmd: Array<bigint>, prikey: string }, { rejectWithValue }) => {
     try {
       const { cmd, prikey } = params;
-      const res = await send_transaction(cmd, prikey);
+      const res = await rpc.sendTransaction(cmd, prikey);
       return res;
     } catch (err: any) {
       return rejectWithValue(err);
