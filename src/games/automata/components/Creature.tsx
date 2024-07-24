@@ -20,17 +20,15 @@ const Creature = ({ index, creature }: Props) => {
   const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const isSelected = selectedCreatureIndex == index;
 
-  const onSelect = (index: number) => {
-    if (isSelected) {
-      return;
-    } else {
+  const onSelect = () => {
+    if (!isSelected) {
       dispatch(setUserActivity("browsing"));
       dispatch(setSelectedCreatureIndex(index));
     }
   };
 
   return (
-    <div className="creature-container" onClick={() => onSelect(5)}>
+    <div className="creature-container" onClick={() => onSelect()}>
       <img src={creatureBackground} className="creature-background" />
       <img src={bot} className="creature-image" />
       <p className="creature-text">
