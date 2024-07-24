@@ -1,5 +1,3 @@
-import { Modifier } from "./types";
-
 export function getModifierIndex(modifierInfo: string) {
   const currentMInfoBinary = BigInt(modifierInfo).toString(2).padStart(64, "0");
   const currentMIndex = parseInt(currentMInfoBinary.slice(8, 16), 2);

@@ -1,33 +1,15 @@
-import React, { useState, useEffect, useRef, memo } from "react";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
+import React, { useState, useEffect } from "react";
 import { query_state } from "./rpc";
-import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
-import { CreateObjectModal } from "./createObject";
 import { createCommand } from "./helper";
 import { query, LeHexBN } from "./sign";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { Creature } from "./creature";
-import { ProgramInfo } from "./modifier";
-import { CreateButton } from "./opbutton";
-import { ErrorAlert } from "./error";
-import { Explore } from "./explore";
-
-import cover from "./images/cover.jpg";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
 import Gameplay from "./components/Gameplay";
-import OldGameplay from "./OldGameplay";
 import WelcomePage from "./components/WelcomePage";
 
 import { getConfig, sendTransaction } from "../../data/automata/request";
@@ -201,14 +183,6 @@ export function GameController() {
         objects={objects}
       />
     );
-    // return (
-    //   <OldGameplay
-    //     playerIds={playerIds}
-    //     address={l2account?.address}
-    // localValues={[1, 1, 1, 1, 1, 1, 1, 1]}
-    //     objects={objects}
-    //   />
-    // );
   } else {
     return (
       <>
