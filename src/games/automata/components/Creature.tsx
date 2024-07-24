@@ -29,7 +29,11 @@ const Creature = ({ index, creature }: Props) => {
 
   return (
     <div className="creature-container" onClick={() => onSelect()}>
-      <img src={creatureBackground} className="creature-background" />
+      <img
+        src={creatureBackground}
+        className="creature-background"
+        style={{ backgroundColor: isSelected ? "Red" : "White" }} // test code
+      />
       <img src={bot} className="creature-image" />
       <p className="creature-text">
         {creature.object_id.length == 0

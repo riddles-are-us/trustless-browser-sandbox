@@ -12,7 +12,8 @@ import { CreateObjectModal } from "./createObject";
 import "./style.scss";
 import "../style.scss";
 import { useAppSelector } from "../../app/hooks";
-import { selectExternal, selectModifier } from "../../data/automata/properties";
+import { selectExternal } from "../../data/automata/properties";
+import { selectPrograms } from "../../data/automata/programs";
 import {
   CreatureModel,
   selectSelectedCreature,
@@ -32,7 +33,7 @@ interface Props {
 
 const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {
   const external = useAppSelector(selectExternal);
-  const modifiersInfo = useAppSelector(selectModifier);
+  const programs = useAppSelector(selectPrograms);
   const localAttributes: string[] = [];
   const [draggingModifierIndex, setDraggingModifierIndex] = useState<
     number | null
@@ -70,14 +71,14 @@ const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {
   }, [external]);
 
   function Preview({ index }: { index: number | null }) {
-    if (index != null && modifiersInfo && modifiersInfo[index]) {
+    if (index != null && programs && programs[index]) {
       return (
         <div className="preview">
           <ProgramInfo
-            name={modifiersInfo[index].name}
-            entity={modifiersInfo[index].entity}
-            local={modifiersInfo[index].local}
-            delay={modifiersInfo[index].delay}
+            name={programs[index].name}
+            entity={programs[index].entity}
+            local={programs[index].local}
+            delay={programs[index].delay}
           />
         </div>
       );
@@ -218,10 +219,10 @@ const OldGameplay = ({ playerIds, address, localValues, objects }: Props) => {
             <div className="title">PROGRAM</div>
             <div className="draggableBox">
               <SortableContext
-                items={modifiersInfo.map((_, index) => index)}
+                items={programs.map((_, index) => index)}
                 strategy={verticalListSortingStrategy}
               >
-                {modifiersInfo.map((modifier, index) => (
+                {programs.map((modifier, index) => (
                   <DragableModifier
                     key={index}
                     index={String(index)}

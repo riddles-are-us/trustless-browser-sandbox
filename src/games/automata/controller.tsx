@@ -30,14 +30,13 @@ import Gameplay from "./components/Gameplay";
 import OldGameplay from "./OldGameplay";
 import WelcomePage from "./components/WelcomePage";
 
+import { getConfig, sendTransaction } from "../../data/automata/request";
 import {
   selectExternal,
   setErrorMessage,
   setViewerActivity,
   setUserActivity,
   setGlobalTimer,
-  getConfig,
-  sendTransaction,
 } from "../../data/automata/properties";
 import {
   setSelectedCreatureIndex,

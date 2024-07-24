@@ -9,13 +9,13 @@ import { ProgramInfo } from "./modifier";
 import {
   selectExternal,
   selectGlobalTimer,
-  selectModifier,
 } from "../../data/automata/properties";
 import {
   CreatureModel,
   selectSelectedCreature,
   selectSelectedCreatureIndex,
 } from "../../data/automata/creatures";
+import { selectPrograms } from "../../data/automata/programs";
 
 export function CircleLayout({ children }: { children: any }) {
   const exploreBoxRef = useRef<HTMLDivElement>(null);
@@ -104,8 +104,8 @@ function Progress({
   const external = useAppSelector(selectExternal);
   const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const globalTime = useAppSelector(selectGlobalTimer);
-  const modifiersInfo = useAppSelector(selectModifier);
-  const delay = modifiersInfo[mIndex].delay;
+  const programs = useAppSelector(selectPrograms);
+  const delay = programs[mIndex].delay;
   if (
     objects.length != 0 &&
     objects.length > selectedCreatureIndex! &&
@@ -136,16 +136,16 @@ export function Explore({
 }) {
   const external = useAppSelector(selectExternal);
   const selectedCreature = useAppSelector(selectSelectedCreature);
-  const modifiersInfo = useAppSelector(selectModifier);
+  const programs = useAppSelector(selectPrograms);
   function ModifierTooltipInfo({ mIndex }: { mIndex: number | null }) {
     if (mIndex != null) {
       return (
         <div className="programItem">
           <ProgramInfo
-            name={modifiersInfo[mIndex].name}
-            entity={modifiersInfo[mIndex].entity}
-            local={modifiersInfo[mIndex].local}
-            delay={modifiersInfo[mIndex].delay}
+            name={programs[mIndex].name}
+            entity={programs[mIndex].entity}
+            local={programs[mIndex].local}
+            delay={programs[mIndex].delay}
           />
         </div>
       );
@@ -198,7 +198,7 @@ export function Explore({
                   color = "yellow";
                 }
               }
-              if (mIndex != null && modifiersInfo && modifiersInfo[mIndex]) {
+              if (mIndex != null && programs && programs[mIndex]) {
                 return (
                   <div key={index}>
                     <OverlayTrigger
@@ -213,7 +213,7 @@ export function Explore({
                         className="exploreItem"
                         style={{ backgroundColor: color }}
                       >
-                        {modifiersInfo[mIndex].name}
+                        {programs[mIndex].name}
                       </div>
                     </OverlayTrigger>
                     {

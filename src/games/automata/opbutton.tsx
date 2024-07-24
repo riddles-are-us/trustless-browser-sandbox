@@ -6,8 +6,8 @@ import {
   setErrorMessage,
   setUserActivity,
   setViewerActivity,
-  sendTransaction,
 } from "../../data/automata/properties";
+import { sendTransaction } from "../../data/automata/request";
 import {
   setSelectedCreatureIndex,
   CreatureModel,
