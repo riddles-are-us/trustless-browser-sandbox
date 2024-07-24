@@ -3,41 +3,31 @@ import "./Program.css";
 import programBackground from "../images/backgrounds/program_background.png";
 import Grid from "./Grid";
 import TinyResourceDisplay from "./TinyResourceDisplay";
-
-import EnercoreIcon from "../images/Icons/Enercore.png";
+import { ProgramModel } from "../../../data/automata/programs";
 
 interface Props {
+  data: ProgramModel;
   onSelect: () => void;
 }
 
-const Program = ({ onSelect }: Props) => {
+const Program = ({ data, onSelect }: Props) => {
   return (
     <div className="program-container" onClick={onSelect}>
       <img src={programBackground} className="program-background" />
-      <p className="program-text">ROBOT</p>
+      <p className="program-text">{data.name}</p>
       <div className="program-resource-grid">
         <Grid
           elementWidth={29}
           elementHeight={12}
           columnCount={2}
           rowCount={3}
-          elements={[
+          elements={data.resources.map((resource, index) => (
             <TinyResourceDisplay
-              key={0}
-              iconImagePath={EnercoreIcon}
-              amount={5}
-            />,
-            <TinyResourceDisplay
-              key={1}
-              iconImagePath={EnercoreIcon}
-              amount={2}
-            />,
-            <TinyResourceDisplay
-              key={2}
-              iconImagePath={EnercoreIcon}
-              amount={-3}
-            />,
-          ]}
+              key={index}
+              iconImagePath={resource.iconImagePath}
+              amount={resource.amount}
+            />
+          ))}
         />
       </div>
     </div>

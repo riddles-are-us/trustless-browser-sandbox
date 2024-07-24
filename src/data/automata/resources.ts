@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { CommonResourceModel, emptyCommonResources } from './models';
+import { CommonResourceModel, emptyCommonResources, getCommonResourceModel } from './models';
 
 interface ResourcesState {
     common: CommonResourceModel;
@@ -15,14 +15,7 @@ export const resourcesSlice = createSlice({
     initialState,
     reducers: {
         setResources: (state, action) => {
-            state.common.crystalAmount = action.payload.resources[0];
-            state.common.interstellarMineralAmount = action.payload.resources[1];
-            state.common.biomassAmount = action.payload.resources[2];
-            state.common.quantumFoamAmount = action.payload.resources[3];
-            state.common.necrodermisAmount = action.payload.resources[4];
-            state.common.alienFloralAmount = action.payload.resources[5];
-            state.common.spiceMelangeAmount = action.payload.resources[6];
-            state.common.titaniumAmount = action.payload.resources[7];
+            state.common = getCommonResourceModel(action.payload.resources);
         },
     },
   },

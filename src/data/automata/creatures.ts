@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { RareResourceModel } from './models';
+import { RareResourceModel, getRareResourceModel } from './models';
 
 export interface CreatureRaw {
     entity: Array<number>;
@@ -18,14 +18,7 @@ export interface CreatureModel {
 
 function rawToModel(raw: CreatureRaw): CreatureModel {
     return {
-        rareResources: {
-            enercoreAmount: raw.entity[0],
-            nexiumAmount: raw.entity[1],
-            swiftexAmount: raw.entity[2],
-            cognisurgeAmount: raw.entity[3],
-            vitalshieldAmount: raw.entity[4],
-            flexonixAmount: raw.entity[5],
-        },
+        rareResources: getRareResourceModel(raw.entity),
         object_id: raw.object_id,
         modifiers: raw.modifiers,
         modifier_info: raw.modifier_info

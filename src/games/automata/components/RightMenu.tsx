@@ -24,7 +24,9 @@ const RightMenu = () => {
   const programGridRowCount = Math.floor(
     programGridHeight / programGridElementHeight
   );
-  const programs = useAppSelector(selectPrograms);
+  const programs = useAppSelector(
+    selectPrograms(0, programGridColumnCount * programGridRowCount)
+  );
 
   useEffect(() => {
     updateProgramGridHeight();
@@ -50,26 +52,15 @@ const RightMenu = () => {
           elementHeight={programGridElementHeight}
           columnCount={programGridColumnCount}
           rowCount={programGridRowCount}
-          elements={[
+          elements={programs.map((program, index) => (
             <Program
-              key={0}
+              key={index}
+              data={program}
               onSelect={() => {
-                console.log(0);
+                console.log(index);
               }}
-            />,
-            <Program
-              key={1}
-              onSelect={() => {
-                console.log(1);
-              }}
-            />,
-            <Program
-              key={2}
-              onSelect={() => {
-                console.log(2);
-              }}
-            />,
-          ]}
+            />
+          ))}
         />
       </div>
       <img src={rightCornerBar} className="right-corner-bar" />

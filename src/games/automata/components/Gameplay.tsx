@@ -5,14 +5,11 @@ import LeftMenu from "./LeftMenu";
 import RightMenu from "./RightMenu";
 import MainMenu from "./MainMenu";
 import { useState, useEffect, useRef, memo } from "react";
-import { useSortable } from "@dnd-kit/sortable";
 import { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import "../style.scss";
 import "../../style.scss";
 import { useAppSelector } from "../../../app/hooks";
 import { selectExternal } from "../../../data/automata/properties";
-import { selectPrograms } from "../../../data/automata/programs";
 import {
   selectSelectedCreature,
   CreatureModel,
@@ -27,7 +24,6 @@ interface Props {
 const Gameplay = ({ playerIds, address, objects }: Props) => {
   const external = useAppSelector(selectExternal);
   const selectedCreature = useAppSelector(selectSelectedCreature);
-  const programs = useAppSelector(selectPrograms);
   const [draggingModifierIndex, setDraggingModifierIndex] = useState<
     number | null
   >(null);
