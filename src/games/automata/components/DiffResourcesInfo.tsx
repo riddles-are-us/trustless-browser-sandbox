@@ -28,29 +28,82 @@ const DiffResourcesInfo = () => {
           columnCount={4}
           rowCount={5}
           elements={[
-            <DiffResourceDisplay iconImagePath={CrystalIcon} amount={5} />,
             <DiffResourceDisplay
+              key={0}
+              iconImagePath={CrystalIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={1}
               iconImagePath={InterstellarMineralIcon}
               amount={5}
             />,
-            <DiffResourceDisplay iconImagePath={BiomassIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={QuantumFoamIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={NecrodermisIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={AlienFloralIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={SpiceMelangeIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={TitaniumIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={EnercoreIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={NexiumIcon} amount={5} />,
-            <DiffResourceDisplay />,
-            <DiffResourceDisplay />,
-            <DiffResourceDisplay iconImagePath={SwiftexIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={CognisurgeIcon} amount={5} />,
-            <DiffResourceDisplay />,
-            <DiffResourceDisplay />,
-            <DiffResourceDisplay iconImagePath={VitalshieldIcon} amount={5} />,
-            <DiffResourceDisplay iconImagePath={FlexonixIcon} amount={5} />,
-            <DiffResourceDisplay />,
-            <DiffResourceDisplay />,
+            <DiffResourceDisplay
+              key={2}
+              iconImagePath={BiomassIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={3}
+              iconImagePath={QuantumFoamIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={4}
+              iconImagePath={NecrodermisIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={5}
+              iconImagePath={AlienFloralIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={6}
+              iconImagePath={SpiceMelangeIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={7}
+              iconImagePath={TitaniumIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={8}
+              iconImagePath={EnercoreIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={9}
+              iconImagePath={NexiumIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay key={10} />,
+            <DiffResourceDisplay key={11} />,
+            <DiffResourceDisplay
+              key={12}
+              iconImagePath={SwiftexIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={13}
+              iconImagePath={CognisurgeIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay key={14} />,
+            <DiffResourceDisplay key={15} />,
+            <DiffResourceDisplay
+              key={16}
+              iconImagePath={VitalshieldIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay
+              key={17}
+              iconImagePath={FlexonixIcon}
+              amount={5}
+            />,
+            <DiffResourceDisplay key={18} />,
+            <DiffResourceDisplay key={19} />,
           ]}
         />
       </div>
