@@ -7,7 +7,7 @@ import { useAppSelector } from "../../app/hooks";
 export function CreateObjectModal() {
   const external = useAppSelector(selectExternal);
   const message = external.userActivity;
-  const show = external.isMonitorResult();
+  const show = external.viewerActivity == "monitoringResult";
   return (
     <Modal show={show}>
       <Modal.Header>

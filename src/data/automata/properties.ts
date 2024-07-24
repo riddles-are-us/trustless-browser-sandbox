@@ -24,14 +24,6 @@ class ExternalState {
         (this.viewerActivity = "idle"),
         (this.errorMessage = "");
     }
-
-    isMonitorResult() {
-        return this.viewerActivity == "monitoringResult";
-    }
-
-    hasError() {
-        return this.errorMessage != "";
-    }
 }
 
 interface SendTransactionRes {
@@ -50,8 +42,14 @@ interface PropertyState {
     globalTimer: number,
 }
 
+const initialExternalState: ExternalState = {
+    userActivity: "loading",
+    viewerActivity: "idle",
+    errorMessage: "",
+};
+
 const initialState: PropertyState = {
-    external: new ExternalState(),
+    external: initialExternalState,
     modifiers: [],
     globalTimer: 0,
 };
