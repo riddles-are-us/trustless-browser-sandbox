@@ -18,32 +18,32 @@ const SmallResources = () => {
       <SmallResourceDisplay
         order={0}
         iconImagePath={EnercoreIcon}
-        amount={selectedCreature?.entity[0] ?? 0}
+        amount={selectedCreature?.rareResources.enercoreAmount ?? 0}
       />
       <SmallResourceDisplay
         order={1}
         iconImagePath={NexiumIcon}
-        amount={selectedCreature?.entity[1] ?? 0}
+        amount={selectedCreature?.rareResources.nexiumAmount ?? 0}
       />
       <SmallResourceDisplay
         order={2}
         iconImagePath={SwiftexIcon}
-        amount={selectedCreature?.entity[2] ?? 0}
+        amount={selectedCreature?.rareResources.swiftexAmount ?? 0}
       />
       <SmallResourceDisplay
         order={3}
         iconImagePath={CognisurgeIcon}
-        amount={selectedCreature?.entity[3] ?? 0}
+        amount={selectedCreature?.rareResources.cognisurgeAmount ?? 0}
       />
       <SmallResourceDisplay
         order={4}
         iconImagePath={VitalshieldIcon}
-        amount={selectedCreature?.entity[4] ?? 0}
+        amount={selectedCreature?.rareResources.vitalshieldAmount ?? 0}
       />
       <SmallResourceDisplay
         order={5}
         iconImagePath={FlexonixIcon}
-        amount={selectedCreature?.entity[5] ?? 0}
+        amount={selectedCreature?.rareResources.flexonixAmount ?? 0}
       />
     </div>
   );

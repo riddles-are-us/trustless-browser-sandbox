@@ -7,6 +7,8 @@ import PageNumber from "./PageNumber";
 import Grid from "./Grid";
 import Program from "./Program";
 import ProgramFilterBar from "./ProgramFilterBar";
+import { useAppSelector } from "../../../app/hooks";
+import { selectPrograms } from "../../../data/automata/programs";
 
 const RightMenu = () => {
   const [programGridHeight, setProgramGridHeight] = useState(0);
@@ -22,6 +24,7 @@ const RightMenu = () => {
   const programGridRowCount = Math.floor(
     programGridHeight / programGridElementHeight
   );
+  const programs = useAppSelector(selectPrograms);
 
   useEffect(() => {
     updateProgramGridHeight();
