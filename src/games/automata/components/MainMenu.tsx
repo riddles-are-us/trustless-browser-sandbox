@@ -9,32 +9,19 @@ import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
 import { selectCreaturePrograms } from "../../../data/automata/creaturePrograms";
-import { selectSelectedCreature } from "../../../data/automata/creatures";
+import {
+  selectSelectedCreature,
+  selectSelectedCreatureProgramProgress,
+} from "../../../data/automata/creatures";
 import { selectGlobalTimer } from "../../../data/automata/properties";
-import { selectProgramsByIndex as selectProgramByIndex } from "../../../data/automata/programs";
-
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
   const creaturePrograms = useAppSelector(selectCreaturePrograms);
   const selectedCreature = useAppSelector(selectSelectedCreature);
-  const globalTime = useAppSelector(selectGlobalTimer);
   const currentProgramIndex = selectedCreature?.currentProgramIndex ?? null;
   const isProgramStop = selectedCreature?.isProgramStop ?? true;
-  const startTime = selectedCreature?.startTime ?? null;
-
-  let progress = 0;
-  if (selectedCreature && isProgramStop == false) {
-    const programIndex = selectedCreature.programIndexes[currentProgramIndex!];
-    if (programIndex) {
-      const processTime = useAppSelector(
-        selectProgramByIndex(programIndex)
-      )?.processingTime;
-      if (processTime) {
-        progress = ((globalTime - startTime!) / processTime) * 100;
-      }
-    }
-  }
+  const progress = useAppSelector(selectSelectedCreatureProgramProgress);
 
   return (
     <div className="main">

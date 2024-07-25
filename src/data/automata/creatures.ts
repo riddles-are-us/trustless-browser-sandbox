@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { CreatureModel, getRareResourceModel } from './models';
+import { selectProgramByIndex } from "./programs"
 
 interface CreatureRaw {
     entity: Array<number>;
@@ -54,6 +55,19 @@ export const selectSelectedCreature = (state: RootState) =>
     state.automata.creatures.selectedCreatureIndex != null
         ? state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
         : null;
+export const selectSelectedCreatureProgramProgress = (state: RootState) => {
+    const selectedCreature = selectSelectedCreature(state);
+    if (selectedCreature && selectedCreature.isProgramStop == false) {
+        const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
+        if (programIndex) {
+            const processTime = selectProgramByIndex(programIndex)(state)?.processingTime;
+            if (processTime) {
+                return ((state.automata.properties.globalTimer - selectedCreature.startTime) / processTime) * 100;
+            }
+        }
+    }
+    return 0;
+}
     
 export const { setSelectedCreatureIndex, setCreatures } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

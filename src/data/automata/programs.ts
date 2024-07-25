@@ -46,7 +46,7 @@ export const selectAllPrograms = (page = 0, amountPerPage = Infinity) => (state:
 };
 export const selectProgramsByIndexes = (indexes: (number | null)[]) => (state: RootState) => 
     indexes.map(index => (index != null && 0 <= index && index < state.automata.programs.programs.length) ? state.automata.programs.programs[index] : null);
-export const selectProgramsByIndex = (index: (number | null)) => (state: RootState) => 
+export const selectProgramByIndex = (index: (number | null)) => (state: RootState) => 
     (index != null && 0 <= index && index < state.automata.programs.programs.length) ? state.automata.programs.programs[index] : null
 
 export default programsSlice.reducer;
