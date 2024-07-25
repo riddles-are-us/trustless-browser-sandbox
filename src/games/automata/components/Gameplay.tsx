@@ -26,14 +26,13 @@ const Gameplay = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // not good, because it will trigger another render refresh and the logic is implicit / hard to trace
   useEffect(() => {
-    if (selectedCreature) {
-      dispatch(
-        setIndexes({
-          Indexes: selectedCreature.programIndexes,
-        })
-      );
-    }
+    dispatch(
+      setIndexes({
+        Indexes: selectedCreature.programIndexes,
+      })
+    );
   }, [selectedCreature]);
 
   function handleDragStart(event: DragStartEvent) {

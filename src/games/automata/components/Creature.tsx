@@ -35,11 +35,7 @@ const Creature = ({ index, creature }: Props) => {
         style={{ backgroundColor: isSelected ? "Red" : "White" }} // test code
       />
       <img src={bot} className="creature-image" />
-      <p className="creature-text">
-        {creature.object_id.length == 0
-          ? "Creating"
-          : creature.object_id.join("")}
-      </p>
+      <p className="creature-text">{creature.name}</p>
     </div>
   );
 };

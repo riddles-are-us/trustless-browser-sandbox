@@ -85,7 +85,8 @@ export function GameController() {
           const selectedCreatureIndex = useAppSelector(
             selectSelectedCreatureIndex
           );
-          if (creatures.length == selectedCreatureIndex! + 1) {
+          // not too good
+          if (selectedCreatureIndex == "Creating") {
             dispatch(setUserActivity("browsing"));
             dispatch(setViewerActivity("queryingUpdate"));
             dispatch(setCreatures({ creatures }));

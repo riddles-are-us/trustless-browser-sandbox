@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { CreatureModel, getRareResourceModel } from './models';
+import { CreatureModel, getRareResourceModel, emptyCreatingCreature } from './models';
 import { selectProgramByIndex } from "./programs"
 
 interface CreatureRaw {
@@ -17,7 +17,7 @@ function rawToModel(raw: CreatureRaw): CreatureModel {
     const startTime = parseInt(binary.slice(16), 2);
     return {
         rareResources: getRareResourceModel(raw.entity),
-        object_id: raw.object_id,
+        name: raw.object_id.join(""),
         programIndexes: raw.modifiers,
         currentProgramIndex: currentProgramIndex,
         isProgramStop: isProgramStop,
@@ -25,14 +25,18 @@ function rawToModel(raw: CreatureRaw): CreatureModel {
     };
 }
 
+const NOT_SELECTING_CREATURE = "NotSelecting"
+const CREATING_CREATURE = "Creating"
 interface CreaturesState {
-    selectedCreatureIndex: number | null;
-    creatures: Array<CreatureModel>;
+    selectedCreatureIndex: number | typeof NOT_SELECTING_CREATURE | typeof CREATING_CREATURE;
+    creatures: CreatureModel[];
+    creatingCreature: CreatureModel;
 }
 
 const initialState: CreaturesState = {
-    selectedCreatureIndex: null,
+    selectedCreatureIndex: NOT_SELECTING_CREATURE,
     creatures: [],
+    creatingCreature: emptyCreatingCreature,
 };
 
 export const creaturesSlice = createSlice({
@@ -40,11 +44,15 @@ export const creaturesSlice = createSlice({
     initialState,
     reducers: {
         setSelectedCreatureIndex: (state, loaded) => {
-          state.selectedCreatureIndex = loaded.payload;
+            state.selectedCreatureIndex = loaded.payload;
         },
         setCreatures: (state, action) => {
             state.creatures = action.payload.creatures.map(rawToModel);
-        }
+        },
+        startCreatingCreature: (state, action) => {
+            state.selectedCreatureIndex = CREATING_CREATURE;
+            state.creatingCreature = emptyCreatingCreature;
+        },
     },
   },
 );
@@ -52,18 +60,19 @@ export const creaturesSlice = createSlice({
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
 export const selectCreatures = (state: RootState) => state.automata.creatures.creatures;
 export const selectSelectedCreature = (state: RootState) => 
-    state.automata.creatures.selectedCreatureIndex != null
-        ? state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
-        : null;
+    state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
+        ? emptyCreatingCreature :
+    state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
+        ? state.automata.creatures.creatingCreature
+        : state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
+
 export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);
-    if (selectedCreature && selectedCreature.isProgramStop == false) {
-        const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
-        if (programIndex) {
-            const processTime = selectProgramByIndex(programIndex)(state)?.processingTime;
-            if (processTime) {
-                return ((state.automata.properties.globalTimer - selectedCreature.startTime) / processTime) * 100;
-            }
+    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
+    if (selectedCreature.isProgramStop == false && programIndex) {
+        const processTime = selectProgramByIndex(programIndex)(state)?.processingTime;
+        if (processTime) {
+            return ((state.automata.properties.globalTimer - selectedCreature.startTime) / processTime) * 100;
         }
     }
     return 0;

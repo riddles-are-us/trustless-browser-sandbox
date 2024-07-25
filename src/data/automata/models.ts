@@ -15,7 +15,7 @@ import FlexonixIcon from "../../games/automata/images/Icons/Flexonix.png";
 
 export interface CreatureModel {
     rareResources: RareResourceModel;
-    object_id: Array<string>;
+    name: string;
     programIndexes: Array<number>;
     currentProgramIndex: number;
     isProgramStop: boolean;
@@ -72,6 +72,15 @@ export const emptyRareResources: RareResourceModel = {
     vitalshieldAmount: 0,
     flexonixAmount: 0,
 };
+
+export const emptyCreatingCreature: CreatureModel = {
+    rareResources: emptyRareResources,
+    name: "Creating",
+    programIndexes: [],
+    currentProgramIndex: 0,
+    isProgramStop: false,
+    startTime: 0,
+}
 
 export function getCommonResourceModel(array: Array<number>){
     return {

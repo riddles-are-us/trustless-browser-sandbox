@@ -8,20 +8,25 @@ import ConfirmButton from "./Buttons/ConfirmButton";
 import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
+import { setUserActivity } from "../../../data/automata/properties";
 import { selectCreaturePrograms } from "../../../data/automata/creaturePrograms";
 import {
+  setSelectedCreatureIndex,
   selectSelectedCreature,
   selectSelectedCreatureProgramProgress,
 } from "../../../data/automata/creatures";
-import { selectGlobalTimer } from "../../../data/automata/properties";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
   const creaturePrograms = useAppSelector(selectCreaturePrograms);
   const selectedCreature = useAppSelector(selectSelectedCreature);
-  const currentProgramIndex = selectedCreature?.currentProgramIndex ?? null;
-  const isProgramStop = selectedCreature?.isProgramStop ?? true;
   const progress = useAppSelector(selectSelectedCreatureProgramProgress);
+
+  const dispatch = useAppDispatch();
+  function createObject(len: number) {
+    dispatch(setSelectedCreatureIndex(len));
+    dispatch(setUserActivity("creating"));
+  }
 
   return (
     <div className="main">
@@ -34,8 +39,8 @@ const MainMenu = () => {
           <ConfirmButton />
           {/* <RebootButton /> */}
           <MainMenuSelectingFrame
-            order={currentProgramIndex}
-            isStop={isProgramStop}
+            order={selectedCreature.currentProgramIndex}
+            isStop={selectedCreature.isProgramStop}
           />
           {creaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
