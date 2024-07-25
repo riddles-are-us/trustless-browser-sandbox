@@ -2,12 +2,14 @@ import React from "react";
 import bot from "../images/MainMenu/select_robot.png";
 
 import "./MainMenuBot.css";
+import { ProgramModel } from "../../../data/automata/models";
 
 interface Props {
   order: number;
+  program: ProgramModel | null;
 }
 
-const MainMenuBot = ({ order }: Props) => {
+const MainMenuBot = ({ order, program }: Props) => {
   const rotation = order * 45 + 22.5;
   const angle = 90 - rotation;
 
@@ -22,7 +24,7 @@ const MainMenuBot = ({ order }: Props) => {
         left: `${xPosition}%`,
       }}
     >
-      <img src={bot} className="main-bot-image" />
+      {program != null ? <img src={bot} className="main-bot-image" /> : null}
     </div>
   );
 };

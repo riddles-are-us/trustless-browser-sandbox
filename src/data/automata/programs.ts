@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { getConfig } from "./request"
-import { ResourceViewData, getResourceViewDatas, getCommonResourceModel, getRareResourceModel } from "./models"
-import { ProgramModel } from "./models"
+import { getConfig } from "./request";
+import { ProgramModel, getResourceViewDatas, getCommonResourceModel, getRareResourceModel } from "./models";
 
 interface ProgramsState {
-    programs: ProgramModel[];
+    programs: Array<ProgramModel>;
 }
 
 const initialState: ProgramsState = {
@@ -29,26 +28,23 @@ function decodePrograms(programRaws: any) {
 export const programsSlice = createSlice({
     name: 'programs',
     initialState,
-    reducers: {
-        
-    },
-
+    reducers: {},
     extraReducers: (builder) => {
       builder
-        .addCase(getConfig.fulfilled, (state, c) => {
-          state.programs = decodePrograms(c.payload.modifiers);
+        .addCase(getConfig.fulfilled, (state, action) => {
+          state.programs = decodePrograms(action.payload.modifiers);
         });
-      }
+    }
 });
 
-export const selectPrograms = (page = 0, amountPerPage = Infinity) => (state: RootState) => {
-    const programs = state.automata.programs.programs;
+export const selectAllPrograms = (page = 0, amountPerPage = Infinity) => (state: RootState) => {
+    const programsArray = Object.values(state.automata.programs.programs);
     const startIndex = page * amountPerPage;
     const endIndex = startIndex + amountPerPage;
 
-    return programs.slice(startIndex, endIndex);
+    return programsArray.slice(startIndex, endIndex);
 };
+export const selectProgramsByIndexes = (indexes: (number | null)[]) => (state: RootState) => 
+    indexes.map(index => (index != null && 0 <= index && index < state.automata.programs.programs.length) ? state.automata.programs.programs[index] : null);
 
-    
-// export const { } = programsSlice.actions;
 export default programsSlice.reducer;

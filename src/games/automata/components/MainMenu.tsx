@@ -8,6 +8,8 @@ import ConfirmButton from "./Buttons/ConfirmButton";
 import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
+import { selectCreaturePrograms } from "../../../data/automata/creaturePrograms";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
   // for demo
@@ -20,6 +22,8 @@ const MainMenu = () => {
 
   //   return () => clearInterval(interval);
   // }, []);
+  const dispatch = useAppDispatch();
+  const creaturePrograms = useAppSelector(selectCreaturePrograms);
 
   return (
     <div className="main">
@@ -32,8 +36,8 @@ const MainMenu = () => {
           <ConfirmButton />
           {/* <RebootButton /> */}
           <MainMenuSelectingFrame order={0 /*selectingFrame*/} isStop={true} />
-          {[...Array(8).keys()].map((order, index) => (
-            <MainMenuBot key={index} order={order} />
+          {creaturePrograms.map((program, index) => (
+            <MainMenuBot key={index} order={index} program={program} />
           ))}
           <img src={display} className="main-display-image" />
           <MainMenuProgressBar />

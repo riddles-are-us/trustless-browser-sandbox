@@ -41,22 +41,11 @@ export function GameController() {
   const dispatch = useAppDispatch();
   const external = useAppSelector(selectExternal);
 
-  // player related information
-  const [playerIds, setPlayerIds] = useState("");
-  const [objects, setObjects] = useState<Array<CreatureModel>>([]);
-
   const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
-  //const exploreBoxRef = useRef<HTMLDivElement>(null);
 
   async function createPlayer() {
     try {
-      // Get player id
-      const data = query(l2account!.address);
-      const playerId = new LeHexBN(data.pkx).toU64Array().join("");
-      const playerIdHex = "0x" + BigInt(playerId).toString(16);
-      setPlayerIds(playerIdHex);
-
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       dispatch(
         sendTransaction({
@@ -176,13 +165,7 @@ export function GameController() {
   const account = useAppSelector(selectL1Account);
 
   if (l2account && clientLoaded()) {
-    return (
-      <Gameplay
-        playerIds={playerIds}
-        address={l2account?.address}
-        objects={objects}
-      />
-    );
+    return <Gameplay />;
   } else {
     return (
       <>
