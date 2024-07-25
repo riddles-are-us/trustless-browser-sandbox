@@ -19,10 +19,11 @@ export interface CreatureModel {
     programIndexes: Array<number>;
     currentProgramIndex: number;
     isProgramStop: boolean;
+    startTime: number;
 }
 
 export interface ProgramModel {
-    delay: number;
+    processingTime: number;
     resources: Array<ResourceViewData>;
     name: string;
 }

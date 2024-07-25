@@ -15,7 +15,7 @@ function decodePrograms(programRaws: any) {
     const programs: ProgramModel[] = [];
     for(let i=0; i<programRaws.length; i++) {
         const program: ProgramModel = {
-            delay: programRaws[i][0],
+            processingTime: programRaws[i][0],
             resources: getResourceViewDatas(getCommonResourceModel(programRaws[i][1]), getRareResourceModel(programRaws[i][2])),
             name: programRaws[i][3],
         };
@@ -46,5 +46,7 @@ export const selectAllPrograms = (page = 0, amountPerPage = Infinity) => (state:
 };
 export const selectProgramsByIndexes = (indexes: (number | null)[]) => (state: RootState) => 
     indexes.map(index => (index != null && 0 <= index && index < state.automata.programs.programs.length) ? state.automata.programs.programs[index] : null);
+export const selectProgramsByIndex = (index: (number | null)) => (state: RootState) => 
+    (index != null && 0 <= index && index < state.automata.programs.programs.length) ? state.automata.programs.programs[index] : null
 
 export default programsSlice.reducer;

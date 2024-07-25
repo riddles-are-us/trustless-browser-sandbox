@@ -1,9 +1,3 @@
-export function getCounter(modifierInfo: string) {
-  const currentMInfoBinary = BigInt(modifierInfo).toString(2).padStart(64, "0");
-  const counter = parseInt(currentMInfoBinary.slice(16), 2);
-  return counter;
-}
-
 /* The modifier must less than eight */
 export function encode_modifier(modifiers: Array<bigint>) {
   let c = 0n;

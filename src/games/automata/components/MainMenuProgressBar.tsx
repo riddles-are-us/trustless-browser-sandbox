@@ -3,9 +3,11 @@ import progressBarBackground from "../images/MainMenu/progress_bar.png";
 import progressBarCover from "../images/MainMenu/highlight.png";
 import "./MainMenuProgressBar.css";
 
-const MainMenuProgressBar = () => {
-  const progress = 70;
+interface Props {
+  progress: number;
+}
 
+const MainMenuProgressBar = ({ progress }: Props) => {
   return (
     <div className="main-progress-bar-container">
       <img

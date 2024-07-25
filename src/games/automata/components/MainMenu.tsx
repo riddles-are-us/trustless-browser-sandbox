@@ -10,12 +10,31 @@ import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
 import { selectCreaturePrograms } from "../../../data/automata/creaturePrograms";
 import { selectSelectedCreature } from "../../../data/automata/creatures";
+import { selectGlobalTimer } from "../../../data/automata/properties";
+import { selectProgramsByIndex as selectProgramByIndex } from "../../../data/automata/programs";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
   const creaturePrograms = useAppSelector(selectCreaturePrograms);
   const selectedCreature = useAppSelector(selectSelectedCreature);
+  const globalTime = useAppSelector(selectGlobalTimer);
+  const currentProgramIndex = selectedCreature?.currentProgramIndex ?? null;
+  const isProgramStop = selectedCreature?.isProgramStop ?? true;
+  const startTime = selectedCreature?.startTime ?? null;
+
+  let progress = 0;
+  if (selectedCreature && isProgramStop == false) {
+    const programIndex = selectedCreature.programIndexes[currentProgramIndex!];
+    if (programIndex) {
+      const processTime = useAppSelector(
+        selectProgramByIndex(programIndex)
+      )?.processingTime;
+      if (processTime) {
+        progress = ((globalTime - startTime!) / processTime) * 100;
+      }
+    }
+  }
 
   return (
     <div className="main">
@@ -28,14 +47,14 @@ const MainMenu = () => {
           <ConfirmButton />
           {/* <RebootButton /> */}
           <MainMenuSelectingFrame
-            order={selectedCreature?.currentProgramIndex ?? null}
-            isStop={selectedCreature?.isProgramStop ?? true}
+            order={currentProgramIndex}
+            isStop={isProgramStop}
           />
           {creaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
           ))}
           <img src={display} className="main-display-image" />
-          <MainMenuProgressBar />
+          <MainMenuProgressBar progress={progress} />
         </div>
       </div>
     </div>
