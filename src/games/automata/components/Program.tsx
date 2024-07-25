@@ -3,7 +3,7 @@ import "./Program.css";
 import programBackground from "../images/backgrounds/program_background.png";
 import Grid from "./Grid";
 import TinyResourceDisplay from "./TinyResourceDisplay";
-import { ProgramModel } from "../../../data/automata/programs";
+import { ProgramModel } from "../../../data/automata/models";
 
 interface Props {
   data: ProgramModel;

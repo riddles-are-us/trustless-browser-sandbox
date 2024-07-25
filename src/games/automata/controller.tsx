@@ -23,9 +23,9 @@ import {
 import {
   setSelectedCreatureIndex,
   setCreatures,
-  CreatureModel,
   selectSelectedCreatureIndex,
 } from "../../data/automata/creatures";
+import { CreatureModel } from "../../data/automata/models";
 import { setResources } from "../../data/automata/resources";
 
 // clag

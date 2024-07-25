@@ -10,10 +10,8 @@ import "../style.scss";
 import "../../style.scss";
 import { useAppSelector } from "../../../app/hooks";
 import { selectExternal } from "../../../data/automata/properties";
-import {
-  selectSelectedCreature,
-  CreatureModel,
-} from "../../../data/automata/creatures";
+import { selectSelectedCreature } from "../../../data/automata/creatures";
+import { CreatureModel } from "../../../data/automata/models";
 
 interface Props {
   playerIds: string;

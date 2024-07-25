@@ -4,10 +4,10 @@ import creatureBackground from "../images/backgrounds/creature_frame.png";
 import bot from "../images/CreatureBots/idle_robot.png";
 import { setUserActivity } from "../../../data/automata/properties";
 import {
-  CreatureModel,
   setSelectedCreatureIndex,
   selectSelectedCreatureIndex,
 } from "../../../data/automata/creatures";
+import { CreatureModel } from "../../../data/automata/models";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface Props {

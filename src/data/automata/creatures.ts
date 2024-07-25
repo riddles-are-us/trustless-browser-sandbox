@@ -1,16 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { RareResourceModel, getRareResourceModel } from './models';
+import { CreatureModel, getRareResourceModel } from './models';
 
-export interface CreatureRaw {
+interface CreatureRaw {
     entity: Array<number>;
-    object_id: Array<string>;
-    modifiers: Array<number>;
-    modifier_info: string;
-}
-
-export interface CreatureModel {
-    rareResources: RareResourceModel;
     object_id: Array<string>;
     modifiers: Array<number>;
     modifier_info: string;

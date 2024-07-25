@@ -13,6 +13,19 @@ import CognisurgeIcon from "../../games/automata/images/Icons/Cognisurge.png";
 import VitalshieldIcon from "../../games/automata/images/Icons/Vitalshield.png";
 import FlexonixIcon from "../../games/automata/images/Icons/Flexonix.png";
 
+export interface CreatureModel {
+    rareResources: RareResourceModel;
+    object_id: Array<string>;
+    modifiers: Array<number>;
+    modifier_info: string;
+}
+
+export interface ProgramModel {
+    delay: number;
+    resources: Array<ResourceViewData>;
+    name: string;
+}
+
 export interface CommonResourceModel {
     crystalAmount: number;
     interstellarMineralAmount: number;

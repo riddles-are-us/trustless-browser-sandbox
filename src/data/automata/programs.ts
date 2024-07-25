@@ -2,18 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { getConfig } from "./request"
 import { ResourceViewData, getResourceViewDatas, getCommonResourceModel, getRareResourceModel } from "./models"
+import { ProgramModel } from "./models"
 
-export interface ProgramModel {
-    delay: number;
-    resources: Array<ResourceViewData>;
-    name: string;
-}
-
-interface PropertiesState {
+interface ProgramsState {
     programs: ProgramModel[];
 }
 
-const initialState: PropertiesState = {
+const initialState: ProgramsState = {
     programs: [],
 };
 
