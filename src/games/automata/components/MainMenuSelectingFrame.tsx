@@ -6,11 +6,15 @@ import selectingFrameStop from "../images/MainMenu/selecting_frame_red.png";
 import "./MainMenuSelectingFrame.css";
 
 interface Props {
-  order: number;
+  order: number | null;
   isStop: boolean;
 }
 
 const MainMenuSelectingFrame = ({ order, isStop }: Props) => {
+  if (order == null) {
+    return <></>;
+  }
+
   const rotation = order * 45 + 22.5;
   const angle = 90 - rotation;
 

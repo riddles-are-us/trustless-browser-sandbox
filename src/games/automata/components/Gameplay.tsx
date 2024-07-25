@@ -30,7 +30,7 @@ const Gameplay = () => {
     if (selectedCreature) {
       dispatch(
         setIndexes({
-          Indexes: selectedCreature.modifiers,
+          Indexes: selectedCreature.programIndexes,
         })
       );
     }

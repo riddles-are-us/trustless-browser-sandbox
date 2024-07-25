@@ -9,21 +9,13 @@ import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
 import { selectCreaturePrograms } from "../../../data/automata/creaturePrograms";
+import { selectSelectedCreature } from "../../../data/automata/creatures";
+
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
-  // for demo
-  // const [selectingFrame, setSelectingFrame] = useState(0);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setSelectingFrame((prevSelectingFrame) => (prevSelectingFrame + 1) % 8);
-  //   }, 500);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-  const dispatch = useAppDispatch();
   const creaturePrograms = useAppSelector(selectCreaturePrograms);
+  const selectedCreature = useAppSelector(selectSelectedCreature);
 
   return (
     <div className="main">
@@ -35,7 +27,10 @@ const MainMenu = () => {
           <img src={circleBackground} className="main-circle-background" />
           <ConfirmButton />
           {/* <RebootButton /> */}
-          <MainMenuSelectingFrame order={0 /*selectingFrame*/} isStop={true} />
+          <MainMenuSelectingFrame
+            order={selectedCreature?.currentProgramIndex ?? null}
+            isStop={selectedCreature?.isProgramStop ?? true}
+          />
           {creaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
           ))}

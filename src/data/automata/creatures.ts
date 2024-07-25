@@ -10,11 +10,15 @@ interface CreatureRaw {
 }
 
 function rawToModel(raw: CreatureRaw): CreatureModel {
+    const binary = BigInt(raw.modifier_info).toString(2).padStart(64, "0");
+    const currentProgramIndex = parseInt(binary.slice(8, 16), 2);
+    const isProgramStop = parseInt(binary.slice(0, 8), 2) == 1;
     return {
         rareResources: getRareResourceModel(raw.entity),
         object_id: raw.object_id,
-        modifiers: raw.modifiers,
-        modifier_info: raw.modifier_info
+        programIndexes: raw.modifiers,
+        currentProgramIndex: currentProgramIndex,
+        isProgramStop: isProgramStop,
     };
 }
 

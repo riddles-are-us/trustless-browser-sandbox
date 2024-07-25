@@ -16,8 +16,9 @@ import FlexonixIcon from "../../games/automata/images/Icons/Flexonix.png";
 export interface CreatureModel {
     rareResources: RareResourceModel;
     object_id: Array<string>;
-    modifiers: Array<number>;
-    modifier_info: string;
+    programIndexes: Array<number>;
+    currentProgramIndex: number;
+    isProgramStop: boolean;
 }
 
 export interface ProgramModel {
