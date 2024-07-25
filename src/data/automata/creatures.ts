@@ -78,5 +78,5 @@ export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     return 0;
 }
     
-export const { setSelectedCreatureIndex, setCreatures } = creaturesSlice.actions;
+export const { setSelectedCreatureIndex, setCreatures, startCreatingCreature } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

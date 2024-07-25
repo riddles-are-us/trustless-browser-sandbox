@@ -5,7 +5,11 @@ import downButtonHoverImage from "../../images/Buttons/Down/down_hover.png";
 import downButtonClickImage from "../../images/Buttons/Down/down_click.png";
 import "./DownButton.css";
 
-const DownButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+const DownButton = ({ onClick }: Props) => {
   return (
     <div className="down-button-scale">
       <ImageButton
@@ -14,9 +18,7 @@ const DownButton = () => {
         hoverImagePath={downButtonHoverImage}
         clickedImagePath={downButtonClickImage}
         disabledImagePath={downButtonImage}
-        onClick={() => {
-          /**/
-        }}
+        onClick={onClick}
       />
     </div>
   );

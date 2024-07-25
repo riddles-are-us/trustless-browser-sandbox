@@ -68,11 +68,19 @@ const RightMenu = () => {
         <ProgramFilterBar />
       </div>
       <div className="right-up-button-position">
-        <UpButton />
+        <UpButton
+          onClick={() => {
+            /**/
+          }}
+        />
       </div>
 
       <div className="right-down-button-position">
-        <DownButton />
+        <DownButton
+          onClick={() => {
+            /**/
+          }}
+        />
       </div>
     </div>
   );

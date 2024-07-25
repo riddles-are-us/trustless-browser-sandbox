@@ -7,8 +7,15 @@ import DownButton from "./Buttons/DownButton";
 import NewButton from "./Buttons/NewButton";
 import Grid from "./Grid";
 import Creature from "./Creature";
-import { useAppSelector } from "../../../app/hooks";
-import { selectCreatures } from "../../../data/automata/creatures";
+import {
+  selectCreatures,
+  startCreatingCreature,
+} from "../../../data/automata/creatures";
+import {
+  selectExternal,
+  setUserActivity,
+} from "../../../data/automata/properties";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const LeftMenu = () => {
   const [creatureGridHeight, setCreatureGridHeight] = useState(0);
@@ -26,7 +33,15 @@ const LeftMenu = () => {
   );
 
   const creatures = useAppSelector(selectCreatures);
+  const external = useAppSelector(selectExternal);
+  const dispatch = useAppDispatch();
+  const showNewButton =
+    external.userActivity != "creating" && external.viewerActivity != "idle";
 
+  function createObject() {
+    dispatch(startCreatingCreature({}));
+    dispatch(setUserActivity("creating"));
+  }
   useEffect(() => {
     updateCreatureGridHeight();
     window.addEventListener("resize", updateCreatureGridHeight);
@@ -56,14 +71,24 @@ const LeftMenu = () => {
       <img src={leftMiddleBar} className="left-middle-bar" />
       <img src={leftCornerBar} className="left-corner-bar" />
 
-      <div className="left-new-button-position">
-        <NewButton />
-      </div>
+      {showNewButton ? (
+        <div className="left-new-button-position">
+          <NewButton onClick={() => createObject()} />
+        </div>
+      ) : null}
       <div className="left-up-button-position">
-        <UpButton />
+        <UpButton
+          onClick={() => {
+            /**/
+          }}
+        />
       </div>
       <div className="left-down-button-position">
-        <DownButton />
+        <DownButton
+          onClick={() => {
+            /**/
+          }}
+        />
       </div>
     </div>
   );

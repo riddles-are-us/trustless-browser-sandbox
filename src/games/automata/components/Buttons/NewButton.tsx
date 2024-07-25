@@ -5,7 +5,11 @@ import newButtonHoverImage from "../../images/Buttons/New/new_hover.png";
 import newButtonClickImage from "../../images/Buttons/New/new_click.png";
 import "./NewButton.css";
 
-const NewButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+const NewButton = ({ onClick }: Props) => {
   return (
     <div className="new-button-scale">
       <ImageButton
@@ -14,9 +18,7 @@ const NewButton = () => {
         hoverImagePath={newButtonHoverImage}
         clickedImagePath={newButtonClickImage}
         disabledImagePath={newButtonImage}
-        onClick={() => {
-          /**/
-        }}
+        onClick={onClick}
       />
     </div>
   );

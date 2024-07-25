@@ -22,12 +22,6 @@ const MainMenu = () => {
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const progress = useAppSelector(selectSelectedCreatureProgramProgress);
 
-  const dispatch = useAppDispatch();
-  function createObject(len: number) {
-    dispatch(setSelectedCreatureIndex(len));
-    dispatch(setUserActivity("creating"));
-  }
-
   return (
     <div className="main">
       <div className="main-content">

@@ -5,7 +5,11 @@ import upButtonHoverImage from "../../images/Buttons/Up/up_hover.png";
 import upButtonClickImage from "../../images/Buttons/Up/up_click.png";
 import "./UpButton.css";
 
-const UpButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+const UpButton = ({ onClick }: Props) => {
   return (
     <div className="up-button-scale">
       <ImageButton
@@ -14,9 +18,7 @@ const UpButton = () => {
         hoverImagePath={upButtonHoverImage}
         clickedImagePath={upButtonClickImage}
         disabledImagePath={upButtonImage}
-        onClick={() => {
-          /**/
-        }}
+        onClick={onClick}
       />
     </div>
   );
