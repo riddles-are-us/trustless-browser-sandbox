@@ -3,6 +3,10 @@
     width: calc(100% - 190px * 2);
     flex: 1;
     background-color: lightgreen;
+    background-image: url('../images/backgrounds/menu_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     text-align: center;
     display: flex;
     align-items: center;
@@ -11,6 +15,7 @@
     position: relative;
     z-index: 3;
 }
+
 
 .main-content {
     width: fit-content;
@@ -21,8 +26,9 @@
     min-height: 512px;
     min-width: 550px;
     max-height: min(100%, calc((100vw - 190px * 2) *  486 / 550));
-    aspect-ratio: 550 / 486; */
+    aspect-ratio: 550 / 486; 
     background-color: lightblue;
+    */
     position: relative;
 }
 
