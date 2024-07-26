@@ -8,19 +8,61 @@ import ConfirmButton from "./Buttons/ConfirmButton";
 import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
-import { setUserActivity } from "../../../data/automata/properties";
-import { selectCreaturePrograms } from "../../../data/automata/creaturePrograms";
+import { getTransactionCommandArray } from "../rpc";
+import { selectL2Account } from "../../../data/accountSlice";
+import { sendTransaction } from "../../../data/automata/request";
 import {
-  setSelectedCreatureIndex,
+  selectExternal,
+  setErrorMessage,
+  setUserActivity,
+  setViewerActivity,
+} from "../../../data/automata/properties";
+import {
+  isCreatingCreature,
+  isSelectingCreatedCreature,
   selectSelectedCreature,
+  selectSelectedCreaturePrograms,
   selectSelectedCreatureProgramProgress,
+  selectSelectedCreatureIndexForRequestEncode,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
-  const creaturePrograms = useAppSelector(selectCreaturePrograms);
+  const dispatch = useAppDispatch();
+  const external = useAppSelector(selectExternal);
+  const l2account = useAppSelector(selectL2Account);
   const selectedCreature = useAppSelector(selectSelectedCreature);
+  const selectedCreaturePrograms = useAppSelector(
+    selectSelectedCreaturePrograms
+  );
   const progress = useAppSelector(selectSelectedCreatureProgramProgress);
+  const showConfirmButton = useAppSelector(isCreatingCreature);
+  const showRebootButton = useAppSelector(isSelectingCreatedCreature);
+  const selectedCreatureIndexForRequestEncode = useAppSelector(
+    selectSelectedCreatureIndexForRequestEncode
+  );
+
+  function onClickConfirm() {
+    try {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(
+            selectedCreature.programIndexes,
+            selectedCreatureIndexForRequestEncode,
+            external.userActivity == "creating"
+          ),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(setViewerActivity("monitoringResult"));
+    } catch (e) {
+      dispatch(setErrorMessage(`confirm ${external.userActivity} error`));
+    }
+  }
+
+  function onClickReboot() {
+    dispatch(setUserActivity("rebooting"));
+  }
 
   return (
     <div className="main">
@@ -30,13 +72,15 @@ const MainMenu = () => {
         </div>
         <div className="main-circle-container">
           <img src={circleBackground} className="main-circle-background" />
-          <ConfirmButton />
-          {/* <RebootButton /> */}
+          {showConfirmButton && (
+            <ConfirmButton onClick={() => onClickConfirm()} />
+          )}
+          {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
           <MainMenuSelectingFrame
             order={selectedCreature.currentProgramIndex}
             isStop={selectedCreature.isProgramStop}
           />
-          {creaturePrograms.map((program, index) => (
+          {selectedCreaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
           ))}
           <img src={display} className="main-display-image" />

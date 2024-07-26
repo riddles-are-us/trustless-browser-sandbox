@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { CreatureModel, getRareResourceModel, emptyCreatingCreature } from './models';
-import { selectProgramByIndex } from "./programs"
+import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
     entity: Array<number>;
@@ -63,7 +63,13 @@ export const creaturesSlice = createSlice({
   },
 );
 
+export const isCreatingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == CREATING_CREATURE;
+export const isSelectingCreatedCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex != CREATING_CREATURE && state.automata.creatures.selectedCreatureIndex != NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
+export const selectSelectedCreatureIndexForRequestEncode = (state: RootState) => 
+    state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE || state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
+        ? state.automata.creatures.creatures.length
+        : state.automata.creatures.selectedCreatureIndex
 export const selectCreatures = (state: RootState) => state.automata.creatures.creatures;
 export const selectSelectedCreature = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
@@ -71,6 +77,9 @@ export const selectSelectedCreature = (state: RootState) =>
     state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
         ? state.automata.creatures.creatingCreature
         : state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
+
+export const selectSelectedCreaturePrograms = (state: RootState) => 
+    selectProgramsByIndexes(selectSelectedCreature(state).programIndexes)(state)
 
 export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);

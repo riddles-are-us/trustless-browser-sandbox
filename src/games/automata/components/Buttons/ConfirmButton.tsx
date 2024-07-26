@@ -4,7 +4,11 @@ import confirmButtonImage from "../../images/Buttons/Confirm/confirm.png";
 import confirmButtonHoverImage from "../../images/Buttons/Confirm/confirm_hv.png";
 import "./ConfirmButton.css";
 
-const ConfirmButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+const ConfirmButton = ({ onClick }: Props) => {
   return (
     <div className="confirm-button">
       <ImageButton
@@ -13,9 +17,7 @@ const ConfirmButton = () => {
         hoverImagePath={confirmButtonHoverImage}
         clickedImagePath={confirmButtonHoverImage}
         disabledImagePath={confirmButtonImage}
-        onClick={() => {
-          /**/
-        }}
+        onClick={onClick}
       />
     </div>
   );
