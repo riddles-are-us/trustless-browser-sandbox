@@ -49,9 +49,58 @@ export interface RareResourceModel {
     flexonixAmount: number;
 }
 
+export const CRYSTAL_TYPE = "crystal";
+export const INTERSTELLAR_MINERAL_TYPE = "interstellarMineral";
+export const BIOMASS_TYPE = "biomass";
+export const QUANTUM_FOAM_TYPE = "quantumFoam";
+export const NECRODERMIS_TYPE = "necrodermis";
+export const ALIEN_FLORAL_TYPE = "alienFloral";
+export const SPICE_MELANGE_TYPE = "spiceMelange";
+export const TITANIUM_TYPE = "titanium";
+export const ENERCORE_TYPE = "enercore";
+export const NEXIUM_TYPE = "nexium";
+export const SWIFTEX_TYPE = "swiftex";
+export const COGNISURGE_TYPE = "cognisurge";
+export const VITALSHIELD_TYPE = "vitalshield";
+export const FLEXONIX_TYPE = "flexonix";
+
+export type ResourceType = 
+    typeof CRYSTAL_TYPE | 
+    typeof INTERSTELLAR_MINERAL_TYPE | 
+    typeof BIOMASS_TYPE | 
+    typeof QUANTUM_FOAM_TYPE | 
+    typeof NECRODERMIS_TYPE | 
+    typeof ALIEN_FLORAL_TYPE | 
+    typeof SPICE_MELANGE_TYPE | 
+    typeof TITANIUM_TYPE | 
+    typeof ENERCORE_TYPE | 
+    typeof NEXIUM_TYPE | 
+    typeof SWIFTEX_TYPE | 
+    typeof COGNISURGE_TYPE | 
+    typeof VITALSHIELD_TYPE | 
+    typeof FLEXONIX_TYPE;
 export interface ResourceViewData {
+    type: ResourceType;
     iconImagePath: string;
     amount: number;
+}
+
+
+export interface FilterModel{
+    crystalToggle: boolean;
+    interstellarMineralToggle: boolean;
+    biomassToggle: boolean;
+    quantumFoamToggle: boolean;
+    necrodermisToggle: boolean;
+    alienFloralToggle: boolean;
+    spiceMelangeToggle: boolean;
+    titaniumToggle: boolean;
+    enercoreToggle: boolean;
+    nexiumToggle: boolean;
+    swiftexToggle: boolean;
+    cognisurgeToggle: boolean;
+    vitalshieldToggle: boolean;
+    flexonixToggle: boolean;
 }
 
 export const emptyCommonResources: CommonResourceModel = {
@@ -83,47 +132,63 @@ export const emptyCreatingCreature: CreatureModel = {
     startTime: 0,
 }
 
+export const allResourcesToggleFilter: FilterModel = {
+    crystalToggle: false,
+    interstellarMineralToggle: false,
+    biomassToggle: false,
+    quantumFoamToggle: false,
+    necrodermisToggle: false,
+    alienFloralToggle: false,
+    spiceMelangeToggle: false,
+    titaniumToggle: false,
+    enercoreToggle: false,
+    nexiumToggle: false,
+    swiftexToggle: false,
+    cognisurgeToggle: false,
+    vitalshieldToggle: false,
+    flexonixToggle: false
+};
+
+
+
 export function getCommonResourceModel(array: Array<number>){
     return {
-        crystalAmount: array[0],
-        interstellarMineralAmount: array[1],
-        biomassAmount: array[2],
-        quantumFoamAmount: array[3],
-        necrodermisAmount: array[4],
-        alienFloralAmount: array[5],
-        spiceMelangeAmount: array[6],
-        titaniumAmount: array[7]
+        crystalAmount: array[0] ?? 0,
+        interstellarMineralAmount: array[1] ?? 0,
+        biomassAmount: array[2] ?? 0,
+        quantumFoamAmount: array[3] ?? 0,
+        necrodermisAmount: array[4] ?? 0,
+        alienFloralAmount: array[5] ?? 0,
+        spiceMelangeAmount: array[6] ?? 0,
+        titaniumAmount: array[7] ?? 0,
     }
 }
 
 export function getRareResourceModel(array: Array<number>){
     return {
-        enercoreAmount: array[0],
-        nexiumAmount: array[1],
-        swiftexAmount: array[2],
-        cognisurgeAmount: array[3],
-        vitalshieldAmount: array[4],
-        flexonixAmount: array[5]
+        enercoreAmount: array[0] ?? 0,
+        nexiumAmount: array[1] ?? 0,
+        swiftexAmount: array[2] ?? 0,
+        cognisurgeAmount: array[3] ?? 0,
+        vitalshieldAmount: array[4] ?? 0,
+        flexonixAmount: array[5] ?? 0,
     }
 }
-
-export function getResourceViewDatas(commonResources: CommonResourceModel, rareResources: RareResourceModel) {
-    const resources = [
-        { iconImagePath: CrystalIcon, amount: commonResources.crystalAmount },
-        { iconImagePath: InterstellarMineralIcon, amount: commonResources.interstellarMineralAmount },
-        { iconImagePath: BiomassIcon, amount: commonResources.biomassAmount },
-        { iconImagePath: QuantumFoamIcon, amount: commonResources.quantumFoamAmount },
-        { iconImagePath: NecrodermisIcon, amount: commonResources.necrodermisAmount },
-        { iconImagePath: AlienFloralIcon, amount: commonResources.alienFloralAmount },
-        { iconImagePath: SpiceMelangeIcon, amount: commonResources.spiceMelangeAmount },
-        { iconImagePath: TitaniumIcon, amount: commonResources.titaniumAmount },
-        { iconImagePath: EnercoreIcon, amount: rareResources.enercoreAmount },
-        { iconImagePath: NexiumIcon, amount: rareResources.nexiumAmount },
-        { iconImagePath: SwiftexIcon, amount: rareResources.swiftexAmount },
-        { iconImagePath: CognisurgeIcon, amount: rareResources.cognisurgeAmount },
-        { iconImagePath: VitalshieldIcon, amount: rareResources.vitalshieldAmount },
-        { iconImagePath: FlexonixIcon, amount: rareResources.flexonixAmount }
-    ];
-
-    return resources.filter(resource => resource.amount != null && resource.amount != 0);
+export function getResourceViewDatas(commonResources: CommonResourceModel, rareResources: RareResourceModel): ResourceViewData[] {
+    return [
+        { type: CRYSTAL_TYPE, iconImagePath: CrystalIcon, amount: commonResources.crystalAmount } as ResourceViewData,
+        { type: INTERSTELLAR_MINERAL_TYPE, iconImagePath: InterstellarMineralIcon, amount: commonResources.interstellarMineralAmount } as ResourceViewData,
+        { type: BIOMASS_TYPE, iconImagePath: BiomassIcon, amount: commonResources.biomassAmount } as ResourceViewData,
+        { type: QUANTUM_FOAM_TYPE, iconImagePath: QuantumFoamIcon, amount: commonResources.quantumFoamAmount } as ResourceViewData,
+        { type: NECRODERMIS_TYPE, iconImagePath: NecrodermisIcon, amount: commonResources.necrodermisAmount } as ResourceViewData,
+        { type: ALIEN_FLORAL_TYPE, iconImagePath: AlienFloralIcon, amount: commonResources.alienFloralAmount } as ResourceViewData,
+        { type: SPICE_MELANGE_TYPE, iconImagePath: SpiceMelangeIcon, amount: commonResources.spiceMelangeAmount } as ResourceViewData,
+        { type: TITANIUM_TYPE, iconImagePath: TitaniumIcon, amount: commonResources.titaniumAmount } as ResourceViewData,
+        { type: ENERCORE_TYPE, iconImagePath: EnercoreIcon, amount: rareResources.enercoreAmount } as ResourceViewData,
+        { type: NEXIUM_TYPE, iconImagePath: NexiumIcon, amount: rareResources.nexiumAmount } as ResourceViewData,
+        { type: SWIFTEX_TYPE, iconImagePath: SwiftexIcon, amount: rareResources.swiftexAmount } as ResourceViewData,
+        { type: COGNISURGE_TYPE, iconImagePath: CognisurgeIcon, amount: rareResources.cognisurgeAmount } as ResourceViewData,
+        { type: VITALSHIELD_TYPE, iconImagePath: VitalshieldIcon, amount: rareResources.vitalshieldAmount } as ResourceViewData,
+        { type: FLEXONIX_TYPE, iconImagePath: FlexonixIcon, amount: rareResources.flexonixAmount } as ResourceViewData
+    ].filter(resource => resource.amount !== 0);
 }
