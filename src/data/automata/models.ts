@@ -23,6 +23,7 @@ export interface CreatureModel {
 }
 
 export interface ProgramModel {
+    index: number;
     processingTime: number;
     resources: Array<ResourceViewData>;
     name: string;

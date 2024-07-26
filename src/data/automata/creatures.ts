@@ -53,6 +53,12 @@ export const creaturesSlice = createSlice({
             state.selectedCreatureIndex = CREATING_CREATURE;
             state.creatingCreature = emptyCreatingCreature;
         },
+        trySetProgramForCreatingCreature: (state, action) => {
+            if (state.selectedCreatureIndex == CREATING_CREATURE){
+                state.creatingCreature.programIndexes[state.creatingCreature.currentProgramIndex] = action.payload.index;
+                state.creatingCreature.currentProgramIndex = (state.creatingCreature.currentProgramIndex + 1) % 8;
+            }
+        }
     },
   },
 );
@@ -78,5 +84,5 @@ export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     return 0;
 }
     
-export const { setSelectedCreatureIndex, setCreatures, startCreatingCreature } = creaturesSlice.actions;
+export const { setSelectedCreatureIndex, setCreatures, startCreatingCreature, trySetProgramForCreatingCreature } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

@@ -15,6 +15,7 @@ function decodePrograms(programRaws: any) {
     const programs: ProgramModel[] = [];
     for(let i=0; i<programRaws.length; i++) {
         const program: ProgramModel = {
+            index: i,
             processingTime: programRaws[i][0],
             resources: getResourceViewDatas(getCommonResourceModel(programRaws[i][1]), getRareResourceModel(programRaws[i][2])),
             name: programRaws[i][3],

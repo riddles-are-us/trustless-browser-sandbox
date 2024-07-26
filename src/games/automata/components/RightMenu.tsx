@@ -7,10 +7,12 @@ import PageNumber from "./PageNumber";
 import Grid from "./Grid";
 import Program from "./Program";
 import ProgramFilterBar from "./ProgramFilterBar";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
 import { selectAllPrograms } from "../../../data/automata/programs";
+import { trySetProgramForCreatingCreature } from "../../../data/automata/creatures";
 
 const RightMenu = () => {
+  const dispatch = useAppDispatch();
   const [programGridHeight, setProgramGridHeight] = useState(0);
   const programGridRef = useRef<HTMLInputElement>(null);
   const updateProgramGridHeight = () => {
@@ -36,6 +38,10 @@ const RightMenu = () => {
     };
   }, []);
 
+  const onSelectProgram = (index: number) => {
+    dispatch(trySetProgramForCreatingCreature({ index }));
+  };
+
   return (
     <div className="right">
       <div className="right-top"></div>
@@ -56,9 +62,7 @@ const RightMenu = () => {
             <Program
               key={index}
               data={program}
-              onSelect={() => {
-                console.log(index);
-              }}
+              onSelect={() => onSelectProgram(program.index)}
             />
           ))}
         />
