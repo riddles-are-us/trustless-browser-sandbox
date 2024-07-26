@@ -23,7 +23,7 @@ import {
   selectSelectedCreature,
   selectSelectedCreaturePrograms,
   selectSelectedCreatureProgramProgress,
-  selectSelectedCreatureIndexForRequestEncode,
+  selectSelectedCreatureListIndex,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
@@ -39,7 +39,7 @@ const MainMenu = () => {
   const showConfirmButton = useAppSelector(isCreatingCreature);
   const showRebootButton = useAppSelector(isSelectingCreatedCreature);
   const selectedCreatureIndexForRequestEncode = useAppSelector(
-    selectSelectedCreatureIndexForRequestEncode
+    selectSelectedCreatureListIndex
   );
 
   function onClickConfirm() {

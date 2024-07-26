@@ -44,7 +44,10 @@ export const creaturesSlice = createSlice({
     initialState,
     reducers: {
         setSelectedCreatureIndex: (state, loaded) => {
-            state.selectedCreatureIndex = loaded.payload;
+            state.selectedCreatureIndex = 
+                (loaded.payload.index >= state.creatures.length)
+                    ? CREATING_CREATURE
+                    : loaded.payload.index;
         },
         setCreatures: (state, action) => {
             state.creatures = action.payload.creatures.map(rawToModel);
@@ -66,11 +69,14 @@ export const creaturesSlice = createSlice({
 export const isCreatingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == CREATING_CREATURE;
 export const isSelectingCreatedCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex != CREATING_CREATURE && state.automata.creatures.selectedCreatureIndex != NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
-export const selectSelectedCreatureIndexForRequestEncode = (state: RootState) => 
+export const selectSelectedCreatureListIndex = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE || state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
         ? state.automata.creatures.creatures.length
         : state.automata.creatures.selectedCreatureIndex
-export const selectCreatures = (state: RootState) => state.automata.creatures.creatures;
+export const selectCreatures = (state: RootState) => 
+    state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
+        ? [...state.automata.creatures.creatures, state.automata.creatures.creatingCreature]
+        : state.automata.creatures.creatures;
 export const selectSelectedCreature = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
         ? emptyCreatingCreature :
