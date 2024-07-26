@@ -16,13 +16,17 @@
     transform: translate(-50%, -50%);
 }
 
-.creature-image {
+.selecting-creature-image, .normal-creature-image {
     position: absolute;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 45px;
     height: 45px;
+}
+
+.normal-creature-image {
+    opacity: 0.3;
 }
 
 .creature-text {

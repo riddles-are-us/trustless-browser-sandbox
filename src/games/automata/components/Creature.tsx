@@ -31,12 +31,13 @@ const Creature = ({ index, creature }: Props) => {
 
   return (
     <div className="creature-container" onClick={() => onSelect()}>
+      <img src={creatureBackground} className="creature-background" />
       <img
-        src={creatureBackground}
-        className="creature-background"
-        style={{ backgroundColor: isSelected ? "Red" : "White" }} // test code
+        src={bot}
+        className={
+          isSelected ? "selecting-creature-image" : "normal-creature-image"
+        }
       />
-      <img src={bot} className="creature-image" />
       <p className="creature-text">{creature.name}</p>
     </div>
   );
