@@ -8,7 +8,13 @@ import Grid from "./Grid";
 import Program from "./Program";
 import ProgramFilterBar from "./ProgramFilterBar";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { selectAllPrograms } from "../../../data/automata/programs";
+import {
+  selectFilteredPrograms,
+  selectProgramsOnCurrentPage,
+  selectCurrentPage,
+  pageUp,
+  pageDown,
+} from "../../../data/automata/programs";
 import { trySetProgramForCreatingCreature } from "../../../data/automata/creatures";
 
 const RightMenu = () => {
@@ -26,9 +32,18 @@ const RightMenu = () => {
   const programGridRowCount = Math.floor(
     programGridHeight / programGridElementHeight
   );
+  const amountPerPage = programGridColumnCount * programGridRowCount;
+  const currentPage = useAppSelector(selectCurrentPage);
+  const programsBeforePage = useAppSelector(selectFilteredPrograms);
   const programs = useAppSelector(
-    selectAllPrograms(0, programGridColumnCount * programGridRowCount)
+    selectProgramsOnCurrentPage(programsBeforePage)(amountPerPage)
   );
+  const pageCount = Math.max(
+    Math.ceil(programsBeforePage.length / amountPerPage),
+    1
+  );
+  const showDownButton = currentPage > 0;
+  const showUpButton = currentPage < pageCount - 1;
 
   useEffect(() => {
     updateProgramGridHeight();
@@ -42,14 +57,22 @@ const RightMenu = () => {
     dispatch(trySetProgramForCreatingCreature({ index }));
   };
 
+  const onClickUpButton = () => {
+    dispatch(pageUp({}));
+  };
+
+  const onClickDownButton = () => {
+    dispatch(pageDown({}));
+  };
+
   return (
     <div className="right">
       <div className="right-top"></div>
       <div className="right-middle"></div>
       <div className="right-bottom"></div>
       <PageNumber
-        page={1}
-        maxPage={8}
+        page={currentPage + 1}
+        maxPage={pageCount}
         positionClass={"right-page-number-position"}
       />
       <div ref={programGridRef} className="right-program-grid">
@@ -72,19 +95,11 @@ const RightMenu = () => {
         <ProgramFilterBar />
       </div>
       <div className="right-up-button-position">
-        <UpButton
-          onClick={() => {
-            /**/
-          }}
-        />
+        {showUpButton && <UpButton onClick={onClickUpButton} />}
       </div>
 
       <div className="right-down-button-position">
-        <DownButton
-          onClick={() => {
-            /**/
-          }}
-        />
+        {showDownButton && <DownButton onClick={onClickDownButton} />}
       </div>
     </div>
   );

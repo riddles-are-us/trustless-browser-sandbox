@@ -21,11 +21,13 @@ import { ProgramModel, FilterModel, allResourcesToggleFilter, getResourceViewDat
 interface ProgramsState {
     programs: Array<ProgramModel>;
     filter: FilterModel;
+    currentPage: number;
 }
 
 const initialState: ProgramsState = {
     programs: [],
     filter: allResourcesToggleFilter,
+    currentPage: 0,
 };
 
 function decodePrograms(programRaws: any) {
@@ -48,49 +50,70 @@ export const programsSlice = createSlice({
     initialState,
     reducers: {
         resetFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter = allResourcesToggleFilter;
         },
         toggleCrystalFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.crystalToggle = !state.filter.crystalToggle;
         },
         toggleInterstellarMineralFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.interstellarMineralToggle = !state.filter.interstellarMineralToggle;
         },
         toggleBiomassFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.biomassToggle = !state.filter.biomassToggle;
         },
         toggleQuantumFoamFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.quantumFoamToggle = !state.filter.quantumFoamToggle;
         },
         toggleNecrodermisFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.necrodermisToggle = !state.filter.necrodermisToggle;
         },
         toggleAlienFloralFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.alienFloralToggle = !state.filter.alienFloralToggle;
         },
         toggleSpiceMelangeFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.spiceMelangeToggle = !state.filter.spiceMelangeToggle;
         },
         toggleTitaniumFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.titaniumToggle = !state.filter.titaniumToggle;
         },
         toggleEnercoreFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.enercoreToggle = !state.filter.enercoreToggle;
         },
         toggleNexiumFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.nexiumToggle = !state.filter.nexiumToggle;
         },
         toggleSwiftexFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.swiftexToggle = !state.filter.swiftexToggle;
         },
         toggleCognisurgeFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.cognisurgeToggle = !state.filter.cognisurgeToggle;
         },
         toggleVitalshieldFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.vitalshieldToggle = !state.filter.vitalshieldToggle;
         },
         toggleFlexonixFilter: (state, action) => {
+            state.currentPage = 0;
             state.filter.flexonixToggle = !state.filter.flexonixToggle;
+        },
+        pageUp: (state, action) => {
+            state.currentPage += 1;
+        },
+        pageDown: (state, action) => {
+            state.currentPage = Math.max(0, state.currentPage - 1);
         },
     },
     extraReducers: (builder) => {
@@ -101,8 +124,16 @@ export const programsSlice = createSlice({
     }
 });
 
-export const selectAllPrograms = (page = 0, amountPerPage = Infinity) => (state: RootState) => {
-    const programsArray = Object.values(state.automata.programs.programs).filter(program =>
+export const selectProgramsOnCurrentPage = (programs: ProgramModel[]) => (amountPerPage: number) => (state: RootState) => {
+    const startIndex = state.automata.programs.currentPage * amountPerPage;
+    const endIndex = startIndex + amountPerPage;
+    return programs.slice(startIndex, endIndex);
+}
+
+export const selectAllPrograms = (state: RootState) => state.automata.programs.programs;
+
+export const selectFilteredPrograms = (state: RootState) => 
+    state.automata.programs.programs.filter(program =>
         selectIsAllResourcesToggled(state) || (
             (!selectIsCrystalToggled(state) || program.resources.some(resource => resource.type === CRYSTAL_TYPE)) &&
             (!selectIsInterstellarMineralToggled(state) || program.resources.some(resource => resource.type === INTERSTELLAR_MINERAL_TYPE)) &&
@@ -118,11 +149,7 @@ export const selectAllPrograms = (page = 0, amountPerPage = Infinity) => (state:
             (!selectIsCognisurgeToggled(state) || program.resources.some(resource => resource.type === COGNISURGE_TYPE)) &&
             (!selectIsVitalshieldToggled(state) || program.resources.some(resource => resource.type === VITALSHIELD_TYPE)) &&
             (!selectIsFlexonixToggled(state) || program.resources.some(resource => resource.type === FLEXONIX_TYPE))));
-    const startIndex = page * amountPerPage;
-    const endIndex = startIndex + amountPerPage;
 
-    return programsArray.slice(startIndex, endIndex);
-};
 export const selectProgramsByIndexes = (indexes: (number | null)[]) => (state: RootState) => 
     indexes.map(index => (index != null && 0 <= index && index < state.automata.programs.programs.length) ? state.automata.programs.programs[index] : null);
 export const selectProgramByIndex = (index: (number | null)) => (state: RootState) => 
@@ -157,6 +184,7 @@ export const selectIsSwiftexToggled = (state: RootState) => state.automata.progr
 export const selectIsCognisurgeToggled = (state: RootState) => state.automata.programs.filter.cognisurgeToggle;
 export const selectIsVitalshieldToggled = (state: RootState) => state.automata.programs.filter.vitalshieldToggle;
 export const selectIsFlexonixToggled = (state: RootState) => state.automata.programs.filter.flexonixToggle;
+export const selectCurrentPage = (state: RootState) => state.automata.programs.currentPage;
 
 export const {
     resetFilter,
@@ -173,6 +201,8 @@ export const {
     toggleSwiftexFilter,
     toggleCognisurgeFilter,
     toggleVitalshieldFilter,
-    toggleFlexonixFilter
+    toggleFlexonixFilter,
+    pageUp,
+    pageDown,
 } = programsSlice.actions;
 export default programsSlice.reducer;

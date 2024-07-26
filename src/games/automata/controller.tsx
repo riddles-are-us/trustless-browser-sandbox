@@ -115,7 +115,7 @@ export function GameController() {
           dispatch(setViewerActivity("queryingUpdate"));
 
           if (creatures.length != 0) {
-            dispatch(setSelectedCreatureIndex(0));
+            dispatch(setSelectedCreatureIndex({ index: 0 }));
           }
         }
       } /* Very hard to handle after rebooting status
