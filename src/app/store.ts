@@ -37,6 +37,11 @@ export const store = configureStore({
     client: clientReducer,
     automata: automataReducer,
   },
+  devTools: {
+    serialize: {
+      replacer: (_key, value) => (typeof value === "bigint" ? value.toString() : value),
+    },
+  },
 });
 
 export type AppDispatch = typeof store.dispatch;
