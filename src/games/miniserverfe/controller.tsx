@@ -46,7 +46,7 @@ export function GameController() {
   const [playerIds, setPlayerIds] = useState("");
   const [localValues, setLocalValues] = useState<number[]>([]);
   const [objects, setObjects] = useState<Array<ObjectProperty>>([]);
-
+  const [nonce, setNonce] = useState(0n);
 
   // modified modifier array
   const [dropList, setDropList] = useState<Array<number|null>>([null, null, null, null, null, null, null, null]);
@@ -136,7 +136,7 @@ export function GameController() {
       const playerIdHex = "0x" + BigInt(playerId).toString(16);
       setPlayerIds(playerIdHex);
 
-      const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
+      const insPlayerCmd = createCommand(0n, CMD_INSTALL_PLAYER, 0n);
       dispatch(sendTransaction({cmd: [insPlayerCmd, 0n, 0n, 0n], prikey: l2account!.address}));
     } catch(e) {
       dispatch(setErrorMessage("Error at create player " + e));
@@ -166,6 +166,8 @@ export function GameController() {
 
       // Extract the data from the parsed response
       const data = JSON.parse(parsedRes.data);
+
+      setNonce(BigInt(data[0].nonce));
 
       console.log("query state data", data);
       if(playerAction == "creating") {
@@ -305,7 +307,7 @@ export function GameController() {
               {<CreateButton objects={objects} />}
               </div>
             </div>
-            <Explore objects={objects} modifiers={dropList}/>
+            <Explore objects={objects} modifiers={dropList} nonce={nonce}/>
             <div className="program">
               <div className="title">PROGRAM</div>
               <div className="draggableBox">
