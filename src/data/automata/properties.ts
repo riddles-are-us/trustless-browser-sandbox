@@ -1,80 +1,73 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { getConfig, sendTransaction } from "./request"
+import { getConfig, sendTransaction, queryState } from "../../games/automata/request"
 
-class ExternalState {
-    userActivity: "browsing" | "creating" | "rebooting" | "loading";
-    // idle -> queryingUpdate, queryingUpdate -> moniteringResut, moniteringResut-> queryingUpdate
-    viewerActivity:
-        | "monitoringResult"
-        | "queryingUpdate"
-        | "idle"
-        | "queryConfig";
-    errorMessage: string;
-
-    constructor() {
-        (this.userActivity = "loading"),
-        (this.viewerActivity = "idle"),
-        (this.errorMessage = "");
-    }
+export enum UIState{
+  Init,
+  Idle,
+  WaitingQuery,
+  Creating,
+  Reboot,
 }
 
 interface PropertiesState {
-    external: ExternalState;
-    globalTimer: number,
+    uIState: UIState;
+    globalTimer: number;
+    getConfigFinished: boolean;
+    queryStateFinished: boolean;
 }
 
-const initialExternalState: ExternalState = {
-    userActivity: "loading",
-    viewerActivity: "idle",
-    errorMessage: "",
-};
-
 const initialState: PropertiesState = {
-    external: initialExternalState,
+    uIState: UIState.Init,
     globalTimer: 0,
+    getConfigFinished: false,
+    queryStateFinished: false,
 };
 
 export const propertiesSlice = createSlice({
     name: 'properties',
     initialState,
     reducers: {
-        setUserActivity: (state, loaded) => {
-          state.external.userActivity = loaded.payload;
-        },
-        setGlobalTimer: (state, loaded) => {
-          state.globalTimer = loaded.payload;
-        },
-        setViewerActivity: (state, loaded) => {
-          state.external.viewerActivity = loaded.payload;
-        },
-        setErrorMessage: (state, loaded) => {
-          state.external.errorMessage = loaded.payload;
+        setUIState: (state, action) => {
+          state.uIState = action.payload.uIState;
         },
     },
 
   extraReducers: (builder) => {
     builder
-      .addCase(getConfig.pending, (state) => {
-        //
-        state.external.viewerActivity = "queryConfig";
-        console.log("query config pending");
-      })
-      .addCase(getConfig.fulfilled, (state, c) => {
-        state.external.viewerActivity = "idle";
+      .addCase(getConfig.fulfilled, (state, action) => {
+        state.getConfigFinished = true;
+        if (state.getConfigFinished && state.queryStateFinished){
+          state.uIState = UIState.Idle;
+        }
         console.log("query config fulfilled");
       })
-      .addCase(sendTransaction.rejected, (state, c) => {
-        if (c.payload) {
-          state.external.errorMessage = c.payload;
+      .addCase(getConfig.rejected, (state, action) => {
+        console.log(`query config rejected: ${action.payload}`);
+      })
+      .addCase(sendTransaction.fulfilled, (state, action) => {
+        state.uIState = UIState.Idle;
+        console.log("send transaction fulfilled");
+      })
+      .addCase(sendTransaction.rejected, (state, action) => {
+        console.log(`send transaction rejected: ${action.payload}`);
+      })
+      .addCase(queryState.fulfilled, (state, action) => {
+        state.queryStateFinished = true;
+        if (state.getConfigFinished && state.queryStateFinished){
+          state.uIState = UIState.Idle;
         }
-        console.log("send transaction rejected");
+        state.globalTimer = action.payload.globalTimer;
+        console.log("send transaction fulfilled");
+      })
+      .addCase(queryState.rejected, (state, action) => {
+        console.log(`query state rejected: ${action.payload}`);
       });
     }
 });
 
-export const selectExternal = (state: RootState) => state.automata.properties.external;
+export const selectUIState = (state: RootState) => state.automata.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.automata.properties.globalTimer;
     
-export const { setGlobalTimer, setViewerActivity, setErrorMessage, setUserActivity } = propertiesSlice.actions;
+export const { setUIState } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

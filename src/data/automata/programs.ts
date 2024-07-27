@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { getConfig } from "./request";
+import { getConfig } from "../../games/automata/request";
 import { ProgramModel, FilterModel, allResourcesToggleFilter, getResourceViewDatas, getCommonResourceModel, getRareResourceModel,
     CRYSTAL_TYPE,
     INTERSTELLAR_MINERAL_TYPE,

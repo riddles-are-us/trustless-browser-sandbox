@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
+import { queryState } from "../../games/automata/request";
 import { CreatureModel, getRareResourceModel, emptyCreatingCreature } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
@@ -49,9 +50,6 @@ export const creaturesSlice = createSlice({
                     ? CREATING_CREATURE
                     : loaded.payload.index;
         },
-        setCreatures: (state, action) => {
-            state.creatures = action.payload.creatures.map(rawToModel);
-        },
         startCreatingCreature: (state, action) => {
             state.selectedCreatureIndex = CREATING_CREATURE;
             state.creatingCreature = emptyCreatingCreature;
@@ -63,6 +61,12 @@ export const creaturesSlice = createSlice({
             }
         }
     },
+    extraReducers: (builder) => {
+      builder
+        .addCase(queryState.fulfilled, (state, action) => {
+            state.creatures = action.payload.creatures.map(rawToModel);
+        });
+    }
   },
 );
 
@@ -99,5 +103,5 @@ export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     return 0;
 }
     
-export const { setSelectedCreatureIndex, setCreatures, startCreatingCreature, trySetProgramForCreatingCreature } = creaturesSlice.actions;
+export const { setSelectedCreatureIndex, startCreatingCreature, trySetProgramForCreatingCreature } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

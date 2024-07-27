@@ -12,8 +12,9 @@ import {
   startCreatingCreature,
 } from "../../../data/automata/creatures";
 import {
-  selectExternal,
-  setUserActivity,
+  UIState,
+  selectUIState,
+  setUIState,
 } from "../../../data/automata/properties";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
@@ -33,14 +34,13 @@ const LeftMenu = () => {
   );
 
   const creatures = useAppSelector(selectCreatures);
-  const external = useAppSelector(selectExternal);
+  const uIState = useAppSelector(selectUIState);
   const dispatch = useAppDispatch();
-  const showNewButton =
-    external.userActivity != "creating" && external.viewerActivity != "idle";
+  const showNewButton = uIState == UIState.Idle;
 
   function createObject() {
     dispatch(startCreatingCreature({}));
-    dispatch(setUserActivity("creating"));
+    dispatch(setUIState({ uIState: UIState.Creating }));
   }
   useEffect(() => {
     updateCreatureGridHeight();

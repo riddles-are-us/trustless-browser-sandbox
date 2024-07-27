@@ -10,12 +10,11 @@ import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
 import { getTransactionCommandArray } from "../rpc";
 import { selectL2Account } from "../../../data/accountSlice";
-import { sendTransaction } from "../../../data/automata/request";
+import { sendTransaction } from "../request";
 import {
-  selectExternal,
-  setErrorMessage,
-  setUserActivity,
-  setViewerActivity,
+  UIState,
+  selectUIState,
+  setUIState,
 } from "../../../data/automata/properties";
 import {
   isCreatingCreature,
@@ -29,8 +28,8 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
-  const external = useAppSelector(selectExternal);
   const l2account = useAppSelector(selectL2Account);
+  const uIState = useAppSelector(selectUIState);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
@@ -49,19 +48,19 @@ const MainMenu = () => {
           cmd: getTransactionCommandArray(
             selectedCreature.programIndexes,
             selectedCreatureIndexForRequestEncode,
-            external.userActivity == "creating"
+            uIState == UIState.Creating
           ),
           prikey: l2account!.address,
         })
       );
-      dispatch(setViewerActivity("monitoringResult"));
+      dispatch(setUIState({ uIState: UIState.WaitingQuery }));
     } catch (e) {
-      dispatch(setErrorMessage(`confirm ${external.userActivity} error`));
+      console.log(`confirm ${uIState.toString()} error`);
     }
   }
 
   function onClickReboot() {
-    dispatch(setUserActivity("rebooting"));
+    dispatch(setUIState({ uIState: UIState.Reboot }));
   }
 
   return (

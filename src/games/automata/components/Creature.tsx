@@ -2,7 +2,7 @@ import React from "react";
 import "./Creature.css";
 import creatureBackground from "../images/backgrounds/creature_frame.png";
 import bot from "../images/CreatureBots/idle_robot.png";
-import { setUserActivity } from "../../../data/automata/properties";
+import { setUIState } from "../../../data/automata/properties";
 import {
   setSelectedCreatureIndex,
   selectSelectedCreatureListIndex,
@@ -24,7 +24,6 @@ const Creature = ({ index, creature }: Props) => {
 
   const onSelect = () => {
     if (!isSelected) {
-      dispatch(setUserActivity("browsing"));
       dispatch(setSelectedCreatureIndex({ index }));
     }
   };
