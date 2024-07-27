@@ -96,7 +96,7 @@ export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     if (selectedCreature.isProgramStop == false && programIndex) {
         const processTime = selectProgramByIndex(programIndex)(state)?.processingTime;
         if (processTime) {
-            return ((state.automata.properties.globalTimer - selectedCreature.startTime) / processTime) * 100;
+            return Math.min(((state.automata.properties.globalTimer - selectedCreature.startTime) / processTime) * 100, 100);
         }
     }
     return 0;

@@ -16,7 +16,7 @@ import FlexonixIcon from "../../games/automata/images/Icons/Flexonix.png";
 export interface CreatureModel {
     rareResources: RareResourceModel;
     name: string;
-    programIndexes: Array<number>;
+    programIndexes: Array<(number | null)>;
     currentProgramIndex: number;
     isProgramStop: boolean;
     startTime: number;
@@ -126,7 +126,7 @@ export const emptyRareResources: RareResourceModel = {
 export const emptyCreatingCreature: CreatureModel = {
     rareResources: emptyRareResources,
     name: "Creating",
-    programIndexes: [],
+    programIndexes: [null, null, null, null, null, null, null, null],
     currentProgramIndex: 0,
     isProgramStop: false,
     startTime: 0,

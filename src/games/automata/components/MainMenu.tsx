@@ -35,8 +35,10 @@ const MainMenu = () => {
   );
   const progress = useAppSelector(selectSelectedCreatureProgramProgress);
   const showConfirmButton =
-    uIState == UIState.Creating || uIState == UIState.Reboot;
-  const showRebootButton = useAppSelector(isSelectingCreatedCreature);
+    (uIState == UIState.Creating || uIState == UIState.Reboot) &&
+    selectedCreaturePrograms.every((program) => program !== null);
+  console.log(selectedCreaturePrograms);
+  const showRebootButton = uIState == UIState.Idle;
   const selectedCreatureIndexForRequestEncode = useAppSelector(
     selectSelectedCreatureListIndex
   );
@@ -46,7 +48,7 @@ const MainMenu = () => {
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(
-            selectedCreature.programIndexes,
+            selectedCreature.programIndexes.map((index) => index!),
             selectedCreatureIndexForRequestEncode,
             uIState == UIState.Creating
           ),
