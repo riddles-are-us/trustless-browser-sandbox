@@ -5,7 +5,6 @@ import { getConfig, sendTransaction, queryState } from "../../games/automata/req
 export enum UIState{
   Init,
   Idle,
-  WaitingQuery,
   Creating,
   Reboot,
 }
@@ -37,7 +36,7 @@ export const propertiesSlice = createSlice({
     builder
       .addCase(getConfig.fulfilled, (state, action) => {
         state.getConfigFinished = true;
-        if (state.getConfigFinished && state.queryStateFinished){
+        if (state.uIState == UIState.Init && state.getConfigFinished && state.queryStateFinished){
           state.uIState = UIState.Idle;
         }
         console.log("query config fulfilled");
@@ -54,7 +53,7 @@ export const propertiesSlice = createSlice({
       })
       .addCase(queryState.fulfilled, (state, action) => {
         state.queryStateFinished = true;
-        if (state.getConfigFinished && state.queryStateFinished){
+        if (state.uIState == UIState.Init && state.getConfigFinished && state.queryStateFinished){
           state.uIState = UIState.Idle;
         }
         state.globalTimer = action.payload.globalTimer;

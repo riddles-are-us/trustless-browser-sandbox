@@ -17,7 +17,6 @@ import {
   setUIState,
 } from "../../../data/automata/properties";
 import {
-  isCreatingCreature,
   isSelectingCreatedCreature,
   selectSelectedCreature,
   selectSelectedCreaturePrograms,
@@ -35,7 +34,8 @@ const MainMenu = () => {
     selectSelectedCreaturePrograms
   );
   const progress = useAppSelector(selectSelectedCreatureProgramProgress);
-  const showConfirmButton = useAppSelector(isCreatingCreature);
+  const showConfirmButton =
+    uIState == UIState.Creating || uIState == UIState.Reboot;
   const showRebootButton = useAppSelector(isSelectingCreatedCreature);
   const selectedCreatureIndexForRequestEncode = useAppSelector(
     selectSelectedCreatureListIndex
@@ -53,7 +53,6 @@ const MainMenu = () => {
           prikey: l2account!.address,
         })
       );
-      dispatch(setUIState({ uIState: UIState.WaitingQuery }));
     } catch (e) {
       console.log(`confirm ${uIState.toString()} error`);
     }

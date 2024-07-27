@@ -16,12 +16,6 @@ import { UIState, selectUIState } from "../../data/automata/properties";
 // clag
 const CMD_INSTALL_PLAYER = 1n;
 
-interface playerProperty {
-  player_id: Array<string>;
-  objects: Array<number>;
-  local: Array<number>;
-}
-
 export function GameController() {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);

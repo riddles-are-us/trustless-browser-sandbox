@@ -81,7 +81,6 @@ function createCommand(command: bigint, objindex: bigint) {
   return (command << 32n) + objindex;
 }
 
-const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
 const CMD_RESTART_OBJECT = 3n;
 export function getTransactionCommandArray(

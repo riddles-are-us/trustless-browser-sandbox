@@ -70,7 +70,6 @@ export const creaturesSlice = createSlice({
   },
 );
 
-export const isCreatingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == CREATING_CREATURE;
 export const isSelectingCreatedCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex != CREATING_CREATURE && state.automata.creatures.selectedCreatureIndex != NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
 export const selectSelectedCreatureListIndex = (state: RootState) => 
