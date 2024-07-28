@@ -17,7 +17,7 @@ import {
   setUIState,
 } from "../../../data/automata/properties";
 import {
-  isSelectingCreatedCreature,
+  isNotSelectingCreature,
   selectSelectedCreature,
   selectSelectedCreaturePrograms,
   selectSelectedCreatureProgramProgress,
@@ -29,6 +29,7 @@ const MainMenu = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
+  const notSelectingCreature = useAppSelector(isNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
@@ -77,7 +78,9 @@ const MainMenu = () => {
           )}
           {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
           <MainMenuSelectingFrame
-            order={selectedCreature.currentProgramIndex}
+            order={
+              notSelectingCreature ? null : selectedCreature.currentProgramIndex
+            }
             isStop={selectedCreature.isProgramStop}
           />
           {selectedCreaturePrograms.map((program, index) => (
