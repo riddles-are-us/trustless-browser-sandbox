@@ -24,6 +24,7 @@ import {
   selectSelectedCreatureListIndex,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import MainMenuWarning from "./MainMenuWarning";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
@@ -88,6 +89,7 @@ const MainMenu = () => {
           ))}
           <img src={display} className="main-display-image" />
           <MainMenuProgressBar progress={progress} />
+          <MainMenuWarning />
         </div>
       </div>
     </div>

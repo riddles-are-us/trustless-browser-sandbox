@@ -1,0 +1,38 @@
+.main-menu-warning-container {
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+    height: 7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-menu-warning-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    text-align: center;
+    line-height: 100%;
+    margin: 0px;
+    color: rgb(236, 57, 57);
+    width: 100%;
+    height: 20px;
+    font-family: "mishmash";
+    pointer-events: none;
+    animation: shine 2s infinite alternate linear;
+}
+
+@keyframes shine {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
