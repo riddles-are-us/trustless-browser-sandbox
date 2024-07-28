@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import circleBackground from "../images/backgrounds/circle.png";
-import display from "../images/MainMenu/display.png";
-import MainMenuProgressBar from "./MainMenuProgressBar";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
 import MainMenuBot from "./MainMenuBot";
 import ConfirmButton from "./Buttons/ConfirmButton";
@@ -20,11 +18,11 @@ import {
   isNotSelectingCreature,
   selectSelectedCreature,
   selectSelectedCreaturePrograms,
-  selectSelectedCreatureProgramProgress,
   selectSelectedCreatureListIndex,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import MainMenuWarning from "./MainMenuWarning";
+import MainMenuProgramInfo from "./MainMenuProgramInfo";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +33,6 @@ const MainMenu = () => {
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
   );
-  const progress = useAppSelector(selectSelectedCreatureProgramProgress);
   const showConfirmButton =
     (uIState == UIState.Creating || uIState == UIState.Reboot) &&
     selectedCreaturePrograms.every((program) => program !== null);
@@ -87,8 +84,7 @@ const MainMenu = () => {
           {selectedCreaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
           ))}
-          <img src={display} className="main-display-image" />
-          <MainMenuProgressBar progress={progress} />
+          <MainMenuProgramInfo />
           <MainMenuWarning />
         </div>
       </div>

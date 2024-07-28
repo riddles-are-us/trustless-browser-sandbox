@@ -11,6 +11,19 @@ interface CreatureRaw {
     modifier_info: string;
 }
 
+function formatTime(seconds: number) {
+    if (seconds == 0){
+        return "";
+    }
+
+    const pad = (num: number) => String(num).padStart(2, '0');
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+}
+
 function rawToModel(raw: CreatureRaw): CreatureModel {
     const binary = BigInt(raw.modifier_info).toString(2).padStart(64, "0");
     const currentProgramIndex = parseInt(binary.slice(8, 16), 2);
@@ -89,6 +102,18 @@ export const selectSelectedCreature = (state: RootState) =>
 
 export const selectSelectedCreaturePrograms = (state: RootState) => 
     selectProgramsByIndexes(selectSelectedCreature(state).programIndexes)(state)
+
+export const selectSelectedCreatureProgramName = (state: RootState) => {
+    const selectedCreature = selectSelectedCreature(state);
+    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
+    return selectProgramByIndex(programIndex)(state)?.name ?? "";
+}
+
+export const selectSelectedCreatureProgramProcessTime = (state: RootState) => {
+    const selectedCreature = selectSelectedCreature(state);
+    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
+    return formatTime(selectProgramByIndex(programIndex)(state)?.processingTime ?? 0) ;
+}
 
 export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);
