@@ -45,7 +45,6 @@ export const propertiesSlice = createSlice({
         console.log(`query config rejected: ${action.payload}`);
       })
       .addCase(sendTransaction.fulfilled, (state, action) => {
-        state.uIState = UIState.Idle;
         console.log("send transaction fulfilled");
       })
       .addCase(sendTransaction.rejected, (state, action) => {

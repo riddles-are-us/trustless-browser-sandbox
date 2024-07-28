@@ -8,7 +8,7 @@ import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
 import { getTransactionCommandArray } from "../rpc";
 import { selectL2Account } from "../../../data/accountSlice";
-import { sendTransaction } from "../request";
+import { sendTransaction, queryState } from "../request";
 import {
   UIState,
   selectUIState,
@@ -44,6 +44,8 @@ const MainMenu = () => {
 
   function onClickConfirm() {
     try {
+      // bugs here, after creating a new creature, the list will refresh unproperly.
+      // fix it after UI done polishing creature list since it may change the layout of the creating creature.
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(
@@ -53,7 +55,17 @@ const MainMenu = () => {
           ),
           prikey: l2account!.address,
         })
-      );
+      ).then((action) => {
+        if (sendTransaction.fulfilled.match(action)) {
+          dispatch(queryState({ cmd: [], prikey: l2account!.address })).then(
+            (action) => {
+              if (sendTransaction.fulfilled.match(action)) {
+                dispatch(setUIState({ uIState: UIState.Idle }));
+              }
+            }
+          );
+        }
+      });
     } catch (e) {
       console.log(`confirm ${uIState.toString()} error`);
     }

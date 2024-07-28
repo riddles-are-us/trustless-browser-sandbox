@@ -57,11 +57,11 @@ export const creaturesSlice = createSlice({
     name: 'creatures',
     initialState,
     reducers: {
-        setSelectedCreatureIndex: (state, loaded) => {
+        setSelectedCreatureIndex: (state, action) => {
             state.selectedCreatureIndex = 
-                (loaded.payload.index >= state.creatures.length)
+                (action.payload.index >= state.creatures.length)
                     ? CREATING_CREATURE
-                    : loaded.payload.index;
+                    : action.payload.index;
         },
         startCreatingCreature: (state, action) => {
             state.selectedCreatureIndex = CREATING_CREATURE;
