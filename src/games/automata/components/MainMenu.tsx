@@ -11,12 +11,15 @@ import { selectL2Account } from "../../../data/accountSlice";
 import { sendTransaction, queryState } from "../request";
 import {
   UIState,
+  selectIsSelectingUIState,
   selectUIState,
   setUIState,
 } from "../../../data/automata/properties";
 import {
+  setSelectingProgramIndex,
   isNotSelectingCreature,
   selectSelectedCreature,
+  selectSelectingProgramIndex,
   selectSelectedCreaturePrograms,
   selectSelectedCreatureListIndex,
 } from "../../../data/automata/creatures";
@@ -30,13 +33,14 @@ const MainMenu = () => {
   const uIState = useAppSelector(selectUIState);
   const notSelectingCreature = useAppSelector(isNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
+  const selectingProgramIndex = useAppSelector(selectSelectingProgramIndex);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
   );
+  const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
   const showConfirmButton =
-    (uIState == UIState.Creating || uIState == UIState.Reboot) &&
+    isSelectingUIState &&
     selectedCreaturePrograms.every((program) => program !== null);
-  console.log(selectedCreaturePrograms);
   const showRebootButton = uIState == UIState.Idle;
   const selectedCreatureIndexForRequestEncode = useAppSelector(
     selectSelectedCreatureListIndex
@@ -73,6 +77,11 @@ const MainMenu = () => {
 
   function onClickReboot() {
     dispatch(setUIState({ uIState: UIState.Reboot }));
+    dispatch(
+      setSelectingProgramIndex({
+        selectingIndex: selectedCreature.currentProgramIndex,
+      })
+    );
   }
 
   return (
@@ -89,8 +98,13 @@ const MainMenu = () => {
           {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
           <MainMenuSelectingFrame
             order={
-              notSelectingCreature ? null : selectedCreature.currentProgramIndex
+              notSelectingCreature
+                ? null
+                : isSelectingUIState
+                ? selectingProgramIndex
+                : selectedCreature.currentProgramIndex
             }
+            isCurrentProgram={!isSelectingUIState}
             isStop={selectedCreature.isProgramStop}
           />
           {selectedCreaturePrograms.map((program, index) => (

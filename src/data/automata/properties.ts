@@ -64,6 +64,7 @@ export const propertiesSlice = createSlice({
     }
 });
 
+export const selectIsSelectingUIState = (state: RootState) => state.automata.properties.uIState == UIState.Creating || state.automata.properties.uIState == UIState.Reboot;
 export const selectUIState = (state: RootState) => state.automata.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.automata.properties.globalTimer;
     

@@ -45,12 +45,14 @@ interface CreaturesState {
     selectedCreatureIndex: number | typeof NOT_SELECTING_CREATURE | typeof CREATING_CREATURE;
     creatures: CreatureModel[];
     creatingCreature: CreatureModel;
+    selectingProgramIndex: number;
 }
 
 const initialState: CreaturesState = {
     selectedCreatureIndex: NOT_SELECTING_CREATURE,
     creatures: [],
     creatingCreature: emptyCreatingCreature,
+    selectingProgramIndex: 0,
 };
 
 export const creaturesSlice = createSlice({
@@ -66,13 +68,21 @@ export const creaturesSlice = createSlice({
         startCreatingCreature: (state, action) => {
             state.selectedCreatureIndex = CREATING_CREATURE;
             state.creatingCreature = emptyCreatingCreature;
+            state.selectingProgramIndex = 0;
         },
-        trySetProgramForCreatingCreature: (state, action) => {
-            if (state.selectedCreatureIndex == CREATING_CREATURE){
-                state.creatingCreature.programIndexes[state.creatingCreature.currentProgramIndex] = action.payload.index;
-                state.creatingCreature.currentProgramIndex = (state.creatingCreature.currentProgramIndex + 1) % 8;
-            }
-        }
+        setProgramIndex: (state, action) => {
+            const selectedCreature = state.selectedCreatureIndex === NOT_SELECTING_CREATURE
+                ? emptyCreatingCreature :
+            state.selectedCreatureIndex === CREATING_CREATURE
+                ? state.creatingCreature
+                : state.creatures[state.selectedCreatureIndex]
+
+            selectedCreature.programIndexes[state.selectingProgramIndex] = action.payload.programIndex;
+            state.selectingProgramIndex = (state.selectingProgramIndex + 1) % 8;
+        },
+        setSelectingProgramIndex: (state, action) => {
+            state.selectingProgramIndex = action.payload.selectingIndex;
+        },
     },
     extraReducers: (builder) => {
       builder
@@ -85,6 +95,7 @@ export const creaturesSlice = createSlice({
 
 export const isNotSelectingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
+export const selectSelectingProgramIndex = (state: RootState) => state.automata.creatures.selectingProgramIndex;
 export const selectSelectedCreatureListIndex = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE || state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
         ? state.automata.creatures.creatures.length
@@ -103,19 +114,31 @@ export const selectSelectedCreature = (state: RootState) =>
 export const selectSelectedCreaturePrograms = (state: RootState) => 
     selectProgramsByIndexes(selectSelectedCreature(state).programIndexes)(state)
 
-export const selectSelectedCreatureProgramName = (state: RootState) => {
+export const selectSelectedCreatureCurrentProgramName = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);
     const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
     return selectProgramByIndex(programIndex)(state)?.name ?? "";
 }
 
-export const selectSelectedCreatureProgramProcessTime = (state: RootState) => {
+export const selectSelectedCreatureSelectingProgramName = (state: RootState) => {
+    const selectedCreature = selectSelectedCreature(state);
+    const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
+    return selectProgramByIndex(programIndex)(state)?.name ?? "";
+}
+
+export const selectSelectedCreatureCurrentProgramProcessTime = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);
     const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
     return formatTime(selectProgramByIndex(programIndex)(state)?.processingTime ?? 0) ;
 }
 
-export const selectSelectedCreatureProgramProgress = (state: RootState) => {
+export const selectSelectedCreatureSelectingProgramProcessTime = (state: RootState) => {
+    const selectedCreature = selectSelectedCreature(state);
+    const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
+    return formatTime(selectProgramByIndex(programIndex)(state)?.processingTime ?? 0) ;
+}
+
+export const selectSelectedCreatureCurrentProgramProgress = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);
     const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
     if (selectedCreature.isProgramStop == false && programIndex) {
@@ -127,5 +150,5 @@ export const selectSelectedCreatureProgramProgress = (state: RootState) => {
     return 0;
 }
     
-export const { setSelectedCreatureIndex, startCreatingCreature, trySetProgramForCreatingCreature } = creaturesSlice.actions;
+export const { setSelectedCreatureIndex, startCreatingCreature, setProgramIndex, setSelectingProgramIndex } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

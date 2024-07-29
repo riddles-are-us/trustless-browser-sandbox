@@ -1,13 +1,13 @@
 .program-filter-bar-filter-container{
     position: relative;
-    width: 55px;
-    height: 27px;
+    width: 54px;
+    height: 26px;
 }
 
 .program-filter-bar-filter-selecting-background{
     position: absolute;
-    width: 55px;
-    height: 27px;
+    width: 54px;
+    height: 26px;
 }
 
 .program-filter-bar-filter-background{

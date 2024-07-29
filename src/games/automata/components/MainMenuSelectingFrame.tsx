@@ -7,10 +7,11 @@ import "./MainMenuSelectingFrame.css";
 
 interface Props {
   order: number | null;
+  isCurrentProgram: boolean;
   isStop: boolean;
 }
 
-const MainMenuSelectingFrame = ({ order, isStop }: Props) => {
+const MainMenuSelectingFrame = ({ order, isCurrentProgram, isStop }: Props) => {
   if (order == null) {
     return <></>;
   }
@@ -29,19 +30,24 @@ const MainMenuSelectingFrame = ({ order, isStop }: Props) => {
   const arrowXPposition = 50 + Math.cos((angle * Math.PI) / 180) * arrowRadius;
   return (
     <>
-      <div
-        className="main-selecting-frame-container"
-        style={{
-          top: `${selectingFrameYPosition}%`,
-          left: `${selectingFrameXPosition}%`,
-        }}
-      >
-        <img
-          src={isStop ? selectingFrameStop : selectingFrame}
-          className="main-selecting-frame-image"
-          style={{ transform: `translate(-50%, -50%) rotate(${rotation}deg)` }}
-        />
-      </div>
+      {isCurrentProgram && (
+        <div
+          className="main-selecting-frame-container"
+          style={{
+            top: `${selectingFrameYPosition}%`,
+            left: `${selectingFrameXPosition}%`,
+          }}
+        >
+          <img
+            src={isStop ? selectingFrameStop : selectingFrame}
+            className="main-selecting-frame-image"
+            style={{
+              transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+            }}
+          />
+        </div>
+      )}
+
       <div
         className="main-arrow-container"
         style={{ top: `${arrowYPosition}%`, left: `${arrowXPposition}%` }}

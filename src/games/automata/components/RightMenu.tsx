@@ -8,6 +8,7 @@ import Grid from "./Grid";
 import Program from "./Program";
 import ProgramFilterBar from "./ProgramFilterBar";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { selectIsSelectingUIState } from "../../../data/automata/properties";
 import {
   selectFilteredPrograms,
   selectProgramsOnCurrentPage,
@@ -15,7 +16,7 @@ import {
   pageUp,
   pageDown,
 } from "../../../data/automata/programs";
-import { trySetProgramForCreatingCreature } from "../../../data/automata/creatures";
+import { setProgramIndex } from "../../../data/automata/creatures";
 
 const RightMenu = () => {
   const dispatch = useAppDispatch();
@@ -44,6 +45,7 @@ const RightMenu = () => {
   );
   const showDownButton = currentPage > 0;
   const showUpButton = currentPage < pageCount - 1;
+  const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
 
   useEffect(() => {
     updateProgramGridHeight();
@@ -53,8 +55,10 @@ const RightMenu = () => {
     };
   }, []);
 
-  const onSelectProgram = (index: number) => {
-    dispatch(trySetProgramForCreatingCreature({ index }));
+  const onSelectProgram = (programIndex: number) => {
+    if (isSelectingUIState) {
+      dispatch(setProgramIndex({ programIndex }));
+    }
   };
 
   const onClickUpButton = () => {
