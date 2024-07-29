@@ -3,12 +3,11 @@ import background from "../images/backgrounds/top_bar.png";
 import "./MediumResourceDisplay.css";
 
 interface Props {
-  order: number;
   iconImagePath: string;
   amount: number;
 }
 
-const MediumResourceDisplay = ({ order, iconImagePath, amount }: Props) => {
+const MediumResourceDisplay = ({ iconImagePath, amount }: Props) => {
   return (
     <div className="medium-resource-display-container">
       <img src={background} className="medium-resource-display-background" />

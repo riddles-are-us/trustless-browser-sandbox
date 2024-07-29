@@ -4,7 +4,10 @@ import programBackground from "../images/backgrounds/program_button.png";
 import programIdleBackground from "../images/backgrounds/program_idle.png";
 import Grid from "./Grid";
 import TinyResourceDisplay from "./TinyResourceDisplay";
-import { ProgramModel } from "../../../data/automata/models";
+import {
+  ProgramModel,
+  getResourceIconPath,
+} from "../../../data/automata/models";
 
 import { formatTime } from "../../../data/automata/creatures";
 
@@ -28,7 +31,7 @@ const Program = ({ data, onSelect }: Props) => {
           elements={data.resources.map((resource, index) => (
             <TinyResourceDisplay
               key={index}
-              iconImagePath={resource.iconImagePath}
+              iconImagePath={getResourceIconPath(resource.type)}
               amount={resource.amount}
             />
           ))}

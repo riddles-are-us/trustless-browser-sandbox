@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { queryState } from "../../games/automata/request";
-import { CreatureModel, getRareResourceModel, emptyCreatingCreature } from './models';
+import { CreatureModel, getRareResources, emptyCreatingCreature, ResourceType } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
@@ -30,7 +30,7 @@ function rawToModel(raw: CreatureRaw): CreatureModel {
     const isProgramStop = parseInt(binary.slice(0, 8), 2) == 1;
     const startTime = parseInt(binary.slice(16), 2);
     return {
-        rareResources: getRareResourceModel(raw.entity),
+        rareResources: getRareResources(raw.entity),
         name: raw.object_id.join(""),
         programIndexes: raw.modifiers,
         currentProgramIndex: currentProgramIndex,
@@ -110,6 +110,9 @@ export const selectSelectedCreature = (state: RootState) =>
     state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
         ? state.automata.creatures.creatingCreature
         : state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
+
+export const selectSelectedRareResources = (type: ResourceType) => (state: RootState) => 
+    selectSelectedCreature(state).rareResources.find(resource => resource.type == type)?.amount ?? 0;
 
 export const selectSelectedCreaturePrograms = (state: RootState) => 
     selectProgramsByIndexes(selectSelectedCreature(state).programIndexes)(state)

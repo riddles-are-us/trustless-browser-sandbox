@@ -3,12 +3,11 @@ import background from "../images/backgrounds/bottom_bar.png";
 import "./SmallResourceDisplay.css";
 
 interface Props {
-  order: number;
   iconImagePath: string;
   amount: number;
 }
 
-const SmallResourceDisplay = ({ order, iconImagePath, amount }: Props) => {
+const SmallResourceDisplay = ({ iconImagePath, amount }: Props) => {
   return (
     <div className="small-resource-display-container">
       <img src={background} className="small-resource-display-background" />
