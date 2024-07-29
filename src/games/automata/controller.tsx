@@ -59,14 +59,14 @@ export function GameController() {
   }
 
   useEffect(() => {
-    loginProcess();
-  }, [uIState]);
-
-  useEffect(() => {
     if (l2account && uIState == UIState.Init) {
       dispatch(setUIState({ uIState: UIState.QueryConfig }));
     }
   }, [l2account]);
+
+  useEffect(() => {
+    loginProcess();
+  }, [uIState]);
 
   useEffect(() => {
     setTimeout(() => {

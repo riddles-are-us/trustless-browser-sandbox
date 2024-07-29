@@ -11,7 +11,7 @@ interface CreatureRaw {
     modifier_info: string;
 }
 
-function formatTime(seconds: number) {
+export function formatTime(seconds: number) {
     if (seconds == 0){
         return "";
     }

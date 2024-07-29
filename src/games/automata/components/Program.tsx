@@ -1,9 +1,12 @@
 import React from "react";
 import "./Program.css";
-import programBackground from "../images/backgrounds/program_background.png";
+import programBackground from "../images/backgrounds/program_button.png";
+import programIdleBackground from "../images/backgrounds/program_idle.png";
 import Grid from "./Grid";
 import TinyResourceDisplay from "./TinyResourceDisplay";
 import { ProgramModel } from "../../../data/automata/models";
+
+import { formatTime } from "../../../data/automata/creatures";
 
 interface Props {
   data: ProgramModel;
@@ -14,12 +17,13 @@ const Program = ({ data, onSelect }: Props) => {
   return (
     <div className="program-container" onClick={onSelect}>
       <img src={programBackground} className="program-background" />
-      <p className="program-text">{data.name}</p>
+      <p className="program-name-text">{data.name}</p>
+      <p className="program-time-text">{formatTime(data.processingTime)}</p>
       <div className="program-resource-grid">
         <Grid
-          elementWidth={29}
-          elementHeight={12}
-          columnCount={2}
+          elementWidth={23}
+          elementHeight={11}
+          columnCount={3}
           rowCount={3}
           elements={data.resources.map((resource, index) => (
             <TinyResourceDisplay

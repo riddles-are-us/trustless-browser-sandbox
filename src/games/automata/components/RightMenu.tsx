@@ -27,7 +27,7 @@ const RightMenu = () => {
       setProgramGridHeight(programGridRef.current.offsetHeight);
     }
   };
-  const programGridElementWidth = 75;
+  const programGridElementWidth = 85;
   const programGridElementHeight = 70;
   const programGridColumnCount = 2;
   const programGridRowCount = Math.floor(

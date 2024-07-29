@@ -34,10 +34,10 @@
 .right-program-grid{
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 150px;
+    width: 170px;
     height: calc(100% - 150px);
     top: 50%;
-    left: 55%;
+    left: 54%;
 }
 
 .right-page-number-position{
