@@ -4,6 +4,9 @@ import { getConfig, sendTransaction, queryState } from "../../games/automata/req
 
 export enum UIState{
   Init,
+  QueryConfig,
+  QueryState,
+  CreatePlayer,
   Idle,
   Creating,
   Reboot,
@@ -12,15 +15,11 @@ export enum UIState{
 interface PropertiesState {
     uIState: UIState;
     globalTimer: number;
-    getConfigFinished: boolean;
-    queryStateFinished: boolean;
 }
 
 const initialState: PropertiesState = {
     uIState: UIState.Init,
     globalTimer: 0,
-    getConfigFinished: false,
-    queryStateFinished: false,
 };
 
 export const propertiesSlice = createSlice({
@@ -35,30 +34,32 @@ export const propertiesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getConfig.fulfilled, (state, action) => {
-        state.getConfigFinished = true;
-        if (state.uIState == UIState.Init && state.getConfigFinished && state.queryStateFinished){
-          state.uIState = UIState.Idle;
-        }
+        state.uIState = UIState.QueryState;
         console.log("query config fulfilled");
       })
       .addCase(getConfig.rejected, (state, action) => {
         console.log(`query config rejected: ${action.payload}`);
       })
       .addCase(sendTransaction.fulfilled, (state, action) => {
+        if (state.uIState == UIState.CreatePlayer){
+          state.uIState = UIState.Idle;
+        }
         console.log("send transaction fulfilled");
       })
       .addCase(sendTransaction.rejected, (state, action) => {
         console.log(`send transaction rejected: ${action.payload}`);
       })
       .addCase(queryState.fulfilled, (state, action) => {
-        state.queryStateFinished = true;
-        if (state.uIState == UIState.Init && state.getConfigFinished && state.queryStateFinished){
+        if (state.uIState == UIState.QueryState){
           state.uIState = UIState.Idle;
         }
         state.globalTimer = action.payload.globalTimer;
         console.log("send transaction fulfilled");
       })
       .addCase(queryState.rejected, (state, action) => {
+        if (state.uIState == UIState.QueryState){
+          state.uIState = UIState.CreatePlayer;
+        }
         console.log(`query state rejected: ${action.payload}`);
       });
     }

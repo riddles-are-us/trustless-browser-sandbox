@@ -11,7 +11,11 @@ import Gameplay from "./components/Gameplay";
 import WelcomePage from "./components/WelcomePage";
 
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState } from "../../data/automata/properties";
+import {
+  UIState,
+  selectUIState,
+  setUIState,
+} from "../../data/automata/properties";
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
@@ -23,7 +27,7 @@ export function GameController() {
   const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
 
-  async function createPlayer() {
+  function createPlayer() {
     try {
       const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       dispatch(
@@ -37,28 +41,36 @@ export function GameController() {
     }
   }
 
-  async function queryStateWithReboot() {
-    if (l2account) {
-      try {
-        dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-      } catch (e) {
-        if (e == "QueryStateError") {
-          await createPlayer();
-        } else {
-          console.log("Error at query state " + e);
-        }
-      }
+  function updateState() {
+    if (uIState >= UIState.Idle) {
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
     }
     setInc(inc + 1);
   }
 
+  function loginProcess() {
+    if (uIState == UIState.QueryConfig) {
+      dispatch(getConfig());
+    } else if (uIState == UIState.QueryState) {
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    } else if (uIState == UIState.CreatePlayer) {
+      createPlayer();
+    }
+  }
+
   useEffect(() => {
-    dispatch(getConfig());
+    loginProcess();
+  }, [uIState]);
+
+  useEffect(() => {
+    if (l2account && uIState == UIState.Init) {
+      dispatch(setUIState({ uIState: UIState.QueryConfig }));
+    }
   }, [l2account]);
 
   useEffect(() => {
     setTimeout(() => {
-      queryStateWithReboot();
+      updateState();
     }, 1000);
   }, [inc]);
 
@@ -66,7 +78,7 @@ export function GameController() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (l2account) {
+      if (UIState.Init < uIState && uIState < UIState.Idle) {
         setProgress((p) => Math.min(p + 10, 100)); // 2% progress every 100ms for a total of 5 seconds
       }
     }, 100);
@@ -74,11 +86,11 @@ export function GameController() {
       clearInterval(interval);
       setProgress(0);
     };
-  }, [l2account]);
+  }, [uIState]);
 
   const account = useAppSelector(selectL1Account);
 
-  if (l2account && uIState != UIState.Init) {
+  if (l2account && uIState >= UIState.Idle) {
     return <Gameplay />;
   } else {
     return (
