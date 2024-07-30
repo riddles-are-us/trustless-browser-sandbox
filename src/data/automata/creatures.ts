@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { queryState } from "../../games/automata/request";
-import { CreatureModel, getRareResources, emptyCreatingCreature, ResourceType } from './models';
+import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
@@ -24,7 +24,7 @@ export function formatTime(seconds: number) {
     return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
 }
 
-function rawToModel(raw: CreatureRaw): CreatureModel {
+function rawToModel(raw: CreatureRaw, index: number): CreatureModel {
     const binary = BigInt(raw.modifier_info).toString(2).padStart(64, "0");
     const currentProgramIndex = parseInt(binary.slice(8, 16), 2);
     const isProgramStop = parseInt(binary.slice(0, 8), 2) == 1;
@@ -32,6 +32,8 @@ function rawToModel(raw: CreatureRaw): CreatureModel {
     return {
         rareResources: getRareResources(raw.entity),
         name: raw.object_id.join(""),
+        creatureType: index,
+        isLocked: false,
         programIndexes: raw.modifiers,
         currentProgramIndex: currentProgramIndex,
         isProgramStop: isProgramStop,
@@ -39,13 +41,34 @@ function rawToModel(raw: CreatureRaw): CreatureModel {
     };
 }
 
+function createLockedCreature(creatureType: number): CreatureModel {
+    return {
+        rareResources: emptyRareResources,
+        name: "Lock",
+        isLocked: true,
+        creatureType: creatureType,
+        programIndexes: [null, null, null, null, null, null, null, null],
+        currentProgramIndex: 0,
+        isProgramStop: false,
+        startTime: 0,
+    }
+}
+
+const CREATURE_MAX_COUNT = 24;
+function fillCreaturesWithLocked(origin: CreatureModel[]): CreatureModel[] {
+    const start = origin.length;
+    const end = CREATURE_MAX_COUNT;
+    const addArray = Array.from({ length: end - start }, (_, index) => start + index).map((index) => createLockedCreature(index));
+    return [...origin, ...addArray];
+}
+
 const NOT_SELECTING_CREATURE = "NotSelecting"
-const CREATING_CREATURE = "Creating"
 interface CreaturesState {
-    selectedCreatureIndex: number | typeof NOT_SELECTING_CREATURE | typeof CREATING_CREATURE;
+    selectedCreatureIndex: number | typeof NOT_SELECTING_CREATURE;
     creatures: CreatureModel[];
     creatingCreature: CreatureModel;
     selectingProgramIndex: number;
+    currentPage: number;
 }
 
 const initialState: CreaturesState = {
@@ -53,6 +76,7 @@ const initialState: CreaturesState = {
     creatures: [],
     creatingCreature: emptyCreatingCreature,
     selectingProgramIndex: 0,
+    currentPage: 0,
 };
 
 export const creaturesSlice = createSlice({
@@ -60,20 +84,19 @@ export const creaturesSlice = createSlice({
     initialState,
     reducers: {
         setSelectedCreatureIndex: (state, action) => {
-            state.selectedCreatureIndex = 
-                (action.payload.index >= state.creatures.length)
-                    ? CREATING_CREATURE
-                    : action.payload.index;
+            if (action.payload.index < state.creatures.length){
+                state.selectedCreatureIndex = action.payload.index;
+            }
         },
         startCreatingCreature: (state, action) => {
-            state.selectedCreatureIndex = CREATING_CREATURE;
+            state.selectedCreatureIndex = state.creatures.length;
             state.creatingCreature = emptyCreatingCreature;
             state.selectingProgramIndex = 0;
         },
         setProgramIndex: (state, action) => {
             const selectedCreature = state.selectedCreatureIndex === NOT_SELECTING_CREATURE
                 ? emptyCreatingCreature :
-            state.selectedCreatureIndex === CREATING_CREATURE
+            state.selectedCreatureIndex === state.creatures.length
                 ? state.creatingCreature
                 : state.creatures[state.selectedCreatureIndex]
 
@@ -83,31 +106,45 @@ export const creaturesSlice = createSlice({
         setSelectingProgramIndex: (state, action) => {
             state.selectingProgramIndex = action.payload.selectingIndex;
         },
+        nextPage: (state, action) => {
+            state.currentPage += 1;
+        },
+        prevPage: (state, action) => {
+            state.currentPage = Math.max(0, state.currentPage - 1);
+        },
     },
     extraReducers: (builder) => {
       builder
         .addCase(queryState.fulfilled, (state, action) => {
-            state.creatures = action.payload.creatures.map(rawToModel);
+            const creatures = action.payload.creatures as CreatureRaw[];
+            state.creatures =creatures .map((creature, index) => rawToModel(creature, index));
         });
     }
   },
 );
 
+export const selectCreaturesOnCurrentPage = (creatures: CreatureModel[]) => (amountPerPage: number) => (state: RootState) => {
+    const startIndex = state.automata.creatures.currentPage * amountPerPage;
+    const endIndex = startIndex + amountPerPage;
+    return creatures.slice(startIndex, endIndex);
+}
+
 export const isNotSelectingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
 export const selectSelectingProgramIndex = (state: RootState) => state.automata.creatures.selectingProgramIndex;
 export const selectSelectedCreatureListIndex = (state: RootState) => 
-    state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE || state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
-        ? state.automata.creatures.creatures.length
-        : state.automata.creatures.selectedCreatureIndex
+    state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
+        ? -1
+        : state.automata.creatures.selectedCreatureIndex;
+export const selectCreaturesCount = (state: RootState) => state.automata.creatures.creatures.length
 export const selectCreatures = (state: RootState) => 
-    state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
-        ? [...state.automata.creatures.creatures, state.automata.creatures.creatingCreature]
-        : state.automata.creatures.creatures;
+    state.automata.creatures.selectedCreatureIndex === state.automata.creatures.creatures.length
+        ? fillCreaturesWithLocked([...state.automata.creatures.creatures, state.automata.creatures.creatingCreature])
+        : fillCreaturesWithLocked(state.automata.creatures.creatures);
 export const selectSelectedCreature = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
         ? emptyCreatingCreature :
-    state.automata.creatures.selectedCreatureIndex === CREATING_CREATURE
+    state.automata.creatures.selectedCreatureIndex === state.automata.creatures.creatures.length
         ? state.automata.creatures.creatingCreature
         : state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
 
@@ -152,6 +189,8 @@ export const selectSelectedCreatureCurrentProgramProgress = (state: RootState) =
     }
     return 0;
 }
+
+export const selectCurrentPage = (state: RootState) => state.automata.creatures.currentPage;
     
-export const { setSelectedCreatureIndex, startCreatingCreature, setProgramIndex, setSelectingProgramIndex } = creaturesSlice.actions;
+export const { setSelectedCreatureIndex, startCreatingCreature, setProgramIndex, setSelectingProgramIndex, nextPage, prevPage } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

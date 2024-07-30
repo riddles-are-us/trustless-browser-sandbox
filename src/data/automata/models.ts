@@ -16,6 +16,8 @@ import FlexonixIcon from "../../games/automata/images/Icons/Flexonix.png";
 export interface CreatureModel {
     rareResources: ResourceAmountPair[];
     name: string;
+    isLocked: boolean;
+    creatureType: number; // can change to enum later to show different types of pictures
     programIndexes: Array<(number | null)>;
     currentProgramIndex: number;
     isProgramStop: boolean;
@@ -90,6 +92,8 @@ export const emptyRareResources = rareResourceTypes.map(type => ({
 export const emptyCreatingCreature: CreatureModel = {
     rareResources: emptyRareResources,
     name: "Creating",
+    isLocked: false,
+    creatureType: 0,
     programIndexes: [null, null, null, null, null, null, null, null],
     currentProgramIndex: 0,
     isProgramStop: false,

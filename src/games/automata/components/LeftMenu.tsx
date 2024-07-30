@@ -4,21 +4,19 @@ import leftCornerBar from "../images/backgrounds/left_corner_bar.png";
 import "./LeftMenu.css";
 import PrevPageButton from "./Buttons/PrevPageButton";
 import NextPageButton from "./Buttons/NextPageButton";
-import NewButton from "./Buttons/NewButton";
 import Grid from "./Grid";
 import Creature from "./Creature";
 import {
   selectCreatures,
-  startCreatingCreature,
+  selectCurrentPage,
+  selectCreaturesOnCurrentPage,
+  nextPage,
+  prevPage,
 } from "../../../data/automata/creatures";
-import {
-  UIState,
-  selectUIState,
-  setUIState,
-} from "../../../data/automata/properties";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const LeftMenu = () => {
+  const dispatch = useAppDispatch();
   const [creatureGridHeight, setCreatureGridHeight] = useState(0);
   const creatureGridRef = useRef<HTMLInputElement>(null);
   const updateCreatureGridHeight = () => {
@@ -32,16 +30,28 @@ const LeftMenu = () => {
   const creatureGridRowCount = Math.floor(
     creatureGridHeight / creatureGridElementHeight
   );
+  const amountPerPage = creatureGridColumnCount * creatureGridRowCount;
 
-  const creatures = useAppSelector(selectCreatures);
-  const uIState = useAppSelector(selectUIState);
-  const dispatch = useAppDispatch();
-  const showNewButton = uIState == UIState.Idle;
+  const currentPage = useAppSelector(selectCurrentPage);
+  const creaturesBeforePaging = useAppSelector(selectCreatures);
+  const creatures = useAppSelector(
+    selectCreaturesOnCurrentPage(creaturesBeforePaging)(amountPerPage)
+  );
+  const pageCount = Math.max(
+    Math.ceil(creaturesBeforePaging.length / amountPerPage),
+    1
+  );
+  const enableNextPageButton = currentPage < pageCount - 1;
+  const enablePrevPageButton = currentPage > 0;
 
-  function createObject() {
-    dispatch(startCreatingCreature({}));
-    dispatch(setUIState({ uIState: UIState.Creating }));
-  }
+  const onClickPrevPageButton = () => {
+    dispatch(prevPage({}));
+  };
+
+  const onClickNextPageButton = () => {
+    dispatch(nextPage({}));
+  };
+
   useEffect(() => {
     updateCreatureGridHeight();
     window.addEventListener("resize", updateCreatureGridHeight);
@@ -70,26 +80,16 @@ const LeftMenu = () => {
 
       <img src={leftMiddleBar} className="left-middle-bar" />
       <img src={leftCornerBar} className="left-corner-bar" />
-
-      {showNewButton ? (
-        <div className="left-new-button-position">
-          <NewButton onClick={() => createObject()} />
-        </div>
-      ) : null}
       <div className="left-up-button-position">
         <PrevPageButton
-          isDisabled={true}
-          onClick={() => {
-            /**/
-          }}
+          isDisabled={!enablePrevPageButton}
+          onClick={onClickPrevPageButton}
         />
       </div>
       <div className="left-down-button-position">
         <NextPageButton
-          isDisabled={true}
-          onClick={() => {
-            /**/
-          }}
+          isDisabled={!enableNextPageButton}
+          onClick={onClickNextPageButton}
         />
       </div>
     </div>

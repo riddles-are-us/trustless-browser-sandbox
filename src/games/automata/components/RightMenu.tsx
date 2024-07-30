@@ -35,12 +35,12 @@ const RightMenu = () => {
   );
   const amountPerPage = programGridColumnCount * programGridRowCount;
   const currentPage = useAppSelector(selectCurrentPage);
-  const programsBeforePage = useAppSelector(selectFilteredPrograms);
+  const programsBeforePaging = useAppSelector(selectFilteredPrograms);
   const programs = useAppSelector(
-    selectProgramsOnCurrentPage(programsBeforePage)(amountPerPage)
+    selectProgramsOnCurrentPage(programsBeforePaging)(amountPerPage)
   );
   const pageCount = Math.max(
-    Math.ceil(programsBeforePage.length / amountPerPage),
+    Math.ceil(programsBeforePaging.length / amountPerPage),
     1
   );
   const enableNextPageButton = currentPage < pageCount - 1;
