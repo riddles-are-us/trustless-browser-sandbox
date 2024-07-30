@@ -40,29 +40,19 @@
     left: 54%;
 }
 
-.right-page-number-position{
-    position: absolute;
-    bottom: 8px;
-    left: 105px;
-}
-
-.right-up-button-position{
-    position: absolute;
-    bottom: 20px;
-    left: 30px;
-}
-
-.right-down-button-position{
-    position: absolute;
-    bottom: 20px;
-    left: 150px;
-}
-
 .right-program-filter-bar-position{
     position: absolute;
     top: 50%;
     left: -10px;
     transform: translate(-50%, -50%);
+}
+
+.right-program-page-selector{
+    position: absolute;
+    width: 170px;
+    height: 40px;
+    bottom: 0px;
+    left: 20px;
 }
 
 .right-corner-bar {

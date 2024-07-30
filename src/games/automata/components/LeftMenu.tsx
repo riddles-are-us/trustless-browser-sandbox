@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import leftMiddleBar from "../images/backgrounds/left_middle_bar.png";
 import leftCornerBar from "../images/backgrounds/left_corner_bar.png";
 import "./LeftMenu.css";
-import PrevPageButton from "./Buttons/PrevPageButton";
-import NextPageButton from "./Buttons/NextPageButton";
+import PageSelector from "./PageSelector";
 import Grid from "./Grid";
 import Creature from "./Creature";
 import {
@@ -73,23 +72,23 @@ const LeftMenu = () => {
           columnCount={creatureGridColumnCount}
           rowCount={creatureGridRowCount}
           elements={creatures.map((creature, index) => (
-            <Creature key={index} index={index} creature={creature} />
+            <Creature
+              key={index}
+              index={currentPage * amountPerPage + index}
+              creature={creature}
+            />
           ))}
         />
       </div>
 
       <img src={leftMiddleBar} className="left-middle-bar" />
       <img src={leftCornerBar} className="left-corner-bar" />
-      <div className="left-up-button-position">
-        <PrevPageButton
-          isDisabled={!enablePrevPageButton}
-          onClick={onClickPrevPageButton}
-        />
-      </div>
-      <div className="left-down-button-position">
-        <NextPageButton
-          isDisabled={!enableNextPageButton}
-          onClick={onClickNextPageButton}
+      <div className="left-program-page-selector">
+        <PageSelector
+          currentPage={currentPage}
+          pageCount={pageCount}
+          onClickPrevPageButton={onClickPrevPageButton}
+          onClickNextPageButton={onClickNextPageButton}
         />
       </div>
     </div>

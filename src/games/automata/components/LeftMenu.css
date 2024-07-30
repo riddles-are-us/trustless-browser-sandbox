@@ -40,22 +40,12 @@
     left: 45%;
 }
 
-.left-new-button-position{
+.left-program-page-selector{
     position: absolute;
-    bottom: 15px;
-    left: 10px;
-}
-
-.left-up-button-position{
-    position: absolute;
-    bottom: 20px;
-    left: 110px;
-}
-
-.left-down-button-position{
-    position: absolute;
-    bottom: 20px;
-    left: 140px;
+    width: 170px;
+    height: 40px;
+    bottom: 0px;
+    left: 0px;
 }
 
 .left-corner-bar {

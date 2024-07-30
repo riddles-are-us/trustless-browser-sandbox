@@ -1,0 +1,44 @@
+.page-selector-container{
+    position: absolute;
+    width: 170px;
+    height: 40px;
+}
+
+.page-selector-page-number-background {
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 25px;
+}
+
+.page-selector-page-number-text {
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 25px;
+    margin: 0px;
+    color: white;
+    width: 56px;
+    height: 25px;
+    font-family: "mishmash";
+    color: #5CFFFF;
+    pointer-events: none;
+}
+
+.page-selector-prev-button{
+    position: absolute;
+    bottom: 25%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+}
+
+.page-selector-next-button{
+    position: absolute;
+    bottom: 25%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+}

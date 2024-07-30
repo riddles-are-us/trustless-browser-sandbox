@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import rightCornerBar from "../images/backgrounds/right_corner_bar.png";
 import "./RightMenu.css";
-import PrevPageButton from "./Buttons/PrevPageButton";
-import NextPageButton from "./Buttons/NextPageButton";
-import PageNumber from "./PageNumber";
+import PageSelector from "./PageSelector";
 import Grid from "./Grid";
 import Program from "./Program";
 import ProgramFilterBar from "./ProgramFilterBar";
@@ -43,8 +41,6 @@ const RightMenu = () => {
     Math.ceil(programsBeforePaging.length / amountPerPage),
     1
   );
-  const enableNextPageButton = currentPage < pageCount - 1;
-  const enablePrevPageButton = currentPage > 0;
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
 
   useEffect(() => {
@@ -74,11 +70,7 @@ const RightMenu = () => {
       <div className="right-top"></div>
       <div className="right-middle"></div>
       <div className="right-bottom"></div>
-      <PageNumber
-        page={currentPage + 1}
-        maxPage={pageCount}
-        positionClass={"right-page-number-position"}
-      />
+      <img src={rightCornerBar} className="right-corner-bar" />
       <div ref={programGridRef} className="right-program-grid">
         <Grid
           elementWidth={programGridElementWidth}
@@ -94,21 +86,15 @@ const RightMenu = () => {
           ))}
         />
       </div>
-      <img src={rightCornerBar} className="right-corner-bar" />
       <div className="right-program-filter-bar-position">
         <ProgramFilterBar />
       </div>
-      <div className="right-up-button-position">
-        <PrevPageButton
-          isDisabled={!enablePrevPageButton}
-          onClick={onClickPrevPageButton}
-        />
-      </div>
-
-      <div className="right-down-button-position">
-        <NextPageButton
-          isDisabled={!enableNextPageButton}
-          onClick={onClickNextPageButton}
+      <div className="right-program-page-selector">
+        <PageSelector
+          currentPage={currentPage}
+          pageCount={pageCount}
+          onClickPrevPageButton={onClickPrevPageButton}
+          onClickNextPageButton={onClickNextPageButton}
         />
       </div>
     </div>
