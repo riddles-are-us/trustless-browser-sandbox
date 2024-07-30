@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { queryState } from "../../games/automata/request";
-import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType } from './models';
+import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType, allResourceTypes } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
@@ -153,6 +153,13 @@ export const selectSelectedRareResources = (type: ResourceType) => (state: RootS
 
 export const selectSelectedCreaturePrograms = (state: RootState) => 
     selectProgramsByIndexes(selectSelectedCreature(state).programIndexes)(state)
+
+export const selectSelectedCreatureDiffResources = (state: RootState) => {
+    const programs = selectProgramsByIndexes(selectSelectedCreature(state).programIndexes)(state).filter(program => program != null);
+    const diffResources = Object.fromEntries(allResourceTypes.map(type => [type, 0]));
+    programs.forEach(program => program?.resources?.forEach(resource => diffResources[resource.type] += resource.amount));
+    return diffResources;
+}
 
 export const selectSelectedCreatureCurrentProgramName = (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);

@@ -6,23 +6,34 @@
 
 .diff-resource-display-image {
     position: absolute;
-    top: 10%;
+    top: 20%;
     left: 10%;
-    width: 37.3%;
-    height: 80%;
+    width: 28%;
+    height: 60%;
 }
 
-.diff-resource-display-text {
+.diff-resource-display-positive-text, .diff-resource-display-zero-text, .diff-resource-display-negative-text {
     position: absolute;
     top: 50%;
-    left: 78.5%;
+    left: 70%;
     transform: translate(-50%, -50%);
-    font-size: 12px;
+    font-size: 10px;
     text-align: center;
-    line-height: 12px;
+    line-height: 10px;
     margin: 0px;
-    color: yellow;
-    width: 42.7%;
-    height: 12px;
+    width: 60%;
+    height: 10px;
     font-family: "mishmash";
+}
+
+.diff-resource-display-positive-text {
+    color: rgb(85, 221, 85);
+}
+
+.diff-resource-display-zero-text{
+    color: white;
+}
+
+.diff-resource-display-negative-text {
+    color: rgb(220, 36, 36)
 }

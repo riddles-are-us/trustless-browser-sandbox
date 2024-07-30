@@ -16,7 +16,9 @@
     height: 10px;
 }
 
-.program-resource-display-text {
+.program-resource-display-positive-text, 
+.program-resource-display-zero-text, 
+.program-resource-display-negative-text {
     position: absolute;
     top: 50%;
     left: 16.5px;
@@ -25,8 +27,19 @@
     text-align: center;
     line-height: 7px;
     margin: 0px;
-    color: white;
     width: 13px;
     height: 7px;
     font-family: "mishmash";
+}
+
+.program-resource-display-positive-text {
+    color: rgb(85, 221, 85);
+}
+
+.program-resource-display-zero-text{
+    color: white;
+}
+
+.program-resource-display-negative-text {
+    color: rgb(220, 36, 36)
 }

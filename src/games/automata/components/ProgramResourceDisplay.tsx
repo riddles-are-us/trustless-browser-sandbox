@@ -12,9 +12,15 @@ const ProgramResourceDisplay = ({ iconImagePath, amount }: Props) => {
   return (
     <div className="program-resource-display-container">
       <img src={iconImagePath} className="program-resource-display-image" />
-      <p className="program-resource-display-text">{`${getSign(
-        amount
-      )}${amount.toString()}`}</p>
+      <p
+        className={
+          amount == 0
+            ? "program-resource-display-zero-text"
+            : amount > 0
+            ? "program-resource-display-positive-text"
+            : "program-resource-display-negative-text"
+        }
+      >{`${getSign(amount)}${amount.toString()}`}</p>
     </div>
   );
 };

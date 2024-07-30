@@ -10,16 +10,26 @@ const DiffResourceDisplay = ({
   iconImagePath = null,
   amount = null,
 }: Props) => {
-  const getSign = (number: number) => (number > 0 ? "+" : "");
-
   return (
     <div className="diff-resource-display-container">
       {iconImagePath != null && amount != null ? (
         <>
           <img src={iconImagePath} className="diff-resource-display-image" />
-          <p className="diff-resource-display-text">{`${getSign(
-            amount
-          )}${amount.toString()}`}</p>
+          <p
+            className={
+              amount == 0
+                ? "diff-resource-display-zero-text"
+                : amount > 0
+                ? "diff-resource-display-positive-text"
+                : "diff-resource-display-negative-text"
+            }
+          >
+            {amount == 0
+              ? ""
+              : amount > 0
+              ? `+${amount.toString()}`
+              : `${amount.toString()}`}
+          </p>
         </>
       ) : null}
     </div>

@@ -21,6 +21,7 @@ import {
   selectSelectedCreature,
   selectSelectingProgramIndex,
   selectSelectedCreaturePrograms,
+  selectSelectedCreatureDiffResources,
   selectSelectedCreatureListIndex,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -36,6 +37,9 @@ const MainMenu = () => {
   const selectingProgramIndex = useAppSelector(selectSelectingProgramIndex);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
+  );
+  const selectedCreatureDiffResources = useAppSelector(
+    selectSelectedCreatureDiffResources
   );
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
   const showConfirmButton =
@@ -88,7 +92,7 @@ const MainMenu = () => {
     <div className="main">
       <div className="main-content">
         <div className="main-info-container">
-          <DiffResourcesInfo />
+          <DiffResourcesInfo diffResources={selectedCreatureDiffResources} />
         </div>
         <div className="main-circle-container">
           <img src={circleBackground} className="main-circle-background" />
