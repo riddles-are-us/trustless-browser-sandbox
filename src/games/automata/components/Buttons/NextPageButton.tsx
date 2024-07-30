@@ -3,25 +3,26 @@ import ImageButton from "./ImageButton";
 import downButtonImage from "../../images/Buttons/Down/down.png";
 import downButtonHoverImage from "../../images/Buttons/Down/down_hover.png";
 import downButtonClickImage from "../../images/Buttons/Down/down_click.png";
-import "./DownButton.css";
+import "./NextPageButton.css";
 
 interface Props {
+  isDisabled: boolean;
   onClick: () => void;
 }
 
-const DownButton = ({ onClick }: Props) => {
+const NextPageButton = ({ isDisabled, onClick }: Props) => {
   return (
-    <div className="down-button-scale">
+    <div className="next-page-button-scale">
       <ImageButton
-        isDisabled={false}
+        isDisabled={isDisabled}
         defaultImagePath={downButtonImage}
         hoverImagePath={downButtonHoverImage}
         clickedImagePath={downButtonClickImage}
-        disabledImagePath={downButtonImage}
+        disabledImagePath={downButtonClickImage}
         onClick={onClick}
       />
     </div>
   );
 };
 
-export default DownButton;
+export default NextPageButton;

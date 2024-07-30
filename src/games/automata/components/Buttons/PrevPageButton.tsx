@@ -3,25 +3,26 @@ import ImageButton from "./ImageButton";
 import upButtonImage from "../../images/Buttons/Up/up.png";
 import upButtonHoverImage from "../../images/Buttons/Up/up_hover.png";
 import upButtonClickImage from "../../images/Buttons/Up/up_click.png";
-import "./UpButton.css";
+import "./PrevPageButton.css";
 
 interface Props {
+  isDisabled: boolean;
   onClick: () => void;
 }
 
-const UpButton = ({ onClick }: Props) => {
+const PrevPageButton = ({ isDisabled, onClick }: Props) => {
   return (
-    <div className="up-button-scale">
+    <div className="prev-page-button-scale">
       <ImageButton
-        isDisabled={false}
+        isDisabled={isDisabled}
         defaultImagePath={upButtonImage}
         hoverImagePath={upButtonHoverImage}
         clickedImagePath={upButtonClickImage}
-        disabledImagePath={upButtonImage}
+        disabledImagePath={upButtonClickImage}
         onClick={onClick}
       />
     </div>
   );
 };
 
-export default UpButton;
+export default PrevPageButton;

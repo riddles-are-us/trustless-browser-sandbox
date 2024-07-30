@@ -48,10 +48,10 @@ export const programsSlice = createSlice({
             const type = action.payload.type as ResourceType;
             state.filter.dict[type] = !(state.filter.dict[type] ?? true);
         },
-        pageUp: (state, action) => {
+        nextPage: (state, action) => {
             state.currentPage += 1;
         },
-        pageDown: (state, action) => {
+        prevPage: (state, action) => {
             state.currentPage = Math.max(0, state.currentPage - 1);
         },
     },
@@ -92,7 +92,7 @@ export const selectCurrentPage = (state: RootState) => state.automata.programs.c
 export const {
     resetFilter,
     toggleFilter,
-    pageUp,
-    pageDown,
+    nextPage,
+    prevPage,
 } = programsSlice.actions;
 export default programsSlice.reducer;

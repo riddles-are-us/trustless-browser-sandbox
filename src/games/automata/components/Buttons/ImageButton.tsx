@@ -24,13 +24,13 @@ const ImageButton = ({
   const handleMouseDown = () => {
     if (!isDisabled) {
       setIsClicked(true);
-      onClick();
     }
   };
 
   const handleMouseUp = () => {
     if (!isDisabled) {
       setIsClicked(false);
+      onClick();
     }
   };
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import rightCornerBar from "../images/backgrounds/right_corner_bar.png";
 import "./RightMenu.css";
-import UpButton from "./Buttons/UpButton";
-import DownButton from "./Buttons/DownButton";
+import PrevPageButton from "./Buttons/PrevPageButton";
+import NextPageButton from "./Buttons/NextPageButton";
 import PageNumber from "./PageNumber";
 import Grid from "./Grid";
 import Program from "./Program";
@@ -13,8 +13,8 @@ import {
   selectFilteredPrograms,
   selectProgramsOnCurrentPage,
   selectCurrentPage,
-  pageUp,
-  pageDown,
+  prevPage,
+  nextPage,
 } from "../../../data/automata/programs";
 import { setProgramIndex } from "../../../data/automata/creatures";
 
@@ -43,8 +43,8 @@ const RightMenu = () => {
     Math.ceil(programsBeforePage.length / amountPerPage),
     1
   );
-  const showDownButton = currentPage > 0;
-  const showUpButton = currentPage < pageCount - 1;
+  const enableNextPageButton = currentPage < pageCount - 1;
+  const enablePrevPageButton = currentPage > 0;
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
 
   useEffect(() => {
@@ -61,12 +61,12 @@ const RightMenu = () => {
     }
   };
 
-  const onClickUpButton = () => {
-    dispatch(pageUp({}));
+  const onClickPrevPageButton = () => {
+    dispatch(prevPage({}));
   };
 
-  const onClickDownButton = () => {
-    dispatch(pageDown({}));
+  const onClickNextPageButton = () => {
+    dispatch(nextPage({}));
   };
 
   return (
@@ -99,11 +99,17 @@ const RightMenu = () => {
         <ProgramFilterBar />
       </div>
       <div className="right-up-button-position">
-        {showUpButton && <UpButton onClick={onClickUpButton} />}
+        <PrevPageButton
+          isDisabled={!enablePrevPageButton}
+          onClick={onClickPrevPageButton}
+        />
       </div>
 
       <div className="right-down-button-position">
-        {showDownButton && <DownButton onClick={onClickDownButton} />}
+        <NextPageButton
+          isDisabled={!enableNextPageButton}
+          onClick={onClickNextPageButton}
+        />
       </div>
     </div>
   );
