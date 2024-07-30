@@ -1,9 +1,9 @@
 import React from "react";
 import "./Program.css";
 import programBackground from "../images/backgrounds/program_button.png";
-import programIdleBackground from "../images/backgrounds/program_idle.png";
+import programIdleBackground from "../images/backgrounds/program_button_idle.png";
 import Grid from "./Grid";
-import TinyResourceDisplay from "./TinyResourceDisplay";
+import ProgramResourceDisplay from "./ProgramResourceDisplay";
 import {
   ProgramModel,
   getResourceIconPath,
@@ -24,12 +24,12 @@ const Program = ({ data, onSelect }: Props) => {
       <p className="program-time-text">{formatTime(data.processingTime)}</p>
       <div className="program-resource-grid">
         <Grid
-          elementWidth={23}
-          elementHeight={11}
-          columnCount={3}
-          rowCount={3}
+          elementWidth={35}
+          elementHeight={14}
+          columnCount={2}
+          rowCount={4}
           elements={data.resources.map((resource, index) => (
-            <TinyResourceDisplay
+            <ProgramResourceDisplay
               key={index}
               iconImagePath={getResourceIconPath(resource.type)}
               amount={resource.amount}

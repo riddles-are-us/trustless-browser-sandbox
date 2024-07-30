@@ -1,7 +1,7 @@
 .program-container {
     position: relative;
     width: 85px;
-    height: 70px;
+    height: 92px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -9,8 +9,8 @@
 
 .program-background {
     position: absolute;
-    width: 81px;
-    height: 65px;
+    width: 82px;
+    height: 89px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -18,16 +18,16 @@
 
 .program-name-text {
     position: absolute;
-    top: 15%;
+    top: 12%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 6px;
+    font-size: 8px;
     overflow: auto;
     text-align: center;
     line-height: 100%;
     margin: 0px;
     width: 90%;
-    height: 6px;
+    height: 8px;
     font-family: "mishmash";
     color: white;
     pointer-events: none;
@@ -35,16 +35,16 @@
 
 .program-time-text {
     position: absolute;
-    top: 30%;
+    top: 22%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 6px;
+    font-size: 8px;
     overflow: auto;
     text-align: center;
     line-height: 100%;
     margin: 0px;
     width: 90%;
-    height: 6px;
+    height: 8px;
     font-family: "mishmash";
     color: white;
     pointer-events: none;
@@ -53,8 +53,8 @@
 .program-resource-grid{
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 69px;
-    height: 33px;
-    top: 62%;
+    width: 70px;
+    height: 56px;
+    top: 59%;
     left: 50%;
 }

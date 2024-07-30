@@ -1,28 +1,28 @@
-.small-resource-display-container {
+.common-resource-display-container {
     position: relative;
-    width: 80px;
-    height: 40px;
+    width: 90px;
+    height: 50px;
 }
 
-.small-resource-display-background {
+.common-resource-display-background {
     position: absolute;
-    width: 45px;
-    height: 16px;
+    width: 48px;
+    height: 17px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.small-resource-display-image {
+.common-resource-display-image {
     position: absolute;
     top: 50%;
     left: 15%;
     transform: translate(-50%, -50%);
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
 }
 
-.small-resource-display-text {
+.common-resource-display-text {
     position: absolute;
     top: 50%;
     left: 55%;

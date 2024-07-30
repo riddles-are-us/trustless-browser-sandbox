@@ -28,7 +28,7 @@ const RightMenu = () => {
     }
   };
   const programGridElementWidth = 85;
-  const programGridElementHeight = 70;
+  const programGridElementHeight = 92;
   const programGridColumnCount = 2;
   const programGridRowCount = Math.floor(
     programGridHeight / programGridElementHeight

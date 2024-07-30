@@ -1,8 +1,8 @@
 import React from "react";
 import "./TopMenu.css";
 import AccountInfo from "./AccountInfo";
-import MediumResources from "./MediumResources";
-import SmallResources from "./SmallResources";
+import CommonResources from "./CommonResources";
+import SmallResources from "./RareResources";
 
 const TopMenu = () => {
   return (
@@ -11,7 +11,7 @@ const TopMenu = () => {
       <div className="top-middle"></div>
       <div className="top-right"></div>
       <AccountInfo />
-      <MediumResources />
+      <CommonResources />
       <SmallResources />
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
-import MediumResourceDisplay from "./MediumResourceDisplay";
+import CommonResourceDisplay from "./CommonResourceDisplay";
 import { useAppSelector } from "../../../app/hooks";
-import "./MediumResources.css";
+import "./CommonResources.css";
 
 import { selectCommonResource } from "../../../data/automata/resources";
 import {
@@ -9,11 +9,11 @@ import {
   commonResourceTypes,
 } from "../../../data/automata/models";
 
-const MediumResources = () => {
+const CommonResources = () => {
   return (
-    <div className="top-medium-resources-container">
+    <div className="top-common-resources-container">
       {commonResourceTypes.map((type, index) => (
-        <MediumResourceDisplay
+        <CommonResourceDisplay
           key={index}
           iconImagePath={getResourceIconPath(type)}
           amount={useAppSelector(selectCommonResource(type))}
@@ -23,4 +23,4 @@ const MediumResources = () => {
   );
 };
 
-export default MediumResources;
+export default CommonResources;
