@@ -11,12 +11,14 @@ import { selectL2Account } from "../../../data/accountSlice";
 import { sendTransaction, queryState } from "../request";
 import {
   UIState,
+  selectIsLoading,
   selectIsSelectingUIState,
   selectUIState,
   setUIState,
 } from "../../../data/automata/properties";
 import {
-  setSelectingProgramIndex,
+  startRebootCreature,
+  clearRebootCreature,
   isNotSelectingCreature,
   selectSelectedCreature,
   selectSelectingProgramIndex,
@@ -27,6 +29,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import MainMenuWarning from "./MainMenuWarning";
 import MainMenuProgramInfo from "./MainMenuProgramInfo";
+import { query } from "express";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
@@ -45,21 +48,24 @@ const MainMenu = () => {
   const showConfirmButton =
     isSelectingUIState &&
     selectedCreaturePrograms.every((program) => program !== null);
+  const isLoading = useAppSelector(selectIsLoading);
   const showRebootButton = uIState == UIState.Idle;
   const selectedCreatureIndexForRequestEncode = useAppSelector(
     selectSelectedCreatureListIndex
   );
 
   function onClickConfirm() {
-    try {
+    if (!isLoading) {
       // bugs here, after creating a new creature, the list will refresh unproperly.
       // fix it after UI done polishing creature list since it may change the layout of the creating creature.
+      const isCreating = uIState == UIState.Creating;
+      dispatch(setUIState({ uIState: UIState.Loading }));
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(
             selectedCreature.programIndexes.map((index) => index!),
             selectedCreatureIndexForRequestEncode,
-            uIState == UIState.Creating
+            isCreating
           ),
           prikey: l2account!.address,
         })
@@ -67,25 +73,27 @@ const MainMenu = () => {
         if (sendTransaction.fulfilled.match(action)) {
           dispatch(queryState({ cmd: [], prikey: l2account!.address })).then(
             (action) => {
-              if (sendTransaction.fulfilled.match(action)) {
+              if (queryState.fulfilled.match(action)) {
                 dispatch(setUIState({ uIState: UIState.Idle }));
+                dispatch(clearRebootCreature({}));
+              } else {
+                dispatch(setUIState({ uIState: UIState.Idle }));
+                dispatch(clearRebootCreature({}));
               }
             }
           );
+        } else if (sendTransaction.rejected.match(action)) {
+          dispatch(setUIState({ uIState: UIState.Idle }));
         }
       });
-    } catch (e) {
-      console.log(`confirm ${uIState.toString()} error`);
     }
   }
 
   function onClickReboot() {
-    dispatch(setUIState({ uIState: UIState.Reboot }));
-    dispatch(
-      setSelectingProgramIndex({
-        selectingIndex: selectedCreature.currentProgramIndex,
-      })
-    );
+    if (!isLoading) {
+      dispatch(setUIState({ uIState: UIState.Reboot }));
+      dispatch(startRebootCreature({}));
+    }
   }
 
   return (

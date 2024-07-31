@@ -5,6 +5,7 @@ import "./LeftMenu.css";
 import PageSelector from "./PageSelector";
 import Grid from "./Grid";
 import Creature from "./Creature";
+import { selectIsLoading } from "../../../data/automata/properties";
 import {
   selectCreatures,
   selectCurrentPage,
@@ -40,15 +41,18 @@ const LeftMenu = () => {
     Math.ceil(creaturesBeforePaging.length / amountPerPage),
     1
   );
-  const enableNextPageButton = currentPage < pageCount - 1;
-  const enablePrevPageButton = currentPage > 0;
+  const isLoading = useAppSelector(selectIsLoading);
 
   const onClickPrevPageButton = () => {
-    dispatch(prevPage({}));
+    if (!isLoading) {
+      dispatch(prevPage({}));
+    }
   };
 
   const onClickNextPageButton = () => {
-    dispatch(nextPage({}));
+    if (!isLoading) {
+      dispatch(nextPage({}));
+    }
   };
 
   useEffect(() => {

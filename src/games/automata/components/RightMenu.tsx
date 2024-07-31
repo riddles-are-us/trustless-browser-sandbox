@@ -6,7 +6,10 @@ import Grid from "./Grid";
 import Program from "./Program";
 import ProgramFilterBar from "./ProgramFilterBar";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { selectIsSelectingUIState } from "../../../data/automata/properties";
+import {
+  selectIsSelectingUIState,
+  selectIsLoading,
+} from "../../../data/automata/properties";
 import {
   selectFilteredPrograms,
   selectProgramsOnCurrentPage,
@@ -42,6 +45,7 @@ const RightMenu = () => {
     1
   );
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
+  const isLoading = useAppSelector(selectIsLoading);
 
   useEffect(() => {
     updateProgramGridHeight();
@@ -52,7 +56,7 @@ const RightMenu = () => {
   }, []);
 
   const onSelectProgram = (programIndex: number) => {
-    if (isSelectingUIState) {
+    if (isSelectingUIState && !isLoading) {
       dispatch(setProgramIndex({ programIndex }));
     }
   };

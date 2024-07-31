@@ -10,6 +10,7 @@ import {
   selectSelectedCreatureListIndex,
   selectCreaturesCount,
 } from "../../../data/automata/creatures";
+import { selectIsLoading } from "../../../data/automata/properties";
 import { CreatureModel } from "../../../data/automata/models";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
@@ -24,10 +25,11 @@ const Creature = ({ index, creature }: Props) => {
     selectSelectedCreatureListIndex
   );
   const isSelected = selectedCreatureListIndex == index;
+  const isLoading = useAppSelector(selectIsLoading);
   const creaturesCount = useAppSelector(selectCreaturesCount);
 
   const onSelect = () => {
-    if (!isSelected) {
+    if (!isSelected && !isLoading) {
       if (index == creaturesCount) {
         dispatch(startCreatingCreature({}));
         dispatch(setUIState({ uIState: UIState.Creating }));

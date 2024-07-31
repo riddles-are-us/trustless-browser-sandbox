@@ -67,6 +67,7 @@ interface CreaturesState {
     selectedCreatureIndex: number | typeof NOT_SELECTING_CREATURE;
     creatures: CreatureModel[];
     creatingCreature: CreatureModel;
+    rebootCreature: CreatureModel | null;
     selectingProgramIndex: number;
     currentPage: number;
 }
@@ -75,6 +76,7 @@ const initialState: CreaturesState = {
     selectedCreatureIndex: NOT_SELECTING_CREATURE,
     creatures: [],
     creatingCreature: emptyCreatingCreature,
+    rebootCreature: null,
     selectingProgramIndex: 0,
     currentPage: 0,
 };
@@ -93,15 +95,25 @@ export const creaturesSlice = createSlice({
             state.creatingCreature = emptyCreatingCreature;
             state.selectingProgramIndex = 0;
         },
+        startRebootCreature: (state, action) => {
+            if (state.selectedCreatureIndex != NOT_SELECTING_CREATURE){
+                state.rebootCreature = state.creatures[state.selectedCreatureIndex];
+                state.selectingProgramIndex = 0;
+            }
+        },
+        clearRebootCreature: (state, action) => {
+            state.rebootCreature = null;
+        },
         setProgramIndex: (state, action) => {
-            const selectedCreature = state.selectedCreatureIndex === NOT_SELECTING_CREATURE
-                ? emptyCreatingCreature :
-            state.selectedCreatureIndex === state.creatures.length
-                ? state.creatingCreature
-                : state.creatures[state.selectedCreatureIndex]
+            if (state.selectedCreatureIndex != NOT_SELECTING_CREATURE){
+                const selectedCreature = 
+                    state.selectedCreatureIndex === state.creatures.length
+                        ? state.creatingCreature
+                        : state.rebootCreature;
 
-            selectedCreature.programIndexes[state.selectingProgramIndex] = action.payload.programIndex;
-            state.selectingProgramIndex = (state.selectingProgramIndex + 1) % 8;
+                selectedCreature!.programIndexes[state.selectingProgramIndex] = action.payload.programIndex;
+                state.selectingProgramIndex = (state.selectingProgramIndex + 1) % 8;
+            }
         },
         setSelectingProgramIndex: (state, action) => {
             state.selectingProgramIndex = action.payload.selectingIndex;
@@ -145,7 +157,9 @@ export const selectSelectedCreature = (state: RootState) =>
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
         ? emptyCreatingCreature :
     state.automata.creatures.selectedCreatureIndex === state.automata.creatures.creatures.length
-        ? state.automata.creatures.creatingCreature
+        ? state.automata.creatures.creatingCreature :
+    state.automata.creatures.rebootCreature != null
+        ? state.automata.creatures.rebootCreature 
         : state.automata.creatures.creatures[state.automata.creatures.selectedCreatureIndex]
 
 export const selectSelectedRareResources = (type: ResourceType) => (state: RootState) => 
@@ -199,5 +213,5 @@ export const selectSelectedCreatureCurrentProgramProgress = (state: RootState) =
 
 export const selectCurrentPage = (state: RootState) => state.automata.creatures.currentPage;
     
-export const { setSelectedCreatureIndex, startCreatingCreature, setProgramIndex, setSelectingProgramIndex, nextPage, prevPage } = creaturesSlice.actions;
+export const { setSelectedCreatureIndex, startCreatingCreature, startRebootCreature, clearRebootCreature, setProgramIndex, setSelectingProgramIndex, nextPage, prevPage } = creaturesSlice.actions;
 export default creaturesSlice.reducer;

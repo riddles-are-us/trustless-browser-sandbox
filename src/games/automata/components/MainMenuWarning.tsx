@@ -16,6 +16,7 @@ const MainMenuWarning = () => {
   const notFillInAllSlots =
     (uIState == UIState.Creating || uIState == UIState.Reboot) &&
     selectedCreaturePrograms.some((program) => program == null);
+  const isLoading = uIState == UIState.Loading;
   return (
     <div className="main-menu-warning-container">
       {notSelectingCreature && (
@@ -24,6 +25,7 @@ const MainMenuWarning = () => {
       {notFillInAllSlots && (
         <p className="main-menu-warning-text">Install all program slots</p>
       )}
+      {isLoading && <p className="main-menu-warning-text">Loading...</p>}
     </div>
   );
 };
