@@ -1,4 +1,4 @@
-.image-button {
+.image-button, .image-button-disabled {
   border: none;
   background: none;
   padding: 0;
@@ -8,8 +8,12 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
+.image-button-disabled:hover{
+  cursor: default;
+}
   
-.image-button img {
+.image-button img, .image-button-disabled img {
   display: block;
   width: 100%;
   height: 100%;

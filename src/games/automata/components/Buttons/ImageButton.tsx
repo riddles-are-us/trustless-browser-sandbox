@@ -49,7 +49,7 @@ const ImageButton = ({
 
   return (
     <button
-      className="image-button"
+      className={isDisabled ? "image-button-disabled" : "image-button"}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}

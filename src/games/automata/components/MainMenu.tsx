@@ -45,9 +45,10 @@ const MainMenu = () => {
     selectSelectedCreatureDiffResources
   );
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
-  const showConfirmButton =
-    isSelectingUIState &&
-    selectedCreaturePrograms.every((program) => program !== null);
+  const showConfirmButton = isSelectingUIState;
+  const enableConfirmButton = selectedCreaturePrograms.every(
+    (program) => program !== null
+  );
   const isLoading = useAppSelector(selectIsLoading);
   const showRebootButton = uIState == UIState.Idle;
   const selectedCreatureIndexForRequestEncode = useAppSelector(
@@ -105,7 +106,10 @@ const MainMenu = () => {
         <div className="main-circle-container">
           <img src={circleBackground} className="main-circle-background" />
           {showConfirmButton && (
-            <ConfirmButton onClick={() => onClickConfirm()} />
+            <ConfirmButton
+              isDisabled={!enableConfirmButton}
+              onClick={() => onClickConfirm()}
+            />
           )}
           {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
           <MainMenuSelectingFrame
