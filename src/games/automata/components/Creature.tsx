@@ -1,7 +1,8 @@
 import React from "react";
 import "./Creature.css";
 import creatureBackground from "../images/backgrounds/creature_frame.png";
-import creatureSelectingBackground from "../images/backgrounds/creature_frame_selecting.png";
+import creatureSelectingFrame from "../images/backgrounds/robot_select.png";
+import creatureLock from "../images/backgrounds/robot_lock.png";
 import bot from "../images/CreatureBots/idle_robot.png";
 import { UIState, setUIState } from "../../../data/automata/properties";
 import {
@@ -26,6 +27,7 @@ const Creature = ({ index, creature }: Props) => {
   const isSelected = selectedCreatureListIndex == index;
   const isLoading = useAppSelector(selectIsLoading);
   const creaturesCount = useAppSelector(selectCreaturesCount);
+  const isLocked = index > creaturesCount;
 
   const onSelect = () => {
     if (!isSelected && !isLoading) {
@@ -40,10 +42,13 @@ const Creature = ({ index, creature }: Props) => {
 
   return (
     <div className="creature-container" onClick={() => onSelect()}>
-      <img
-        src={isSelected ? creatureSelectingBackground : creatureBackground}
-        className="creature-background"
-      />
+      <img src={creatureBackground} className="creature-background" />
+      {isSelected && (
+        <img
+          src={creatureSelectingFrame}
+          className="creature-selecting-image"
+        />
+      )}
       <img
         src={bot}
         className={
@@ -51,6 +56,7 @@ const Creature = ({ index, creature }: Props) => {
         }
       />
       <p className="creature-text">{creature.name}</p>
+      {isLocked && <img src={creatureLock} className="creature-lock-image" />}
     </div>
   );
 };
