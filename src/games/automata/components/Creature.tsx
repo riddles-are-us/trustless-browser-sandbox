@@ -5,7 +5,6 @@ import creatureSelectingBackground from "../images/backgrounds/creature_frame_se
 import bot from "../images/CreatureBots/idle_robot.png";
 import { UIState, setUIState } from "../../../data/automata/properties";
 import {
-  startCreatingCreature,
   setSelectedCreatureIndex,
   selectSelectedCreatureListIndex,
   selectCreaturesCount,
@@ -31,8 +30,7 @@ const Creature = ({ index, creature }: Props) => {
   const onSelect = () => {
     if (!isSelected && !isLoading) {
       if (index == creaturesCount) {
-        dispatch(startCreatingCreature({}));
-        dispatch(setUIState({ uIState: UIState.Creating }));
+        dispatch(setUIState({ uIState: UIState.Unlock }));
       } else if (index < creaturesCount) {
         dispatch(setSelectedCreatureIndex({ index }));
         dispatch(setUIState({ uIState: UIState.Idle }));

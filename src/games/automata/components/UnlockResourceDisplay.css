@@ -1,0 +1,45 @@
+.unlock-resource-display-container {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 27px;
+}
+
+.unlock-resource-display-image {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+}
+
+.unlock-resource-display-positive-text, 
+.unlock-resource-display-zero-text, 
+.unlock-resource-display-negative-text {
+    position: absolute;
+    top: 50%;
+    left: 60px;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    text-align: center;
+    line-height: 12px;
+    margin: 0px;
+    width: 50px;
+    height: 12px;
+    font-family: "mishmash";
+}
+
+.unlock-resource-display-positive-text {
+    color: rgb(85, 221, 85);
+}
+
+.unlock-resource-display-zero-text{
+    color: white;
+}
+
+.unlock-resource-display-negative-text {
+    color: rgb(220, 36, 36)
+}
