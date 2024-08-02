@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { selectL2Account } from "../../data/accountSlice";
 import { createCommand } from "./helper";
 // import "bootstrap/dist/css/bootstrap.min.css";
@@ -75,18 +75,41 @@ export function GameController() {
   }, [inc]);
 
   const [progress, setProgress] = useState(0);
+  const startTimeRef = useRef<number>(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (UIState.Init < uIState && uIState < UIState.Idle) {
-        setProgress((p) => Math.min(p + 10, 100)); // 2% progress every 100ms for a total of 5 seconds
+    const updateProgress = (timestamp: DOMHighResTimeStamp) => {
+      if (startTimeRef.current === 0) {
+        startTimeRef.current = timestamp;
       }
-    }, 100);
+
+      const elapsedTime = timestamp - startTimeRef.current;
+      const newProgress = Math.min(
+        Math.ceil((elapsedTime / 500) * 10000) / 100,
+        100
+      );
+
+      setProgress(newProgress);
+
+      if (
+        newProgress < 100 &&
+        UIState.Init < uIState &&
+        uIState < UIState.Idle
+      ) {
+        requestAnimationFrame(updateProgress);
+      }
+    };
+
+    if (UIState.Init < uIState && uIState < UIState.Idle) {
+      startTimeRef.current = 0;
+      requestAnimationFrame(updateProgress);
+    }
+
     return () => {
-      clearInterval(interval);
+      startTimeRef.current = 0;
       setProgress(0);
     };
-  }, [uIState]);
+  }, [uIState, UIState]);
 
   const account = useAppSelector(selectL1Account);
 
