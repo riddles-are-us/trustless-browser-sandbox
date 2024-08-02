@@ -15,16 +15,17 @@ import {
   selectIsSelectingUIState,
   selectUIState,
   setUIState,
+  selectGlobalTimer,
 } from "../../../data/automata/properties";
 import {
   startRebootCreature,
   clearRebootCreature,
-  isNotSelectingCreature,
   selectSelectedCreature,
-  selectSelectingProgramIndex,
   selectSelectedCreaturePrograms,
   selectSelectedCreatureDiffResources,
   selectSelectedCreatureListIndex,
+  selectSelectedCreatureCurrentProgram,
+  selectSelectedCreatureSelectingProgram,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import MainMenuWarning from "./MainMenuWarning";
@@ -35,9 +36,8 @@ const MainMenu = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
-  const notSelectingCreature = useAppSelector(isNotSelectingCreature);
+  const globalTimer = useAppSelector(selectGlobalTimer);
   const selectedCreature = useAppSelector(selectSelectedCreature);
-  const selectingProgramIndex = useAppSelector(selectSelectingProgramIndex);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
   );
@@ -97,41 +97,45 @@ const MainMenu = () => {
     }
   }
 
-  const [progress, setProgress] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const startTimeRef = useRef<number>(0);
+
+  const resetElapsedTime = () => {
+    startTimeRef.current = 0;
+    setElapsedTime(0);
+  };
+
   useEffect(() => {
     const updateProgress = (timestamp: DOMHighResTimeStamp) => {
       if (startTimeRef.current === 0) {
         startTimeRef.current = timestamp;
       }
 
-      const elapsedTime = timestamp - startTimeRef.current;
-      const newProgress = Math.min(
-        Math.ceil((elapsedTime / 500) * 10000) / 100,
-        100
-      );
-
-      setProgress(newProgress);
-
-      if (
-        newProgress < 100 &&
-        UIState.Init < uIState &&
-        uIState < UIState.Idle
-      ) {
+      setElapsedTime((timestamp - startTimeRef.current) / 1000);
+      if (uIState == UIState.Idle) {
         requestAnimationFrame(updateProgress);
       }
     };
 
-    if (UIState.Init < uIState && uIState < UIState.Idle) {
-      startTimeRef.current = 0;
+    if (uIState == UIState.Idle) {
+      resetElapsedTime();
       requestAnimationFrame(updateProgress);
     }
 
     return () => {
-      startTimeRef.current = 0;
-      setProgress(0);
+      resetElapsedTime();
     };
-  }, [uIState, UIState]);
+  }, [uIState]);
+
+  useEffect(() => {
+    resetElapsedTime();
+  }, [globalTimer]);
+
+  const { program, index, progress } = useAppSelector(
+    isSelectingUIState
+      ? selectSelectedCreatureSelectingProgram
+      : selectSelectedCreatureCurrentProgram(elapsedTime)
+  );
 
   return (
     <div className="main">
@@ -149,20 +153,14 @@ const MainMenu = () => {
           )}
           {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
           <MainMenuSelectingFrame
-            order={
-              notSelectingCreature
-                ? null
-                : isSelectingUIState
-                ? selectingProgramIndex
-                : selectedCreature.currentProgramIndex
-            }
+            order={index}
             isCurrentProgram={!isSelectingUIState}
             isStop={selectedCreature.isProgramStop}
           />
           {selectedCreaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
           ))}
-          <MainMenuProgramInfo />
+          <MainMenuProgramInfo program={program} progress={progress} />
           <MainMenuWarning />
         </div>
       </div>

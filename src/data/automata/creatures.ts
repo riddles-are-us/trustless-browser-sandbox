@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { queryState, SERVER_TICK_TO_SECOND } from "../../games/automata/request";
-import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType, allResourceTypes } from './models';
+import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType, allResourceTypes, ProgramModel } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
@@ -143,7 +143,6 @@ export const selectCreaturesOnCurrentPage = (creatures: CreatureModel[]) => (amo
 
 export const isNotSelectingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
-export const selectSelectingProgramIndex = (state: RootState) => state.automata.creatures.selectingProgramIndex;
 export const selectSelectedCreatureListIndex = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
         ? -1
@@ -179,14 +178,16 @@ function getProgressBarValue(progress: number, process: number){
     return Math.min((progress / process) * 100, 100);
 }
 
-export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState) => {
+export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState): { program: ProgramModel | null; index: number | null; progress: number } => {
     const selectedCreature = selectSelectedCreature(state);
-    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex]!;
+    const currentProgramIndex = selectedCreature.currentProgramIndex
+    const programIndex = selectedCreature.programIndexes[currentProgramIndex]!;
     let program = selectProgramByIndex(programIndex)(state);
 
     if (program == null){
         return {
-            program,
+            program: null,
+            index: null,
             progress: 0,
         }
     }
@@ -194,31 +195,34 @@ export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (st
     if (selectedCreature.isProgramStop == true){
         return {
             program,
+            index: selectedCreature.currentProgramIndex,
             progress: getProgressBarValue(state.automata.properties.globalTimer - selectedCreature.startTime, program.processingTime)
         };
     }
 
-    let time = state.automata.properties.globalTimer + elapsedTime;
+    let time = state.automata.properties.globalTimer - selectedCreature.startTime + elapsedTime;
     let diffIndex = 0;
-    let index = programIndex + diffIndex;
+    let index = currentProgramIndex + diffIndex;
     while (diffIndex < 8 && time >= program.processingTime) {
         time -= program.processingTime;
         diffIndex += 1;
-        index = programIndex + diffIndex;
-        program = selectProgramByIndex(index)(state)!;
+        index = (currentProgramIndex + diffIndex) % 8;
+        program = selectProgramByIndex(selectedCreature.programIndexes[index]!)(state)!;
     }
 
     return {
         program, 
+        index,
         progress: getProgressBarValue(time, program.processingTime)
     };
 }
 
-export const selectSelectedCreatureSelectingProgram = (state: RootState) => {
+export const selectSelectedCreatureSelectingProgram = (state: RootState): { program: ProgramModel | null; index: number | null; progress: number } => {
     const selectedCreature = selectSelectedCreature(state);
     const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
     return {
         program: selectProgramByIndex(programIndex)(state),
+        index: state.automata.creatures.selectingProgramIndex,
         progress: 0
     };
 }
