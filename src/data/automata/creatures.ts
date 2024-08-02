@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { queryState } from "../../games/automata/request";
+import { queryState, SERVER_TICK_TO_SECOND } from "../../games/automata/request";
 import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType, allResourceTypes } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
@@ -28,7 +28,7 @@ function rawToModel(raw: CreatureRaw, index: number): CreatureModel {
     const binary = BigInt(raw.modifier_info).toString(2).padStart(64, "0");
     const currentProgramIndex = parseInt(binary.slice(8, 16), 2);
     const isProgramStop = parseInt(binary.slice(0, 8), 2) == 1;
-    const startTime = parseInt(binary.slice(16), 2);
+    const startTick = parseInt(binary.slice(16), 2);
     return {
         rareResources: getRareResources(raw.entity),
         name: raw.object_id.join(""),
@@ -37,7 +37,7 @@ function rawToModel(raw: CreatureRaw, index: number): CreatureModel {
         programIndexes: raw.modifiers,
         currentProgramIndex: currentProgramIndex,
         isProgramStop: isProgramStop,
-        startTime: startTime,
+        startTime: startTick * SERVER_TICK_TO_SECOND,
     };
 }
 
@@ -129,7 +129,7 @@ export const creaturesSlice = createSlice({
       builder
         .addCase(queryState.fulfilled, (state, action) => {
             const creatures = action.payload.creatures as CreatureRaw[];
-            state.creatures =creatures .map((creature, index) => rawToModel(creature, index));
+            state.creatures =creatures.map((creature, index) => rawToModel(creature, index));
         });
     }
   },

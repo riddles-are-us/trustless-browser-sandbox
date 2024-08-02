@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
-import { getConfig } from "../../games/automata/request";
+import { getConfig, SERVER_TICK_TO_SECOND } from "../../games/automata/request";
 import { ProgramModel, FilterModel, allResourcesToggleFilter, getCommonResources, getRareResources, ResourceType, allResourceTypes
  } from "./models";
 
@@ -21,7 +21,7 @@ function decodePrograms(programRaws: any) {
     for(let i=0; i<programRaws.length; i++) {
         const program: ProgramModel = {
             index: i,
-            processingTime: programRaws[i][0],
+            processingTime: programRaws[i][0] * SERVER_TICK_TO_SECOND,
             resources: 
                 [
                     ...getCommonResources(programRaws[i][2]), 

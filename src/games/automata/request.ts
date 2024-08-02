@@ -1,6 +1,8 @@
 import { query_config, send_transaction, query_state } from './rpc';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+export const SERVER_TICK_TO_SECOND = 5;
+
 interface SendTransactionRes {
     success: boolean;
     jobid: string | undefined;
@@ -59,12 +61,12 @@ export const queryState = createAsyncThunk<
                 const { cmd, prikey } = params;
                 const res = await query_state(cmd, prikey);
                 const datas = JSON.parse(res.data);
-                const [player, creatures, globalTimer] = datas;
+                const [player, creatures, serverTick] = datas;
                 console.log("query state data", datas.data);
                 return {
                     player,
                     creatures,
-                    globalTimer,
+                    globalTimer: serverTick * SERVER_TICK_TO_SECOND,
                 };
 
             } catch (err: any) {
