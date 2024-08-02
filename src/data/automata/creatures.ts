@@ -175,40 +175,52 @@ export const selectSelectedCreatureDiffResources = (state: RootState) => {
     return diffResources;
 }
 
-export const selectSelectedCreatureCurrentProgramName = (state: RootState) => {
-    const selectedCreature = selectSelectedCreature(state);
-    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
-    return selectProgramByIndex(programIndex)(state)?.name ?? "";
+function getProgressBarValue(progress: number, process: number){
+    return Math.min((progress / process) * 100, 100);
 }
 
-export const selectSelectedCreatureSelectingProgramName = (state: RootState) => {
+export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState) => {
     const selectedCreature = selectSelectedCreature(state);
-    const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
-    return selectProgramByIndex(programIndex)(state)?.name ?? "";
-}
+    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex]!;
+    let program = selectProgramByIndex(programIndex)(state);
 
-export const selectSelectedCreatureCurrentProgramProcessTime = (state: RootState) => {
-    const selectedCreature = selectSelectedCreature(state);
-    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
-    return formatTime(selectProgramByIndex(programIndex)(state)?.processingTime ?? 0) ;
-}
-
-export const selectSelectedCreatureSelectingProgramProcessTime = (state: RootState) => {
-    const selectedCreature = selectSelectedCreature(state);
-    const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
-    return formatTime(selectProgramByIndex(programIndex)(state)?.processingTime ?? 0) ;
-}
-
-export const selectSelectedCreatureCurrentProgramProgress = (state: RootState) => {
-    const selectedCreature = selectSelectedCreature(state);
-    const programIndex = selectedCreature.programIndexes[selectedCreature.currentProgramIndex];
-    if (selectedCreature.isProgramStop == false && programIndex) {
-        const processTime = selectProgramByIndex(programIndex)(state)?.processingTime;
-        if (processTime) {
-            return Math.min(((state.automata.properties.globalTimer - selectedCreature.startTime) / processTime) * 100, 100);
+    if (program == null){
+        return {
+            program,
+            progress: 0,
         }
     }
-    return 0;
+
+    if (selectedCreature.isProgramStop == true){
+        return {
+            program,
+            progress: getProgressBarValue(state.automata.properties.globalTimer - selectedCreature.startTime, program.processingTime)
+        };
+    }
+
+    let time = state.automata.properties.globalTimer + elapsedTime;
+    let diffIndex = 0;
+    let index = programIndex + diffIndex;
+    while (diffIndex < 8 && time >= program.processingTime) {
+        time -= program.processingTime;
+        diffIndex += 1;
+        index = programIndex + diffIndex;
+        program = selectProgramByIndex(index)(state)!;
+    }
+
+    return {
+        program, 
+        progress: getProgressBarValue(time, program.processingTime)
+    };
+}
+
+export const selectSelectedCreatureSelectingProgram = (state: RootState) => {
+    const selectedCreature = selectSelectedCreature(state);
+    const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
+    return {
+        program: selectProgramByIndex(programIndex)(state),
+        progress: 0
+    };
 }
 
 export const selectCurrentPage = (state: RootState) => state.automata.creatures.currentPage;

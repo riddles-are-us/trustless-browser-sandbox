@@ -109,7 +109,7 @@ export function GameController() {
       startTimeRef.current = 0;
       setProgress(0);
     };
-  }, [uIState, UIState]);
+  }, [uIState]);
 
   const account = useAppSelector(selectL1Account);
 

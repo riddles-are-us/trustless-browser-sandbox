@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import circleBackground from "../images/backgrounds/circle.png";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
 import MainMenuBot from "./MainMenuBot";
@@ -96,6 +96,42 @@ const MainMenu = () => {
       dispatch(startRebootCreature({}));
     }
   }
+
+  const [progress, setProgress] = useState(0);
+  const startTimeRef = useRef<number>(0);
+  useEffect(() => {
+    const updateProgress = (timestamp: DOMHighResTimeStamp) => {
+      if (startTimeRef.current === 0) {
+        startTimeRef.current = timestamp;
+      }
+
+      const elapsedTime = timestamp - startTimeRef.current;
+      const newProgress = Math.min(
+        Math.ceil((elapsedTime / 500) * 10000) / 100,
+        100
+      );
+
+      setProgress(newProgress);
+
+      if (
+        newProgress < 100 &&
+        UIState.Init < uIState &&
+        uIState < UIState.Idle
+      ) {
+        requestAnimationFrame(updateProgress);
+      }
+    };
+
+    if (UIState.Init < uIState && uIState < UIState.Idle) {
+      startTimeRef.current = 0;
+      requestAnimationFrame(updateProgress);
+    }
+
+    return () => {
+      startTimeRef.current = 0;
+      setProgress(0);
+    };
+  }, [uIState, UIState]);
 
   return (
     <div className="main">
