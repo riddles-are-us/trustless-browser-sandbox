@@ -6,6 +6,7 @@ import ConfirmButton from "./Buttons/ConfirmButton";
 import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
+import Rocket from "./Rocket";
 import { getTransactionCommandArray } from "../rpc";
 import { selectL2Account } from "../../../data/accountSlice";
 import { sendTransaction, queryState } from "../request";
@@ -30,7 +31,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import MainMenuWarning from "./MainMenuWarning";
 import MainMenuProgramInfo from "./MainMenuProgramInfo";
-import { query } from "express";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
@@ -164,6 +164,7 @@ const MainMenu = () => {
           <MainMenuWarning />
         </div>
       </div>
+      <Rocket />
     </div>
   );
 };

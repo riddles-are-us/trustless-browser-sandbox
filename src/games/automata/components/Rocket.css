@@ -1,0 +1,19 @@
+@keyframes animateFrames {
+    0% { background-image: url('../images/Animations/Rockets/rocket1.png'); }
+    20% { background-image: url('../images/Animations/Rockets/rocket2.png'); }
+    40% { background-image: url('../images/Animations/Rockets/rocket3.png'); }
+    60% { background-image: url('../images/Animations/Rockets/rocket4.png'); }
+    80% { background-image: url('../images/Animations/Rockets/rocket5.png'); }
+    100% { background-image: url('../images/Animations/Rockets/rocket1.png'); }
+  }
+  
+  .rocket-image {
+    position: absolute;
+    width: 76px;
+    height: 134px;
+    left: 30%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    background-size: cover;
+    animation: animateFrames 0.5s steps(5) infinite;
+  }
