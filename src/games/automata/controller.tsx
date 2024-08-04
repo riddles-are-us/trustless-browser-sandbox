@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { selectL2Account } from "../../data/accountSlice";
 import { createCommand } from "./helper";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import "./style.scss";
-import "../style.scss";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";

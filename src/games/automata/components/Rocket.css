@@ -5,15 +5,24 @@
     60% { background-image: url('../images/Animations/Rockets/rocket4.png'); }
     80% { background-image: url('../images/Animations/Rockets/rocket5.png'); }
     100% { background-image: url('../images/Animations/Rockets/rocket1.png'); }
-  }
-  
-  .rocket-image {
+}
+
+.space-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.rocket-container {
     position: absolute;
     width: 76px;
     height: 134px;
-    left: 30%;
-    top: 30%;
-    transform: translate(-50%, -50%);
+}
+
+.rocket-image {
+    position: absolute;
+    width: 76px;
+    height: 134px;
     background-size: cover;
     animation: animateFrames 0.5s steps(5) infinite;
-  }
+}
