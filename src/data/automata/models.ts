@@ -57,6 +57,11 @@ export interface FilterModel{
     dict: { [key in ResourceType]?: boolean };
 }
 
+export enum GuideType {
+  None,
+  First,
+}
+
 export const commonResourceTypes = [
     ResourceType.Crystal,
     ResourceType.InterstellarMineral,

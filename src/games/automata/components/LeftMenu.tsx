@@ -87,7 +87,7 @@ const LeftMenu = () => {
 
       <img src={leftMiddleBar} className="left-middle-bar" />
       <img src={leftCornerBar} className="left-corner-bar" />
-      <div className="left-program-page-selector">
+      <div className="left-creature-page-selector">
         <PageSelector
           currentPage={currentPage}
           pageCount={pageCount}

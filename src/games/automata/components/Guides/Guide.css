@@ -1,0 +1,16 @@
+.guide-popup-content-text {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    overflow: auto;
+    text-align: center;
+    line-height: 100%;
+    margin: 0px;
+    width: 90%;
+    height: 65%;
+    font-family: "mishmash";
+    color: #5CFFFF;
+    pointer-events: none;
+}

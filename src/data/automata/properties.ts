@@ -10,6 +10,7 @@ export enum UIState{
   Idle,
   Loading,
   Unlock,
+  Guide,
   Creating,
   Reboot,
 }
@@ -44,7 +45,7 @@ export const propertiesSlice = createSlice({
       })
       .addCase(sendTransaction.fulfilled, (state, action) => {
         if (state.uIState == UIState.CreatePlayer){
-          state.uIState = UIState.Idle;
+          state.uIState = UIState.Guide;
         }
         console.log("send transaction fulfilled");
       })
