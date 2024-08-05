@@ -18,20 +18,25 @@ export enum UIState{
 interface PropertiesState {
     uIState: UIState;
     globalTimer: number;
+    hasRocket: boolean;
 }
 
 const initialState: PropertiesState = {
     uIState: UIState.Init,
     globalTimer: 0,
+    hasRocket: true,
 };
 
 export const propertiesSlice = createSlice({
     name: 'properties',
     initialState,
     reducers: {
-        setUIState: (state, action) => {
-          state.uIState = action.payload.uIState;
-        },
+      setUIState: (state, action) => {
+        state.uIState = action.payload.uIState;
+      },
+      setHasRocket: (state, action) => {
+        state.hasRocket = action.payload.hasRocket;
+      },
     },
 
   extraReducers: (builder) => {
@@ -72,6 +77,7 @@ export const selectIsLoading = (state: RootState) => state.automata.properties.u
 export const selectIsSelectingUIState = (state: RootState) => state.automata.properties.uIState == UIState.Creating || state.automata.properties.uIState == UIState.Reboot;
 export const selectUIState = (state: RootState) => state.automata.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.automata.properties.globalTimer;
+export const selectHasRocket = (state: RootState) => state.automata.properties.hasRocket;
     
-export const { setUIState } = propertiesSlice.actions;
+export const { setUIState, setHasRocket } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

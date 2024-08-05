@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import {
+  selectHasRocket,
+  setHasRocket,
+} from "../../../data/automata/properties";
+
 import "./Rocket.css";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const getRandomStartPosition = (width: number, height: number) => {
   const x = Math.random() * 0.3;
@@ -14,10 +20,20 @@ const getRandomEndPosition = (width: number, height: number) => {
 };
 
 const Rocket = () => {
+  const dispatch = useAppDispatch();
+  const hasRocket = useAppSelector(selectHasRocket);
   const rocketRef = useRef<HTMLDivElement | null>(null);
   const spaceRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  const onClickRocket = () => {
+    dispatch(setHasRocket({ hasRocket: false }));
+  };
+
+  const onAnimationEnd = () => {
+    dispatch(setHasRocket({ hasRocket: false }));
+  };
+
+  const InitRocket = () => {
     const rocketContainer = rocketRef.current;
     const spaceContainer = spaceRef.current;
     if (rocketContainer && spaceContainer) {
@@ -31,7 +47,7 @@ const Rocket = () => {
       );
       const dx = endPosition.x - startPosition.x;
       const dy = endPosition.y - startPosition.y;
-      const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90; // Convert to degrees
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
 
       rocketContainer.style.transform = `translate(${startPosition.x}px, ${startPosition.y}px) rotate(${angle}deg)`;
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
@@ -42,22 +58,31 @@ const Rocket = () => {
         }
       `;
       styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-      rocketContainer.style.animation = `flyAcrossScreen 20s linear infinite`;
+      rocketContainer.style.animation = `flyAcrossScreen 20s linear`;
+      rocketContainer.addEventListener("animationend", onAnimationEnd);
+
+      return () => {
+        rocketContainer.removeEventListener("animationend", onAnimationEnd);
+      };
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    if (hasRocket) {
+      return InitRocket();
+    }
+  }, [hasRocket]);
 
   return (
     <>
-      <div ref={spaceRef} className="space-container">
-        <div ref={rocketRef} className="rocket-container">
-          <div
-            className="rocket-image"
-            onClick={() => {
-              console.log("click rocket");
-            }}
-          />
+      <></>
+      {hasRocket && (
+        <div ref={spaceRef} className="space-container">
+          <div ref={rocketRef} className="rocket-container">
+            <div className="rocket-image" onClick={onClickRocket} />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

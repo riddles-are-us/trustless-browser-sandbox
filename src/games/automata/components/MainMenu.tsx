@@ -139,6 +139,7 @@ const MainMenu = () => {
 
   return (
     <div className="main">
+      <Rocket />
       <div className="main-content">
         <div className="main-info-container">
           <DiffResourcesInfo diffResources={selectedCreatureDiffResources} />
@@ -164,7 +165,6 @@ const MainMenu = () => {
           <MainMenuWarning />
         </div>
       </div>
-      <Rocket />
     </div>
   );
 };
