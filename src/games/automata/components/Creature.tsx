@@ -3,7 +3,6 @@ import "./Creature.css";
 import creatureBackground from "../images/backgrounds/creature_frame.png";
 import creatureSelectingFrame from "../images/backgrounds/robot_select.png";
 import creatureLock from "../images/backgrounds/robot_lock.png";
-import bot from "../images/CreatureBots/idle_robot.png";
 import { UIState, setUIState } from "../../../data/automata/properties";
 import {
   setSelectedCreatureIndex,
@@ -11,7 +10,10 @@ import {
   selectCreaturesCount,
 } from "../../../data/automata/creatures";
 import { selectIsLoading } from "../../../data/automata/properties";
-import { CreatureModel } from "../../../data/automata/models";
+import {
+  CreatureModel,
+  getCreatureIconPath,
+} from "../../../data/automata/models";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface Props {
@@ -28,6 +30,7 @@ const Creature = ({ index, creature }: Props) => {
   const isLoading = useAppSelector(selectIsLoading);
   const creaturesCount = useAppSelector(selectCreaturesCount);
   const isLocked = index > creaturesCount;
+  const creatureIconPath = getCreatureIconPath(creature.creatureType);
 
   const onSelect = () => {
     if (!isSelected && !isLoading) {
@@ -49,12 +52,14 @@ const Creature = ({ index, creature }: Props) => {
           className="creature-selecting-image"
         />
       )}
-      <img
-        src={bot}
-        className={
-          creature.isLocked ? "lock-creature-image" : "normal-creature-image"
-        }
-      />
+      {creatureIconPath && (
+        <img
+          src={creatureIconPath}
+          className={
+            creature.isLocked ? "lock-creature-image" : "normal-creature-image"
+          }
+        />
+      )}
       <p className="creature-text">{creature.name}</p>
       {isLocked && <img src={creatureLock} className="creature-lock-image" />}
     </div>

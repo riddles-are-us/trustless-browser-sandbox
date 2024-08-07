@@ -1,20 +1,16 @@
 import React from "react";
 import progressBarBackground from "../images/MainMenu/circle_bg.png";
-import bot from "../images/MainMenu/select_robot.png";
 import "./MainMenuProgressBar.css";
-import {
-  selectSelectedCreatureCurrentProgram,
-  selectSelectedCreatureSelectingProgram,
-  formatTime,
-} from "../../../data/automata/creatures";
+import { formatTime } from "../../../data/automata/creatures";
 import { ProgramModel } from "../../../data/automata/models";
 
 interface Props {
   program: ProgramModel | null;
   progress: number;
+  iconPath: string;
 }
 
-const MainMenuProgressBar = ({ program, progress }: Props) => {
+const MainMenuProgressBar = ({ program, progress, iconPath }: Props) => {
   progress = 50;
   return (
     <div className="main-progress-bar-container">
@@ -22,7 +18,7 @@ const MainMenuProgressBar = ({ program, progress }: Props) => {
         src={progressBarBackground}
         className="main-progress-bar-background"
       />
-      <img src={bot} className="main-progress-bot-image" />
+      {iconPath && <img src={iconPath} className="main-progress-bot-image" />}
       <p className="main-progress-bar-program-name-text">
         {program?.name ?? ""}
       </p>

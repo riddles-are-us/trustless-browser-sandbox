@@ -10,6 +10,7 @@ import Rocket from "./Rocket";
 import { getTransactionCommandArray } from "../rpc";
 import { selectL2Account } from "../../../data/accountSlice";
 import { sendTransaction, queryState } from "../request";
+import { getCreatureIconPath } from "../../../data/automata/models";
 import {
   UIState,
   selectIsLoading,
@@ -145,7 +146,11 @@ const MainMenu = () => {
           <DiffResourcesInfo diffResources={selectedCreatureDiffResources} />
         </div>
         <div className="main-circle-container">
-          <MainMenuProgressBar program={program} progress={progress} />
+          <MainMenuProgressBar
+            program={program}
+            progress={progress}
+            iconPath={getCreatureIconPath(selectedCreature.creatureType)}
+          />
           <img src={circleBackground} className="main-circle-background" />
           {showConfirmButton && (
             <ConfirmButton

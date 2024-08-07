@@ -12,6 +12,11 @@ import SwiftexIcon from "../../games/automata/images/Icons/Swiftex.png";
 import CognisurgeIcon from "../../games/automata/images/Icons/Cognisurge.png";
 import VitalshieldIcon from "../../games/automata/images/Icons/Vitalshield.png";
 import FlexonixIcon from "../../games/automata/images/Icons/Flexonix.png";
+import Bot1 from "../../games/automata/images/CreatureBots/charge.png";
+import Bot2 from "../../games/automata/images/CreatureBots/idle_robot.png";
+import Bot3 from "../../games/automata/images/CreatureBots/mining.png";
+import Bot4 from "../../games/automata/images/CreatureBots/run.png";
+import Bot5 from "../../games/automata/images/CreatureBots/science.png";
 
 export interface CreatureModel {
     rareResources: ResourceAmountPair[];
@@ -98,7 +103,7 @@ export const emptyCreatingCreature: CreatureModel = {
     rareResources: emptyRareResources,
     name: "Creating",
     isLocked: false,
-    creatureType: 0,
+    creatureType: -1,
     programIndexes: [null, null, null, null, null, null, null, null],
     currentProgramIndex: 0,
     isProgramStop: false,
@@ -159,4 +164,16 @@ export function getResourceIconPath(type: ResourceType): string {
         default:
             throw new Error('Unknown ResourceType');
     }
+}
+
+const botIconPaths = [
+    Bot1,
+    Bot2,
+    Bot3,
+    Bot4,
+    Bot5,
+]
+
+export function getCreatureIconPath(creatureType: number): string {
+    return creatureType == -1 ? "" : botIconPaths[creatureType % 5];
 }
