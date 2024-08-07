@@ -27,7 +27,7 @@ function decodePrograms(programRaws: any) {
                     ...getCommonResources(programRaws[i][2]), 
                     ...getRareResources(programRaws[i][1])
                 ].filter(resource => resource.amount !== 0),
-            name: programRaws[i][3],
+            name: `Bot ${i}`,
         };
         
         programs.push(program);

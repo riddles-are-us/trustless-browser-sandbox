@@ -1,4 +1,4 @@
-@keyframes animateFrames {
+@keyframes rocketFrames {
     0% { background-image: url('../images/Animations/Rockets/rocket1.png'); }
     20% { background-image: url('../images/Animations/Rockets/rocket2.png'); }
     40% { background-image: url('../images/Animations/Rockets/rocket3.png'); }
@@ -25,5 +25,5 @@
     width: 76px;
     height: 134px;
     background-size: cover;
-    animation: animateFrames 0.5s steps(5) infinite;
+    animation: rocketFrames 0.5s steps(5) infinite;
 }

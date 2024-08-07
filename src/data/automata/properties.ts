@@ -24,7 +24,7 @@ interface PropertiesState {
 const initialState: PropertiesState = {
     uIState: UIState.Init,
     globalTimer: 0,
-    hasRocket: true,
+    hasRocket: false,
 };
 
 export const propertiesSlice = createSlice({

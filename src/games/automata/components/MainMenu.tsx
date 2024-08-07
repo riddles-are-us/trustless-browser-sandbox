@@ -30,7 +30,7 @@ import {
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import MainMenuWarning from "./MainMenuWarning";
-import MainMenuProgramInfo from "./MainMenuProgramInfo";
+import MainMenuProgressBar from "./MainMenuProgressBar";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
@@ -145,6 +145,7 @@ const MainMenu = () => {
           <DiffResourcesInfo diffResources={selectedCreatureDiffResources} />
         </div>
         <div className="main-circle-container">
+          <MainMenuProgressBar program={program} progress={progress} />
           <img src={circleBackground} className="main-circle-background" />
           {showConfirmButton && (
             <ConfirmButton
@@ -161,7 +162,6 @@ const MainMenu = () => {
           {selectedCreaturePrograms.map((program, index) => (
             <MainMenuBot key={index} order={index} program={program} />
           ))}
-          <MainMenuProgramInfo program={program} progress={progress} />
           <MainMenuWarning />
         </div>
       </div>
