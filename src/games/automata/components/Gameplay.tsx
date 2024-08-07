@@ -4,14 +4,12 @@ import TopMenu from "./TopMenu";
 import LeftMenu from "./LeftMenu";
 import RightMenu from "./RightMenu";
 import MainMenu from "./MainMenu";
-import CreatureUnlockPopup from "./CreatureUnlockPopup";
 import { UIState, selectUIState } from "../../../data/automata/properties";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import GuidePopup from "./GuidePopup";
 
 const Gameplay = () => {
   const uIState = useAppSelector(selectUIState);
-  const showUnlockPopup = uIState == UIState.Unlock;
   const showGuidePopup = uIState == UIState.Guide;
 
   return (
@@ -22,7 +20,6 @@ const Gameplay = () => {
         <MainMenu />
         <RightMenu />
       </div>
-      {showUnlockPopup && <CreatureUnlockPopup />}
       {showGuidePopup && <GuidePopup />}
     </>
   );

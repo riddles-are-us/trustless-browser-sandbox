@@ -8,6 +8,7 @@ import {
   setSelectedCreatureIndex,
   selectSelectedCreatureListIndex,
   selectCreaturesCount,
+  startCreatingCreature,
 } from "../../../data/automata/creatures";
 import { selectIsLoading } from "../../../data/automata/properties";
 import {
@@ -35,7 +36,8 @@ const Creature = ({ index, creature }: Props) => {
   const onSelect = () => {
     if (!isSelected && !isLoading) {
       if (index == creaturesCount) {
-        dispatch(setUIState({ uIState: UIState.Unlock }));
+        dispatch(startCreatingCreature({}));
+        dispatch(setUIState({ uIState: UIState.Creating }));
       } else if (index < creaturesCount) {
         dispatch(setSelectedCreatureIndex({ index }));
         dispatch(setUIState({ uIState: UIState.Idle }));

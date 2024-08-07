@@ -9,7 +9,6 @@ export enum UIState{
   CreatePlayer,
   Idle,
   Loading,
-  Unlock,
   Guide,
   Creating,
   Reboot,
