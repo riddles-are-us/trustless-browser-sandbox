@@ -31,7 +31,7 @@ function rawToModel(raw: CreatureRaw, index: number): CreatureModel {
     const startTick = parseInt(binary.slice(16), 2);
     return {
         rareResources: getRareResources(raw.entity),
-        name: raw.object_id.join(""),
+        name: `Bot ${index + 1}`,
         creatureType: index,
         isLocked: false,
         programIndexes: raw.modifiers,
