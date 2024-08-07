@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { queryState, SERVER_TICK_TO_SECOND } from "../../games/automata/request";
-import { CreatureModel, getRareResources, emptyRareResources, emptyCreatingCreature, ResourceType, allResourceTypes, ProgramModel } from './models';
+import { CreatureModel, getRareResources, emptyRareResources, emptyCreature, getCreatingCreature, ResourceType, allResourceTypes, ProgramModel } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
@@ -75,7 +75,7 @@ interface CreaturesState {
 const initialState: CreaturesState = {
     selectedCreatureIndex: NOT_SELECTING_CREATURE,
     creatures: [],
-    creatingCreature: emptyCreatingCreature,
+    creatingCreature: emptyCreature,
     rebootCreature: null,
     selectingProgramIndex: 0,
     currentPage: 0,
@@ -92,7 +92,7 @@ export const creaturesSlice = createSlice({
         },
         startCreatingCreature: (state, action) => {
             state.selectedCreatureIndex = state.creatures.length;
-            state.creatingCreature = emptyCreatingCreature;
+            state.creatingCreature = getCreatingCreature(action.payload.creatureType);
             state.selectingProgramIndex = 0;
         },
         startRebootCreature: (state, action) => {
@@ -154,7 +154,7 @@ export const selectCreatures = (state: RootState) =>
         : fillCreaturesWithLocked(state.automata.creatures.creatures);
 export const selectSelectedCreature = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE
-        ? emptyCreatingCreature :
+        ? emptyCreature :
     state.automata.creatures.selectedCreatureIndex === state.automata.creatures.creatures.length
         ? state.automata.creatures.creatingCreature :
     state.automata.creatures.rebootCreature != null

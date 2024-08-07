@@ -99,15 +99,28 @@ export const emptyRareResources = rareResourceTypes.map(type => ({
     amount: 0
 }));
 
-export const emptyCreatingCreature: CreatureModel = {
+export const emptyCreature: CreatureModel = {
     rareResources: emptyRareResources,
-    name: "Creating",
+    name: "",
     isLocked: false,
     creatureType: -1,
     programIndexes: [null, null, null, null, null, null, null, null],
     currentProgramIndex: 0,
     isProgramStop: false,
     startTime: 0,
+}
+
+export function getCreatingCreature(creatureType: number): CreatureModel {
+    return {
+        rareResources: emptyRareResources,
+        name: "Creating",
+        isLocked: false,
+        creatureType: creatureType,
+        programIndexes: [null, null, null, null, null, null, null, null],
+        currentProgramIndex: 0,
+        isProgramStop: false,
+        startTime: 0,
+    };
 }
 
 export const allResourcesToggleFilter: FilterModel = {

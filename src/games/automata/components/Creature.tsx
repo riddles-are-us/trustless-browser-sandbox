@@ -36,7 +36,9 @@ const Creature = ({ index, creature }: Props) => {
   const onSelect = () => {
     if (!isSelected && !isLoading) {
       if (index == creaturesCount) {
-        dispatch(startCreatingCreature({}));
+        dispatch(
+          startCreatingCreature({ creatureType: creature.creatureType })
+        );
         dispatch(setUIState({ uIState: UIState.Creating }));
       } else if (index < creaturesCount) {
         dispatch(setSelectedCreatureIndex({ index }));
