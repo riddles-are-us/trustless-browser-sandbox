@@ -1,11 +1,11 @@
-.main-selecting-frame-container {
+.main-current-frame-container {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 35.7%;
-    height: 25.6%;
+    width: 174px;
+    height: 124px;
 }
 
-.main-selecting-frame-image {
+.main-current-frame-image {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -13,14 +13,14 @@
     left: 50%;
 }
 
-.main-arrow-container {
+.main-selecting-frame-container {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 10.6%;
-    height: 5.5%;
+    width: 145px;
+    height: 109px;
 }
 
-.main-arrow-image {
+.main-selecting-frame-image {
     position: absolute;
     width: 100%;
     height: 100%;
