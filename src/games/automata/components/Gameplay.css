@@ -6,6 +6,11 @@ body, html, #root {
     flex-direction: column;
 }
 
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
 .middle-container {
     position: absolute;
     display: flex;
