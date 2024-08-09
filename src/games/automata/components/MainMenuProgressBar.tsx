@@ -5,13 +5,18 @@ import { formatTime } from "../../../data/automata/creatures";
 import { ProgramModel } from "../../../data/automata/models";
 
 interface Props {
-  program: ProgramModel | null;
+  programName: string;
+  remainTime: number;
   progress: number;
   iconPath: string;
 }
 
-const MainMenuProgressBar = ({ program, progress, iconPath }: Props) => {
-  progress = 50;
+const MainMenuProgressBar = ({
+  programName,
+  remainTime,
+  progress,
+  iconPath,
+}: Props) => {
   return (
     <div className="main-progress-bar-container">
       <img
@@ -19,11 +24,9 @@ const MainMenuProgressBar = ({ program, progress, iconPath }: Props) => {
         className="main-progress-bar-background"
       />
       {iconPath && <img src={iconPath} className="main-progress-bot-image" />}
-      <p className="main-progress-bar-program-name-text">
-        {program?.name ?? ""}
-      </p>
+      <p className="main-progress-bar-program-name-text">{}</p>
       <p className="main-progress-bar-program-processing-time-text">
-        {formatTime(program?.processingTime ?? 0)}
+        {formatTime(remainTime)}
       </p>
       <div className="main-progress-container">
         <div

@@ -132,7 +132,7 @@ const MainMenu = () => {
     resetElapsedTime();
   }, [globalTimer]);
 
-  const { program, index, progress } = useAppSelector(
+  const { program, index, remainTime, progress } = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
       : selectSelectedCreatureCurrentProgram(elapsedTime)
@@ -147,7 +147,8 @@ const MainMenu = () => {
         </div>
         <div className="main-circle-container">
           <MainMenuProgressBar
-            program={program}
+            programName={program?.name ?? ""}
+            remainTime={remainTime}
             progress={progress}
             iconPath={getCreatureIconPath(selectedCreature.creatureType)}
           />

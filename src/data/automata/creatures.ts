@@ -178,7 +178,14 @@ function getProgressBarValue(progress: number, process: number){
     return Math.min((progress / process) * 100, 100);
 }
 
-export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState): { program: ProgramModel | null; index: number | null; progress: number } => {
+interface ProgramInfo{
+    program: ProgramModel | null;
+    index: number | null;
+    remainTime: number;
+    progress: number;
+}
+
+export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState): ProgramInfo => {
     const selectedCreature = selectSelectedCreature(state);
     const currentProgramIndex = selectedCreature.currentProgramIndex
     const programIndex = selectedCreature.programIndexes[currentProgramIndex]!;
@@ -188,6 +195,7 @@ export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (st
         return {
             program: null,
             index: null,
+            remainTime: 0,
             progress: 0,
         }
     }
@@ -196,7 +204,8 @@ export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (st
         return {
             program,
             index: selectedCreature.currentProgramIndex,
-            progress: getProgressBarValue(state.automata.properties.globalTimer - selectedCreature.startTime, program.processingTime)
+            remainTime: 0,
+            progress: getProgressBarValue(state.automata.properties.globalTimer - selectedCreature.startTime, program.processingTime),
         };
     }
 
@@ -213,17 +222,19 @@ export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (st
     return {
         program, 
         index,
-        progress: getProgressBarValue(time, program.processingTime)
+        remainTime: Math.ceil(program.processingTime - time),
+        progress: getProgressBarValue(time, program.processingTime),
     };
 }
 
-export const selectSelectedCreatureSelectingProgram = (state: RootState): { program: ProgramModel | null; index: number | null; progress: number } => {
+export const selectSelectedCreatureSelectingProgram = (state: RootState): ProgramInfo => {
     const selectedCreature = selectSelectedCreature(state);
     const programIndex = selectedCreature.programIndexes[state.automata.creatures.selectingProgramIndex];
     return {
         program: selectProgramByIndex(programIndex)(state),
         index: state.automata.creatures.selectingProgramIndex,
-        progress: 0
+        remainTime: 0,
+        progress: 0,
     };
 }
 
