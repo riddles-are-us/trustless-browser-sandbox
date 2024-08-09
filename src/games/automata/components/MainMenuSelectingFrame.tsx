@@ -25,7 +25,7 @@ const MainMenuSelectingFrame = ({ order, isCurrentProgram, isStop }: Props) => {
   const currentFrameXPosition =
     50 + Math.cos((angle * Math.PI) / 180) * currentFrameRadius;
 
-  const selectingRadius = 29;
+  const selectingRadius = 30;
   const selectingYPosition =
     50 - Math.sin((angle * Math.PI) / 180) * selectingRadius;
   const selectingXPosition =

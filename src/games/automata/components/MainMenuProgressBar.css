@@ -69,23 +69,30 @@
 }
 
 @keyframes progressFrames {
-    0% { background-image: url('../images/MainMenu/wave1.png'); }
-    25% { background-image: url('../images/MainMenu/wave2.png'); }
-    50% { background-image: url('../images/MainMenu/wave3.png'); }
-    75% { background-image: url('../images/MainMenu/wave4.png'); }
-    100% { background-image: url('../images/MainMenu/wave1.png'); }
+    0% { background-image: url('../images/Animations/Waves/wave1.png'); }
+    12.5% { background-image: url('../images/Animations/Waves/wave2.png'); }
+    25% { background-image: url('../images/Animations/Waves/wave3.png'); }
+    37.5% { background-image: url('../images/Animations/Waves/wave4.png'); }
+    50% { background-image: url('../images/Animations/Waves/wave5.png'); }
+    62.5% { background-image: url('../images/Animations/Waves/wave6.png'); }
+    75% { background-image: url('../images/Animations/Waves/wave7.png'); }
+    87.5% { background-image: url('../images/Animations/Waves/wave8.png'); }
+    100% { background-image: url('../images/Animations/Waves/wave1.png'); }
 }
 
 .main-progress-sector-top {
-    height: 24px;
+    height: 14px;
     width: 100%;
     background-repeat: no-repeat;
     background-size: contain;
-    animation: progressFrames 0.5s steps(4) infinite;
+    animation: progressFrames 0.7s steps(4) infinite;
 }
 
 .main-progress-sector-repeat {
-    height: round(down, calc(100% - 24px), 1px);
+    position: absolute;
+    top: 14px;
+    width: 100%;
+    height: round(down, calc(100% - 14px), 1px);
     background-image: url('../images/MainMenu/progress.png');
     background-repeat: repeat-Y;
     background-size: contain;
