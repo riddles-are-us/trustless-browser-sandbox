@@ -15,9 +15,16 @@
 
 .main-selecting-frame-container {
     position: absolute;
-    transform: translate(-50%, -50%);
-    width: 145px;
-    height: 108px;
+    width: 397px;
+    height: 396px;
+    left: 46px;
+    top: 44px;
+}
+
+@keyframes selecting-shining {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
 }
 
 .main-selecting-frame-image {
@@ -26,4 +33,6 @@
     height: 100%;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    animation: selecting-shining 1s infinite ease-in-out;
 }
