@@ -7,15 +7,6 @@
     transform: translate(-50%, -50%);
 }
 
-.program-background {
-    position: absolute;
-    width: 82px;
-    height: 89px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .program-name-text {
     position: absolute;
     top: 12%;
@@ -57,4 +48,5 @@
     height: 56px;
     top: 59%;
     left: 50%;
+    pointer-events: none;
 }

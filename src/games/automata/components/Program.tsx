@@ -1,13 +1,12 @@
 import React from "react";
 import "./Program.css";
-import programBackground from "../images/backgrounds/program_button.png";
-import programIdleBackground from "../images/backgrounds/program_button_idle.png";
 import Grid from "./Grid";
 import ProgramResourceDisplay from "./ProgramResourceDisplay";
 import {
   ProgramModel,
   getResourceIconPath,
 } from "../../../data/automata/models";
+import ProgramButton from "./Buttons/ProgramButton";
 
 import { formatTime } from "../../../data/automata/creatures";
 
@@ -18,8 +17,8 @@ interface Props {
 
 const Program = ({ data, onSelect }: Props) => {
   return (
-    <div className="program-container" onClick={onSelect}>
-      <img src={programBackground} className="program-background" />
+    <div className="program-container">
+      <ProgramButton isDisabled={false} onClick={onSelect} />
       <p className="program-name-text">{data.name}</p>
       <p className="program-time-text">{formatTime(data.processingTime)}</p>
       <div className="program-resource-grid">
