@@ -1,0 +1,8 @@
+.unlock-button{
+    width: 15.6%;
+    height: 14.8%;
+    bottom: 7%;
+    left: 10%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}

@@ -3,6 +3,7 @@ import circleBackground from "../images/backgrounds/circle.png";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
 import MainMenuBot from "./MainMenuBot";
 import ConfirmButton from "./Buttons/ConfirmButton";
+import UnlockButton from "./Buttons/UnlockButton";
 import "./MainMenu.css";
 import RebootButton from "./Buttons/RebootButton";
 import DiffResourcesInfo from "./DiffResourcesInfo";
@@ -46,8 +47,12 @@ const MainMenu = () => {
     selectSelectedCreatureDiffResources
   );
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
-  const showConfirmButton = isSelectingUIState;
+  const showConfirmButton = uIState == UIState.Reboot;
   const enableConfirmButton = selectedCreaturePrograms.every(
+    (program) => program !== null
+  );
+  const showUnlockButton = uIState == UIState.Creating;
+  const enableUnlockButton = selectedCreaturePrograms.every(
     (program) => program !== null
   );
   const isLoading = useAppSelector(selectIsLoading);
@@ -156,6 +161,12 @@ const MainMenu = () => {
           {showConfirmButton && (
             <ConfirmButton
               isDisabled={!enableConfirmButton}
+              onClick={() => onClickConfirm()}
+            />
+          )}
+          {showUnlockButton && (
+            <UnlockButton
+              isDisabled={!enableUnlockButton}
               onClick={() => onClickConfirm()}
             />
           )}
