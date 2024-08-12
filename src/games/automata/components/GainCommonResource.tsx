@@ -22,21 +22,40 @@ const GainCommonResource = ({ type, order }: Props) => {
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
+  const animationName = `resourceflyAcross-${type}`;
 
-  const onAnimationEnd =
-    (resourceContainer: HTMLDivElement) =>
-    (endPosition: { x: number; y: number }) => {
-      setPlayingAnimation(false);
-      resourceContainer.style.transform = `translate(-50%, -50%) translate(${endPosition.x}px, ${endPosition.y}px)`;
-      const styleSheet = document.styleSheets[0] as CSSStyleSheet;
-      for (let i = 0; i < styleSheet.cssRules.length; i++) {
-        const rule = styleSheet.cssRules[i] as CSSKeyframesRule;
-        if (rule.name === `resourceflyAcross-${type}`) {
-          styleSheet.deleteRule(i);
-        }
-      }
-      dispatch(resetDiffCommonResources({ type }));
+  const getStartPositionString = (parentContainer: HTMLDivElement) => {
+    const startPosition = {
+      x: parentContainer.clientWidth / 2,
+      y: parentContainer.clientHeight / 2,
     };
+    return `translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px)`;
+  };
+
+  const getEndPositionString = () => {
+    const endPosition = {
+      x: 90 * order + 30,
+      y: 25,
+    };
+    return `translate(-50%, -50%) translate(${endPosition.x}px, ${endPosition.y}px)`;
+  };
+
+  const removeAnimation = () => {
+    const styleSheet = document.styleSheets[0] as CSSStyleSheet;
+    for (let i = 0; i < styleSheet.cssRules.length; i++) {
+      const rule = styleSheet.cssRules[i] as CSSKeyframesRule;
+      if (rule.name == animationName) {
+        styleSheet.deleteRule(i);
+      }
+    }
+  };
+
+  const onAnimationEnd = (resourceContainer: HTMLDivElement) => {
+    setPlayingAnimation(false);
+    removeAnimation();
+    resourceContainer.style.transform = getEndPositionString();
+    dispatch(resetDiffCommonResources({ type }));
+  };
 
   const InitAnimation = () => {
     const parentContainer = parentRef.current;
@@ -53,19 +72,20 @@ const GainCommonResource = ({ type, order }: Props) => {
       };
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const keyframes = `
-          @keyframes resourceflyAcross-${type} {
-            from { transform: translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px); }
-            to { transform: translate(-50%, -50%) translate(${endPosition.x}px, ${endPosition.y}px); }
+          @keyframes ${animationName} {
+            from { transform: ${getStartPositionString(parentContainer)}; }
+            to { transform: ${getEndPositionString()}; }
           }
         `;
       styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-      resourceContainer.style.transform = `translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px)`;
-      resourceContainer.style.animation = `resourceflyAcross-${type} 1s linear`;
+      resourceContainer.style.transform =
+        getStartPositionString(parentContainer);
+      resourceContainer.style.animation = `${animationName} 1s linear`;
       resourceContainer.removeEventListener("animationend", () =>
-        onAnimationEnd(resourceContainer)(endPosition)
+        onAnimationEnd(resourceContainer)
       );
       resourceContainer.addEventListener("animationend", () =>
-        onAnimationEnd(resourceContainer)(endPosition)
+        onAnimationEnd(resourceContainer)
       );
     }
   };
