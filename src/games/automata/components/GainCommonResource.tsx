@@ -60,7 +60,7 @@ const GainCommonResource = ({ type, order }: Props) => {
         `;
       styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
       resourceContainer.style.transform = `translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px)`;
-      resourceContainer.style.animation = `resourceflyAcross-${type} 4s linear`;
+      resourceContainer.style.animation = `resourceflyAcross-${type} 1s linear`;
       resourceContainer.removeEventListener("animationend", () =>
         onAnimationEnd(resourceContainer)(endPosition)
       );

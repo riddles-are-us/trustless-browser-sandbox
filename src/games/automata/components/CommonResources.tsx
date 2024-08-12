@@ -3,7 +3,7 @@ import CommonResourceDisplay from "./CommonResourceDisplay";
 import { useAppSelector } from "../../../app/hooks";
 import "./CommonResources.css";
 
-import { selectCommonResource } from "../../../data/automata/resources";
+import { selectDisplayCommonResource } from "../../../data/automata/resources";
 import {
   getResourceIconPath,
   commonResourceTypes,
@@ -16,7 +16,7 @@ const CommonResources = () => {
         <CommonResourceDisplay
           key={index}
           iconImagePath={getResourceIconPath(type)}
-          amount={useAppSelector(selectCommonResource(type))}
+          amount={useAppSelector(selectDisplayCommonResource(type))}
         />
       ))}
     </div>
