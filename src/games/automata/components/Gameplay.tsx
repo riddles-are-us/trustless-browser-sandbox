@@ -7,6 +7,7 @@ import MainMenu from "./MainMenu";
 import { UIState, selectUIState } from "../../../data/automata/properties";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import GuidePopup from "./GuidePopup";
+import GainResources from "./GainResources";
 
 const Gameplay = () => {
   const uIState = useAppSelector(selectUIState);
@@ -14,6 +15,7 @@ const Gameplay = () => {
 
   return (
     <>
+      <GainResources />
       <TopMenu />
       <div className="middle-container">
         <LeftMenu />

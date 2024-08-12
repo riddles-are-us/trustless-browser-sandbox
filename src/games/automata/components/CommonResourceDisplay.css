@@ -15,8 +15,8 @@
 
 .common-resource-display-image {
     position: absolute;
-    top: 50%;
-    left: 15%;
+    top: 25px;
+    left: 10px;
     transform: translate(-50%, -50%);
     width: 35px;
     height: 35px;
