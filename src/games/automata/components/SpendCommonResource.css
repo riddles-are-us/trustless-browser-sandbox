@@ -1,0 +1,21 @@
+.spend-common-resource-parent-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.spend-common-resource-container {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    transform: translate(-50%, -50%);
+}
+
+.spend-common-resource-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
