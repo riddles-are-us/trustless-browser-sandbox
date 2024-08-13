@@ -21,7 +21,7 @@ function modifiersAreFullfilled(modifier: Array<number|null>) {
 
 
 
-export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
+export function ConfirmButton({modifiers, nonce}: {modifiers: Array<number|null>, nonce: bigint}) {
   const external = useAppSelector(selectExternal);
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
@@ -38,11 +38,11 @@ export function ConfirmButton({modifiers}: {modifiers: Array<number|null>}) {
       const modifiers: bigint = encode_modifier(index);
       if(activity == "creating") {
         const objIndex = BigInt(selectedId!);
-        const insObjectCmd = createCommand(CMD_INSTALL_OBJECT, objIndex);
+        const insObjectCmd = createCommand(nonce, CMD_INSTALL_OBJECT, objIndex);
         dispatch(sendTransaction({cmd: [insObjectCmd, modifiers, 0n, 0n], prikey: l2account!.address}));
       } else if(activity == "rebooting") {
         const objIndex = BigInt(selectedId!);
-        const restartObjectCmd = createCommand(CMD_RESTART_OBJECT, BigInt(objIndex));
+        const restartObjectCmd = createCommand(nonce, CMD_RESTART_OBJECT, BigInt(objIndex));
         dispatch(sendTransaction({cmd: [restartObjectCmd, modifiers, 0n, 0n], prikey: l2account!.address}));
       }
       dispatch(setViewerActivity("monitoringResult"));
