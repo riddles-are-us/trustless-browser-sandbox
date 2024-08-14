@@ -23,6 +23,10 @@ const GainCommonResource = ({ type, order }: Props) => {
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
+  const [
+    playingResourceChangeAmountAnimation,
+    setPlayingResourceChangeAmountAnimation,
+  ] = useState(false);
   const [diffAmount, setDiffAmount] = useState(0);
   const animationName = `gainResourceFlyAcross-${type}`;
 
@@ -66,12 +70,17 @@ const GainCommonResource = ({ type, order }: Props) => {
       removeAnimation();
       resourceContainer.style.transform = endPositionString;
       dispatch(resetDiffCommonResources({ type }));
+
+      setPlayingResourceChangeAmountAnimation(true);
+      setTimeout(() => {
+        setPlayingResourceChangeAmountAnimation(false);
+      }, 2000);
     };
 
   const InitAnimation = () => {
     const parentContainer = parentRef.current;
     const resourceContainer = resourceRef.current;
-    if (resourceContainer && parentContainer && playingAnimation == false) {
+    if (resourceContainer && parentContainer) {
       setPlayingAnimation(true);
       setDiffAmount(diffResource);
       const startPositionString = getStartPositionString(parentContainer);
@@ -100,7 +109,9 @@ const GainCommonResource = ({ type, order }: Props) => {
 
   useEffect(() => {
     if (gainingResource) {
-      InitAnimation();
+      setTimeout(() => {
+        InitAnimation();
+      }, 1500);
     }
   }, [gainingResource]);
 
@@ -116,7 +127,7 @@ const GainCommonResource = ({ type, order }: Props) => {
             />
           )}
         </div>
-        {playingAnimation && (
+        {playingResourceChangeAmountAnimation && (
           <div
             className="gain-common-resource-amount-animation-container"
             style={{ left: `${90 * order + 60}px` }}

@@ -23,6 +23,10 @@ const SpendCommonResource = ({ type, order }: Props) => {
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
+  const [
+    playingResourceChangeAmountAnimation,
+    setPlayingResourceChangeAmountAnimation,
+  ] = useState(false);
   const [diffAmount, setDiffAmount] = useState(0);
   const animationName = `spendResourceFlyAcross-${type}`;
 
@@ -62,7 +66,7 @@ const SpendCommonResource = ({ type, order }: Props) => {
   const InitAnimation = () => {
     const parentContainer = parentRef.current;
     const resourceContainer = resourceRef.current;
-    if (resourceContainer && parentContainer && playingAnimation == false) {
+    if (resourceContainer && parentContainer) {
       setPlayingAnimation(true);
       setDiffAmount(diffResource);
       dispatch(resetDiffCommonResources({ type }));
@@ -90,6 +94,10 @@ const SpendCommonResource = ({ type, order }: Props) => {
   useEffect(() => {
     if (spendingResource) {
       InitAnimation();
+      setPlayingResourceChangeAmountAnimation(true);
+      setTimeout(() => {
+        setPlayingResourceChangeAmountAnimation(false);
+      }, 2000);
     }
   }, [spendingResource]);
 
@@ -105,7 +113,7 @@ const SpendCommonResource = ({ type, order }: Props) => {
             />
           )}
         </div>
-        {playingAnimation && (
+        {playingResourceChangeAmountAnimation && (
           <div
             className="spend-common-resource-amount-animation-container"
             style={{ left: `${90 * order + 60}px` }}
