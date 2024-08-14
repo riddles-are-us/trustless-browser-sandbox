@@ -23,6 +23,7 @@ const SpendCommonResource = ({ type, order }: Props) => {
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
+  const [showingIcon, setShowingIcon] = useState(false);
   const [
     playingResourceChangeAmountAnimation,
     setPlayingResourceChangeAmountAnimation,
@@ -59,6 +60,7 @@ const SpendCommonResource = ({ type, order }: Props) => {
   const onAnimationEnd =
     (resourceContainer: HTMLDivElement) => (endPositionString: string) => {
       setPlayingAnimation(false);
+      setShowingIcon(false);
       removeAnimation();
       resourceContainer.style.transform = endPositionString;
     };
@@ -67,7 +69,7 @@ const SpendCommonResource = ({ type, order }: Props) => {
     const parentContainer = parentRef.current;
     const resourceContainer = resourceRef.current;
     if (resourceContainer && parentContainer) {
-      setPlayingAnimation(true);
+      setShowingIcon(true);
       setDiffAmount(diffResource);
       dispatch(resetDiffCommonResources({ type }));
       const startPositionString = getStartPositionString();
@@ -92,7 +94,8 @@ const SpendCommonResource = ({ type, order }: Props) => {
   };
 
   useEffect(() => {
-    if (spendingResource) {
+    if (spendingResource && !playingAnimation) {
+      setPlayingAnimation(true);
       InitAnimation();
       setPlayingResourceChangeAmountAnimation(true);
       setTimeout(() => {
@@ -106,7 +109,7 @@ const SpendCommonResource = ({ type, order }: Props) => {
       <></>
       <div ref={parentRef} className="spend-common-resource-parent-container">
         <div ref={resourceRef} className="spend-common-resource-container">
-          {playingAnimation && (
+          {showingIcon && (
             <img
               src={getResourceIconPath(type)}
               className="spend-common-resource-image"

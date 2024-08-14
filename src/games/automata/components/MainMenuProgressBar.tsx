@@ -24,7 +24,7 @@ const MainMenuProgressBar = ({
         className="main-progress-bar-background"
       />
       {iconPath && <img src={iconPath} className="main-progress-bot-image" />}
-      <p className="main-progress-bar-program-name-text">{}</p>
+      <p className="main-progress-bar-program-name-text">{programName}</p>
       <p className="main-progress-bar-program-processing-time-text">
         {formatTime(remainTime)}
       </p>

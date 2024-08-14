@@ -43,11 +43,6 @@ export const resourcesSlice = createSlice({
                     type: pair.type,
                     amount: pair.amount - (state.commonResources.find(oldPair => oldPair.type == pair.type)?.amount ?? 0),
                   }));
-              state.displayCommonResources = 
-                newResources.map((pair, index) => ({
-                  type: pair.type,
-                  amount: Math.min(pair.amount, state.commonResources[index].amount),
-                }));
             }
             state.commonResources = newResources;
         });
