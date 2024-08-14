@@ -9,6 +9,7 @@ import {
 } from "../../../data/automata/resources";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./SpendCommonResource.css";
+import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 interface Props {
   type: ResourceType;
@@ -22,7 +23,8 @@ const SpendCommonResource = ({ type, order }: Props) => {
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
-  const animationName = `resourceflyAcross-${type}`;
+  const [diffAmount, setDiffAmount] = useState(0);
+  const animationName = `spendResourceFlyAcross-${type}`;
 
   const getStartPositionString = () => {
     const startPosition = {
@@ -62,22 +64,25 @@ const SpendCommonResource = ({ type, order }: Props) => {
     const resourceContainer = resourceRef.current;
     if (resourceContainer && parentContainer && playingAnimation == false) {
       setPlayingAnimation(true);
+      setDiffAmount(diffResource);
       dispatch(resetDiffCommonResources({ type }));
+      const startPositionString = getStartPositionString();
+      const endPositionString = getEndPositionString(parentContainer);
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const keyframes = `
           @keyframes ${animationName} {
-            from { transform: ${getStartPositionString()}; }
-            to { transform: ${getEndPositionString(parentContainer)}; }
+            from { transform: ${startPositionString}; }
+            to { transform: ${endPositionString}; }
           }
         `;
       styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-      resourceContainer.style.transform = getStartPositionString();
+      resourceContainer.style.transform = startPositionString;
       resourceContainer.style.animation = `${animationName} 1s ease-in-out`;
       resourceContainer.removeEventListener("animationend", () =>
-        onAnimationEnd(resourceContainer)(getEndPositionString(parentContainer))
+        onAnimationEnd(resourceContainer)(endPositionString)
       );
       resourceContainer.addEventListener("animationend", () =>
-        onAnimationEnd(resourceContainer)(getEndPositionString(parentContainer))
+        onAnimationEnd(resourceContainer)(endPositionString)
       );
     }
   };
@@ -100,6 +105,14 @@ const SpendCommonResource = ({ type, order }: Props) => {
             />
           )}
         </div>
+        {playingAnimation && (
+          <div
+            className="spend-common-resource-amount-animation-container"
+            style={{ left: `${90 * order + 60}px` }}
+          >
+            <ResourceChangeAmountAnimation amount={diffAmount} />
+          </div>
+        )}
       </div>
     </>
   );

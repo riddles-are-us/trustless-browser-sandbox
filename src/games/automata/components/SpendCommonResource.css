@@ -19,3 +19,11 @@
     top: 50%;
     transform: translate(-50%, -50%);
 }
+
+.spend-common-resource-amount-animation-container {
+    position: absolute;
+    width: 40px;
+    height: 12px;
+    top: 45px;
+    transform: translate(-50%, -50%);
+}

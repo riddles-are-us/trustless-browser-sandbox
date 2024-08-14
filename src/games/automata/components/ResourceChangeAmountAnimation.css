@@ -1,0 +1,48 @@
+
+@keyframes moveAndFade {
+    0% {
+      top: 0px;
+      opacity: 1;
+    }
+    80% {
+      top: 4px;
+      opacity: 0.8;
+    }
+    100% {
+      top: 5px;
+      opacity: 0;
+    }
+}
+
+.resource-change-amount-animation-container {
+    position: absolute;
+    width: 40px;
+    height: 12px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: moveAndFade 1s linear forwards;
+}
+
+.resource-change-amount-animation-positive-text, .resource-change-amount-animation-negative-text {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    text-align: center;
+    line-height: 100%;
+    margin: 0px;
+    width: 40px;
+    height: 12px;
+    font-family: "mishmash";
+    pointer-events: none;
+}
+
+.resource-change-amount-animation-positive-text {
+    color: rgb(85, 221, 85);
+}
+
+.resource-change-amount-animation-negative-text {
+    color: rgb(220, 36, 36);
+}

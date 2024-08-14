@@ -9,6 +9,7 @@ import {
 } from "../../../data/automata/resources";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GainCommonResource.css";
+import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 interface Props {
   type: ResourceType;
@@ -22,7 +23,8 @@ const GainCommonResource = ({ type, order }: Props) => {
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
-  const animationName = `resourceflyAcross-${type}`;
+  const [diffAmount, setDiffAmount] = useState(0);
+  const animationName = `gainResourceFlyAcross-${type}`;
 
   const getStartPositionString = (parentContainer: HTMLDivElement) => {
     const startPosition = {
@@ -30,6 +32,14 @@ const GainCommonResource = ({ type, order }: Props) => {
       y: parentContainer.clientHeight / 2,
     };
     return `translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px)`;
+  };
+
+  const getMiddlePositionString = (parentContainer: HTMLDivElement) => {
+    const middlePosition = {
+      x: parentContainer.clientWidth / 2 + (Math.random() * 100 - 50) * 2,
+      y: parentContainer.clientHeight / 2 + (Math.random() * 100 - 50) * 2,
+    };
+    return `translate(-50%, -50%) translate(${middlePosition.x}px, ${middlePosition.y}px)`;
   };
 
   const getEndPositionString = () => {
@@ -50,34 +60,40 @@ const GainCommonResource = ({ type, order }: Props) => {
     }
   };
 
-  const onAnimationEnd = (resourceContainer: HTMLDivElement) => {
-    setPlayingAnimation(false);
-    removeAnimation();
-    resourceContainer.style.transform = getEndPositionString();
-    dispatch(resetDiffCommonResources({ type }));
-  };
+  const onAnimationEnd =
+    (resourceContainer: HTMLDivElement) => (endPositionString: string) => {
+      setPlayingAnimation(false);
+      removeAnimation();
+      resourceContainer.style.transform = endPositionString;
+      dispatch(resetDiffCommonResources({ type }));
+    };
 
   const InitAnimation = () => {
     const parentContainer = parentRef.current;
     const resourceContainer = resourceRef.current;
     if (resourceContainer && parentContainer && playingAnimation == false) {
       setPlayingAnimation(true);
+      setDiffAmount(diffResource);
+      const startPositionString = getStartPositionString(parentContainer);
+      const middlePositionString = getMiddlePositionString(parentContainer);
+      const endPositionString = getEndPositionString();
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const keyframes = `
           @keyframes ${animationName} {
-            from { transform: ${getStartPositionString(parentContainer)}; }
-            to { transform: ${getEndPositionString()}; }
+            0% { transform: ${startPositionString}; }
+            5% { transform: ${middlePositionString}; }
+            35% { transform: ${middlePositionString}; }
+            100% { transform: ${endPositionString}; }
           }
         `;
       styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-      resourceContainer.style.transform =
-        getStartPositionString(parentContainer);
-      resourceContainer.style.animation = `${animationName} 1s ease-in-out`;
+      resourceContainer.style.transform = startPositionString;
+      resourceContainer.style.animation = `${animationName} 1.5s ease-in-out`;
       resourceContainer.removeEventListener("animationend", () =>
-        onAnimationEnd(resourceContainer)
+        onAnimationEnd(resourceContainer)(endPositionString)
       );
       resourceContainer.addEventListener("animationend", () =>
-        onAnimationEnd(resourceContainer)
+        onAnimationEnd(resourceContainer)(endPositionString)
       );
     }
   };
@@ -100,6 +116,14 @@ const GainCommonResource = ({ type, order }: Props) => {
             />
           )}
         </div>
+        {playingAnimation && (
+          <div
+            className="gain-common-resource-amount-animation-container"
+            style={{ left: `${90 * order + 60}px` }}
+          >
+            <ResourceChangeAmountAnimation amount={diffAmount} />
+          </div>
+        )}
       </div>
     </>
   );
