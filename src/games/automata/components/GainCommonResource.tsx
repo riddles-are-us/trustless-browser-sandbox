@@ -3,10 +3,6 @@ import {
   ResourceType,
   getResourceIconPath,
 } from "../../../data/automata/models";
-import {
-  selectDiffCommonResource,
-  resetDiffCommonResources,
-} from "../../../data/automata/resources";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GainCommonResource.css";
 import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
@@ -18,8 +14,8 @@ interface Props {
 
 const GainCommonResource = ({ type, order }: Props) => {
   const dispatch = useAppDispatch();
-  const diffResource = useAppSelector(selectDiffCommonResource(type));
-  const gainingResource = diffResource > 0;
+  // const diffResource = useAppSelector(selectDiffCommonResource(type));
+  const gainingResource = false;
   const resourceRef = useRef<HTMLDivElement | null>(null);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
@@ -71,7 +67,6 @@ const GainCommonResource = ({ type, order }: Props) => {
       setShowingIcon(false);
       removeAnimation();
       resourceContainer.style.transform = endPositionString;
-      dispatch(resetDiffCommonResources({ type }));
 
       setPlayingResourceChangeAmountAnimation(true);
       setTimeout(() => {
@@ -84,7 +79,7 @@ const GainCommonResource = ({ type, order }: Props) => {
     const resourceContainer = resourceRef.current;
     if (resourceContainer && parentContainer) {
       setShowingIcon(true);
-      setDiffAmount(diffResource);
+      setDiffAmount(20);
       const startPositionString = getStartPositionString(parentContainer);
       const middlePositionString = getMiddlePositionString(parentContainer);
       const endPositionString = getEndPositionString();
