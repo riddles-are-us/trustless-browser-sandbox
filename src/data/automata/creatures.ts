@@ -185,6 +185,8 @@ interface ProgramInfo{
     progress: number;
 }
 
+export const selectSelectedCreatureCurrentProgramIndex = (state: RootState) => selectSelectedCreature(state).currentProgramIndex;
+
 export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState): ProgramInfo => {
     const selectedCreature = selectSelectedCreature(state);
     const currentProgramIndex = selectedCreature.currentProgramIndex
@@ -203,7 +205,7 @@ export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (st
     if (selectedCreature.isProgramStop == true){
         return {
             program,
-            index: selectedCreature.currentProgramIndex,
+            index: currentProgramIndex,
             remainTime: 0,
             progress: getProgressBarValue(state.automata.properties.globalTimer - selectedCreature.startTime, program.processingTime),
         };

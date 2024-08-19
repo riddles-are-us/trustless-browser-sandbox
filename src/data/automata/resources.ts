@@ -28,5 +28,5 @@ export const resourcesSlice = createSlice({
 
 export const selectCommonResource = (type: ResourceType) => (state: RootState) => state.automata.resources.commonResources.find(resource => resource.type == type)?.amount ?? 0;
     
-export const { } = resourcesSlice.actions;
+// export const { } = resourcesSlice.actions;
 export default resourcesSlice.reducer;

@@ -19,6 +19,7 @@ import {
   selectUIState,
   setUIState,
   selectGlobalTimer,
+  setSelectedCreatureDiffResources,
 } from "../../../data/automata/properties";
 import {
   startRebootCreature,
@@ -27,6 +28,7 @@ import {
   selectSelectedCreaturePrograms,
   selectSelectedCreatureDiffResources,
   selectSelectedCreatureListIndex,
+  selectSelectedCreatureCurrentProgramIndex,
   selectSelectedCreatureCurrentProgram,
   selectSelectedCreatureSelectingProgram,
 } from "../../../data/automata/creatures";
@@ -137,11 +139,27 @@ const MainMenu = () => {
     resetElapsedTime();
   }, [globalTimer]);
 
-  const { program, index, remainTime, progress } = useAppSelector(
+  const lastUpdatedProgramInfo = useAppSelector(
+    isSelectingUIState
+      ? selectSelectedCreatureSelectingProgram
+      : selectSelectedCreatureCurrentProgram(0)
+  );
+  const currentProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
       : selectSelectedCreatureCurrentProgram(elapsedTime)
   );
+
+  if (
+    lastUpdatedProgramInfo.index != currentProgramInfo.index &&
+    lastUpdatedProgramInfo.program
+  ) {
+    dispatch(
+      setSelectedCreatureDiffResources({
+        resources: lastUpdatedProgramInfo.program.resources,
+      })
+    );
+  }
 
   return (
     <div className="main">
@@ -152,9 +170,9 @@ const MainMenu = () => {
         </div>
         <div className="main-circle-container">
           <MainMenuProgressBar
-            programName={program?.name ?? ""}
-            remainTime={remainTime}
-            progress={progress}
+            programName={currentProgramInfo.program?.name ?? ""}
+            remainTime={currentProgramInfo.remainTime}
+            progress={currentProgramInfo.progress}
             iconPath={getCreatureIconPath(selectedCreature.creatureType)}
           />
           <img src={circleBackground} className="main-circle-background" />
@@ -172,7 +190,7 @@ const MainMenu = () => {
           )}
           {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
           <MainMenuSelectingFrame
-            order={index}
+            order={currentProgramInfo.index}
             isCurrentProgram={!isSelectingUIState}
             isStop={selectedCreature.isProgramStop}
           />
