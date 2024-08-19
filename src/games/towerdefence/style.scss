@@ -1,41 +1,57 @@
-div.droppable-tile {
-  border: 1px solid gray;
-  width: 60px;
-  height: 60px;
-}
-.dragable-tile {
-  border: 1px solid gray;
-  width: 130px;
-  height: 200px;
-}
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars */
+  height: 100%;
+  background-image: url('images/background.jpg');
+  background-size: cover;
+  background-position: center;
 
-.valid-position {
-  border: 1px solid green;
-  background-color: green;
-  opacity: 0.5;
+   /* Apply grayscale filter */
 }
-.invalid-position {
-  border: 1px solid red;
-  background-color: red;
-  opacity: 0.5;
+div.center {
+    position: absolute;
+    width: 960px;
+    height: 540px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-.position-indicator {
-  height: 30px;
-  width: 30px;
-  border: 1px solid black;
-}
-
-.item {
-  border: 1px solid black;
-  padding: 5px;
-  height: 30px;
-  width: 30px;
-}
-
-.item-used {
-  background-color: gray;
-}
-
 canvas {
-  border: 1px solid gray;
+  border: 0px solid gray;
+  display: block; /* Removes the default inline spacing for canvas */
+}
+
+div.stage-buttons {
+  position: absolute;
+  left: 300px;
+  top: 460px;
+  .button1 {
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-color: blue;
+  }
+  .button2 {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-color: blue;
+  }
+  .button3 {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-color: blue;
+  }
+  .button4 {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-color: blue;
+  }
 }

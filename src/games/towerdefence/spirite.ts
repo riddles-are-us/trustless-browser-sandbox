@@ -1,16 +1,8 @@
-import TowerImage from "./images/tower.png";
-import CaveImage1 from "./images/cave01.png";
+import BackGround from "./images/background.jpg"
 
-const towerImage = new Image();
-towerImage.src = TowerImage;
-
-const caveImage = new Image();
-caveImage.src = CaveImage1;
-
-const towerSpirites = [towerImage];
-const caveSpirites = [caveImage];
+const backgroundImage = new Image();
+backgroundImage.src = BackGround;
 
 export default {
-  towerSpirites: towerSpirites,
-  caveSpirites: caveSpirites
+  backgroundImage: backgroundImage,
 }
