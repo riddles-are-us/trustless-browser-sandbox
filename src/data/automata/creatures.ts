@@ -187,7 +187,7 @@ interface ProgramInfo{
 
 export const selectSelectedCreatureCurrentProgramIndex = (state: RootState) => selectSelectedCreature(state).currentProgramIndex;
 
-export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (state: RootState): ProgramInfo => {
+export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (globalTimer: number) => (state: RootState): ProgramInfo => {
     const selectedCreature = selectSelectedCreature(state);
     const currentProgramIndex = selectedCreature.currentProgramIndex
     const programIndex = selectedCreature.programIndexes[currentProgramIndex]!;
@@ -207,11 +207,11 @@ export const selectSelectedCreatureCurrentProgram = (elapsedTime: number) => (st
             program,
             index: currentProgramIndex,
             remainTime: 0,
-            progress: getProgressBarValue(state.automata.properties.globalTimer - selectedCreature.startTime, program.processingTime),
+            progress: getProgressBarValue(globalTimer - selectedCreature.startTime, program.processingTime),
         };
     }
 
-    let time = state.automata.properties.globalTimer - selectedCreature.startTime + elapsedTime;
+    let time = globalTimer - selectedCreature.startTime + elapsedTime;
     let diffIndex = 0;
     let index = currentProgramIndex + diffIndex;
     while (diffIndex < 8 && time >= program.processingTime) {

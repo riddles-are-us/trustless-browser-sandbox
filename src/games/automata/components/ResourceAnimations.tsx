@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import GainCommonResource from "./GainCommonResource";
-import { commonResourceTypes } from "../../../data/automata/models";
 import {
-  ResourceType,
-  getResourceIconPath,
+  commonResourceTypes,
+  ResourceAmountPair,
+  emptyCommonResources,
 } from "../../../data/automata/models";
 import {
   selectSelectedCreatureDiffResources,
@@ -11,7 +11,6 @@ import {
 } from "../../../data/automata/properties";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./ResourceAnimations.css";
-import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 const ResourceAnimations = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +26,8 @@ const ResourceAnimations = () => {
     playingResourceChangeAmountAnimation,
     setPlayingResourceChangeAmountAnimation,
   ] = useState(false);
+  const [diffResourcesPair, setDiffResourcesPair] =
+    useState<ResourceAmountPair[]>(emptyCommonResources);
 
   const getStartPositionString = (parentContainer: HTMLDivElement) => {
     const startPosition = {
@@ -53,11 +54,9 @@ const ResourceAnimations = () => {
   };
 
   const PlayingResourceChangeAmountAnimation = () => {
-    setPlayingIconAnimation(false);
+    console.log("end");
     setPlayingResourceChangeAmountAnimation(true);
-
-    dispatch(resetSelectedCreatureDiffResources({}));
-
+    setPlayingIconAnimation(false);
     setTimeout(() => {
       setPlayingAnimation(false);
       setPlayingResourceChangeAmountAnimation(false);
@@ -65,10 +64,19 @@ const ResourceAnimations = () => {
   };
 
   const PlayIconAnimation = () => {
+    setDiffResourcesPair(
+      commonResourceTypes.map((type) => ({
+        type,
+        amount:
+          diffResources.find((resource) => resource.type == type)?.amount ?? 0,
+      }))
+    );
+
+    dispatch(resetSelectedCreatureDiffResources({}));
     setPlayingIconAnimation(true);
     setTimeout(() => {
       PlayingResourceChangeAmountAnimation();
-    }, 1500);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -84,12 +92,9 @@ const ResourceAnimations = () => {
   return (
     <div ref={parentRef} className="resource-animations-container">
       {(playingIconAnimation || playingResourceChangeAmountAnimation) &&
-        commonResourceTypes.map((type, index) => {
-          const changeAmount = gainingResources.find(
-            (resource) => resource.type == type
-          )?.amount;
-          return (
-            changeAmount && (
+        commonResourceTypes.map(
+          (type, index) =>
+            diffResourcesPair[index].amount > 0 && (
               <GainCommonResource
                 key={index}
                 type={type}
@@ -103,11 +108,10 @@ const ResourceAnimations = () => {
                 )}
                 endPositionString={getEndPositionString(index)}
                 changeAmountTextPositionX={90 * index + 60}
-                changeAmount={changeAmount}
+                changeAmount={diffResourcesPair[index].amount}
               />
             )
-          );
-        })}
+        )}
     </div>
   );
 };

@@ -106,11 +106,14 @@ const MainMenu = () => {
   }
 
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [globalTimerCache, setGlobalTimerCache] = useState(0);
+  const [hasSetDiffResources, setHasSetDiffResources] = useState(false);
   const startTimeRef = useRef<number>(0);
 
   const resetElapsedTime = () => {
     startTimeRef.current = 0;
     setElapsedTime(0);
+    setHasSetDiffResources(false);
   };
 
   useEffect(() => {
@@ -137,23 +140,27 @@ const MainMenu = () => {
 
   useEffect(() => {
     resetElapsedTime();
+    setGlobalTimerCache(globalTimer);
   }, [globalTimer]);
 
   const lastUpdatedProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
-      : selectSelectedCreatureCurrentProgram(0)
+      : selectSelectedCreatureCurrentProgram(0)(globalTimerCache)
   );
   const currentProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
-      : selectSelectedCreatureCurrentProgram(elapsedTime)
+      : selectSelectedCreatureCurrentProgram(elapsedTime)(globalTimerCache)
   );
 
   if (
-    lastUpdatedProgramInfo.index != currentProgramInfo.index &&
+    !isSelectingUIState &&
+    !hasSetDiffResources &&
+    lastUpdatedProgramInfo.index !== currentProgramInfo.index &&
     lastUpdatedProgramInfo.program
   ) {
+    setHasSetDiffResources(true);
     dispatch(
       setSelectedCreatureDiffResources({
         resources: lastUpdatedProgramInfo.program.resources,
