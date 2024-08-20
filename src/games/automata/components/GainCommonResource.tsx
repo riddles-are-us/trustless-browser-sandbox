@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import {
   ResourceType,
   getResourceIconPath,
 } from "../../../data/automata/models";
-import {
-  selectSelectedCreatureDiffResources,
-  resetSelectedCreatureDiffResources,
-} from "../../../data/automata/properties";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./GainCommonResource.css";
 import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
@@ -53,6 +48,7 @@ const GainCommonResource = ({
     };
 
   const InitAnimation = () => {
+    console.log("Init");
     if (iconContainer) {
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const keyframes = `

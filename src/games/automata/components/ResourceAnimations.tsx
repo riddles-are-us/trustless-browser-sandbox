@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import GainCommonResource from "./GainCommonResource";
+import SpendCommonResource from "./SpendCommonResource";
 import {
   commonResourceTypes,
   ResourceAmountPair,
@@ -21,11 +22,15 @@ const ResourceAnimations = () => {
   const gainingResource = gainingResources.length > 0;
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
-  const [playingIconAnimation, setPlayingIconAnimation] = useState(false);
+  const [playingGainingIconAnimation, setPlayingGainingIconAnimation] =
+    useState(false);
   const [
-    playingResourceChangeAmountAnimation,
-    setPlayingResourceChangeAmountAnimation,
+    playingGainingResourceChangeAmountAnimation,
+    setPlayingGainingResourceChangeAmountAnimation,
   ] = useState(false);
+  const [playingSpendingAnimation, setPlayingSpendingAnimation] =
+    useState(false);
+
   const [diffResourcesPair, setDiffResourcesPair] =
     useState<ResourceAmountPair[]>(emptyCommonResources);
 
@@ -55,11 +60,11 @@ const ResourceAnimations = () => {
 
   const PlayingResourceChangeAmountAnimation = () => {
     console.log("end");
-    setPlayingResourceChangeAmountAnimation(true);
-    setPlayingIconAnimation(false);
+    setPlayingGainingResourceChangeAmountAnimation(true);
+    setPlayingGainingIconAnimation(false);
     setTimeout(() => {
       setPlayingAnimation(false);
-      setPlayingResourceChangeAmountAnimation(false);
+      setPlayingGainingResourceChangeAmountAnimation(false);
     }, 2000);
   };
 
@@ -73,7 +78,8 @@ const ResourceAnimations = () => {
     );
 
     dispatch(resetSelectedCreatureDiffResources({}));
-    setPlayingIconAnimation(true);
+    setPlayingGainingIconAnimation(true);
+    setPlayingSpendingAnimation(false);
     setTimeout(() => {
       PlayingResourceChangeAmountAnimation();
     }, 2000);
@@ -83,6 +89,7 @@ const ResourceAnimations = () => {
     const parentContainer = parentRef.current;
     if (parentContainer && gainingResource && !playingAnimation) {
       setPlayingAnimation(true);
+      setPlayingSpendingAnimation(true);
       setTimeout(() => {
         PlayIconAnimation();
       }, 1500);
@@ -91,22 +98,39 @@ const ResourceAnimations = () => {
 
   return (
     <div ref={parentRef} className="resource-animations-container">
-      {(playingIconAnimation || playingResourceChangeAmountAnimation) &&
+      {(playingGainingIconAnimation ||
+        playingGainingResourceChangeAmountAnimation) &&
         commonResourceTypes.map(
           (type, index) =>
             diffResourcesPair[index].amount > 0 && (
               <GainCommonResource
                 key={index}
                 type={type}
-                playingIconAnimation={playingIconAnimation}
+                playingIconAnimation={playingGainingIconAnimation}
                 playingResourceChangeAmountAnimation={
-                  playingResourceChangeAmountAnimation
+                  playingGainingResourceChangeAmountAnimation
                 }
                 startPositionString={getStartPositionString(parentRef.current!)}
                 middlePositionString={getMiddlePositionString(
                   parentRef.current!
                 )}
                 endPositionString={getEndPositionString(index)}
+                changeAmountTextPositionX={90 * index + 60}
+                changeAmount={diffResourcesPair[index].amount}
+              />
+            )
+        )}
+      {playingSpendingAnimation &&
+        commonResourceTypes.map(
+          (type, index) =>
+            diffResourcesPair[index].amount < 0 && (
+              <SpendCommonResource
+                key={index}
+                type={type}
+                playingIconAnimation={playingSpendingAnimation}
+                playingResourceChangeAmountAnimation={playingSpendingAnimation}
+                startPositionString={getEndPositionString(index)}
+                endPositionString={getStartPositionString(parentRef.current!)}
                 changeAmountTextPositionX={90 * index + 60}
                 changeAmount={diffResourcesPair[index].amount}
               />
