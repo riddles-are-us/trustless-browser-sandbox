@@ -28,18 +28,23 @@
     height: 100%;
 }
 
-.guide-popup-skip-button {
+.guide-popup-end-guide-button {
     position: absolute;
-    top: 87%;
-    left: 85%;
+    top: 80%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.guide-page-selector{
+.guide-popup-prev-button {
     position: absolute;
-    width: 170px;
-    height: 40px;
-    top: 85%;
-    left: 50%;
+    top: 80%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+}
+
+.guide-popup-next-button {
+    position: absolute;
+    top: 80%;
+    left: 55%;
     transform: translate(-50%, -50%);
 }

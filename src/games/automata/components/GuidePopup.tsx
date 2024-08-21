@@ -1,7 +1,8 @@
 import React from "react";
 import background from "../images/backgrounds/guide_frame.png";
-import SkipButton from "./Buttons/SkipButton";
-import PageSelector from "./PageSelector";
+import EndGuideButton from "./Buttons/EndGuideButton";
+import HorizontalPrevPageButton from "./Buttons/HorizontalPrevPageButton";
+import HorizontalNextPageButton from "./Buttons/HorizontalNextPageButton";
 import { UIState, setUIState } from "../../../data/automata/properties";
 import {
   nextPage,
@@ -20,8 +21,10 @@ const GuidePopup = () => {
   const currentGuide = useAppSelector(selectGuideOnCurrentPage);
   const showPageSelector = totalPage > 1;
   const enableSkipButton = currentPage >= totalPage - 1;
+  const enablePrevPageButton = currentPage > 0;
+  const enableNextPageButton = currentPage < totalPage - 1;
 
-  const onClickSkip = () => {
+  const onClickEndGuide = () => {
     if (enableSkipButton) {
       dispatch(setUIState({ uIState: UIState.Idle }));
     }
@@ -41,19 +44,27 @@ const GuidePopup = () => {
       <div className="guide-popup-main-container">
         <img src={background} className="guide-popup-main-background" />
         {currentGuide}
-        {showPageSelector && (
-          <div className="guide-page-selector">
-            <PageSelector
-              currentPage={currentPage}
-              pageCount={totalPage}
-              onClickPrevPageButton={onClickPrevPageButton}
-              onClickNextPageButton={onClickNextPageButton}
+        {!enableSkipButton && (
+          <div className="guide-popup-prev-button">
+            <HorizontalPrevPageButton
+              isDisabled={!enablePrevPageButton}
+              onClick={onClickPrevPageButton}
             />
           </div>
         )}
-        <div className="guide-popup-skip-button">
-          <SkipButton isDisabled={!enableSkipButton} onClick={onClickSkip} />
-        </div>
+        {!enableSkipButton && (
+          <div className="guide-popup-next-button">
+            <HorizontalNextPageButton
+              isDisabled={!enableNextPageButton}
+              onClick={onClickNextPageButton}
+            />
+          </div>
+        )}
+        {enableSkipButton && (
+          <div className="guide-popup-end-guide-button">
+            <EndGuideButton onClick={onClickEndGuide} />
+          </div>
+        )}
       </div>
     </div>
   );
