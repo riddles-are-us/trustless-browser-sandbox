@@ -46,7 +46,6 @@ const SpendCommonResource = ({
     };
 
   const InitAnimation = () => {
-    console.log("Init");
     if (iconContainer) {
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const keyframes = `
