@@ -24,23 +24,25 @@ import {
 import {
   startRebootCreature,
   clearRebootCreature,
+  selectIsNotSelectingCreature,
   selectSelectedCreature,
   selectSelectedCreaturePrograms,
   selectSelectedCreatureDiffResources,
   selectSelectedCreatureListIndex,
-  selectSelectedCreatureCurrentProgramIndex,
   selectSelectedCreatureCurrentProgram,
   selectSelectedCreatureSelectingProgram,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import MainMenuWarning from "./MainMenuWarning";
 import MainMenuProgressBar from "./MainMenuProgressBar";
+import SummaryMenu from "./SummaryMenu";
 
 const MainMenu = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
   const globalTimer = useAppSelector(selectGlobalTimer);
+  const isNotSelectingCreature = useAppSelector(selectIsNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
@@ -171,42 +173,47 @@ const MainMenu = () => {
   return (
     <div className="main">
       <Rocket />
-      <div className="main-content">
-        <div className="main-info-container">
-          <DiffResourcesInfo diffResources={selectedCreatureDiffResources} />
-        </div>
-        <div className="main-circle-container">
-          <MainMenuProgressBar
-            programName={currentProgramInfo.program?.name ?? ""}
-            remainTime={currentProgramInfo.remainTime}
-            progress={currentProgramInfo.progress}
-            iconPath={getCreatureIconPath(selectedCreature.creatureType)}
-          />
-          <img src={circleBackground} className="main-circle-background" />
-          {showConfirmButton && (
-            <ConfirmButton
-              isDisabled={!enableConfirmButton}
-              onClick={() => onClickConfirm()}
+      {!isNotSelectingCreature && (
+        <div className="main-content">
+          <div className="main-info-container">
+            <DiffResourcesInfo diffResources={selectedCreatureDiffResources} />
+          </div>
+          <div className="main-circle-container">
+            <MainMenuProgressBar
+              programName={currentProgramInfo.program?.name ?? ""}
+              remainTime={currentProgramInfo.remainTime}
+              progress={currentProgramInfo.progress}
+              iconPath={getCreatureIconPath(selectedCreature.creatureType)}
             />
-          )}
-          {showUnlockButton && (
-            <UnlockButton
-              isDisabled={!enableUnlockButton}
-              onClick={() => onClickConfirm()}
+            <img src={circleBackground} className="main-circle-background" />
+            {showConfirmButton && (
+              <ConfirmButton
+                isDisabled={!enableConfirmButton}
+                onClick={() => onClickConfirm()}
+              />
+            )}
+            {showUnlockButton && (
+              <UnlockButton
+                isDisabled={!enableUnlockButton}
+                onClick={() => onClickConfirm()}
+              />
+            )}
+            {showRebootButton && (
+              <RebootButton onClick={() => onClickReboot()} />
+            )}
+            <MainMenuSelectingFrame
+              order={currentProgramInfo.index}
+              isCurrentProgram={!isSelectingUIState}
+              isStop={selectedCreature.isProgramStop}
             />
-          )}
-          {showRebootButton && <RebootButton onClick={() => onClickReboot()} />}
-          <MainMenuSelectingFrame
-            order={currentProgramInfo.index}
-            isCurrentProgram={!isSelectingUIState}
-            isStop={selectedCreature.isProgramStop}
-          />
-          {selectedCreaturePrograms.map((program, index) => (
-            <MainMenuBot key={index} order={index} program={program} />
-          ))}
-          <MainMenuWarning />
+            {selectedCreaturePrograms.map((program, index) => (
+              <MainMenuBot key={index} order={index} program={program} />
+            ))}
+            <MainMenuWarning />
+          </div>
         </div>
-      </div>
+      )}
+      {isNotSelectingCreature && <SummaryMenu />}
     </div>
   );
 };

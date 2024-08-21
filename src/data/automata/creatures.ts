@@ -141,7 +141,7 @@ export const selectCreaturesOnCurrentPage = (creatures: CreatureModel[]) => (amo
     return creatures.slice(startIndex, endIndex);
 }
 
-export const isNotSelectingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == NOT_SELECTING_CREATURE;
+export const selectIsNotSelectingCreature = (state: RootState) => state.automata.creatures.selectedCreatureIndex == NOT_SELECTING_CREATURE;
 export const selectSelectedCreatureIndex = (state: RootState) => state.automata.creatures.selectedCreatureIndex;
 export const selectSelectedCreatureListIndex = (state: RootState) => 
     state.automata.creatures.selectedCreatureIndex === NOT_SELECTING_CREATURE

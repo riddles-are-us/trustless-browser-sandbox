@@ -2,14 +2,14 @@ import React from "react";
 import "./MainMenuWarning.css";
 import { UIState, selectUIState } from "../../../data/automata/properties";
 import {
-  isNotSelectingCreature,
+  selectIsNotSelectingCreature,
   selectSelectedCreaturePrograms,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 const MainMenuWarning = () => {
   const uIState = useAppSelector(selectUIState);
-  const notSelectingCreature = useAppSelector(isNotSelectingCreature);
+  const notSelectingCreature = useAppSelector(selectIsNotSelectingCreature);
   const selectedCreaturePrograms = useAppSelector(
     selectSelectedCreaturePrograms
   );
