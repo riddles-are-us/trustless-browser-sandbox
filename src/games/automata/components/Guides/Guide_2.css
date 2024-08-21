@@ -1,0 +1,42 @@
+.guide-popup-2-content-title {
+    position: absolute;
+    top: 15%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    overflow: auto;
+    text-align: left;
+    line-height: 100%;
+    margin: 0px;
+    width: 50%;
+    height: 10%;
+    font-family: "mishmash";
+    color: #5CFFFF;
+    pointer-events: none;
+}
+
+.guide-popup-2-content-text {
+    position: absolute;
+    top: 45%;
+    left: 28%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    overflow: auto;
+    text-align: left;
+    line-height: 100%;
+    margin: 0px;
+    width: 46%;
+    height: 55%;
+    font-family: "mishmash";
+    color: white;
+    pointer-events: none;
+}
+
+.guide-popup-2-image {
+    position: absolute;
+    width: 260px;
+    height: 324px;
+    left: 70%;
+    top: 41%;
+    transform: translate(-50%, -50%);
+}

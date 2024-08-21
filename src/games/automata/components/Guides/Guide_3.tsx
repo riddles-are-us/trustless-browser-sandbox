@@ -1,10 +1,13 @@
 import React from "react";
-import "./Guide.css";
+import image from "../../images/Guides/image3.png";
+import "./Guide_3.css";
 
 const Guide_3 = () => {
   return (
     <div>
-      <p className="guide-popup-content-text">
+      <img src={image} className="guide-popup-3-image" />
+      <p className="guide-popup-3-content-title">3. Develop Strategies</p>
+      <p className="guide-popup-3-content-text">
         The Napoleonic Wars (1803–1815) were a series of conflicts fought
         between the First French Empire under Napoleon Bonaparte (1804–1815) and
         a fluctuating array of European coalitions. The wars originated in
