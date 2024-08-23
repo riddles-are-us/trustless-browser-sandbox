@@ -33,6 +33,7 @@ import {
   selectSelectedCreatureSelectingProgram,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { SERVER_TICK_TO_SECOND } from "../request";
 import MainMenuWarning from "./MainMenuWarning";
 import MainMenuProgressBar from "./MainMenuProgressBar";
 import SummaryMenu from "./SummaryMenu";
@@ -41,7 +42,6 @@ const MainMenu = () => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
-  const globalTimer = useAppSelector(selectGlobalTimer);
   const isNotSelectingCreature = useAppSelector(selectIsNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
@@ -107,14 +107,18 @@ const MainMenu = () => {
     }
   }
 
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [globalTimerCache, setGlobalTimerCache] = useState(0);
+  const globalTimer = useAppSelector(selectGlobalTimer);
+  const [globalTimerCache, setGlobalTimerCache] = useState(globalTimer);
+  const [localTimer, setLocalTimer] = useState(globalTimer);
   const [hasSetDiffResources, setHasSetDiffResources] = useState(false);
   const startTimeRef = useRef<number>(0);
+  const animationFrameIdRef = useRef<number | null>(null);
+  const elapsedTimeMultiplierRef = useRef<number>(1);
+  const lastLocalTimer = useRef<number>(globalTimer);
 
-  const resetElapsedTime = () => {
+  const resetStartTimeRef = () => {
     startTimeRef.current = 0;
-    setElapsedTime(0);
+    lastLocalTimer.current = localTimer;
     setHasSetDiffResources(false);
   };
 
@@ -124,36 +128,54 @@ const MainMenu = () => {
         startTimeRef.current = timestamp;
       }
 
-      setElapsedTime((timestamp - startTimeRef.current) / 1000);
+      setLocalTimer(
+        lastLocalTimer.current +
+          ((timestamp - startTimeRef.current) / 1000) *
+            elapsedTimeMultiplierRef.current
+      );
       if (uIState == UIState.Idle) {
-        requestAnimationFrame(updateProgress);
+        animationFrameIdRef.current = requestAnimationFrame(updateProgress);
       }
     };
 
     if (uIState == UIState.Idle) {
-      resetElapsedTime();
-      requestAnimationFrame(updateProgress);
+      resetStartTimeRef();
+      elapsedTimeMultiplierRef.current = Math.max(
+        Math.min(
+          (globalTimerCache - lastLocalTimer.current + SERVER_TICK_TO_SECOND) /
+            SERVER_TICK_TO_SECOND,
+          1.1
+        ),
+        0.9
+      );
+
+      if (animationFrameIdRef.current !== null) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
     }
 
     return () => {
-      resetElapsedTime();
+      if (animationFrameIdRef.current !== null) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+      resetStartTimeRef();
     };
-  }, [uIState]);
+  }, [uIState, globalTimerCache]);
 
   useEffect(() => {
-    resetElapsedTime();
     setGlobalTimerCache(globalTimer);
   }, [globalTimer]);
 
   const lastUpdatedProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
-      : selectSelectedCreatureCurrentProgram(0)(globalTimerCache)
+      : selectSelectedCreatureCurrentProgram(globalTimerCache)
   );
   const currentProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
-      : selectSelectedCreatureCurrentProgram(elapsedTime)(globalTimerCache)
+      : selectSelectedCreatureCurrentProgram(localTimer)
   );
 
   if (
