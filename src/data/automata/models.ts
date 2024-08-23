@@ -22,7 +22,7 @@ export interface CreatureModel {
     rareResources: ResourceAmountPair[];
     name: string;
     isLocked: boolean;
-    creatureType: number; // can change to enum later to show different types of pictures
+    creatureType: number; 
     programIndexes: Array<(number | null)>;
     currentProgramIndex: number;
     isProgramStop: boolean;
@@ -212,6 +212,29 @@ export function getResourceNameText(type: ResourceType): string {
         default:
             throw new Error('Unknown ResourceType');
     }
+}
+
+export function getNumberAbbr(num: number): string {
+    const abbr = [
+        { value: 1e12, suffix: 'T' },
+        { value: 1e9, suffix: 'B' },
+        { value: 1e6, suffix: 'M' },
+        { value: 1e3, suffix: 'K' }
+    ];
+    const sign = num < 0 ? '-' : '';
+
+    num = Math.abs(num);
+    for (let i = 0; i < abbr.length; i++) {
+        if (num >= abbr[i].value) {
+            let formattedNumber = (num / abbr[i].value).toFixed(1);
+            if (formattedNumber.endsWith('.0')) {
+                formattedNumber = formattedNumber.slice(0, -2);
+            }
+            return sign + formattedNumber + abbr[i].suffix;
+        }
+    }
+
+    return sign + num.toString();
 }
 
 const botIconPaths = [

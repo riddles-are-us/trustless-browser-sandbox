@@ -1,5 +1,6 @@
 import React from "react";
 import background from "../images/backgrounds/summary_resource_frame.png";
+import { getNumberAbbr } from "../../../data/automata/models";
 import "./SummaryResourceDisplay.css";
 
 interface Props {
@@ -35,8 +36,8 @@ const SummaryResourceDisplay = ({
             {amount == 0
               ? ""
               : amount > 0
-              ? `+${amount.toString()}`
-              : `${amount.toString()}`}
+              ? "+" + getNumberAbbr(amount)
+              : getNumberAbbr(amount)}
           </p>
         </>
       ) : null}

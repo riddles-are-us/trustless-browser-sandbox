@@ -1,5 +1,6 @@
 import React from "react";
 import background from "../images/backgrounds/bottom_bar.png";
+import { getNumberAbbr } from "../../../data/automata/models";
 import "./RareResourceDisplay.css";
 
 interface Props {
@@ -12,7 +13,7 @@ const RareResourceDisplay = ({ iconImagePath, amount }: Props) => {
     <div className="rare-resource-display-container">
       <img src={background} className="rare-resource-display-background" />
       <img src={iconImagePath} className="rare-resource-display-image" />
-      <p className="rare-resource-display-text">{amount.toString()}</p>
+      <p className="rare-resource-display-text">{getNumberAbbr(amount)}</p>
     </div>
   );
 };

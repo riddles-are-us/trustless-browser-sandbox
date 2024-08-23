@@ -1,4 +1,5 @@
 import React from "react";
+import { getNumberAbbr } from "../../../data/automata/models";
 import "./DiffResourceDisplay.css";
 
 interface Props {
@@ -27,8 +28,8 @@ const DiffResourceDisplay = ({
             {amount == 0
               ? ""
               : amount > 0
-              ? `+${amount.toString()}`
-              : `${amount.toString()}`}
+              ? "+" + getNumberAbbr(amount)
+              : getNumberAbbr(amount)}
           </p>
         </>
       ) : null}
