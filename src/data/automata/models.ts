@@ -179,6 +179,41 @@ export function getResourceIconPath(type: ResourceType): string {
     }
 }
 
+export function getResourceNameText(type: ResourceType): string {
+    switch (type) {
+        case ResourceType.Crystal:
+            return "Crystal";
+        case ResourceType.InterstellarMineral:
+            return "Interstellar Mineral";
+        case ResourceType.Biomass:
+            return "Biomass";
+        case ResourceType.QuantumFoam:
+            return "Quantum Foam";
+        case ResourceType.Necrodermis:
+            return "Necrodermis";
+        case ResourceType.AlienFloral:
+            return "Alien Floral";
+        case ResourceType.SpiceMelange:
+            return "Spice Melange";
+        case ResourceType.Titanium:
+            return "Titanium";
+        case ResourceType.Enercore:
+            return "Enercore";
+        case ResourceType.Nexium:
+            return "Nexium";
+        case ResourceType.Swiftex:
+            return "Swiftex";
+        case ResourceType.Cognisurge:
+            return "Cognisurge";
+        case ResourceType.Vitalshield:
+            return "Vitalshield";
+        case ResourceType.Flexonix:
+            return "Flexonix";
+        default:
+            throw new Error('Unknown ResourceType');
+    }
+}
+
 const botIconPaths = [
     Bot1,
     Bot2,

@@ -12,6 +12,30 @@
     height: 100%;
 }
 
+.summary-resource-title-text {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    text-align: center;
+    line-height: 15px;
+    margin: 0px;
+    width: 80%;
+    height: 15px;
+    font-family: "mishmash";
+    color: white;
+}
+
+.summary-menu-grid{
+    width: 480px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
 .summary-menu-guide-button {
     position: absolute;
     top: 80%;
