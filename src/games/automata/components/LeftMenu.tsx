@@ -15,7 +15,11 @@ import {
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
-const LeftMenu = () => {
+interface Props {
+  localTimer: number;
+}
+
+const LeftMenu = ({ localTimer }: Props) => {
   const dispatch = useAppDispatch();
   const [creatureGridHeight, setCreatureGridHeight] = useState(0);
   const creatureGridRef = useRef<HTMLInputElement>(null);

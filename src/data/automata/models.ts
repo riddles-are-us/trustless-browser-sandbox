@@ -36,6 +36,13 @@ export interface ProgramModel {
     name: string;
 }
 
+export interface ProgramInfo{
+    program: ProgramModel | null;
+    index: number | null;
+    remainTime: number;
+    progress: number;
+}
+
 export enum ResourceType{
     Crystal,
     InterstellarMineral,

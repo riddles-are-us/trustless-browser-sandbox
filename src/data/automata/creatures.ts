@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { queryState, SERVER_TICK_TO_SECOND } from "../../games/automata/request";
-import { CreatureModel, getRareResources, emptyRareResources, emptyCreature, getCreatingCreature, ResourceType, allResourceTypes, ProgramModel } from './models';
+import { CreatureModel, getRareResources, emptyRareResources, emptyCreature, getCreatingCreature, ResourceType, allResourceTypes, ProgramModel, ProgramInfo } from './models';
 import { selectProgramByIndex, selectProgramsByIndexes } from "./programs"
 
 interface CreatureRaw {
@@ -176,13 +176,6 @@ export const selectSelectedCreatureDiffResources = (state: RootState) => {
 
 function getProgressBarValue(progress: number, process: number){
     return Math.min((progress / process) * 100, 100);
-}
-
-interface ProgramInfo{
-    program: ProgramModel | null;
-    index: number | null;
-    remainTime: number;
-    progress: number;
 }
 
 export const selectSelectedCreatureCurrentProgramIndex = (state: RootState) => selectSelectedCreature(state).currentProgramIndex;

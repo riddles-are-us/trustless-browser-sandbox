@@ -11,7 +11,10 @@ import Rocket from "./Rocket";
 import { getTransactionCommandArray } from "../rpc";
 import { selectL2Account } from "../../../data/accountSlice";
 import { sendTransaction, queryState } from "../request";
-import { getCreatureIconPath } from "../../../data/automata/models";
+import {
+  getCreatureIconPath,
+  ProgramInfo,
+} from "../../../data/automata/models";
 import {
   UIState,
   selectIsLoading,
@@ -33,15 +36,19 @@ import {
   selectSelectedCreatureSelectingProgram,
 } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { SERVER_TICK_TO_SECOND } from "../request";
 import MainMenuWarning from "./MainMenuWarning";
 import MainMenuProgressBar from "./MainMenuProgressBar";
 import SummaryMenu from "./SummaryMenu";
 
-const MainMenu = () => {
+interface Props {
+  localTimer: number;
+}
+
+const MainMenu = ({ localTimer }: Props) => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
+  const globalTimer = useAppSelector(selectGlobalTimer);
   const isNotSelectingCreature = useAppSelector(selectIsNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
@@ -106,88 +113,23 @@ const MainMenu = () => {
       dispatch(startRebootCreature({}));
     }
   }
-
-  const globalTimer = useAppSelector(selectGlobalTimer);
-  const [globalTimerCache, setGlobalTimerCache] = useState(globalTimer);
-  const [localTimer, setLocalTimer] = useState(globalTimer);
-  const [hasSetDiffResources, setHasSetDiffResources] = useState(false);
-  const startTimeRef = useRef<number>(0);
-  const animationFrameIdRef = useRef<number | null>(null);
-  const elapsedTimeMultiplierRef = useRef<number>(1);
-  const lastLocalTimer = useRef<number>(globalTimer);
-
-  const resetStartTimeRef = () => {
-    startTimeRef.current = 0;
-    lastLocalTimer.current = localTimer;
-    setHasSetDiffResources(false);
-  };
-
-  useEffect(() => {
-    const updateProgress = (timestamp: DOMHighResTimeStamp) => {
-      if (startTimeRef.current === 0) {
-        startTimeRef.current = timestamp;
-      }
-
-      setLocalTimer(
-        lastLocalTimer.current +
-          ((timestamp - startTimeRef.current) / 1000) *
-            elapsedTimeMultiplierRef.current
-      );
-      if (uIState == UIState.Idle) {
-        animationFrameIdRef.current = requestAnimationFrame(updateProgress);
-      }
-    };
-
-    if (uIState == UIState.Idle) {
-      resetStartTimeRef();
-      elapsedTimeMultiplierRef.current = Math.max(
-        Math.min(
-          (globalTimerCache - lastLocalTimer.current + SERVER_TICK_TO_SECOND) /
-            SERVER_TICK_TO_SECOND,
-          1.1
-        ),
-        0.9
-      );
-
-      if (animationFrameIdRef.current !== null) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
-      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
-    }
-
-    return () => {
-      if (animationFrameIdRef.current !== null) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
-      resetStartTimeRef();
-    };
-  }, [uIState, globalTimerCache]);
-
-  useEffect(() => {
-    setGlobalTimerCache(globalTimer);
-  }, [globalTimer]);
-
-  const lastUpdatedProgramInfo = useAppSelector(
-    isSelectingUIState
-      ? selectSelectedCreatureSelectingProgram
-      : selectSelectedCreatureCurrentProgram(globalTimerCache)
-  );
   const currentProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
       : selectSelectedCreatureCurrentProgram(localTimer)
   );
 
+  const [lastProgramInfo, setLastProgramInfo] =
+    useState<ProgramInfo>(currentProgramInfo);
+
   if (
     !isSelectingUIState &&
-    !hasSetDiffResources &&
-    lastUpdatedProgramInfo.index !== currentProgramInfo.index &&
-    lastUpdatedProgramInfo.program
+    lastProgramInfo.index != currentProgramInfo.index
   ) {
-    setHasSetDiffResources(true);
+    setLastProgramInfo(currentProgramInfo);
     dispatch(
       setSelectedCreatureDiffResources({
-        resources: lastUpdatedProgramInfo.program.resources,
+        resources: lastProgramInfo.program?.resources ?? [],
       })
     );
   }
