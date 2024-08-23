@@ -182,6 +182,9 @@ export const selectSelectedCreatureCurrentProgramIndex = (state: RootState) => s
 
 export const selectSelectedCreatureCurrentProgram = (localTimer: number) => (state: RootState): ProgramInfo => {
     const selectedCreature = selectSelectedCreature(state);
+    return getCurrentProgram(selectedCreature)(localTimer)(state);
+}
+const getCurrentProgram = (selectedCreature: CreatureModel) => (localTimer: number) => (state: RootState): ProgramInfo => {
     const currentProgramIndex = selectedCreature.currentProgramIndex
     const programIndex = selectedCreature.programIndexes[currentProgramIndex]!;
     let program = selectProgramByIndex(programIndex)(state);
@@ -231,6 +234,11 @@ export const selectSelectedCreatureSelectingProgram = (state: RootState): Progra
         remainTime: 0,
         progress: 0,
     };
+}
+
+export const selectCreaturesCurrentProgressOnCurrentPage = (creatures: CreatureModel[]) => (amountPerPage: number) => (localTimer: number) =>(state: RootState) => {
+    const slicedCreatures = selectCreaturesOnCurrentPage(creatures)(amountPerPage)(state);
+    return slicedCreatures.map(creature => getCurrentProgram(creature)(localTimer)(state).progress);
 }
 
 export const selectCurrentPage = (state: RootState) => state.automata.creatures.currentPage;

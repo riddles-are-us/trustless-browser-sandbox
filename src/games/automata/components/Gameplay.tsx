@@ -50,29 +50,23 @@ const Gameplay = () => {
           ((timestamp - startTimeRef.current) / 1000) *
             elapsedTimeMultiplierRef.current
       );
-      if (uIState == UIState.Idle) {
-        animationFrameIdRef.current = requestAnimationFrame(updateProgress);
-      }
+      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
     };
 
-    if (uIState == UIState.Idle) {
-      resetStartTimeRef();
-      elapsedTimeMultiplierRef.current = Math.max(
-        Math.min(
-          (globalTimerCache -
-            lastLocalTimerRef.current +
-            SERVER_TICK_TO_SECOND) /
-            SERVER_TICK_TO_SECOND,
-          1.2
-        ),
-        0.8
-      );
+    resetStartTimeRef();
+    elapsedTimeMultiplierRef.current = Math.max(
+      Math.min(
+        (globalTimerCache - lastLocalTimerRef.current + SERVER_TICK_TO_SECOND) /
+          SERVER_TICK_TO_SECOND,
+        1.2
+      ),
+      0.8
+    );
 
-      if (animationFrameIdRef.current !== null) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
-      animationFrameIdRef.current = requestAnimationFrame(updateProgress);
+    if (animationFrameIdRef.current !== null) {
+      cancelAnimationFrame(animationFrameIdRef.current);
     }
+    animationFrameIdRef.current = requestAnimationFrame(updateProgress);
 
     setVisibilityChange(false);
     document.addEventListener("visibilitychange", handleVisibilityChange);

@@ -25,7 +25,7 @@
     transform: translate(-50%, 0);
 }
 
-.lock-creature-image, .normal-creature-image {
+.creature-image-background, .creature-image {
     position: absolute;
     top: 40%;
     left: 50%;
@@ -34,7 +34,7 @@
     height: 45px;
 }
 
-.lock-creature-image {
+.creature-image {
     filter: brightness(0) contrast(100);
 }
 

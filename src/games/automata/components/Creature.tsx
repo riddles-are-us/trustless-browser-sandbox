@@ -20,9 +20,10 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 interface Props {
   index: number;
   creature: CreatureModel;
+  progress: number;
 }
 
-const Creature = ({ index, creature }: Props) => {
+const Creature = ({ index, creature, progress }: Props) => {
   const dispatch = useAppDispatch();
   const selectedCreatureListIndex = useAppSelector(
     selectSelectedCreatureListIndex
@@ -57,12 +58,20 @@ const Creature = ({ index, creature }: Props) => {
         />
       )}
       {creatureIconPath && (
-        <img
-          src={creatureIconPath}
-          className={
-            creature.isLocked ? "lock-creature-image" : "normal-creature-image"
-          }
-        />
+        <>
+          <img src={creatureIconPath} className="creature-image-background" />
+          <img
+            src={creatureIconPath}
+            className="creature-image"
+            style={{
+              clipPath: isLocked
+                ? ""
+                : `polygon(0 ${100 - progress}%, 100% ${
+                    100 - progress
+                  }%, 100% 0, 0 0)`,
+            }}
+          />
+        </>
       )}
       <p className="creature-text">{creature.name}</p>
       {isLocked && <img src={creatureLock} className="creature-lock-image" />}

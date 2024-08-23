@@ -10,6 +10,7 @@ import {
   selectCreatures,
   selectCurrentPage,
   selectCreaturesOnCurrentPage,
+  selectCreaturesCurrentProgressOnCurrentPage,
   nextPage,
   prevPage,
 } from "../../../data/automata/creatures";
@@ -40,6 +41,11 @@ const LeftMenu = ({ localTimer }: Props) => {
   const creaturesBeforePaging = useAppSelector(selectCreatures);
   const creatures = useAppSelector(
     selectCreaturesOnCurrentPage(creaturesBeforePaging)(amountPerPage)
+  );
+  const progress = useAppSelector(
+    selectCreaturesCurrentProgressOnCurrentPage(creaturesBeforePaging)(
+      amountPerPage
+    )(localTimer)
   );
   const pageCount = Math.max(
     Math.ceil(creaturesBeforePaging.length / amountPerPage),
@@ -84,6 +90,7 @@ const LeftMenu = ({ localTimer }: Props) => {
               key={index}
               index={currentPage * amountPerPage + index}
               creature={creature}
+              progress={progress[index]}
             />
           ))}
         />
