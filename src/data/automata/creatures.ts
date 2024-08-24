@@ -215,6 +215,14 @@ const getCurrentProgram = (selectedCreature: CreatureModel) => (localTimer: numb
         diffIndex += 1;
         index = (currentProgramIndex + diffIndex) % 8;
         program = selectProgramByIndex(selectedCreature.programIndexes[index]!)(state)!;
+        if (program == null){
+            return {
+                program: null,
+                index: null,
+                remainTime: 0,
+                progress: 0,
+            }
+        }
     }
 
     return {

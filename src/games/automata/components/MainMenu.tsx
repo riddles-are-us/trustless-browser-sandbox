@@ -48,7 +48,6 @@ const MainMenu = ({ localTimer }: Props) => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
-  const globalTimer = useAppSelector(selectGlobalTimer);
   const isNotSelectingCreature = useAppSelector(selectIsNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
