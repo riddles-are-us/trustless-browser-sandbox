@@ -43,7 +43,7 @@
     background-repeat: repeat-x;
 }
 
-.welcome-page-progress-bar-text{
+.welcome-page-progress-bar-progress-text, .welcome-page-progress-bar-message-text{
     position: absolute;
     top: -20%;
     left: 50%;
@@ -53,7 +53,15 @@
     line-height: 15px;
     margin: 0px;
     color: white;
-    width: 30px;
+    width: 100%;
     height: 15px;
     font-family: "mishmash";
+}
+
+.welcome-page-progress-bar-progress-text{
+    top: -20%;
+}
+
+.welcome-page-progress-bar-message-text{
+    top: 120%;
 }

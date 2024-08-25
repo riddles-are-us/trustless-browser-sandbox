@@ -5,13 +5,15 @@ import "./WelcomePageProgressBar.css";
 
 interface Props {
   progress: number;
+  message: string;
 }
 
-const WelcomePageProgressBar = ({ progress }: Props) => {
+const WelcomePageProgressBar = ({ progress, message }: Props) => {
   return (
     <>
       <div className="welcome-page-progress-bar-container">
-        <p className="welcome-page-progress-bar-text">{`${progress}%`}</p>
+        <p className="welcome-page-progress-bar-progress-text">{`${progress}%`}</p>
+        <p className="welcome-page-progress-bar-message-text">{message}</p>
         <img
           src={background}
           className="welcome-page-progress-bar-background"

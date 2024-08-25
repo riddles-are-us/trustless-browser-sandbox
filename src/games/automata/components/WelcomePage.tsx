@@ -5,10 +5,11 @@ import WelcomePageProgressBar from "./WelcomePageProgressBar";
 
 interface Props {
   progress: number;
+  message: string;
   onClick: () => void;
 }
 
-const WelcomePage = ({ progress, onClick }: Props) => {
+const WelcomePage = ({ progress, message, onClick }: Props) => {
   return (
     <div className="welcome-page-container">
       <div className="welcome-page-background"></div>
@@ -18,7 +19,7 @@ const WelcomePage = ({ progress, onClick }: Props) => {
       {progress > 0 ? (
         <>
           <div className="welcome-page-background-filter"></div>
-          <WelcomePageProgressBar progress={progress} />
+          <WelcomePageProgressBar progress={progress} message={message} />
         </>
       ) : null}
     </div>

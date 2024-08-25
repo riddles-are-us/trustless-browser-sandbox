@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { selectL2Account } from "../../data/accountSlice";
 import { createCommand } from "./helper";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
@@ -58,7 +57,16 @@ export function GameController() {
 
   useEffect(() => {
     if (l2account && uIState == UIState.Init) {
-      dispatch(setUIState({ uIState: UIState.QueryConfig }));
+      const requireContext = require.context(
+        "./images",
+        true,
+        /\.(png|jpg|jpeg|gif)$/
+      );
+      const urls = requireContext.keys().map(requireContext) as string[];
+      preloadImages(urls, () => {
+        dispatch(setUIState({ uIState: UIState.QueryConfig }));
+        setMessage("Syncing data from server...");
+      });
     }
   }, [l2account]);
 
@@ -73,41 +81,33 @@ export function GameController() {
   }, [inc]);
 
   const [progress, setProgress] = useState(0);
-  const startTimeRef = useRef<number>(0);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const updateProgress = (timestamp: DOMHighResTimeStamp) => {
-      if (startTimeRef.current === 0) {
-        startTimeRef.current = timestamp;
-      }
+  const preloadImages = (urls: string[], onReady: () => void) => {
+    let loadedCount = 0;
+    console.log(urls);
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
 
-      const elapsedTime = timestamp - startTimeRef.current;
-      const newProgress = Math.min(
-        Math.ceil((elapsedTime / 500) * 10000) / 100,
-        100
-      );
+      img.onload = () => {
+        loadedCount++;
+        setProgress(Math.ceil((loadedCount / urls.length) * 8000) / 100);
+        setMessage(`Loading images (${loadedCount}/${urls.length})`);
+        if (loadedCount === urls.length) {
+          onReady();
+        }
+      };
 
-      setProgress(newProgress);
-
-      if (
-        newProgress < 100 &&
-        UIState.Init < uIState &&
-        uIState < UIState.Idle
-      ) {
-        requestAnimationFrame(updateProgress);
-      }
-    };
-
-    if (UIState.Init < uIState && uIState < UIState.Idle) {
-      startTimeRef.current = 0;
-      requestAnimationFrame(updateProgress);
-    }
-
-    return () => {
-      startTimeRef.current = 0;
-      setProgress(0);
-    };
-  }, [uIState]);
+      img.onerror = () => {
+        console.error(`Failed to load image: ${url}`);
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          onReady();
+        }
+      };
+    });
+  };
 
   const account = useAppSelector(selectL1Account);
 
@@ -118,6 +118,7 @@ export function GameController() {
       <>
         <WelcomePage
           progress={progress}
+          message={message}
           onClick={() => dispatch(loginL2AccountAsync(account!))}
         />
       </>
