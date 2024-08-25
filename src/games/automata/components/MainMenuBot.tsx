@@ -12,11 +12,12 @@ import { setSelectingProgramIndex } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface Props {
+  isCurrent: boolean;
   order: number;
   program: ProgramModel | null;
 }
 
-const MainMenuBot = ({ order, program }: Props) => {
+const MainMenuBot = ({ isCurrent, order, program }: Props) => {
   const dispatch = useAppDispatch();
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
   const isLoading = useAppSelector(selectIsLoading);
@@ -42,7 +43,15 @@ const MainMenuBot = ({ order, program }: Props) => {
         left: `${xPosition}%`,
       }}
     >
-      {program != null ? <img src={bot} className="main-bot-image" /> : null}
+      {program != null ? (
+        <div
+          className={
+            isCurrent
+              ? "main-bot-xeno-bloom-animation"
+              : "main-bot-xeno-bloom-idle"
+          }
+        />
+      ) : null}
     </div>
   );
 };

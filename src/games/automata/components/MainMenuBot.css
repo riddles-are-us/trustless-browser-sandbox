@@ -1,8 +1,8 @@
 .main-bot-container {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 15.5%;
-    height: 15.5%;
+    width: 60px;
+    height: 60px;
 }
 
 .main-bot-image {
@@ -12,4 +12,46 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+@keyframes xenoBloomFrames {
+    0% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_00.png'); }
+    4.17% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_01.png'); }
+    8.33% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_02.png'); }
+    12.5% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_03.png'); }
+    16.67% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_04.png'); }
+    20.83% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_05.png'); }
+    25% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_06.png'); }
+    29.17% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_07.png'); }
+    33.33% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_08.png'); }
+    37.5% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_09.png'); }
+    41.67% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_10.png'); }
+    45.83% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_11.png'); }
+    50% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_12.png'); }
+    54.17% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_13.png'); }
+    58.33% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_14.png'); }
+    62.5% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_15.png'); }
+    66.67% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_16.png'); }
+    70.83% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_17.png'); }
+    75% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_18.png'); }
+    79.17% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_19.png'); }
+    83.33% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_20.png'); }
+    87.5% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_21.png'); }
+    91.67% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_22.png'); }
+    95.83% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_23.png'); }
+    100% { background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_00.png'); }
+}
+
+.main-bot-xeno-bloom-animation {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    animation: xenoBloomFrames 2s steps(24) infinite;
+}
+
+.main-bot-xeno-bloom-idle {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-image: url('../images/Animations/Actions/XenoBloom/XenoBloom_00.png');
 }
