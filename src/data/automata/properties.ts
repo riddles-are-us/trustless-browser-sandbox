@@ -39,12 +39,6 @@ export const propertiesSlice = createSlice({
       setHasRocket: (state, action) => {
         state.hasRocket = action.payload.hasRocket;
       },
-      setSelectedCreatureDiffResources: (state, action) => {
-        state.selectedCreatureDiffResources = action.payload.resources;
-      },
-      resetSelectedCreatureDiffResources: (state, action) => {
-        state.selectedCreatureDiffResources = [];
-      },
     },
 
   extraReducers: (builder) => {
@@ -86,7 +80,6 @@ export const selectIsSelectingUIState = (state: RootState) => state.automata.pro
 export const selectUIState = (state: RootState) => state.automata.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.automata.properties.globalTimer;
 export const selectHasRocket = (state: RootState) => state.automata.properties.hasRocket;
-export const selectSelectedCreatureDiffResources = (state: RootState) => state.automata.properties.selectedCreatureDiffResources;
     
-export const { setUIState, setHasRocket, setSelectedCreatureDiffResources, resetSelectedCreatureDiffResources } = propertiesSlice.actions;
+export const { setUIState, setHasRocket } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

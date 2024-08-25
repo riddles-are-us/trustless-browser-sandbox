@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   ResourceType,
   getResourceIconPath,
@@ -26,7 +26,6 @@ const SpendCommonResource = ({
   changeAmount,
 }: Props) => {
   const iconRef = useRef<HTMLDivElement | null>(null);
-  const iconContainer = iconRef.current;
   const animationName = `spendResourceFlyAcross-${type}`;
 
   const removeAnimation = () => {
@@ -46,6 +45,7 @@ const SpendCommonResource = ({
     };
 
   const InitAnimation = () => {
+    const iconContainer = iconRef.current;
     if (iconContainer) {
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const keyframes = `
@@ -66,7 +66,11 @@ const SpendCommonResource = ({
     }
   };
 
-  InitAnimation();
+  useEffect(() => {
+    if (playingIconAnimation) {
+      InitAnimation();
+    }
+  }, [playingIconAnimation]);
   return (
     <>
       <div ref={iconRef} className="spend-common-resource-container">

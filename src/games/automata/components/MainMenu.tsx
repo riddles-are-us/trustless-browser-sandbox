@@ -21,8 +21,6 @@ import {
   selectIsSelectingUIState,
   selectUIState,
   setUIState,
-  selectGlobalTimer,
-  setSelectedCreatureDiffResources,
 } from "../../../data/automata/properties";
 import {
   startRebootCreature,
@@ -112,26 +110,12 @@ const MainMenu = ({ localTimer }: Props) => {
       dispatch(startRebootCreature({}));
     }
   }
+
   const currentProgramInfo = useAppSelector(
     isSelectingUIState
       ? selectSelectedCreatureSelectingProgram
       : selectSelectedCreatureCurrentProgram(localTimer)
   );
-
-  const [lastProgramInfo, setLastProgramInfo] =
-    useState<ProgramInfo>(currentProgramInfo);
-
-  if (
-    !isSelectingUIState &&
-    lastProgramInfo.index != currentProgramInfo.index
-  ) {
-    setLastProgramInfo(currentProgramInfo);
-    dispatch(
-      setSelectedCreatureDiffResources({
-        resources: lastProgramInfo.program?.resources ?? [],
-      })
-    );
-  }
 
   return (
     <div className="main">
@@ -170,7 +154,14 @@ const MainMenu = ({ localTimer }: Props) => {
               isStop={selectedCreature.isProgramStop}
             />
             {selectedCreaturePrograms.map((program, index) => (
-              <MainMenuBot key={index} order={index} program={program} />
+              <MainMenuBot
+                key={index}
+                isCurrent={
+                  !isSelectingUIState && currentProgramInfo.index == index
+                }
+                order={index}
+                program={program}
+              />
             ))}
             <MainMenuWarning />
           </div>

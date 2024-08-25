@@ -5,21 +5,24 @@ import {
   commonResourceTypes,
   ResourceAmountPair,
   emptyCommonResources,
+  ProgramInfo,
 } from "../../../data/automata/models";
+import { selectIsSelectingUIState } from "../../../data/automata/properties";
 import {
-  selectSelectedCreatureDiffResources,
-  resetSelectedCreatureDiffResources,
-} from "../../../data/automata/properties";
+  selectSelectedCreatureIndex,
+  selectSelectedCreatureCurrentProgram,
+} from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import "./ResourceAnimations.css";
 
-const ResourceAnimations = () => {
+interface Props {
+  localTimer: number;
+}
+
+const ResourceAnimations = ({ localTimer }: Props) => {
   const dispatch = useAppDispatch();
-  const diffResources = useAppSelector(selectSelectedCreatureDiffResources);
-  const gainingResources = diffResources.filter(
-    (resource) => resource.amount > 0
-  );
-  const gainingResource = gainingResources.length > 0;
+  const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
+  const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
   const [playingGainingIconAnimation, setPlayingGainingIconAnimation] =
@@ -59,42 +62,64 @@ const ResourceAnimations = () => {
   };
 
   const PlayingResourceChangeAmountAnimation = () => {
-    console.log("end");
     setPlayingGainingResourceChangeAmountAnimation(true);
     setPlayingGainingIconAnimation(false);
     setTimeout(() => {
       setPlayingAnimation(false);
       setPlayingGainingResourceChangeAmountAnimation(false);
-    }, 2000);
+    }, 1000);
   };
 
-  const PlayIconAnimation = () => {
-    setDiffResourcesPair(
-      commonResourceTypes.map((type) => ({
-        type,
-        amount:
-          diffResources.find((resource) => resource.type == type)?.amount ?? 0,
-      }))
-    );
-
-    dispatch(resetSelectedCreatureDiffResources({}));
+  const PlayIconAnimation = (diffResources: ResourceAmountPair[]) => {
     setPlayingGainingIconAnimation(true);
     setPlayingSpendingAnimation(false);
     setTimeout(() => {
       PlayingResourceChangeAmountAnimation();
-    }, 2000);
+    }, 1500);
   };
 
-  useEffect(() => {
+  const TriggerAnimation = (diffResources: ResourceAmountPair[]) => {
     const parentContainer = parentRef.current;
-    if (parentContainer && gainingResource && !playingAnimation) {
+    if (parentContainer && !playingAnimation) {
       setPlayingAnimation(true);
+
+      setDiffResourcesPair(
+        commonResourceTypes.map((type) => ({
+          type,
+          amount:
+            diffResources.find((resource) => resource.type == type)?.amount ??
+            0,
+        }))
+      );
       setPlayingSpendingAnimation(true);
       setTimeout(() => {
-        PlayIconAnimation();
-      }, 1500);
+        PlayIconAnimation(diffResources);
+      }, 1000);
     }
-  }, [gainingResource]);
+  };
+
+  const currentProgramInfo = useAppSelector(
+    selectSelectedCreatureCurrentProgram(localTimer)
+  );
+
+  const [lastProgramInfo, setLastProgramInfo] = useState(currentProgramInfo);
+  const [lastSelectedCreatureIndex, setLastSelectedCreatureIndex] = useState(
+    selectedCreatureIndex
+  );
+
+  if (
+    !isSelectingUIState &&
+    selectedCreatureIndex == lastSelectedCreatureIndex &&
+    lastProgramInfo.index != currentProgramInfo.index
+  ) {
+    setLastProgramInfo(currentProgramInfo);
+    TriggerAnimation(lastProgramInfo.program?.resources ?? []);
+  }
+
+  useEffect(() => {
+    setLastSelectedCreatureIndex(selectedCreatureIndex);
+    setLastProgramInfo(currentProgramInfo);
+  }, [selectedCreatureIndex]);
 
   return (
     <div ref={parentRef} className="resource-animations-container">
