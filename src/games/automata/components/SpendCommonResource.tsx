@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   ResourceType,
   getResourceIconPath,
@@ -8,80 +8,139 @@ import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 interface Props {
   type: ResourceType;
-  playingIconAnimation: boolean;
-  playingResourceChangeAmountAnimation: boolean;
-  startPositionString: string;
-  endPositionString: string;
+  playingAnimation: boolean;
+  delayTime: number;
+  startPosition: { x: number; y: number };
+  endPosition: { x: number; y: number };
   changeAmountTextPositionX: number;
   changeAmount: number;
+  onAnimationEnd: () => void;
 }
 
 const SpendCommonResource = ({
   type,
-  playingIconAnimation,
-  playingResourceChangeAmountAnimation,
-  startPositionString,
-  endPositionString,
+  playingAnimation,
+  delayTime,
+  startPosition,
+  endPosition,
   changeAmountTextPositionX,
   changeAmount,
+  onAnimationEnd,
 }: Props) => {
-  const iconRef = useRef<HTMLDivElement | null>(null);
-  const animationName = `spendResourceFlyAcross-${type}`;
+  const getParabolaXStartPositionString = () => {
+    return `translate(${startPosition.x}px, 0px)`;
+  };
+
+  const getParabolaXEndPositionString = () => {
+    return `translate(${endPosition.x}px, 0px)`;
+  };
+
+  const getParabolaYStartPositionString = () => {
+    return `translate(0px, ${startPosition.y}px)`;
+  };
+
+  const getParabolaYEndPositionString = () => {
+    return `translate(0px, ${endPosition.y}px)`;
+  };
+
+  const parabolaXRef = useRef<HTMLDivElement | null>(null);
+  const parabolaYRef = useRef<HTMLDivElement | null>(null);
+  const parabolaXAnimationName = `gainResourceParabolaX-${type}`;
+  const parabolaYAnimationName = `gainResourceParabolaY-${type}`;
+  const [playingIconAnimation, setPlayingIconAnimation] = useState(false);
 
   const removeAnimation = () => {
     const styleSheet = document.styleSheets[0] as CSSStyleSheet;
     for (let i = 0; i < styleSheet.cssRules.length; i++) {
       const rule = styleSheet.cssRules[i] as CSSKeyframesRule;
-      if (rule.name == animationName) {
+      if (
+        rule.name == parabolaXAnimationName ||
+        rule.name == parabolaYAnimationName
+      ) {
         styleSheet.deleteRule(i);
       }
     }
   };
 
-  const onAnimationEnd =
-    (resourceContainer: HTMLDivElement) => (endPositionString: string) => {
-      removeAnimation();
-      resourceContainer.style.transform = endPositionString;
-    };
+  const onIconAnimationEnd = (setEndPosition: () => void) => {
+    setPlayingIconAnimation(false);
+    removeAnimation();
+    setEndPosition();
+    onAnimationEnd();
+  };
 
   const InitAnimation = () => {
-    const iconContainer = iconRef.current;
-    if (iconContainer) {
+    const parabolaXContainer = parabolaXRef.current;
+    const parabolaYContainer = parabolaYRef.current;
+    if (parabolaXContainer && parabolaYContainer) {
+      setPlayingIconAnimation(true);
+      const parabolaXStartPositionString = getParabolaXStartPositionString();
+      const parabolaXEndPositionString = getParabolaXEndPositionString();
+      const parabolaYStartPositionString = getParabolaYStartPositionString();
+      const parabolaYEndPositionString = getParabolaYEndPositionString();
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
-      const keyframes = `
-          @keyframes ${animationName} {
-            from { transform: ${startPositionString}; }
-            to { transform: ${endPositionString}; }
+      const parabolaXKeyframes = `
+          @keyframes ${parabolaXAnimationName} {
+            from { transform: ${parabolaXStartPositionString}; }
+            to { transform: ${parabolaXEndPositionString}; }
           }
         `;
-      styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-      iconContainer.style.transform = startPositionString;
-      iconContainer.style.animation = `${animationName} 1s ease-in-out`;
-      iconContainer.removeEventListener("animationend", () =>
-        onAnimationEnd(iconContainer)(endPositionString)
+      parabolaXContainer.style.transform = parabolaXStartPositionString;
+      parabolaXContainer.style.animation = `${parabolaXAnimationName} 1s linear`;
+      const parabolaYKeyframes = `
+            @keyframes ${parabolaYAnimationName} {
+              from { transform: ${parabolaYStartPositionString}; }
+              to { transform: ${parabolaYEndPositionString}; }
+            }
+          `;
+      parabolaYContainer.style.transform = parabolaYStartPositionString;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 1s ease-out`;
+
+      styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);
+      styleSheet.insertRule(parabolaYKeyframes, styleSheet.cssRules.length);
+
+      const setEndPosition = () => {
+        parabolaXContainer.style.transform = parabolaXEndPositionString;
+        parabolaYContainer.style.transform = parabolaYEndPositionString;
+      };
+
+      parabolaXContainer.removeEventListener("animationend", () =>
+        onIconAnimationEnd(setEndPosition)
       );
-      iconContainer.addEventListener("animationend", () =>
-        onAnimationEnd(iconContainer)(endPositionString)
+      parabolaXContainer.addEventListener("animationend", () =>
+        onIconAnimationEnd(setEndPosition)
       );
     }
   };
 
   useEffect(() => {
-    if (playingIconAnimation) {
-      InitAnimation();
+    if (playingAnimation) {
+      setTimeout(() => {
+        InitAnimation();
+      }, delayTime);
     }
-  }, [playingIconAnimation]);
+  }, [playingAnimation]);
   return (
     <>
-      <div ref={iconRef} className="spend-common-resource-container">
-        {playingIconAnimation && (
-          <img
-            src={getResourceIconPath(type)}
-            className="spend-common-resource-image"
-          />
-        )}
+      <div className="spend-common-resource-container">
+        <div
+          ref={parabolaXRef}
+          className="spend-common-resource-animation-container"
+        >
+          <div
+            ref={parabolaYRef}
+            className="spend-common-resource-animation-container"
+          >
+            {playingIconAnimation && (
+              <img
+                src={getResourceIconPath(type)}
+                className="spend-common-resource-image"
+              />
+            )}
+          </div>
+        </div>
       </div>
-      {playingResourceChangeAmountAnimation && (
+      {playingAnimation && (
         <div
           className="spend-common-resource-amount-animation-container"
           style={{ left: `${changeAmountTextPositionX}px` }}

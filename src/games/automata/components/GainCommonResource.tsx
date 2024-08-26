@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   ResourceType,
   getResourceIconPath,
@@ -8,24 +8,26 @@ import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 interface Props {
   type: ResourceType;
-  playingIconAnimation: boolean;
-  playingResourceChangeAmountAnimation: boolean;
+  playingAnimation: boolean;
+  delayTime: number;
   centerPosition: { x: number; y: number };
   splashEndPosition: { x: number; y: number };
   resourceDisplayerPosition: { x: number; y: number };
   changeAmountTextPositionX: number;
   changeAmount: number;
+  onAnimationEnd: () => void;
 }
 
 const GainCommonResource = ({
   type,
-  playingIconAnimation,
-  playingResourceChangeAmountAnimation,
+  playingAnimation,
+  delayTime,
   centerPosition,
   splashEndPosition,
   resourceDisplayerPosition,
   changeAmountTextPositionX,
   changeAmount,
+  onAnimationEnd,
 }: Props) => {
   const getSplashStartPositionString = () => {
     return `translate(${centerPosition.x - splashEndPosition.x}px, ${
@@ -60,6 +62,12 @@ const GainCommonResource = ({
   const parabolaXAnimationName = `gainResourceParabolaX-${type}`;
   const parabolaYAnimationName = `gainResourceParabolaY-${type}`;
 
+  const [playingIconAnimation, setPlayingIconAnimation] = useState(false);
+  const [
+    playingResourceChangeAmountAnimation,
+    setPlayingResourceChangeAmountAnimation,
+  ] = useState(false);
+
   const removeAnimation = () => {
     const styleSheet = document.styleSheets[0] as CSSStyleSheet;
     for (let i = 0; i < styleSheet.cssRules.length; i++) {
@@ -74,9 +82,12 @@ const GainCommonResource = ({
     }
   };
 
-  const onAnimationEnd = (setEndPosition: () => void) => {
+  const onIconAnimationEnd = (setEndPosition: () => void) => {
+    setPlayingResourceChangeAmountAnimation(true);
+    setPlayingIconAnimation(false);
     removeAnimation();
     setEndPosition();
+    onAnimationEnd();
   };
 
   const InitAnimation = () => {
@@ -84,20 +95,14 @@ const GainCommonResource = ({
     const parabolaXContainer = parabolaXRef.current;
     const parabolaYContainer = parabolaYRef.current;
     if (splashContainer && parabolaXContainer && parabolaYContainer) {
+      setPlayingResourceChangeAmountAnimation(false);
+      setPlayingIconAnimation(true);
       const splashStartPositionString = getSplashStartPositionString();
       const splashEndPositionString = getSplashEndPositionString();
       const parabolaXStartPositionString = getParabolaXStartPositionString();
       const parabolaXEndPositionString = getParabolaXEndPositionString();
       const parabolaYStartPositionString = getParabolaYStartPositionString();
       const parabolaYEndPositionString = getParabolaYEndPositionString();
-
-      console.log("(t):", splashStartPositionString);
-      console.log("(t):", splashEndPositionString);
-      console.log("(t):", parabolaXStartPositionString);
-      console.log("(t):", parabolaXEndPositionString);
-      console.log("(t):", parabolaYStartPositionString);
-      console.log("(t):", parabolaYEndPositionString);
-
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
       const splashKeyframes = `
           @keyframes ${splashAnimationName} {
@@ -138,19 +143,21 @@ const GainCommonResource = ({
       };
 
       splashContainer.removeEventListener("animationend", () =>
-        onAnimationEnd(setEndPosition)
+        onIconAnimationEnd(setEndPosition)
       );
       splashContainer.addEventListener("animationend", () =>
-        onAnimationEnd(setEndPosition)
+        onIconAnimationEnd(setEndPosition)
       );
     }
   };
 
   useEffect(() => {
-    if (playingIconAnimation) {
-      InitAnimation();
+    if (playingAnimation) {
+      setTimeout(() => {
+        InitAnimation();
+      }, delayTime);
     }
-  }, [playingIconAnimation]);
+  }, [playingAnimation]);
 
   return (
     <>

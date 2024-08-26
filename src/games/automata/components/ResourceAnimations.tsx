@@ -25,28 +25,37 @@ const ResourceAnimations = ({ localTimer }: Props) => {
   const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
-  const [playingGainingIconAnimation, setPlayingGainingIconAnimation] =
-    useState(false);
-  const [
-    playingGainingResourceChangeAmountAnimation,
-    setPlayingGainingResourceChangeAmountAnimation,
-  ] = useState(false);
-  const [playingSpendingAnimation, setPlayingSpendingAnimation] =
-    useState(false);
+  const [animationCount, setAnimationCount] = useState(0);
+  const [finishedAnimationCount, setFinishedAnimationCount] = useState(0);
+  const [gainAnimations, setGainAnimations] = useState<GainAnimationProps[]>(
+    []
+  );
+  const [spendAnimations, setSpendAnimations] = useState<SpendAnimationProps[]>(
+    []
+  );
 
-  const [diffResourcesPair, setDiffResourcesPair] =
-    useState<ResourceAmountPair[]>(emptyCommonResources);
+  interface GainAnimationProps {
+    entity: ResourceAmountPair;
+    delayTime: number;
+    centerPosition: { x: number; y: number };
+    splashEndPosition: { x: number; y: number };
+    resourceDisplayerPosition: { x: number; y: number };
+    changeAmountTextPositionX: number;
+  }
+
+  interface SpendAnimationProps {
+    entity: ResourceAmountPair;
+    delayTime: number;
+    startPosition: { x: number; y: number };
+    endPosition: { x: number; y: number };
+    changeAmountTextPositionX: number;
+  }
 
   const getCenterPosition = (parentContainer: HTMLDivElement) => {
     return {
       x: parentContainer.clientWidth / 2,
       y: parentContainer.clientHeight / 2,
     };
-  };
-
-  const getCenterPositionString = (parentContainer: HTMLDivElement) => {
-    const centerPosition = getCenterPosition(parentContainer);
-    return `translate(-50%, -50%) translate(${centerPosition.x}px, ${centerPosition.y}px)`;
   };
 
   const getSplashEndPosition =
@@ -71,45 +80,64 @@ const ResourceAnimations = ({ localTimer }: Props) => {
     };
   };
 
-  const getResourceDisplayerPositionString = (index: number) => {
-    const resourceDisplayerPosition = getResourceDisplayerPosition(index);
-    return `translate(-50%, -50%) translate(${resourceDisplayerPosition.x}px, ${resourceDisplayerPosition.y}px)`;
+  const onAllAnimationEnd = () => {
+    setPlayingAnimation(false);
   };
 
-  const PlayingResourceChangeAmountAnimation = () => {
-    setPlayingGainingResourceChangeAmountAnimation(true);
-    setPlayingGainingIconAnimation(false);
-    setTimeout(() => {
-      setPlayingAnimation(false);
-      setPlayingGainingResourceChangeAmountAnimation(false);
-    }, 1000);
+  const onAnimationEnd = () => {
+    if (animationCount == finishedAnimationCount + 1) {
+      onAllAnimationEnd();
+    }
+    setFinishedAnimationCount(finishedAnimationCount + 1);
   };
 
-  const PlayIconAnimation = (diffResources: ResourceAmountPair[]) => {
-    setPlayingGainingIconAnimation(true);
-    setPlayingSpendingAnimation(false);
-    setTimeout(() => {
-      PlayingResourceChangeAmountAnimation();
-    }, 1500);
-  };
-
-  const TriggerAnimation = (diffResources: ResourceAmountPair[]) => {
+  const triggerAnimation = (diffResources: ResourceAmountPair[]) => {
     const parentContainer = parentRef.current;
     if (parentContainer && !playingAnimation) {
       setPlayingAnimation(true);
 
-      setDiffResourcesPair(
-        commonResourceTypes.map((type) => ({
-          type,
-          amount:
-            diffResources.find((resource) => resource.type == type)?.amount ??
-            0,
+      const delayTimePerItem = 500;
+      const gainResources = diffResources.filter(
+        (pair) =>
+          commonResourceTypes.find((type) => type == pair.type) != null &&
+          pair.amount > 0
+      );
+      const spendResources = diffResources.filter(
+        (pair) =>
+          commonResourceTypes.find((type) => type == pair.type) != null &&
+          pair.amount < 0
+      );
+
+      setGainAnimations(
+        gainResources.map((pair, index) => ({
+          entity: pair,
+          delayTime: index * delayTimePerItem,
+          centerPosition: getCenterPosition(parentRef.current!),
+          splashEndPosition: getSplashEndPosition(parentRef.current!)(
+            commonResourceTypes.findIndex((type) => type == pair.type)
+          ),
+          resourceDisplayerPosition: getResourceDisplayerPosition(
+            commonResourceTypes.findIndex((type) => type == pair.type)
+          ),
+          changeAmountTextPositionX:
+            90 * commonResourceTypes.findIndex((type) => type == pair.type) +
+            60,
         }))
       );
-      setPlayingSpendingAnimation(true);
-      setTimeout(() => {
-        PlayIconAnimation(diffResources);
-      }, 1000);
+      setSpendAnimations(
+        spendResources.map((pair, index) => ({
+          entity: pair,
+          delayTime: (index + gainResources.length + 1) * delayTimePerItem,
+          startPosition: getResourceDisplayerPosition(
+            commonResourceTypes.findIndex((type) => type == pair.type)
+          ),
+          endPosition: getCenterPosition(parentRef.current!),
+          changeAmountTextPositionX:
+            90 * commonResourceTypes.findIndex((type) => type == pair.type) +
+            60,
+        }))
+      );
+      setAnimationCount(gainResources.length + spendResources.length);
     }
   };
 
@@ -128,7 +156,7 @@ const ResourceAnimations = ({ localTimer }: Props) => {
     lastProgramInfo.index != currentProgramInfo.index
   ) {
     setLastProgramInfo(currentProgramInfo);
-    TriggerAnimation(lastProgramInfo.program?.resources ?? []);
+    triggerAnimation(lastProgramInfo.program?.resources ?? []);
   }
 
   useEffect(() => {
@@ -138,45 +166,35 @@ const ResourceAnimations = ({ localTimer }: Props) => {
 
   return (
     <div ref={parentRef} className="resource-animations-container">
-      {(playingGainingIconAnimation ||
-        playingGainingResourceChangeAmountAnimation) &&
-        commonResourceTypes.map((type, index) => {
-          return (
-            diffResourcesPair[index].amount > 0 && (
-              <GainCommonResource
-                key={index}
-                type={type}
-                playingIconAnimation={playingGainingIconAnimation}
-                playingResourceChangeAmountAnimation={
-                  playingGainingResourceChangeAmountAnimation
-                }
-                centerPosition={getCenterPosition(parentRef.current!)}
-                splashEndPosition={getSplashEndPosition(parentRef.current!)(
-                  index
-                )}
-                resourceDisplayerPosition={getResourceDisplayerPosition(index)}
-                changeAmountTextPositionX={90 * index + 60}
-                changeAmount={diffResourcesPair[index].amount}
-              />
-            )
-          );
-        })}
-      {playingSpendingAnimation &&
-        commonResourceTypes.map(
-          (type, index) =>
-            diffResourcesPair[index].amount < 0 && (
-              <SpendCommonResource
-                key={index}
-                type={type}
-                playingIconAnimation={playingSpendingAnimation}
-                playingResourceChangeAmountAnimation={playingSpendingAnimation}
-                startPositionString={getResourceDisplayerPositionString(index)}
-                endPositionString={getCenterPositionString(parentRef.current!)}
-                changeAmountTextPositionX={90 * index + 60}
-                changeAmount={diffResourcesPair[index].amount}
-              />
-            )
-        )}
+      {playingAnimation &&
+        gainAnimations.map((prop, index) => (
+          <GainCommonResource
+            key={index}
+            type={prop.entity.type}
+            playingAnimation={playingAnimation}
+            delayTime={prop.delayTime}
+            centerPosition={prop.centerPosition}
+            splashEndPosition={prop.splashEndPosition}
+            resourceDisplayerPosition={prop.resourceDisplayerPosition}
+            changeAmountTextPositionX={prop.changeAmountTextPositionX}
+            changeAmount={prop.entity.amount}
+            onAnimationEnd={onAnimationEnd}
+          />
+        ))}
+      {playingAnimation &&
+        spendAnimations.map((prop, index) => (
+          <SpendCommonResource
+            key={index}
+            type={prop.entity.type}
+            playingAnimation={playingAnimation}
+            delayTime={prop.delayTime}
+            startPosition={prop.startPosition}
+            endPosition={prop.endPosition}
+            changeAmountTextPositionX={prop.changeAmountTextPositionX}
+            changeAmount={prop.entity.amount}
+            onAnimationEnd={onAnimationEnd}
+          />
+        ))}
     </div>
   );
 };
