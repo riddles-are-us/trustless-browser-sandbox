@@ -102,30 +102,30 @@ const GainCommonResource = ({
       const splashKeyframes = `
           @keyframes ${splashAnimationName} {
             0% { transform: ${splashStartPositionString}; }
-            5% { transform: ${splashEndPositionString}; }
+            10% { transform: ${splashEndPositionString}; }
             100% { transform: ${splashEndPositionString}; }
           }
         `;
       splashContainer.style.transform = splashStartPositionString;
-      splashContainer.style.animation = `${splashAnimationName} 1.5s linear`;
+      splashContainer.style.animation = `${splashAnimationName} 1s linear`;
       const parabolaXKeyframes = `
           @keyframes ${parabolaXAnimationName} {
             0% { transform: ${parabolaXStartPositionString}; }
-            35% { transform: ${parabolaXStartPositionString}; }
+            10% { transform: ${parabolaXStartPositionString}; }
             100% { transform: ${parabolaXEndPositionString}; }
           }
         `;
       parabolaXContainer.style.transform = parabolaXStartPositionString;
-      parabolaXContainer.style.animation = `${parabolaXAnimationName} 1.5s linear`;
+      parabolaXContainer.style.animation = `${parabolaXAnimationName} 1s linear`;
       const parabolaYKeyframes = `
           @keyframes ${parabolaYAnimationName} {
             0% { transform: ${parabolaYStartPositionString}; }
-            35% { transform: ${parabolaYStartPositionString}; }
+            10% { transform: ${parabolaYStartPositionString}; }
             100% { transform: ${parabolaYEndPositionString}; }
           }
         `;
       parabolaYContainer.style.transform = parabolaYStartPositionString;
-      parabolaYContainer.style.animation = `${parabolaYAnimationName} 1.5s ease-in`;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 1s ease-in`;
 
       styleSheet.insertRule(splashKeyframes, styleSheet.cssRules.length);
       styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);

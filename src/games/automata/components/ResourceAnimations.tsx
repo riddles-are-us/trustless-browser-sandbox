@@ -45,35 +45,24 @@ const ResourceAnimations = ({ localTimer }: Props) => {
   };
 
   const getCenterPositionString = (parentContainer: HTMLDivElement) => {
-    const startPosition = getCenterPosition(parentContainer);
-    return `translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px)`;
+    const centerPosition = getCenterPosition(parentContainer);
+    return `translate(-50%, -50%) translate(${centerPosition.x}px, ${centerPosition.y}px)`;
   };
 
-  const getSplashEndPosition = (parentContainer: HTMLDivElement) => {
-    return {
-      x: parentContainer.clientWidth / 2 + (Math.random() * 100 - 50) * 2,
-      y: parentContainer.clientHeight / 2 + (Math.random() * 100 - 50) * 2,
+  const getSplashEndPosition =
+    (parentContainer: HTMLDivElement) => (index: number) => {
+      const centerPosition = getCenterPosition(parentContainer);
+      const resourceDisplayerPosition = getResourceDisplayerPosition(index);
+      const vector = {
+        x: centerPosition.x - resourceDisplayerPosition.x,
+        y: centerPosition.y - resourceDisplayerPosition.y,
+      };
+      const length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+      return {
+        x: parentContainer.clientWidth / 2 + (vector.x / length) * 25,
+        y: parentContainer.clientHeight / 2 + (vector.y / length) * 25,
+      };
     };
-  };
-
-  const getSplashStartPositionString = (
-    centerPosition: {
-      x: number;
-      y: number;
-    },
-    splashEndPosition: {
-      x: number;
-      y: number;
-    }
-  ) => {
-    return `translate(-50%, -50%) translate(${
-      centerPosition.x - splashEndPosition.x
-    }px, ${centerPosition.y - splashEndPosition.y}px)`;
-  };
-
-  const getSplashEndPositionString = () => {
-    return `translate(-50%, -50%) translate(0px, 0px)`;
-  };
 
   const getResourceDisplayerPosition = (index: number) => {
     return {
@@ -83,36 +72,8 @@ const ResourceAnimations = ({ localTimer }: Props) => {
   };
 
   const getResourceDisplayerPositionString = (index: number) => {
-    const endPosition = getResourceDisplayerPosition(index);
-    return `translate(-50%, -50%) translate(${endPosition.x}px, ${endPosition.y}px)`;
-  };
-
-  const getParabolaXStartPositionString = (parabolaStartPosition: {
-    x: number;
-    y: number;
-  }) => {
-    return `translate(-50%, -50%) translate(${parabolaStartPosition.x}px, 0px)`;
-  };
-
-  const getParabolaXEndPositionString = (parabolaEndPosition: {
-    x: number;
-    y: number;
-  }) => {
-    return `translate(-50%, -50%) translate(${parabolaEndPosition.x}px, 0px)`;
-  };
-
-  const getParabolaYStartPositionString = (parabolaStartPosition: {
-    x: number;
-    y: number;
-  }) => {
-    return `translate(-50%, -50%) translate(0px, ${parabolaStartPosition.y}px)`;
-  };
-
-  const getParabolaYEndPositionString = (parabolaEndPosition: {
-    x: number;
-    y: number;
-  }) => {
-    return `translate(-50%, -50%) translate(0px, ${parabolaEndPosition.y}px)`;
+    const resourceDisplayerPosition = getResourceDisplayerPosition(index);
+    return `translate(-50%, -50%) translate(${resourceDisplayerPosition.x}px, ${resourceDisplayerPosition.y}px)`;
   };
 
   const PlayingResourceChangeAmountAnimation = () => {
@@ -190,7 +151,9 @@ const ResourceAnimations = ({ localTimer }: Props) => {
                   playingGainingResourceChangeAmountAnimation
                 }
                 centerPosition={getCenterPosition(parentRef.current!)}
-                splashEndPosition={getSplashEndPosition(parentRef.current!)}
+                splashEndPosition={getSplashEndPosition(parentRef.current!)(
+                  index
+                )}
                 resourceDisplayerPosition={getResourceDisplayerPosition(index)}
                 changeAmountTextPositionX={90 * index + 60}
                 changeAmount={diffResourcesPair[index].amount}
