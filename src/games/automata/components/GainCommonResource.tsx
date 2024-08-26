@@ -10,9 +10,9 @@ interface Props {
   type: ResourceType;
   playingIconAnimation: boolean;
   playingResourceChangeAmountAnimation: boolean;
-  startPositionString: string;
-  middlePositionString: string;
-  endPositionString: string;
+  centerPosition: { x: number; y: number };
+  splashEndPosition: { x: number; y: number };
+  resourceDisplayerPosition: { x: number; y: number };
   changeAmountTextPositionX: number;
   changeAmount: number;
 }
@@ -21,51 +21,127 @@ const GainCommonResource = ({
   type,
   playingIconAnimation,
   playingResourceChangeAmountAnimation,
-  startPositionString,
-  middlePositionString,
-  endPositionString,
+  centerPosition,
+  splashEndPosition,
+  resourceDisplayerPosition,
   changeAmountTextPositionX,
   changeAmount,
 }: Props) => {
-  const iconRef = useRef<HTMLDivElement | null>(null);
-  const animationName = `gainResourceFlyAcross-${type}`;
+  const getSplashStartPositionString = () => {
+    return `translate(${centerPosition.x - splashEndPosition.x}px, ${
+      centerPosition.y - splashEndPosition.y
+    }px)`;
+  };
+
+  const getSplashEndPositionString = () => {
+    return `translate(0px, 0px)`;
+  };
+
+  const getParabolaXStartPositionString = () => {
+    return `translate(${splashEndPosition.x}px, 0px)`;
+  };
+
+  const getParabolaXEndPositionString = () => {
+    return `translate(${resourceDisplayerPosition.x}px, 0px)`;
+  };
+
+  const getParabolaYStartPositionString = () => {
+    return `translate(0px, ${splashEndPosition.y}px)`;
+  };
+
+  const getParabolaYEndPositionString = () => {
+    return `translate(0px, ${resourceDisplayerPosition.y}px)`;
+  };
+
+  const splashRef = useRef<HTMLDivElement | null>(null);
+  const parabolaXRef = useRef<HTMLDivElement | null>(null);
+  const parabolaYRef = useRef<HTMLDivElement | null>(null);
+  const splashAnimationName = `gainResourceSplash-${type}`;
+  const parabolaXAnimationName = `gainResourceParabolaX-${type}`;
+  const parabolaYAnimationName = `gainResourceParabolaY-${type}`;
 
   const removeAnimation = () => {
     const styleSheet = document.styleSheets[0] as CSSStyleSheet;
     for (let i = 0; i < styleSheet.cssRules.length; i++) {
       const rule = styleSheet.cssRules[i] as CSSKeyframesRule;
-      if (rule.name == animationName) {
+      if (
+        rule.name == splashAnimationName ||
+        rule.name == parabolaXAnimationName ||
+        rule.name == parabolaYAnimationName
+      ) {
         styleSheet.deleteRule(i);
       }
     }
   };
 
-  const onAnimationEnd =
-    (resourceContainer: HTMLDivElement) => (endPositionString: string) => {
-      removeAnimation();
-      resourceContainer.style.transform = endPositionString;
-    };
+  const onAnimationEnd = (setEndPosition: () => void) => {
+    removeAnimation();
+    setEndPosition();
+  };
 
   const InitAnimation = () => {
-    const iconContainer = iconRef.current;
-    if (iconContainer) {
+    const splashContainer = splashRef.current;
+    const parabolaXContainer = parabolaXRef.current;
+    const parabolaYContainer = parabolaYRef.current;
+    if (splashContainer && parabolaXContainer && parabolaYContainer) {
+      const splashStartPositionString = getSplashStartPositionString();
+      const splashEndPositionString = getSplashEndPositionString();
+      const parabolaXStartPositionString = getParabolaXStartPositionString();
+      const parabolaXEndPositionString = getParabolaXEndPositionString();
+      const parabolaYStartPositionString = getParabolaYStartPositionString();
+      const parabolaYEndPositionString = getParabolaYEndPositionString();
+
+      console.log("(t):", splashStartPositionString);
+      console.log("(t):", splashEndPositionString);
+      console.log("(t):", parabolaXStartPositionString);
+      console.log("(t):", parabolaXEndPositionString);
+      console.log("(t):", parabolaYStartPositionString);
+      console.log("(t):", parabolaYEndPositionString);
+
       const styleSheet = document.styleSheets[0] as CSSStyleSheet;
-      const keyframes = `
-          @keyframes ${animationName} {
-            0% { transform: ${startPositionString}; }
-            5% { transform: ${middlePositionString}; }
-            35% { transform: ${middlePositionString}; }
-            100% { transform: ${endPositionString}; }
+      const splashKeyframes = `
+          @keyframes ${splashAnimationName} {
+            0% { transform: ${splashStartPositionString}; }
+            5% { transform: ${splashEndPositionString}; }
+            100% { transform: ${splashEndPositionString}; }
           }
         `;
-      styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-      iconContainer.style.transform = startPositionString;
-      iconContainer.style.animation = `${animationName} 1.5s ease-in-out`;
-      iconContainer.removeEventListener("animationend", () =>
-        onAnimationEnd(iconContainer)(endPositionString)
+      splashContainer.style.transform = splashStartPositionString;
+      splashContainer.style.animation = `${splashAnimationName} 1.5s linear`;
+      const parabolaXKeyframes = `
+          @keyframes ${parabolaXAnimationName} {
+            0% { transform: ${parabolaXStartPositionString}; }
+            35% { transform: ${parabolaXStartPositionString}; }
+            100% { transform: ${parabolaXEndPositionString}; }
+          }
+        `;
+      parabolaXContainer.style.transform = parabolaXStartPositionString;
+      parabolaXContainer.style.animation = `${parabolaXAnimationName} 1.5s linear`;
+      const parabolaYKeyframes = `
+          @keyframes ${parabolaYAnimationName} {
+            0% { transform: ${parabolaYStartPositionString}; }
+            35% { transform: ${parabolaYStartPositionString}; }
+            100% { transform: ${parabolaYEndPositionString}; }
+          }
+        `;
+      parabolaYContainer.style.transform = parabolaYStartPositionString;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 1.5s ease-in`;
+
+      styleSheet.insertRule(splashKeyframes, styleSheet.cssRules.length);
+      styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);
+      styleSheet.insertRule(parabolaYKeyframes, styleSheet.cssRules.length);
+
+      const setEndPosition = () => {
+        splashContainer.style.transform = splashEndPositionString;
+        parabolaXContainer.style.transform = parabolaXEndPositionString;
+        parabolaYContainer.style.transform = parabolaYEndPositionString;
+      };
+
+      splashContainer.removeEventListener("animationend", () =>
+        onAnimationEnd(setEndPosition)
       );
-      iconContainer.addEventListener("animationend", () =>
-        onAnimationEnd(iconContainer)(endPositionString)
+      splashContainer.addEventListener("animationend", () =>
+        onAnimationEnd(setEndPosition)
       );
     }
   };
@@ -78,13 +154,28 @@ const GainCommonResource = ({
 
   return (
     <>
-      <div ref={iconRef} className="gain-common-resource-container">
-        {playingIconAnimation && (
-          <img
-            src={getResourceIconPath(type)}
-            className="gain-common-resource-image"
-          />
-        )}
+      <div className="gain-common-resource-container">
+        <div
+          ref={parabolaXRef}
+          className="gain-common-resource-animation-container"
+        >
+          <div
+            ref={parabolaYRef}
+            className="gain-common-resource-animation-container"
+          >
+            <div
+              ref={splashRef}
+              className="gain-common-resource-animation-container"
+            >
+              {playingIconAnimation && (
+                <img
+                  src={getResourceIconPath(type)}
+                  className="gain-common-resource-image"
+                />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
       {playingResourceChangeAmountAnimation && (
         <div

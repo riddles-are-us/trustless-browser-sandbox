@@ -37,28 +37,82 @@ const ResourceAnimations = ({ localTimer }: Props) => {
   const [diffResourcesPair, setDiffResourcesPair] =
     useState<ResourceAmountPair[]>(emptyCommonResources);
 
-  const getStartPositionString = (parentContainer: HTMLDivElement) => {
-    const startPosition = {
+  const getCenterPosition = (parentContainer: HTMLDivElement) => {
+    return {
       x: parentContainer.clientWidth / 2,
       y: parentContainer.clientHeight / 2,
     };
+  };
+
+  const getCenterPositionString = (parentContainer: HTMLDivElement) => {
+    const startPosition = getCenterPosition(parentContainer);
     return `translate(-50%, -50%) translate(${startPosition.x}px, ${startPosition.y}px)`;
   };
 
-  const getMiddlePositionString = (parentContainer: HTMLDivElement) => {
-    const middlePosition = {
+  const getSplashEndPosition = (parentContainer: HTMLDivElement) => {
+    return {
       x: parentContainer.clientWidth / 2 + (Math.random() * 100 - 50) * 2,
       y: parentContainer.clientHeight / 2 + (Math.random() * 100 - 50) * 2,
     };
-    return `translate(-50%, -50%) translate(${middlePosition.x}px, ${middlePosition.y}px)`;
   };
 
-  const getEndPositionString = (index: number) => {
-    const endPosition = {
+  const getSplashStartPositionString = (
+    centerPosition: {
+      x: number;
+      y: number;
+    },
+    splashEndPosition: {
+      x: number;
+      y: number;
+    }
+  ) => {
+    return `translate(-50%, -50%) translate(${
+      centerPosition.x - splashEndPosition.x
+    }px, ${centerPosition.y - splashEndPosition.y}px)`;
+  };
+
+  const getSplashEndPositionString = () => {
+    return `translate(-50%, -50%) translate(0px, 0px)`;
+  };
+
+  const getResourceDisplayerPosition = (index: number) => {
+    return {
       x: 90 * index + 30,
       y: 25,
     };
+  };
+
+  const getResourceDisplayerPositionString = (index: number) => {
+    const endPosition = getResourceDisplayerPosition(index);
     return `translate(-50%, -50%) translate(${endPosition.x}px, ${endPosition.y}px)`;
+  };
+
+  const getParabolaXStartPositionString = (parabolaStartPosition: {
+    x: number;
+    y: number;
+  }) => {
+    return `translate(-50%, -50%) translate(${parabolaStartPosition.x}px, 0px)`;
+  };
+
+  const getParabolaXEndPositionString = (parabolaEndPosition: {
+    x: number;
+    y: number;
+  }) => {
+    return `translate(-50%, -50%) translate(${parabolaEndPosition.x}px, 0px)`;
+  };
+
+  const getParabolaYStartPositionString = (parabolaStartPosition: {
+    x: number;
+    y: number;
+  }) => {
+    return `translate(-50%, -50%) translate(0px, ${parabolaStartPosition.y}px)`;
+  };
+
+  const getParabolaYEndPositionString = (parabolaEndPosition: {
+    x: number;
+    y: number;
+  }) => {
+    return `translate(-50%, -50%) translate(0px, ${parabolaEndPosition.y}px)`;
   };
 
   const PlayingResourceChangeAmountAnimation = () => {
@@ -125,8 +179,8 @@ const ResourceAnimations = ({ localTimer }: Props) => {
     <div ref={parentRef} className="resource-animations-container">
       {(playingGainingIconAnimation ||
         playingGainingResourceChangeAmountAnimation) &&
-        commonResourceTypes.map(
-          (type, index) =>
+        commonResourceTypes.map((type, index) => {
+          return (
             diffResourcesPair[index].amount > 0 && (
               <GainCommonResource
                 key={index}
@@ -135,16 +189,15 @@ const ResourceAnimations = ({ localTimer }: Props) => {
                 playingResourceChangeAmountAnimation={
                   playingGainingResourceChangeAmountAnimation
                 }
-                startPositionString={getStartPositionString(parentRef.current!)}
-                middlePositionString={getMiddlePositionString(
-                  parentRef.current!
-                )}
-                endPositionString={getEndPositionString(index)}
+                centerPosition={getCenterPosition(parentRef.current!)}
+                splashEndPosition={getSplashEndPosition(parentRef.current!)}
+                resourceDisplayerPosition={getResourceDisplayerPosition(index)}
                 changeAmountTextPositionX={90 * index + 60}
                 changeAmount={diffResourcesPair[index].amount}
               />
             )
-        )}
+          );
+        })}
       {playingSpendingAnimation &&
         commonResourceTypes.map(
           (type, index) =>
@@ -154,8 +207,8 @@ const ResourceAnimations = ({ localTimer }: Props) => {
                 type={type}
                 playingIconAnimation={playingSpendingAnimation}
                 playingResourceChangeAmountAnimation={playingSpendingAnimation}
-                startPositionString={getEndPositionString(index)}
-                endPositionString={getStartPositionString(parentRef.current!)}
+                startPositionString={getResourceDisplayerPositionString(index)}
+                endPositionString={getCenterPositionString(parentRef.current!)}
                 changeAmountTextPositionX={90 * index + 60}
                 changeAmount={diffResourcesPair[index].amount}
               />
