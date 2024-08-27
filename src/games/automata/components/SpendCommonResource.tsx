@@ -8,24 +8,20 @@ import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 interface Props {
   type: ResourceType;
-  playingAnimation: boolean;
+  animationIndex: number;
   delayTime: number;
   startPosition: { x: number; y: number };
   endPosition: { x: number; y: number };
-  changeAmountTextPositionX: number;
   changeAmount: number;
-  onAnimationEnd: () => void;
 }
 
 const SpendCommonResource = ({
   type,
-  playingAnimation,
+  animationIndex,
   delayTime,
   startPosition,
   endPosition,
-  changeAmountTextPositionX,
   changeAmount,
-  onAnimationEnd,
 }: Props) => {
   const getParabolaXStartPositionString = () => {
     return `translate(${startPosition.x}px, 0px)`;
@@ -66,7 +62,6 @@ const SpendCommonResource = ({
     setPlayingIconAnimation(false);
     removeAnimation();
     setEndPosition();
-    onAnimationEnd();
   };
 
   const InitAnimation = () => {
@@ -86,7 +81,7 @@ const SpendCommonResource = ({
           }
         `;
       parabolaXContainer.style.transform = parabolaXStartPositionString;
-      parabolaXContainer.style.animation = `${parabolaXAnimationName} 1s linear`;
+      parabolaXContainer.style.animation = `${parabolaXAnimationName} 0.5s linear`;
       const parabolaYKeyframes = `
             @keyframes ${parabolaYAnimationName} {
               from { transform: ${parabolaYStartPositionString}; }
@@ -94,7 +89,7 @@ const SpendCommonResource = ({
             }
           `;
       parabolaYContainer.style.transform = parabolaYStartPositionString;
-      parabolaYContainer.style.animation = `${parabolaYAnimationName} 1s ease-out`;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s ease-out`;
 
       styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);
       styleSheet.insertRule(parabolaYKeyframes, styleSheet.cssRules.length);
@@ -114,12 +109,10 @@ const SpendCommonResource = ({
   };
 
   useEffect(() => {
-    if (playingAnimation) {
-      setTimeout(() => {
-        InitAnimation();
-      }, delayTime);
-    }
-  }, [playingAnimation]);
+    setTimeout(() => {
+      InitAnimation();
+    }, delayTime);
+  }, [animationIndex]);
   return (
     <>
       <div className="spend-common-resource-container">
@@ -140,14 +133,12 @@ const SpendCommonResource = ({
           </div>
         </div>
       </div>
-      {playingAnimation && (
-        <div
-          className="spend-common-resource-amount-animation-container"
-          style={{ left: `${changeAmountTextPositionX}px` }}
-        >
-          <ResourceChangeAmountAnimation amount={changeAmount} />
-        </div>
-      )}
+      <div
+        className="spend-common-resource-amount-animation-container"
+        style={{ left: `${startPosition.x}px` }}
+      >
+        <ResourceChangeAmountAnimation amount={changeAmount} />
+      </div>
     </>
   );
 };

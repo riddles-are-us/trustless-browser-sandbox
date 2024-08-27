@@ -8,26 +8,22 @@ import ResourceChangeAmountAnimation from "./ResourceChangeAmountAnimation";
 
 interface Props {
   type: ResourceType;
-  playingAnimation: boolean;
+  animationIndex: number;
   delayTime: number;
   centerPosition: { x: number; y: number };
   splashEndPosition: { x: number; y: number };
   resourceDisplayerPosition: { x: number; y: number };
-  changeAmountTextPositionX: number;
   changeAmount: number;
-  onAnimationEnd: () => void;
 }
 
 const GainCommonResource = ({
   type,
-  playingAnimation,
+  animationIndex,
   delayTime,
   centerPosition,
   splashEndPosition,
   resourceDisplayerPosition,
-  changeAmountTextPositionX,
   changeAmount,
-  onAnimationEnd,
 }: Props) => {
   const getSplashStartPositionString = () => {
     return `translate(${centerPosition.x - splashEndPosition.x}px, ${
@@ -87,7 +83,6 @@ const GainCommonResource = ({
     setPlayingIconAnimation(false);
     removeAnimation();
     setEndPosition();
-    onAnimationEnd();
   };
 
   const InitAnimation = () => {
@@ -112,7 +107,7 @@ const GainCommonResource = ({
           }
         `;
       splashContainer.style.transform = splashStartPositionString;
-      splashContainer.style.animation = `${splashAnimationName} 1s linear`;
+      splashContainer.style.animation = `${splashAnimationName} 0.5s linear`;
       const parabolaXKeyframes = `
           @keyframes ${parabolaXAnimationName} {
             0% { transform: ${parabolaXStartPositionString}; }
@@ -121,7 +116,7 @@ const GainCommonResource = ({
           }
         `;
       parabolaXContainer.style.transform = parabolaXStartPositionString;
-      parabolaXContainer.style.animation = `${parabolaXAnimationName} 1s linear`;
+      parabolaXContainer.style.animation = `${parabolaXAnimationName} 0.5s linear`;
       const parabolaYKeyframes = `
           @keyframes ${parabolaYAnimationName} {
             0% { transform: ${parabolaYStartPositionString}; }
@@ -130,7 +125,7 @@ const GainCommonResource = ({
           }
         `;
       parabolaYContainer.style.transform = parabolaYStartPositionString;
-      parabolaYContainer.style.animation = `${parabolaYAnimationName} 1s ease-in`;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s ease-in`;
 
       styleSheet.insertRule(splashKeyframes, styleSheet.cssRules.length);
       styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);
@@ -152,12 +147,10 @@ const GainCommonResource = ({
   };
 
   useEffect(() => {
-    if (playingAnimation) {
-      setTimeout(() => {
-        InitAnimation();
-      }, delayTime);
-    }
-  }, [playingAnimation]);
+    setTimeout(() => {
+      InitAnimation();
+    }, delayTime);
+  }, [animationIndex]);
 
   return (
     <>
@@ -187,7 +180,7 @@ const GainCommonResource = ({
       {playingResourceChangeAmountAnimation && (
         <div
           className="gain-common-resource-amount-animation-container"
-          style={{ left: `${changeAmountTextPositionX}px` }}
+          style={{ left: `${resourceDisplayerPosition.x}px` }}
         >
           <ResourceChangeAmountAnimation amount={changeAmount} />
         </div>

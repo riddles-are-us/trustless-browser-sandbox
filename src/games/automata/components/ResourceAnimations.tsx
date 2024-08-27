@@ -3,9 +3,11 @@ import GainCommonResource from "./GainCommonResource";
 import SpendCommonResource from "./SpendCommonResource";
 import {
   commonResourceTypes,
+  rareResourceTypes,
   ResourceAmountPair,
   emptyCommonResources,
   ProgramInfo,
+  ResourceType,
 } from "../../../data/automata/models";
 import { selectIsSelectingUIState } from "../../../data/automata/properties";
 import {
@@ -25,8 +27,7 @@ const ResourceAnimations = ({ localTimer }: Props) => {
   const selectedCreatureIndex = useAppSelector(selectSelectedCreatureIndex);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [playingAnimation, setPlayingAnimation] = useState(false);
-  const [animationCount, setAnimationCount] = useState(0);
-  const [finishedAnimationCount, setFinishedAnimationCount] = useState(0);
+  const [animationIndex, setAnimationIndex] = useState(0);
   const [gainAnimations, setGainAnimations] = useState<GainAnimationProps[]>(
     []
   );
@@ -40,7 +41,6 @@ const ResourceAnimations = ({ localTimer }: Props) => {
     centerPosition: { x: number; y: number };
     splashEndPosition: { x: number; y: number };
     resourceDisplayerPosition: { x: number; y: number };
-    changeAmountTextPositionX: number;
   }
 
   interface SpendAnimationProps {
@@ -48,7 +48,6 @@ const ResourceAnimations = ({ localTimer }: Props) => {
     delayTime: number;
     startPosition: { x: number; y: number };
     endPosition: { x: number; y: number };
-    changeAmountTextPositionX: number;
   }
 
   const getCenterPosition = (parentContainer: HTMLDivElement) => {
@@ -59,9 +58,9 @@ const ResourceAnimations = ({ localTimer }: Props) => {
   };
 
   const getSplashEndPosition =
-    (parentContainer: HTMLDivElement) => (index: number) => {
+    (parentContainer: HTMLDivElement) => (type: ResourceType) => {
       const centerPosition = getCenterPosition(parentContainer);
-      const resourceDisplayerPosition = getResourceDisplayerPosition(index);
+      const resourceDisplayerPosition = getResourceDisplayerPosition(type);
       const vector = {
         x: centerPosition.x - resourceDisplayerPosition.x,
         y: centerPosition.y - resourceDisplayerPosition.y,
@@ -73,30 +72,32 @@ const ResourceAnimations = ({ localTimer }: Props) => {
       };
     };
 
-  const getResourceDisplayerPosition = (index: number) => {
-    return {
-      x: 90 * index + 30,
-      y: 25,
-    };
+  const getResourceDisplayerPosition = (type: ResourceType) => {
+    const commonResourceIndex = commonResourceTypes.findIndex((t) => t == type);
+    const rareResourceIndex = rareResourceTypes.findIndex((t) => t == type);
+
+    return commonResourceIndex != -1
+      ? {
+          x: 90 * commonResourceIndex + 30,
+          y: 25,
+        }
+      : {
+          x: 80 * rareResourceIndex + 272,
+          y: 25,
+        };
   };
 
   const onAllAnimationEnd = () => {
     setPlayingAnimation(false);
   };
 
-  const onAnimationEnd = () => {
-    if (animationCount == finishedAnimationCount + 1) {
-      onAllAnimationEnd();
-    }
-    setFinishedAnimationCount(finishedAnimationCount + 1);
-  };
-
   const triggerAnimation = (diffResources: ResourceAmountPair[]) => {
     const parentContainer = parentRef.current;
     if (parentContainer && !playingAnimation) {
+      setAnimationIndex(animationIndex + 1);
       setPlayingAnimation(true);
 
-      const delayTimePerItem = 500;
+      const delayTimePerItem = 250;
       const gainResources = diffResources.filter(
         (pair) =>
           commonResourceTypes.find((type) => type == pair.type) != null &&
@@ -114,30 +115,24 @@ const ResourceAnimations = ({ localTimer }: Props) => {
           delayTime: index * delayTimePerItem,
           centerPosition: getCenterPosition(parentRef.current!),
           splashEndPosition: getSplashEndPosition(parentRef.current!)(
-            commonResourceTypes.findIndex((type) => type == pair.type)
+            pair.type
           ),
-          resourceDisplayerPosition: getResourceDisplayerPosition(
-            commonResourceTypes.findIndex((type) => type == pair.type)
-          ),
-          changeAmountTextPositionX:
-            90 * commonResourceTypes.findIndex((type) => type == pair.type) +
-            60,
+          resourceDisplayerPosition: getResourceDisplayerPosition(pair.type),
         }))
       );
+
       setSpendAnimations(
         spendResources.map((pair, index) => ({
           entity: pair,
           delayTime: (index + gainResources.length + 1) * delayTimePerItem,
-          startPosition: getResourceDisplayerPosition(
-            commonResourceTypes.findIndex((type) => type == pair.type)
-          ),
+          startPosition: getResourceDisplayerPosition(pair.type),
           endPosition: getCenterPosition(parentRef.current!),
-          changeAmountTextPositionX:
-            90 * commonResourceTypes.findIndex((type) => type == pair.type) +
-            60,
         }))
       );
-      setAnimationCount(gainResources.length + spendResources.length);
+
+      setTimeout(() => {
+        setPlayingAnimation(false);
+      }, (gainResources.length + spendResources.length + 2) * delayTimePerItem + 1000);
     }
   };
 
@@ -171,14 +166,12 @@ const ResourceAnimations = ({ localTimer }: Props) => {
           <GainCommonResource
             key={index}
             type={prop.entity.type}
-            playingAnimation={playingAnimation}
+            animationIndex={animationIndex}
             delayTime={prop.delayTime}
             centerPosition={prop.centerPosition}
             splashEndPosition={prop.splashEndPosition}
             resourceDisplayerPosition={prop.resourceDisplayerPosition}
-            changeAmountTextPositionX={prop.changeAmountTextPositionX}
             changeAmount={prop.entity.amount}
-            onAnimationEnd={onAnimationEnd}
           />
         ))}
       {playingAnimation &&
@@ -186,13 +179,11 @@ const ResourceAnimations = ({ localTimer }: Props) => {
           <SpendCommonResource
             key={index}
             type={prop.entity.type}
-            playingAnimation={playingAnimation}
+            animationIndex={animationIndex}
             delayTime={prop.delayTime}
             startPosition={prop.startPosition}
             endPosition={prop.endPosition}
-            changeAmountTextPositionX={prop.changeAmountTextPositionX}
             changeAmount={prop.entity.amount}
-            onAnimationEnd={onAnimationEnd}
           />
         ))}
     </div>
