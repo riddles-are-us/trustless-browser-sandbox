@@ -44,6 +44,10 @@ const SpendCommonResource = ({
   const parabolaXAnimationName = `gainResourceParabolaX-${type}`;
   const parabolaYAnimationName = `gainResourceParabolaY-${type}`;
   const [playingIconAnimation, setPlayingIconAnimation] = useState(false);
+  const [
+    playingResourceChangeAmountAnimation,
+    setPlayingResourceChangeAmountAnimation,
+  ] = useState(false);
 
   const removeAnimation = () => {
     const styleSheet = document.styleSheets[0] as CSSStyleSheet;
@@ -109,7 +113,9 @@ const SpendCommonResource = ({
   };
 
   useEffect(() => {
+    setPlayingResourceChangeAmountAnimation(false);
     setTimeout(() => {
+      setPlayingResourceChangeAmountAnimation(true);
       InitAnimation();
     }, delayTime);
   }, [animationIndex]);
@@ -133,12 +139,17 @@ const SpendCommonResource = ({
           </div>
         </div>
       </div>
-      <div
-        className="spend-common-resource-amount-animation-container"
-        style={{ left: `${startPosition.x}px` }}
-      >
-        <ResourceChangeAmountAnimation amount={changeAmount} />
-      </div>
+      {playingResourceChangeAmountAnimation && (
+        <div
+          className="spend-common-resource-amount-animation-container"
+          style={{
+            left: `${startPosition.x + 30}px`,
+            top: `${startPosition.y + 20}px`,
+          }}
+        >
+          <ResourceChangeAmountAnimation amount={changeAmount} />
+        </div>
+      )}
     </>
   );
 };

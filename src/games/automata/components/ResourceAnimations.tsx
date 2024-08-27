@@ -83,7 +83,7 @@ const ResourceAnimations = ({ localTimer }: Props) => {
         }
       : {
           x: 80 * rareResourceIndex + 272,
-          y: 25,
+          y: 58,
         };
   };
 
@@ -100,12 +100,12 @@ const ResourceAnimations = ({ localTimer }: Props) => {
       const delayTimePerItem = 250;
       const gainResources = diffResources.filter(
         (pair) =>
-          commonResourceTypes.find((type) => type == pair.type) != null &&
+          // commonResourceTypes.find((type) => type == pair.type) != null &&
           pair.amount > 0
       );
       const spendResources = diffResources.filter(
         (pair) =>
-          commonResourceTypes.find((type) => type == pair.type) != null &&
+          // commonResourceTypes.find((type) => type == pair.type) != null &&
           pair.amount < 0
       );
 

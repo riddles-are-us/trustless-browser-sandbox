@@ -90,7 +90,6 @@ const GainCommonResource = ({
     const parabolaXContainer = parabolaXRef.current;
     const parabolaYContainer = parabolaYRef.current;
     if (splashContainer && parabolaXContainer && parabolaYContainer) {
-      setPlayingResourceChangeAmountAnimation(false);
       setPlayingIconAnimation(true);
       const splashStartPositionString = getSplashStartPositionString();
       const splashEndPositionString = getSplashEndPositionString();
@@ -147,6 +146,7 @@ const GainCommonResource = ({
   };
 
   useEffect(() => {
+    setPlayingResourceChangeAmountAnimation(false);
     setTimeout(() => {
       InitAnimation();
     }, delayTime);
@@ -180,7 +180,10 @@ const GainCommonResource = ({
       {playingResourceChangeAmountAnimation && (
         <div
           className="gain-common-resource-amount-animation-container"
-          style={{ left: `${resourceDisplayerPosition.x}px` }}
+          style={{
+            left: `${resourceDisplayerPosition.x + 30}px`,
+            top: `${resourceDisplayerPosition.y + 20}px`,
+          }}
         >
           <ResourceChangeAmountAnimation amount={changeAmount} />
         </div>
