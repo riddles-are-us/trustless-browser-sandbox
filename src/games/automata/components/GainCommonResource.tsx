@@ -124,7 +124,7 @@ const GainCommonResource = ({
           }
         `;
       parabolaYContainer.style.transform = parabolaYStartPositionString;
-      parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s ease-in`;
+      parabolaYContainer.style.animation = `${parabolaYAnimationName} 0.5s cubic-bezier(.5,0,.8,.5)`;
 
       styleSheet.insertRule(splashKeyframes, styleSheet.cssRules.length);
       styleSheet.insertRule(parabolaXKeyframes, styleSheet.cssRules.length);

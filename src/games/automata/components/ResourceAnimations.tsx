@@ -83,12 +83,8 @@ const ResourceAnimations = ({ localTimer }: Props) => {
         }
       : {
           x: 80 * rareResourceIndex + 272,
-          y: 58,
+          y: 70,
         };
-  };
-
-  const onAllAnimationEnd = () => {
-    setPlayingAnimation(false);
   };
 
   const triggerAnimation = (diffResources: ResourceAmountPair[]) => {
