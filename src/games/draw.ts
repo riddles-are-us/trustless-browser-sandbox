@@ -20,6 +20,7 @@ export class ClipRect {
 }
 
 export class Clip {
+  src: HTMLImageElement;
   top: number;
   left: number;
   vx: number;
@@ -28,7 +29,8 @@ export class Clip {
   clips: Map<string, Array<ClipRect>>;
   currentFrame: number | null;
   currentClip: string | null;
-  constructor(boundry: ClipRect) {
+  constructor(src: HTMLImageElement, boundry: ClipRect) {
+    this.src = src;
     this.boundry = boundry;
     this.vx = 0;
     this.vy = 0;
@@ -42,6 +44,22 @@ export class Clip {
     this.vx = vx;
     this.vy = vy;
   }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    if (this.currentClip != null && this.currentFrame != null) {
+      //Set the fill color
+      const rect = this.clips.get(this.currentClip)![this.currentFrame];
+      const w = rect.right-rect.left;
+      const h = rect.bottom - rect.top;
+      ctx.drawImage(this.src, rect.left, rect.top, w, h, this.left, this.top, 90, 120);
+      ctx.fillStyle = "#000000";  // Red color
+      ctx.font = "12px Arial";
+      ctx.fillText(this.currentClip, this.left+10, this.top); // text, x, y
+      ctx.fillText(this.currentFrame.toString(), this.left + 10, this.top+30); // text, x, y
+    }
+  }
+
+
   incFrame() {
     if (this.currentFrame!=null && this.currentClip!=null) {
       const len = this.clips.get(this.currentClip)!.length;
@@ -154,18 +172,6 @@ export class Light {
   }
 }
 
-
-export function drawObject(clip: Clip, ctx: CanvasRenderingContext2D) {
-  if (clip.currentClip != null && clip.currentFrame != null) {
-    //Set the fill color
-    ctx.fillStyle = "#FF0000";  // Red color
-    ctx.fillRect(clip.left, clip.top, 70, 100); // x, y, width, height
-    ctx.fillStyle = "#000000";  // Red color
-    ctx.font = "12px Arial";
-    ctx.fillText(clip.currentClip, clip.left+10, clip.top); // text, x, y
-    ctx.fillText(clip.currentFrame.toString(), clip.left + 10, clip.top+30); // text, x, y
-  }
-}
 
 export function getBeat(analyser: AnalyserInfo): Array<number> {
   const numPoints = analyser.numPoints;

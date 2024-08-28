@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from "react";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { Container } from "react-bootstrap";
 import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio, analyserInfo, AnalyserInfo} from "./audio";
@@ -12,7 +12,7 @@ import {
   selectL1Account,
   loginL2AccountAsync,
   loginL1AccountAsync
-} from "../../data/accountSlice";
+} from "../data/accountSlice";
 
 import "./style.scss";
 

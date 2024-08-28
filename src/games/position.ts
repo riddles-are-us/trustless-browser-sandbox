@@ -1,24 +1,24 @@
 import {
-  Torch, drawBeat, drawObject, drawHorn,
+  Torch, drawBeat, drawHorn,
   drawBackground,
   ClipRect, Clip, Light,
   HEIGHT, WIDTH,
 }  from "./draw";
 
-function createDogClip(top:number, left: number) {
-  const boundry = new ClipRect(HEIGHT/2, 50, WIDTH-100, HEIGHT-200);
-  const clip = new Clip(boundry);
-  clip.clips.set("normal", [
-          new ClipRect(0, 0, 0, 0),
-          new ClipRect(0, 0, 0, 0),
-          new ClipRect(0, 0, 0, 0),
-          new ClipRect(0, 0, 0, 0),
-          new ClipRect(0, 0, 0, 0),
-  ]);
+import spirits from "./spirite";
+
+function createDogClip(top:number, left: number, start: number) {
+  const boundry = new ClipRect(HEIGHT/2 - 50, 50, WIDTH-100, HEIGHT-200);
+  const clip = new Clip(spirits.spirites[0], boundry);
+  const clips = [];
+  for (let i=0; i< 24; i++) {
+    clips.push(new ClipRect(0, 183*i, 183*(i+1), 200));
+  }
+  clip.clips.set("normal", clips);
   clip.top = top;
   clip.left = left;
   clip.currentClip = "normal";
-  clip.currentFrame = 0;
+  clip.currentFrame = start;
   return clip;
 }
 
@@ -33,27 +33,12 @@ class Scenario {
   torch: Torch;
   constructor() {
     this.status = "pause";
-    this.clips = [
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-        createDogClip(240 + getRandomNumber(80), 50 + getRandomNumber(800)),
-    ];
+    this.clips = [];
+    for (let i = 0; i<20; i++) {
+      this.clips.push(
+        createDogClip(220 + getRandomNumber(80), 50 + getRandomNumber(800), (i * 2)% 24),
+      );
+    }
     this.lights = [
       new Light(0,0,90, 200, 110, 6),
       new Light(0,300,60, 140, 60, 3),
@@ -76,7 +61,7 @@ class Scenario {
     drawBackground(ratioArray, context);
     drawHorn(ratioArray, context);
     for (const obj of this.clips) {
-        drawObject(obj, context);
+        obj.draw(context);
     }
     for (const light of this.lights) {
       light.drawLight(ratioArray, context);
