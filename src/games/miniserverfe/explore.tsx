@@ -95,7 +95,7 @@ function Progress({objects, mIndex, haltBit, currentModifierIndex, index}: {obje
   }
 }
 
-export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, modifiers: Array<number | null>}) {
+export function Explore({objects, modifiers, nonce}: {objects: Array<ObjectProperty>, modifiers: Array<number | null>, nonce: bigint}) {
   const external = useAppSelector(selectExternal);
   const selectedIndex = external.getSelectedIndex();
   const modifiersInfo = useAppSelector(selectModifier);
@@ -186,7 +186,7 @@ export function Explore({objects, modifiers}: {objects: Array<ObjectProperty>, m
           }
         </CircleLayout>
       }
-      {<ConfirmButton modifiers={modifiers}></ConfirmButton>}
+      {<ConfirmButton modifiers={modifiers} nonce={nonce}></ConfirmButton>}
     </div>
   );
   } else {

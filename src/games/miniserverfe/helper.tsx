@@ -27,8 +27,8 @@ export function encode_modifier(modifiers: Array<bigint>) {
   return c;
 }
 
-export function createCommand(command: bigint, objindex: bigint) {
-  return (command << 32n) + objindex;
+export function createCommand(nonce: bigint, command: bigint, objindex: bigint) {
+  return (nonce << 16n) + (objindex << 8n) + command;
 }
 
 export function decodeModifiers(modifiers: any) {
