@@ -18,6 +18,7 @@ export enum UIState{
 interface PropertiesState {
     uIState: UIState;
     globalTimer: number;
+    nonce: bigint;
     hasRocket: boolean;
     selectedCreatureDiffResources: ResourceAmountPair[];
 }
@@ -25,6 +26,7 @@ interface PropertiesState {
 const initialState: PropertiesState = {
     uIState: UIState.Init,
     globalTimer: 0,
+    nonce: BigInt(0),
     hasRocket: false,
     selectedCreatureDiffResources: [],
 };
@@ -64,6 +66,8 @@ export const propertiesSlice = createSlice({
           state.uIState = UIState.Idle;
         }
         state.globalTimer = action.payload.globalTimer;
+        state.nonce = action.payload.player.nonce;
+        console.log("(t):", state.nonce);
         console.log("send transaction fulfilled");
       })
       .addCase(queryState.rejected, (state, action) => {
@@ -79,6 +83,7 @@ export const selectIsLoading = (state: RootState) => state.automata.properties.u
 export const selectIsSelectingUIState = (state: RootState) => state.automata.properties.uIState == UIState.Creating || state.automata.properties.uIState == UIState.Reboot;
 export const selectUIState = (state: RootState) => state.automata.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.automata.properties.globalTimer;
+export const selectNonce = (state: RootState) => state.automata.properties.nonce;
 export const selectHasRocket = (state: RootState) => state.automata.properties.hasRocket;
     
 export const { setUIState, setHasRocket } = propertiesSlice.actions;

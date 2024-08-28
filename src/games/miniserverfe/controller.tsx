@@ -3,12 +3,11 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { query_state } from "./rpc";
 import { Col, Row, OverlayTrigger, Tooltip, Container } from "react-bootstrap";
 import { selectL2Account } from "../../data/accountSlice";
 import { CreateObjectModal } from "./createObject";
 import { createCommand } from "./helper";
-import { query, LeHexBN } from "./sign";
+import { query, ZKWasmAppRpc, LeHexBN } from "zkwasm-ts-server";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.scss";
 import "../style.scss";
@@ -29,6 +28,8 @@ import Loading from './load';
 
 // clag
 const CMD_INSTALL_PLAYER = 1n;
+
+const rpc = new ZKWasmAppRpc("http://localhost:3000");
 
 interface playerProperty {
   nonce: number;
@@ -159,9 +160,16 @@ export function GameController() {
   async function queryState(clientAction: string) {
     try {
       const playerAction = external.userActivity;
-      const res = await query_state([], l2account!.address);
 
-      const data = JSON.parse(res.data);
+      // Get the state response
+      const res = await rpc.queryState(l2account!.address);
+
+      // Parse the response to ensure it is a plain JSON object
+      const parsedRes = JSON.parse(JSON.stringify(res));
+
+      // Extract the data from the parsed response
+      const data = JSON.parse(parsedRes.data);
+
       console.log("query state data", data);
 
       setNonce(BigInt(data[0].nonce));

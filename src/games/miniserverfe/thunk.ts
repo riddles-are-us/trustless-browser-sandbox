@@ -1,19 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { query_config, send_transaction } from './rpc';
+import { ZKWasmAppRpc } from "zkwasm-ts-server";
 import { RootState } from "../../app/store";
 import { ExternalState, Modifier, SendTransactionParams, SendTransactionRes } from './types';
 import { decodeModifiers } from './helper';
 
+const rpc = new ZKWasmAppRpc("http://localhost:3000");
+
 export const getConfig = createAsyncThunk(
   'client/getConfig',
   async () => {
-    const res = await query_config();
-    const data = JSON.parse(res.data);
-    return data;
+    // Get the configuration response
+    const res = await rpc.query_config();
+
+    // Parse the response to ensure it is a plain JSON object
+    const parsedRes = JSON.parse(JSON.stringify(res));
+
+    // Extract the data from the parsed response
+    const data = JSON.parse(parsedRes.data);
+    console.log(data);
+
+    return parsedRes;
   }
 )
 export const sendTransaction = createAsyncThunk<
-  SendTransactionRes,
+  number,
   SendTransactionParams,
   { rejectValue: string }
 >(
@@ -21,7 +31,7 @@ export const sendTransaction = createAsyncThunk<
   async (params: {cmd: Array<bigint>, prikey: string }, { rejectWithValue }) => {
     try {
       const { cmd, prikey } = params;
-      const res = await send_transaction(cmd, prikey);
+      const res = await rpc.sendTransaction(new BigUint64Array(cmd), prikey);
       return res;
     } catch (err: any) {
       return rejectWithValue(err);
@@ -70,13 +80,14 @@ export const clientSlice = createSlice({
       .addCase(getConfig.pending, (state) => {
         //
         state.external.viewerActivity = "queryConfig";
-        console.log("query config pending");
+    console.log("query config pending");
       })
       .addCase(getConfig.fulfilled, (state, c) => {
         state.external.viewerActivity = "idle";
         state.entityAttributes = c.payload.entity_attributes;
         state.localAttributes = c.payload.local_attributes;
-        state.modifiers = decodeModifiers(c.payload.modifiers);
+    console.log(c.payload);
+    state.modifiers = decodeModifiers(c.payload.modifiers);
         console.log("query config fulfilled");
       })
       .addCase(sendTransaction.rejected, (state, c) => {

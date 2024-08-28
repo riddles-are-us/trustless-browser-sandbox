@@ -40,7 +40,9 @@
     "web3subscriber": "git+https://github.com/DelphinusLab/delphinus-web3subscriber.git",
     "zkc-sdk": "^0.1.7-alpha",
     "zkwasm-service-cli": "git+https://github.com/DelphinusLab/zkWasm-service-cli.git",
-    "zkwasm-service-helper": "git+https://github.com/DelphinusLab/zkWasm-service-helper.git"
+    "zkwasm-service-helper": "git+https://github.com/DelphinusLab/zkWasm-service-helper.git",
+    "react-app-rewired": "^2.2.1",
+    "zkwasm-ts-server": "https://gitpkg.vercel.app/DelphinusLab/zkwasm-mini-rollup/ts?main&scripts.postinstall=npm%20install%20--ignore-scripts%20%26%26%20npm%20run%20build"
   },
   "scripts": {
     "start": "npx react-app-rewired start",

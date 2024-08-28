@@ -20,6 +20,7 @@ import {
   selectIsLoading,
   selectIsSelectingUIState,
   selectUIState,
+  selectNonce,
   setUIState,
 } from "../../../data/automata/properties";
 import {
@@ -46,6 +47,7 @@ const MainMenu = ({ localTimer }: Props) => {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
+  const nonce = useAppSelector(selectNonce);
   const isNotSelectingCreature = useAppSelector(selectIsNotSelectingCreature);
   const selectedCreature = useAppSelector(selectSelectedCreature);
   const selectedCreaturePrograms = useAppSelector(
@@ -78,6 +80,7 @@ const MainMenu = ({ localTimer }: Props) => {
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(
+            nonce,
             selectedCreature.programIndexes.map((index) => index!),
             selectedCreatureIndexForRequestEncode,
             isCreating

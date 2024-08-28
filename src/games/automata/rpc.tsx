@@ -77,14 +77,19 @@ function encode_modifier(modifiers: Array<bigint>) {
   return c;
 }
 
-function createCommand(command: bigint, objindex: bigint) {
-  return (command << 32n) + objindex;
+export function createCommand(
+  nonce: bigint,
+  command: bigint,
+  objindex: bigint
+) {
+  return (nonce << 16n) + (objindex << 8n) + command;
 }
 
 const CMD_INSTALL_PLAYER = 1n;
 const CMD_INSTALL_OBJECT = 2n;
 const CMD_RESTART_OBJECT = 3n;
 export function getTransactionCommandArray(
+  nonce: bigint,
   programIndexes: number[],
   selectingCreatureIndex: number,
   isCreating: boolean
@@ -96,13 +101,14 @@ export function getTransactionCommandArray(
   const modifiers: bigint = encode_modifier(index);
   const objIndex = BigInt(selectingCreatureIndex);
   const command = createCommand(
+    nonce,
     isCreating ? CMD_INSTALL_OBJECT : CMD_RESTART_OBJECT,
     objIndex
   );
   return [command, modifiers, 0n, 0n];
 }
 
-export function getInsPlayerTransactionCommandArray() {
-  const command = createCommand(CMD_INSTALL_PLAYER, 0n);
+export function getInsPlayerTransactionCommandArray(nonce: bigint) {
+  const command = createCommand(nonce, CMD_INSTALL_PLAYER, 0n);
   return [command, 0n, 0n, 0n];
 }

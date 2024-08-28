@@ -12,12 +12,13 @@ import {
   UIState,
   selectUIState,
   setUIState,
+  selectNonce,
 } from "../../data/automata/properties";
 
 export function GameController() {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
-
+  const nonce = useAppSelector(selectNonce);
   const [inc, setInc] = useState(0);
   const l2account = useAppSelector(selectL2Account);
 
@@ -25,7 +26,7 @@ export function GameController() {
     try {
       dispatch(
         sendTransaction({
-          cmd: getInsPlayerTransactionCommandArray(),
+          cmd: getInsPlayerTransactionCommandArray(nonce),
           prikey: l2account!.address,
         })
       );
@@ -81,7 +82,6 @@ export function GameController() {
 
   const preloadImages = (urls: string[], onReady: () => void) => {
     let loadedCount = 0;
-    console.log(urls);
     urls.forEach((url) => {
       const img = new Image();
       img.src = url;
