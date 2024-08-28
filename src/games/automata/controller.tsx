@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { selectL2Account } from "../../data/accountSlice";
-import { createCommand } from "./helper";
+import { getInsPlayerTransactionCommandArray } from "./rpc";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 import { selectL1Account, loginL2AccountAsync } from "../../data/accountSlice";
@@ -14,9 +14,6 @@ import {
   setUIState,
 } from "../../data/automata/properties";
 
-// clag
-const CMD_INSTALL_PLAYER = 1n;
-
 export function GameController() {
   const dispatch = useAppDispatch();
   const uIState = useAppSelector(selectUIState);
@@ -26,10 +23,9 @@ export function GameController() {
 
   function createPlayer() {
     try {
-      const insPlayerCmd = createCommand(CMD_INSTALL_PLAYER, 0n);
       dispatch(
         sendTransaction({
-          cmd: [insPlayerCmd, 0n, 0n, 0n],
+          cmd: getInsPlayerTransactionCommandArray(),
           prikey: l2account!.address,
         })
       );
