@@ -22,7 +22,9 @@ const AUTOMATA_PATH = "automata";
 
 function MainNavBarIsShow() {
   const location = useLocation();
-  const showNavBar = location.pathname !== `/${AUTOMATA_PATH}`;
+  const showNavBar = location.pathname !== `/${AUTOMATA_PATH}/`;
+
+  console.log("(t):", location.pathname);
 
   return showNavBar ? (
     <MainNavBar currency={0} handleRestart={() => {}} showNavBar={true} />
