@@ -1,8 +1,11 @@
 import React from "react";
-import bot from "../images/MainMenu/select_robot.png";
+import bot from ".../images/MainMenu/select_robot.png";
 
 import "./MainMenuBot.css";
-import { ProgramModel } from "../../../data/automata/models";
+import {
+  ProgramModel,
+  getActionComponent,
+} from "../../../data/automata/models";
 
 import {
   selectIsSelectingUIState,
@@ -10,6 +13,7 @@ import {
 } from "../../../data/automata/properties";
 import { setSelectingProgramIndex } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import XenoBloom from "./Actions/XenoBloom";
 
 interface Props {
   isCurrent: boolean;
@@ -43,15 +47,7 @@ const MainMenuBot = ({ isCurrent, order, program }: Props) => {
         left: `${xPosition}%`,
       }}
     >
-      {program != null ? (
-        <div
-          className={
-            isCurrent
-              ? "main-bot-xeno-bloom-animation"
-              : "main-bot-xeno-bloom-idle"
-          }
-        />
-      ) : null}
+      {getActionComponent(program, isCurrent)}
     </div>
   );
 };
