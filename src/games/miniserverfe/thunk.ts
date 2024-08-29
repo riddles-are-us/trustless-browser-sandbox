@@ -78,16 +78,14 @@ export const clientSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getConfig.pending, (state) => {
-        //
         state.external.viewerActivity = "queryConfig";
-    console.log("query config pending");
+        console.log("query config pending");
       })
       .addCase(getConfig.fulfilled, (state, c) => {
         state.external.viewerActivity = "idle";
         state.entityAttributes = c.payload.entity_attributes;
         state.localAttributes = c.payload.local_attributes;
-    console.log(c.payload);
-    state.modifiers = decodeModifiers(c.payload.modifiers);
+        state.modifiers = decodeModifiers(c.payload.modifiers);
         console.log("query config fulfilled");
       })
       .addCase(sendTransaction.rejected, (state, c) => {

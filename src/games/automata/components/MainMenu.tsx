@@ -70,6 +70,7 @@ const MainMenu = ({ localTimer }: Props) => {
   const selectedCreatureIndexForRequestEncode = useAppSelector(
     selectSelectedCreatureListIndex
   );
+  const showSummaryMenu = isNotSelectingCreature && uIState != UIState.Guide;
 
   function onClickConfirm() {
     if (!isLoading) {
@@ -170,7 +171,7 @@ const MainMenu = ({ localTimer }: Props) => {
           </div>
         </div>
       )}
-      {isNotSelectingCreature && <SummaryMenu />}
+      {showSummaryMenu && <SummaryMenu />}
     </div>
   );
 };
