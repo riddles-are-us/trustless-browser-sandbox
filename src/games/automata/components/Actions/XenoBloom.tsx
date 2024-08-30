@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "../MainMenuBot.css";
+import "../MainMenuAction.css";
 import image_00 from "../../images/Animations/Actions/XenoBloom/XenoBloom_00.png";
 import image_01 from "../../images/Animations/Actions/XenoBloom/XenoBloom_01.png";
 import image_02 from "../../images/Animations/Actions/XenoBloom/XenoBloom_02.png";
@@ -88,10 +88,9 @@ const XenoBloom = ({ isCurrent }: Props) => {
       {images.map((image, index) => (
         <link key={index} rel="preload" href={image} as="image" />
       ))}
-      <div className={isCurrent ? "main-bot-animation" : "main-bot-idle"} />
       {
         <div
-          className="main-bot-image"
+          className="main-bot-action-image"
           style={
             isCurrent
               ? { animation: `${animationName} 2s steps(24) infinite` }

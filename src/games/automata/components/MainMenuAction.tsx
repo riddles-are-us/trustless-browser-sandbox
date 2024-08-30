@@ -1,7 +1,5 @@
 import React from "react";
-import bot from ".../images/MainMenu/select_robot.png";
-
-import "./MainMenuBot.css";
+import "./MainMenuAction.css";
 import {
   ProgramModel,
   getActionComponent,
@@ -13,7 +11,6 @@ import {
 } from "../../../data/automata/properties";
 import { setSelectingProgramIndex } from "../../../data/automata/creatures";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import XenoBloom from "./Actions/XenoBloom";
 
 interface Props {
   isCurrent: boolean;
@@ -21,7 +18,7 @@ interface Props {
   program: ProgramModel | null;
 }
 
-const MainMenuBot = ({ isCurrent, order, program }: Props) => {
+const MainMenuAction = ({ isCurrent, order, program }: Props) => {
   const dispatch = useAppDispatch();
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
   const isLoading = useAppSelector(selectIsLoading);
@@ -40,7 +37,7 @@ const MainMenuBot = ({ isCurrent, order, program }: Props) => {
 
   return (
     <div
-      className="main-bot-container"
+      className="main-bot-action-container"
       onClick={onClick}
       style={{
         top: `${yPosition}%`,
@@ -52,4 +49,4 @@ const MainMenuBot = ({ isCurrent, order, program }: Props) => {
   );
 };
 
-export default MainMenuBot;
+export default MainMenuAction;
