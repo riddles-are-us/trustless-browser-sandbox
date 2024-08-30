@@ -72,6 +72,17 @@ const MainMenu = ({ localTimer }: Props) => {
     selectSelectedCreatureListIndex
   );
   const showSummaryMenu = isNotSelectingCreature && uIState != UIState.Guide;
+  const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
+
+  function onClickUnlock() {
+    if (uIState == UIState.Creating) {
+      setShowUnlockAnimation(true);
+      setTimeout(() => {
+        setShowUnlockAnimation(false);
+        onClickConfirm();
+      }, 1000);
+    }
+  }
 
   function onClickConfirm() {
     if (!isLoading) {
@@ -137,6 +148,7 @@ const MainMenu = ({ localTimer }: Props) => {
               progress={currentProgramInfo.progress}
               iconPath={getCreatureIconPath(selectedCreature.creatureType)}
               isCreating={isCreatingUIState}
+              showAnimation={showUnlockAnimation}
             />
             <img src={circleBackground} className="main-circle-background" />
             <MainMenuSelectingFrame
@@ -164,7 +176,7 @@ const MainMenu = ({ localTimer }: Props) => {
             {showUnlockButton && (
               <UnlockButton
                 isDisabled={!enableUnlockButton}
-                onClick={() => onClickConfirm()}
+                onClick={() => onClickUnlock()}
               />
             )}
             {showRebootButton && (

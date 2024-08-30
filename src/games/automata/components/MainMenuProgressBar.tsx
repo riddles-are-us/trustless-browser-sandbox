@@ -9,6 +9,7 @@ interface Props {
   progress: number;
   iconPath: string;
   isCreating: boolean;
+  showAnimation: boolean;
 }
 
 const MainMenuProgressBar = ({
@@ -17,6 +18,7 @@ const MainMenuProgressBar = ({
   progress,
   iconPath,
   isCreating,
+  showAnimation,
 }: Props) => {
   return (
     <div className="main-progress-bar-container">
@@ -33,6 +35,9 @@ const MainMenuProgressBar = ({
               : "main-progress-bot-image"
           }
         />
+      )}
+      {showAnimation && (
+        <div className="main-progress-bot-creating-animation" />
       )}
       <p className="main-progress-bar-program-name-text">{programName}</p>
       <p className="main-progress-bar-program-processing-time-text">

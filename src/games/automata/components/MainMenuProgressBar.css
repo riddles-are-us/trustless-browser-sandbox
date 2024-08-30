@@ -34,6 +34,30 @@
     filter: brightness(0) contrast(.7);
 }
 
+@keyframes unlockFrames {
+    0% { background-image: url('../images/Animations/Unlocks/unlock_animation_01.png'); }
+    11% { background-image: url('../images/Animations/Unlocks/unlock_animation_02.png'); }
+    22% { background-image: url('../images/Animations/Unlocks/unlock_animation_03.png'); }
+    33% { background-image: url('../images/Animations/Unlocks/unlock_animation_04.png'); }
+    44% { background-image: url('../images/Animations/Unlocks/unlock_animation_05.png'); }
+    56% { background-image: url('../images/Animations/Unlocks/unlock_animation_06.png'); }
+    67% { background-image: url('../images/Animations/Unlocks/unlock_animation_07.png'); }
+    78% { background-image: url('../images/Animations/Unlocks/unlock_animation_08.png'); }
+    89% { background-image: url('../images/Animations/Unlocks/unlock_animation_09.png'); }
+    100% { background-image: url('../images/Animations/Unlocks/unlock_animation_10.png'); }
+}
+
+.main-progress-bot-creating-animation {
+    position: absolute;
+    width: 390px;
+    height: 390px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-size: cover;
+    animation: unlockFrames 1s steps(11) infinite;
+}
+
 .main-progress-bar-program-name-text {
     position: absolute;
     bottom: 18%;
