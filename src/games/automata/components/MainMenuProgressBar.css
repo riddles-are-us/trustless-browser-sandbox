@@ -21,13 +21,17 @@
     transform: translate(-50%, -50%);
 }
 
-.main-progress-bot-image {
+.main-progress-bot-image, .main-progress-bot-creating-image {
     position: absolute;
     width: 70%;
     height: 70%;
     top: 37%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.main-progress-bot-creating-image {
+    filter: brightness(0) contrast(.7);
 }
 
 .main-progress-bar-program-name-text {

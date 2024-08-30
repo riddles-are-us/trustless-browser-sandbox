@@ -57,6 +57,7 @@ const MainMenu = ({ localTimer }: Props) => {
     selectSelectedCreatureDiffResources
   );
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
+  const isCreatingUIState = uIState == UIState.Creating;
   const showConfirmButton = uIState == UIState.Reboot;
   const enableConfirmButton = selectedCreaturePrograms.every(
     (program) => program !== null
@@ -135,6 +136,7 @@ const MainMenu = ({ localTimer }: Props) => {
               remainTime={currentProgramInfo.remainTime}
               progress={currentProgramInfo.progress}
               iconPath={getCreatureIconPath(selectedCreature.creatureType)}
+              isCreating={isCreatingUIState}
             />
             <img src={circleBackground} className="main-circle-background" />
             {showConfirmButton && (

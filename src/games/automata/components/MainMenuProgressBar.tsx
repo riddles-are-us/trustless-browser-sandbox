@@ -8,6 +8,7 @@ interface Props {
   remainTime: number;
   progress: number;
   iconPath: string;
+  isCreating: boolean;
 }
 
 const MainMenuProgressBar = ({
@@ -15,6 +16,7 @@ const MainMenuProgressBar = ({
   remainTime,
   progress,
   iconPath,
+  isCreating,
 }: Props) => {
   return (
     <div className="main-progress-bar-container">
@@ -22,7 +24,16 @@ const MainMenuProgressBar = ({
         src={progressBarBackground}
         className="main-progress-bar-background"
       />
-      {iconPath && <img src={iconPath} className="main-progress-bot-image" />}
+      {iconPath && (
+        <img
+          src={iconPath}
+          className={
+            isCreating
+              ? "main-progress-bot-creating-image"
+              : "main-progress-bot-image"
+          }
+        />
+      )}
       <p className="main-progress-bar-program-name-text">{programName}</p>
       <p className="main-progress-bar-program-processing-time-text">
         {formatTime(remainTime)}
