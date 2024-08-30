@@ -139,21 +139,6 @@ const MainMenu = ({ localTimer }: Props) => {
               isCreating={isCreatingUIState}
             />
             <img src={circleBackground} className="main-circle-background" />
-            {showConfirmButton && (
-              <ConfirmButton
-                isDisabled={!enableConfirmButton}
-                onClick={() => onClickConfirm()}
-              />
-            )}
-            {showUnlockButton && (
-              <UnlockButton
-                isDisabled={!enableUnlockButton}
-                onClick={() => onClickConfirm()}
-              />
-            )}
-            {showRebootButton && (
-              <RebootButton onClick={() => onClickReboot()} />
-            )}
             <MainMenuSelectingFrame
               order={currentProgramInfo.index}
               isCurrentProgram={!isSelectingUIState}
@@ -170,6 +155,21 @@ const MainMenu = ({ localTimer }: Props) => {
               />
             ))}
             <MainMenuWarning />
+            {showConfirmButton && (
+              <ConfirmButton
+                isDisabled={!enableConfirmButton}
+                onClick={() => onClickConfirm()}
+              />
+            )}
+            {showUnlockButton && (
+              <UnlockButton
+                isDisabled={!enableUnlockButton}
+                onClick={() => onClickConfirm()}
+              />
+            )}
+            {showRebootButton && (
+              <RebootButton onClick={() => onClickReboot()} />
+            )}
           </div>
         </div>
       )}
