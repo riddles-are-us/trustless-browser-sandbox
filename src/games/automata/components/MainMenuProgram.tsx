@@ -1,8 +1,8 @@
 import React from "react";
-import "./MainMenuAction.css";
+import "./MainMenuProgram.css";
 import {
   ProgramModel,
-  getActionComponent,
+  getProgramComponent,
 } from "../../../data/automata/models";
 
 import {
@@ -18,7 +18,7 @@ interface Props {
   program: ProgramModel | null;
 }
 
-const MainMenuAction = ({ isCurrent, order, program }: Props) => {
+const MainMenuProgram = ({ isCurrent, order, program }: Props) => {
   const dispatch = useAppDispatch();
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
   const isLoading = useAppSelector(selectIsLoading);
@@ -37,16 +37,16 @@ const MainMenuAction = ({ isCurrent, order, program }: Props) => {
 
   return (
     <div
-      className="main-bot-action-container"
+      className="main-bot-program-container"
       onClick={onClick}
       style={{
         top: `${yPosition}%`,
         left: `${xPosition}%`,
       }}
     >
-      {getActionComponent(program, isCurrent)}
+      {getProgramComponent(program, isCurrent)}
     </div>
   );
 };
 
-export default MainMenuAction;
+export default MainMenuProgram;

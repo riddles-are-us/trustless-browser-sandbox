@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import circleBackground from "../images/backgrounds/circle.png";
 import MainMenuSelectingFrame from "./MainMenuSelectingFrame";
-import MainMenuAction from "./MainMenuAction";
+import MainMenuProgram from "./MainMenuProgram";
 import ConfirmButton from "./Buttons/ConfirmButton";
 import UnlockButton from "./Buttons/UnlockButton";
 import "./MainMenu.css";
@@ -157,7 +157,7 @@ const MainMenu = ({ localTimer }: Props) => {
               isStop={selectedCreature.isProgramStop}
             />
             {selectedCreaturePrograms.map((program, index) => (
-              <MainMenuAction
+              <MainMenuProgram
                 key={index}
                 isCurrent={
                   !isSelectingUIState && currentProgramInfo.index == index

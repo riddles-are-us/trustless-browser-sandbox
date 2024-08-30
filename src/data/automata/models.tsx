@@ -16,7 +16,7 @@ import Bot1 from "../../games/automata/images/CreatureBots/robot1.png";
 import Bot2 from "../../games/automata/images/CreatureBots/robot2.png";
 import Bot3 from "../../games/automata/images/CreatureBots/robot3.png";
 import Bot4 from "../../games/automata/images/CreatureBots/robot4.png";
-import XenoBloom from "../../games/automata/components/Actions/XenoBloom";
+import XenoBloom from "../../games/automata/components/Programs/XenoBloom";
 
 export interface CreatureModel {
   rareResources: ResourceAmountPair[];
@@ -252,7 +252,7 @@ export function getCreatureIconPath(creatureType: number): string {
     : botIconPaths[creatureType % botIconPaths.length];
 }
 
-export function getActionComponent(
+export function getProgramComponent(
   program: ProgramModel | null,
   isCurrent: boolean
 ): JSX.Element | null {
