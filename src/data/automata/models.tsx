@@ -16,6 +16,29 @@ import Bot1 from "../../games/automata/images/CreatureBots/robot1.png";
 import Bot2 from "../../games/automata/images/CreatureBots/robot2.png";
 import Bot3 from "../../games/automata/images/CreatureBots/robot3.png";
 import Bot4 from "../../games/automata/images/CreatureBots/robot4.png";
+import QuantumScribe from "../../games/automata/components/Programs/QuantumScribe";
+import QuantumFrost from "../../games/automata/components/Programs/QuantumFrost";
+import QuantumSurge from "../../games/automata/components/Programs/QuantumSurge";
+import QuantaForge from "../../games/automata/components/Programs/QuantaForge";
+import Aespa from "../../games/automata/components/Programs/Aespa";
+import BioGen from "../../games/automata/components/Programs/BioGen";
+import BioFusion from "../../games/automata/components/Programs/BioFusion";
+import AstroMine from "../../games/automata/components/Programs/AstroMine";
+import TitaniumBoost from "../../games/automata/components/Programs/TitaniumBoost";
+import QuantumLeap from "../../games/automata/components/Programs/QuantumLeap";
+import BioSurge from "../../games/automata/components/Programs/BioSurge";
+import BioHarvest from "../../games/automata/components/Programs/BioHarvest";
+import EnerGex from "../../games/automata/components/Programs/EnerGex";
+import EtherWeave from "../../games/automata/components/Programs/EtherWeave";
+import BioCast from "../../games/automata/components/Programs/BioCast";
+import AstroCharge from "../../games/automata/components/Programs/AstroCharge";
+import BioSynthesis from "../../games/automata/components/Programs/BioSynthesis";
+import XenoFloral from "../../games/automata/components/Programs/XenoFloral";
+import FoamTap from "../../games/automata/components/Programs/FoamTap";
+import CrystaBloom from "../../games/automata/components/Programs/CrystaBloom";
+import EnerGate from "../../games/automata/components/Programs/EnerGate";
+import EnerFusion from "../../games/automata/components/Programs/EnerFusion";
+import QuantumCore from "../../games/automata/components/Programs/QuantumCore";
 import XenoBloom from "../../games/automata/components/Programs/XenoBloom";
 
 export interface CreatureModel {
@@ -29,8 +52,76 @@ export interface CreatureModel {
   startTime: number;
 }
 
+export enum ProgramType {
+  BioGen,
+  CrysTara,
+  AstroMine,
+  CrystaBloom,
+  EnerGex,
+  StellarCharge,
+  FoamTap,
+  EnerFusion,
+  EnerPlex,
+  TTgenesis,
+  QuantaForge,
+  FortiFyx,
+  SynTitan,
+  SwiftForge,
+  XenoFloral,
+  TitaniumBoost,
+  CerebraSpark,
+  QuiFoam,
+  AstroCharge,
+  EnerGate,
+  CogniMelt,
+  NexiMine,
+  XenoBloom,
+  ResoNex,
+  Fortivest,
+  CogniFy,
+  FortiGen,
+  Abracadabra,
+  MegaBoost,
+  NexuMax,
+  SpicenRich,
+  EvolviFy,
+  NexroVest,
+  QuantumScribe,
+  NeuroForge,
+  CyberPulse,
+  PlasmaShift,
+  IlluGen,
+  Aespa,
+  SuperNova,
+  NeuroCharge,
+  QuantumLeap,
+  BioSynthesis,
+  PlasmaForge,
+  NanoWeave,
+  EtherPulse,
+  StarLight,
+  NovaBurst,
+  BioHarvest,
+  EtherForge,
+  TitanBloom,
+  QuantumFrost,
+  BioFusion,
+  NexusField,
+  StarForge,
+  PlasmaCharge,
+  BioCast,
+  EtherWeave,
+  NovaFlux,
+  QuantumCore,
+  BioSurge,
+  EtherPulse2,
+  StarlightForge,
+  QuantumSurge,
+}
+
 export interface ProgramModel {
   index: number;
+  type: ProgramType;
   processingTime: number;
   resources: Array<ResourceAmountPair>;
   name: string;
@@ -254,16 +345,62 @@ export function getCreatureIconPath(creatureType: number): string {
 
 export function getProgramComponent(
   program: ProgramModel | null,
-  isCurrent: boolean
+  showAnimation: boolean
 ): JSX.Element | null {
   if (program == null) {
     return null;
   }
 
-  switch (program.index) {
-    case 0:
-      return <XenoBloom isCurrent={isCurrent} />;
+  switch (program.type) {
+    case ProgramType.QuantumScribe:
+      return <QuantumScribe showAnimation={showAnimation} />;
+    case ProgramType.QuantumFrost:
+      return <QuantumFrost showAnimation={showAnimation} />;
+    case ProgramType.QuantumSurge:
+      return <QuantumSurge showAnimation={showAnimation} />;
+    case ProgramType.QuantaForge:
+      return <QuantaForge showAnimation={showAnimation} />;
+    case ProgramType.Aespa:
+      return <Aespa showAnimation={showAnimation} />;
+    case ProgramType.BioGen:
+      return <BioGen showAnimation={showAnimation} />;
+    case ProgramType.BioFusion:
+      return <BioFusion showAnimation={showAnimation} />;
+    case ProgramType.AstroMine:
+      return <AstroMine showAnimation={showAnimation} />;
+    case ProgramType.TitaniumBoost:
+      return <TitaniumBoost showAnimation={showAnimation} />;
+    case ProgramType.QuantumLeap:
+      return <QuantumLeap showAnimation={showAnimation} />;
+    case ProgramType.BioSurge:
+      return <BioSurge showAnimation={showAnimation} />;
+    case ProgramType.BioHarvest:
+      return <BioHarvest showAnimation={showAnimation} />;
+    case ProgramType.EnerGex:
+      return <EnerGex showAnimation={showAnimation} />;
+    case ProgramType.EtherWeave:
+      return <EtherWeave showAnimation={showAnimation} />;
+    case ProgramType.BioCast:
+      return <BioCast showAnimation={showAnimation} />;
+    case ProgramType.AstroCharge:
+      return <AstroCharge showAnimation={showAnimation} />;
+    case ProgramType.BioSynthesis:
+      return <BioSynthesis showAnimation={showAnimation} />;
+    case ProgramType.XenoFloral:
+      return <XenoFloral showAnimation={showAnimation} />;
+    case ProgramType.FoamTap:
+      return <FoamTap showAnimation={showAnimation} />;
+    case ProgramType.CrystaBloom:
+      return <CrystaBloom showAnimation={showAnimation} />;
+    case ProgramType.EnerGate:
+      return <EnerGate showAnimation={showAnimation} />;
+    case ProgramType.EnerFusion:
+      return <EnerFusion showAnimation={showAnimation} />;
+    case ProgramType.QuantumCore:
+      return <QuantumCore showAnimation={showAnimation} />;
+    case ProgramType.XenoBloom:
+      return <XenoBloom showAnimation={showAnimation} />;
   }
 
-  return <XenoBloom isCurrent={isCurrent} />;
+  return <BioGen showAnimation={showAnimation} />;
 }

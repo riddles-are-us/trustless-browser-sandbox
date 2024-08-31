@@ -21,6 +21,7 @@ function decodePrograms(programRaws: any) {
     for(let i=0; i<programRaws.length; i++) {
         const program: ProgramModel = {
             index: i,
+            type: i,
             processingTime: programRaws[i][0] * SERVER_TICK_TO_SECOND,
             resources: 
                 [

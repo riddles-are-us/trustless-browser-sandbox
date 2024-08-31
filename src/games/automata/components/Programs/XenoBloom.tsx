@@ -26,10 +26,10 @@ import image_22 from "../../images/Animations/Programs/XenoBloom/XenoBloom_22.pn
 import image_23 from "../../images/Animations/Programs/XenoBloom/XenoBloom_23.png";
 
 interface Props {
-  isCurrent: boolean;
+  showAnimation: boolean;
 }
 
-const XenoBloom = ({ isCurrent }: Props) => {
+const XenoBloom = ({ showAnimation }: Props) => {
   const animationName = "XenoBloomFrames";
   const images = [
     image_00,
@@ -55,7 +55,7 @@ const XenoBloom = ({ isCurrent }: Props) => {
     image_20,
     image_21,
     image_22,
-    image_23,
+    image_23
   ];
 
   const generateAnimation = () => {
@@ -90,11 +90,11 @@ const XenoBloom = ({ isCurrent }: Props) => {
       ))}
       {
         <div
-          className="main-bot-action-image"
+          className="main-bot-program-image"
           style={
-            isCurrent
+            showAnimation
               ? { animation: `${animationName} 2s steps(24) infinite` }
-              : { backgroundImage: `url('${image_00}')` }
+              : { backgroundImage: `url('${images[0]}')` }
           }
         />
       }

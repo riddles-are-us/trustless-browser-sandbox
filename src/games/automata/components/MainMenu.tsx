@@ -162,6 +162,7 @@ const MainMenu = ({ localTimer }: Props) => {
                 isCurrent={
                   !isSelectingUIState && currentProgramInfo.index == index
                 }
+                isStop={selectedCreature.isProgramStop}
                 order={index}
                 program={program}
               />

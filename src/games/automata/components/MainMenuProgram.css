@@ -1,11 +1,11 @@
-.main-bot-action-container {
+.main-bot-program-container {
     position: absolute;
     transform: translate(-50%, -50%);
     width: 60px;
     height: 60px;
 }
 
-.main-bot-action-image {
+.main-bot-program-image {
     position: absolute;
     width: 100%;
     height: 100%;

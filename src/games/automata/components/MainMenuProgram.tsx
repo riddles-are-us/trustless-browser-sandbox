@@ -14,11 +14,12 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface Props {
   isCurrent: boolean;
+  isStop: boolean;
   order: number;
   program: ProgramModel | null;
 }
 
-const MainMenuProgram = ({ isCurrent, order, program }: Props) => {
+const MainMenuProgram = ({ isCurrent, isStop, order, program }: Props) => {
   const dispatch = useAppDispatch();
   const isSelectingUIState = useAppSelector(selectIsSelectingUIState);
   const isLoading = useAppSelector(selectIsLoading);
@@ -44,7 +45,7 @@ const MainMenuProgram = ({ isCurrent, order, program }: Props) => {
         left: `${xPosition}%`,
       }}
     >
-      {getProgramComponent(program, isCurrent)}
+      {getProgramComponent(program, isCurrent && !isStop)}
     </div>
   );
 };
