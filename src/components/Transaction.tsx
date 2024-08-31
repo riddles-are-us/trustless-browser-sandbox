@@ -4,7 +4,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // ZKWASM RELATED STUFF
-import { NewProveTask } from "../modals/NewProveTask";
 import {
     selectCommands,
     selectMessageToSigned,

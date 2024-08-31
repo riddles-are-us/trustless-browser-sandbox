@@ -1,3 +1,90 @@
+import DOCVOX from "../assets/audios/doctorvox.mp3";
+import FOREVER from "../assets/audios/forever.mp3";
+import PHUTHON from "../assets/audios/phuthon.mp3";
+import RANGERS from "../assets/audios/rangers.mp3";
+
+
+class AudioSystem {
+  preparedAudioInfo: Array<AudioInfo>;
+  status: "play" | "interrupt" | "pause" | "loading";
+  index: number;
+  constructor() {
+    this.preparedAudioInfo = [];
+    this.status = "loading";
+    this.index = 0;
+  }
+  addAudio(aInfo: AudioInfo) {
+    aInfo.audio.addEventListener("ended", () => {
+      audioSystem.playNext();
+    })
+    this.preparedAudioInfo.push(aInfo);
+  }
+  playNext() {
+    for (let i=0; i<this.preparedAudioInfo.length; i++) {
+      let index = i + this.index + 1;
+      index = index%this.preparedAudioInfo.length;
+      if(this.preparedAudioInfo[index].analyserInfo != null) {
+        this.index = index;
+        this.preparedAudioInfo[index].audio.play();
+        return;
+      }
+    }
+  }
+  play() {
+    if(this.status == "play") {
+      return this.preparedAudioInfo[this.index].analyserInfo;
+    } else if (this.status == "loading") {
+      for (let i=0; i<this.preparedAudioInfo.length; i++) {
+        if(this.preparedAudioInfo[i].analyserInfo != null) {
+          this.index = i;
+          this.preparedAudioInfo[i].audio.play();
+          this.status = "play";
+          return this.preparedAudioInfo[i].analyserInfo;
+        }
+      }
+      return null;
+    }
+  }
+}
+
+export const audioSystem = new AudioSystem();
+
+
+class AudioInfo {
+  audio: HTMLAudioElement;
+  analyserInfo: AnalyserInfo | null;
+  constructor(audio: HTMLAudioElement) {
+    this.audio = audio;
+    this.analyserInfo = null;
+  }
+
+  handleCanplay(audio: HTMLAudioElement) {
+    // connect the audio element to the analyser node and the analyser node
+    // to the main Web Audio context
+    const context = new AudioContext();
+    const source = context.createMediaElementSource(audio);
+    const analyser = context.createAnalyser();
+    const analyserInfo = new AnalyserInfo(analyser);
+    source.connect(analyser);
+    analyser.connect(context.destination);
+    this.analyserInfo = analyserInfo;
+  }
+}
+
+function prepareAudio(url: string): AudioInfo {
+  const audio = new Audio();
+  audio.src = url;
+  audio.loop = false;
+  audio.autoplay = false;
+  const audioPrepareInfo = new AudioInfo(audio);
+  audio.load();
+  audio.addEventListener('canplay', ()=> {
+    audioPrepareInfo.handleCanplay(audio)
+  });
+  return audioPrepareInfo;
+}
+
+
 export class AnalyserInfo {
   analyser: AnalyserNode;
   numPoints: number;
@@ -14,31 +101,16 @@ export class AnalyserInfo {
   }
 }
 
-export let analyserInfo:null | AnalyserInfo = null;
-
-// Make a buffer to receive the audio data
-
-function handleCanplay(audio: HTMLAudioElement, cb:(audio:HTMLAudioElement) => any) {
-  // connect the audio element to the analyser node and the analyser node
-  // to the main Web Audio context
-  const context = new AudioContext();
-  const source = context.createMediaElementSource(audio);
-  const analyser = context.createAnalyser();
-  analyserInfo = new AnalyserInfo(analyser);
-  source.connect(analyser);
-  analyser.connect(context.destination);
-  cb(audio);
+export function loadAudio(cb:(audio:HTMLAudioElement) => any) {
+  audioSystem.addAudio(prepareAudio(DOCVOX));
+  audioSystem.addAudio(prepareAudio(FOREVER));
+  audioSystem.addAudio(prepareAudio(RANGERS));
+  audioSystem.addAudio(prepareAudio(PHUTHON));
 }
 
-
-export function loadAudio(cb:(audio:HTMLAudioElement) => any) {
-  const audio = new Audio();
-  audio.loop = true;
-  audio.autoplay = true;
-
-  audio.crossOrigin = "anonymous";
-
-  audio.addEventListener('canplay', ()=> {handleCanplay(audio, cb)});
-  audio.src = "https://twgljs.org/examples/sounds/DOCTOR%20VOX%20-%20Level%20Up.mp3";
-  audio.load();
+export function loadAudio2(cb:(audio:HTMLAudioElement) => any) {
+  audioSystem.addAudio(prepareAudio(PHUTHON));
+  audioSystem.addAudio(prepareAudio(RANGERS));
+  audioSystem.addAudio(prepareAudio(DOCVOX));
+  audioSystem.addAudio(prepareAudio(FOREVER));
 }

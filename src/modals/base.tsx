@@ -10,7 +10,6 @@ import { useAppSelector } from "../app/hooks";
 import "./style.scss";
 import React from "react";
 import { selectL1Account } from "../data/accountSlice";
-import { loadStatus } from "../data/statusSlice";
 export interface ModalCommonProps {
   btnLabel: React.ReactNode;
   title: string;

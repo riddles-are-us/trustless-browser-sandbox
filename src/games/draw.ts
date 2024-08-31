@@ -29,7 +29,8 @@ export class Clip {
   clips: Map<string, Array<ClipRect>>;
   currentFrame: number | null;
   currentClip: string | null;
-  constructor(src: HTMLImageElement, boundry: ClipRect) {
+  ratio: number;
+  constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
     this.src = src;
     this.boundry = boundry;
     this.vx = 0;
@@ -39,6 +40,7 @@ export class Clip {
     this.currentFrame = null;
     this.currentClip = null;
     this.clips = new Map<string, Array<ClipRect>>();
+    this.ratio = ratio;
   }
   setSpeed(vx: number, vy: number) {
     this.vx = vx;
@@ -51,7 +53,7 @@ export class Clip {
       const rect = this.clips.get(this.currentClip)![this.currentFrame];
       const w = rect.right-rect.left;
       const h = rect.bottom - rect.top;
-      ctx.drawImage(this.src, rect.left, rect.top, w, h, this.left, this.top, 90, 120);
+      ctx.drawImage(this.src, rect.left, rect.top, w, h, this.left, this.top, w * this.ratio, w * this.ratio);
       ctx.fillStyle = "#000000";  // Red color
       ctx.font = "12px Arial";
       ctx.fillText(this.currentClip, this.left+10, this.top); // text, x, y
@@ -110,14 +112,60 @@ export class Torch {
     this.left += this.vx;
   }
 
-  drawLight(ratioArray: Array<number>, ctx: CanvasRenderingContext2D) {
+  drawLight(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
     // 900 width
-    ctx.fillStyle = 'hsl(60, 100%, 20%)';
+    ctx.fillStyle = 'hsl(60, 100%, 90%, 30%)';
     ctx.globalCompositeOperation = "screen";
     //ctx.fillStyle = 'hsl(20%, 100%, 15%)'; // Use 50% gray to desaturate
     //ctx.globalCompositeOperation = "saturation";
     ctx.beginPath();
     ctx.arc(this.left, this.top, 70, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+}
+
+export class FixedLight {
+  top: number;
+  left: number;
+  constructor(top: number, left: number) {
+    this.top = top;
+    this.left = left;
+  }
+  incFrame() {
+    return;
+  }
+
+  drawLight(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
+    // 900 width
+    let max = 0;
+    let maxWeight = 0;
+    for (let i=0; i<ratioArray.length; i++) {
+      if(ratioArray[i].weight > maxWeight) {
+        maxWeight = ratioArray[i].weight;
+        max = i;
+      }
+    }
+    //maxWeight = Math.floor(100 + maxWeight/4);
+    maxWeight = Math.floor(100 + max * 3.5);
+    const gradient = ctx.createLinearGradient(200, 0, 250, 250);
+    const vue = `${(ratioArray[10].weight * 100 + 200)/1200}%`;
+    const start = `hsl(${maxWeight}, 100%, ${vue})`;
+    const end = `hsl(${maxWeight}, 100%, ${vue}, 0%)`;
+    gradient.addColorStop(0, start);
+    gradient.addColorStop(1, end);
+    ctx.fillStyle = gradient;
+    ctx.globalCompositeOperation = "screen";
+    //ctx.fillStyle = 'hsl(20%, 100%, 15%)'; // Use 50% gray to desaturate
+    //ctx.globalCompositeOperation = "saturation";
+    //
+    ctx.beginPath();
+    ctx.moveTo(180, 75);
+    ctx.lineTo(300, 300);
+    ctx.lineTo(550, 210);
+    ctx.lineTo(270, 8);
     ctx.closePath();
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
@@ -133,7 +181,11 @@ export class Light {
   currentAngle: number;
   direction: number;
   speed: number;
-  constructor(top: number, left: number, start: number, end: number, init:number, speed: number) {
+  channel: number;
+  toggle: number;
+  on: boolean;
+
+  constructor(top: number, left: number, start: number, end: number, init:number, speed: number, channel: number) {
     this.top = top;
     this.left = left;
     this.startAngle = start;
@@ -141,6 +193,9 @@ export class Light {
     this.currentAngle = init;
     this.speed = speed;
     this.direction = speed;
+    this.channel = channel;
+    this.toggle = 2;
+    this.on = true;
   }
   incFrame() {
     if (this.currentAngle > this.endAngle) {
@@ -150,30 +205,51 @@ export class Light {
     }
     this.currentAngle = this.currentAngle + this.direction;
   }
-  drawLight(ratioArray: Array<number>, ctx: CanvasRenderingContext2D) {
+  drawLight(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
     // 900 width
     //ctx.fillStyle = 'hsl(20%, 100%, 75%)'; // Use 50% gray to desaturate
-    ctx.fillStyle = 'hsl(120, 100%, 10%)';
-    ctx.globalCompositeOperation = "screen";
+    if (this.on) {
+      const r = ratioHigh(ratioArray);
+      //ctx.fillStyle = `hsl(${400*(r-1)}, 100%, 10%)`;
+      const vue = `${(ratioArray[this.channel].weight * 100 + 200)/1200}%`;
+      //ctx.fillStyle = `hsl(${this.channel * 10}, ${vue}, 10%)`;
+      ctx.globalCompositeOperation = "screen";
 
-    ctx.beginPath();
-    const left = this.left - 400  * Math.cos(Math.PI * this.currentAngle / 180);
-    const deltaAngle = 12 * Math.sign(this.direction);
-    //const right = this.left - 400  * Math.cos(Math.PI * ((this.currentAngle + deltaAngle) / 180));
-    //const left = this.left;
-    const right = left + 50;
-    ctx.beginPath();
-    ctx.moveTo(this.left, this.top);
-    ctx.lineTo(left, 400);
-    ctx.lineTo(right, 400);
-    ctx.closePath();
-    ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
+      const left = this.left - 400  * Math.cos(Math.PI * this.currentAngle / 180);
+      const gradient = ctx.createLinearGradient(this.left, this.top, left, 400);
+
+      gradient.addColorStop(0, `hsl(${this.channel * 10}, 100%, ${vue})`);   // 顶点的颜色
+      gradient.addColorStop(1, `hsl(${this.channel * 10}, 100%, ${vue}, 0%)`);
+      ctx.fillStyle = gradient;
+
+      ctx.beginPath();
+      const deltaAngle = 12 * Math.sign(this.direction);
+      //const right = this.left - 400  * Math.cos(Math.PI * ((this.currentAngle + deltaAngle) / 180));
+      //const left = this.left;
+      const right = left + 50;
+      ctx.beginPath();
+      ctx.moveTo(this.left, this.top);
+      ctx.lineTo(left, 350 + this.channel*10);
+      ctx.lineTo(right, 350 + this.channel*10);
+      ctx.closePath();
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+    }
+    if (this.toggle == 0) {
+      this.toggle = 2;
+      this.on = !this.on;
+    }
+    this.toggle --;
   }
 }
 
+export interface Beat {
+  ratio: number;
+  weight: number;
+}
 
-export function getBeat(analyser: AnalyserInfo): Array<number> {
+
+export function getBeat(analyser: AnalyserInfo): Array<Beat> {
   const numPoints = analyser.numPoints;
   const audioDataArray = analyser.audioDataArray;
   analyser.analyser.getByteFrequencyData(audioDataArray);
@@ -194,39 +270,111 @@ export function getBeat(analyser: AnalyserInfo): Array<number> {
       ratio = 0.8;
     }
     analyser.avgDataArray[x] = (analyser.avgDataArray[x] * 5 +  weight)/6;
-    ratioArray.push(ratio);
+    ratioArray.push({ratio: ratio, weight: weight/width});
   }
   return ratioArray;
 }
 
-export function drawHorn(ratioArray: Array<number>, ctx: CanvasRenderingContext2D) {
-  // 900 width
-  const top = 30;
-  const left = 60;
-  const channels = ratioArray.length;
+function ratioHigh(ratioArray: Array<Beat>) {
   const cIndexH = 11;
+  const ratioH = 1 + ((ratioArray[cIndexH].ratio - 1) / 40);
+  return ratioH;
+}
+
+function ratioLow(ratioArray: Array<Beat>) {
   const cIndexL = 3;
-  const ratioH = 1 + ((ratioArray[cIndexH] - 1) / 3);
-  const ratioL = 1 + ((ratioArray[cIndexL] - 1) / 3);
+  const ratioL = 1 + ((ratioArray[cIndexL].ratio - 1) / 40);
+  return ratioL;
+
+}
+
+function averageBeat(ratioArray: Array<Beat>) {
+  let total = 0;
+  for(const b of ratioArray) {
+    total += b.weight;
+  }
+  return Math.floor(total/ratioArray.length);
+}
+
+function maxRatio(ratioArray: Array<Beat>) {
+  let max = 1;
+  for(const b of ratioArray) {
+    if(b.ratio > max) {
+      max = b.ratio;
+    }
+  }
+  return max;
+}
+
+let freeze = 0;
+export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
+  // 900 width
+  const top = 80;
+  const left = 60;
+  const ratio = maxRatio(ratioArray);
+  const avg = averageBeat(ratioArray);
+  /*
   ctx.fillStyle = "blue";  // gray color
   ctx.fillRect(left, top, 80* ratioL, 100*ratioL);
   ctx.fillRect(600, top, 80* ratioH, 100*ratioH);
+  */
+
+  const x = 0;
+  const y = 33;
+
+  const rH = ratioHigh(ratioArray) + Math.random()/40;
+  const rL = ratioLow(ratioArray) + Math.random()/40;
+
+  /*
+  if (hornRatio > 1.1) {
+    hornRatio = 1.1;
+  }
+  if (hornRatio < 0.9) {
+    hornRatio = 0.9;
+  }
+  */
+
+  ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y, 88*rH, 105*rH);
+  ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y+110, 88*rL, 105*rL);
+  const ele = document.getElementById("stage");
+  const transform = "translate(50%, -50%)";
+
+  if (freeze==0 && (ratio > 1.08 && avg > 130)) {
+    ele!.style.transition = 'transform 0.1s ease';
+    ele!.style.transform = transform  + " " + "scale(1.02)" + " " + "rotate(0.25deg)";
+    ele!.style.transition = 'transform 0.1s ease';
+    ele!.style.transform = transform  + " " + "scale(1.02)" + " " + "rotate(-0.25deg)";
+    freeze = 10;
+  } else {
+    ele!.style.transform = transform;
+  }
+
+  if (freeze >0) {
+    freeze --;
+  }
   return ratioArray;
 }
 
-export function drawBackground(ratioArray: Array<number>, ctx: CanvasRenderingContext2D) {
+export function drawBackground(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
   ctx.drawImage(spirites.backgroundImage, 0, 0, WIDTH, HEIGHT);
 }
 
+export function drawProgress(progress: number, ctx: CanvasRenderingContext2D) {
+  const width = 750 * progress;
+  ctx.fillStyle = "blue";  // gray color
+  ctx.fillRect(100, 20, 756, 30);
+  ctx.fillStyle = "orange";  // gray color
+  ctx.fillRect(102, 22, width, 26);
+}
 
-export function drawBeat(ratioArray: Array<number>, ctx: CanvasRenderingContext2D) {
+export function drawBeat(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
   // 900 width
   const top = HEIGHT;
   const channels = ratioArray.length;
   const width = WIDTH/channels;
   ctx.fillStyle = "#000";  // gray color
   for(let w=0; w<channels; w++) {
-    const height = (ratioArray[w] - 1) * 100 + 100;
+    const height = (ratioArray[w].weight - 1)/5;
     ctx.fillRect(w * width, top - height, width, height);
   }
   return ratioArray;

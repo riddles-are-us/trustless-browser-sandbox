@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { Container } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import { ClipRect, Clip, getBeat} from "./draw";
-import { loadAudio, analyserInfo, AnalyserInfo} from "./audio";
+import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./position";
 
 import cover from "./images/towerdefence.jpg";
@@ -16,10 +16,14 @@ import {
 
 import "./style.scss";
 
+let progress = 0.001;
+
 function draw(): void {
+  const analyserInfo = audioSystem.play();
   if (scenario.status == "play" && analyserInfo!=null) {
+      progress += 0.0001;
       const ratioArray = getBeat(analyserInfo!);
-      scenario.draw(ratioArray);
+      scenario.draw(ratioArray, {progress: progress});
       scenario.step(ratioArray);
   }
 }
@@ -30,7 +34,6 @@ const intervalId = setInterval(draw, 100); // 1000ms = 1 second
 export function GameController() {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
-  const [audio, setAudio] = useState<null|HTMLAudioElement>(null);
 
   useEffect(() => {
     if (l2account) {
@@ -49,28 +52,39 @@ export function GameController() {
   return (
     <>
       {!l2account && account &&
+      <div className="center" id="stage">
         <Container className="mt-5">
-          <div className="load-game">
-            <img src={cover} width="100px"></img>
-            <button className="btn btn-confirm"
+            <button className="btn btn-confirm mb-5"
               onClick={() => {
                 dispatch(loginL2AccountAsync(account!))
-                loadAudio((ele) => {setAudio(ele)});
+                loadAudio((ele) => {return ele;});
               }}
-            > Start Play </button>
-          </div>
+            > Current Party: BOX DEMO, 4 music, 1000000 Drops of token APCY </button>
+
+            <button className="btn btn-confirm mb-5"
+              onClick={() => {
+                dispatch(loginL2AccountAsync(account!))
+                loadAudio2((ele) => {return ele;});
+              }}
+            > Current Party: BOX DEMO, 4 music, 1000000 Drops of token APCY </button>
+
+            <button className="btn btn-confirm mb-5"
+            > Coming Soon: BOX DEMO2 [2024/8/39:22:00], 4 music, 1000000 Drops of token APCY </button>
+
         </Container>
+      </div>
       }
       {l2account &&
-        <div className="center">
+        <div className="center" id="stage">
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">
-          <div className="button1"></div>
-          <div className="button2"></div>
-          <div className="button3"></div>
-          <div className="button4"></div>
+            <div className="button1"></div>
+            <div className="button2"></div>
+            <div className="button3"></div>
+            <div className="button4"></div>
           </div>
         </div>
+
       }
 
     </>
