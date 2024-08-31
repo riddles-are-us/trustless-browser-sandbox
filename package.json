@@ -34,7 +34,6 @@
     "stream-http": "^3.2.0",
     "url": "^0.11.3",
     "wait-on": "^6.0.1",
-    "zkc-sdk": "^0.1.7-alpha",
     "web3subscriber": "git+https://github.com/DelphinusLab/delphinus-web3subscriber.git",
     "zkwasm-service-cli": "git+https://github.com/DelphinusLab/zkWasm-service-cli.git",
     "zkwasm-service-helper": "git+https://github.com/DelphinusLab/zkWasm-service-helper.git",
