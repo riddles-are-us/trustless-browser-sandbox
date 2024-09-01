@@ -19,10 +19,16 @@ const initialState: StatusState = {
     totalTasks: 0,
   },
   config: {
+    server_version_info: {
+      current_version: "",
+      minimum_supported_node_version: "",
+    },
+    supported_auto_submit_network_ids: [],
     latest_server_checksum: new Uint8Array(4),
     deployer_address: "",
     receiver_address: "",
     task_fee_list: {
+      auto_submit_prove_fee_per_network: "",
       setup_fee: "",
       prove_fee: "",
     },
