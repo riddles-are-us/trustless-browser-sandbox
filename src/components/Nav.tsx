@@ -10,7 +10,6 @@ import {
 } from "react-bootstrap";
 
 import HistoryTasks from "../modals/History";
-import { NewProveTask } from "../modals/NewProveTask";
 
 import { selectMD5, selectGameLoaded } from "../data/game";
 
@@ -46,9 +45,6 @@ export function MainNavBar(props: IProps) {
           <Nav className="ms-auto">
             {gameLoaded && md5 &&
             <>
-               <Nav.Link className="px-2 my-2 py-0">
-                   <NewProveTask md5={md5}></NewProveTask>
-               </Nav.Link>
                <Nav.Link className="px-2 my-2 py-0">
                    <HistoryTasks md5={md5}></HistoryTasks>
                </Nav.Link>
