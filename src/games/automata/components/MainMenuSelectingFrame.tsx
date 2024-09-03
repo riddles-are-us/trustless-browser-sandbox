@@ -48,10 +48,7 @@ const MainMenuSelectingFrame = ({ order, isCurrentProgram, isStop }: Props) => {
   const currentFrameXPosition =
     50 + Math.cos((angle * Math.PI) / 180) * currentFrameRadius;
 
-  console.log("(t):", order, isCurrentProgram, isStop);
-
   const currentFrameDiv = () => {
-    console.log("(t): current");
     return (
       <div
         className="main-current-frame-container"
@@ -72,7 +69,6 @@ const MainMenuSelectingFrame = ({ order, isCurrentProgram, isStop }: Props) => {
   };
 
   const selectingFrameDiv = () => {
-    console.log("(t): selecting");
     return (
       <div className="main-selecting-frame-container">
         {getSelectingFrameDiv(order)}
