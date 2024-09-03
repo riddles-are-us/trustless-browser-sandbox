@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { Container, Row } from "react-bootstrap";
 import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
-import { scenario } from "./position";
+import { scenario } from "./scenario";
 
 import cover from "./images/towerdefence.jpg";
 
@@ -21,7 +21,6 @@ let progress = 0.001;
 function draw(): void {
   const analyserInfo = audioSystem.play();
   if (scenario.status == "play" && analyserInfo!=null) {
-      progress += 0.0001;
       const ratioArray = getBeat(analyserInfo!);
       scenario.draw(ratioArray, {progress: progress});
       scenario.step(ratioArray);
@@ -48,6 +47,24 @@ export function GameController() {
 
   const account = useAppSelector(selectL1Account);
   console.log("l1 account:", account);
+
+  function handleDiscoShake() {
+     progress += 0.02;
+  }
+
+  function handleDiscoJump() {
+     progress += 0.02;
+  }
+
+  function handleDiscoSpin() {
+     progress += 0.02;
+  }
+
+  function handleDiscoLFG() {
+     progress += 0.02;
+  }
+
+
 
   return (
     <>
@@ -78,10 +95,10 @@ export function GameController() {
         <div className="center" id="stage">
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">
-            <div className="button1"></div>
-            <div className="button2"></div>
-            <div className="button3"></div>
-            <div className="button4"></div>
+                  <div className="button1" onClick={handleDiscoShake}></div>
+            <div className="button2" onClick={handleDiscoJump}></div>
+            <div className="button3" onClick={handleDiscoSpin}></div>
+            <div className="button4" onClick={handleDiscoLFG}></div>
           </div>
         </div>
 

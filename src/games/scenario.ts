@@ -31,6 +31,7 @@ function getRandomNumber(range: number): number {
 
 class Scenario {
   status: string;
+  progress: number;
   clips: Array<Clip>;
   lights: Array<Light>;
   fixedLights: Array<FixedLight>;
@@ -53,6 +54,7 @@ class Scenario {
     ];
     this.fixedLights = [new FixedLight(0,0)];
     this.torch = new Torch(100, 100, 40, 4, 4);
+    this.progress = 0;
 
   }
   draw(ratioArray: Array<Beat>, state: any) {
@@ -85,7 +87,15 @@ class Scenario {
       light.drawLight(ratioArray, context);
     }
     drawBeat(ratioArray, context);
-    drawProgress(state.progress, context);
+    if (state.progress > this.progress) {
+      const effectiveProgress = this.progress + 0.001;
+      if (effectiveProgress > state.progress) {
+        this.progress = state.progress;
+      } else {
+        this.progress = effectiveProgress;
+      }
+    }
+    drawProgress(this.progress, context);
   }
 
   step(ratioArray: Array<Beat>) {
