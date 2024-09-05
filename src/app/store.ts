@@ -2,6 +2,8 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import accountReducer from '../data/accountSlice';
 import endpointReducer from "../data/endpoint";
 import gameReducer from "../data/game";
+import puppyPartyReducer from "../data/puppy_party/puppy_party";
+
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -23,6 +25,7 @@ export const store = configureStore({
     account: accountReducer,
     endpoint: endpointReducer,
     game: gameReducer,
+    puppyParty: puppyPartyReducer
   },
 });
 
