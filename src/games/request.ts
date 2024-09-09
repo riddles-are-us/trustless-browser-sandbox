@@ -14,8 +14,8 @@ interface SendTransactionParams {
 }
 
 interface QueryStateRes {
+    player: any;
     playerList: any;
-    progress: any;
     globalTimer: any;
 }
 
@@ -61,13 +61,14 @@ export const queryState = createAsyncThunk<
                 const { cmd, prikey } = params;
                 const res = await query_state(cmd, prikey);
                 const datas = JSON.parse(res.data);
-                const playerList = datas[0];
-                const progress = datas[1];
-                const counter = datas[2];
                 console.log("query state data", datas.data);
+
+                const player = datas[0];
+                const playerList = datas[1];
+                const counter = datas[2];
                 return {
+                    player,
                     playerList,
-                    progress,
                     globalTimer: counter * SERVER_TICK_TO_SECOND,
                 };
             } catch (err: any) {
