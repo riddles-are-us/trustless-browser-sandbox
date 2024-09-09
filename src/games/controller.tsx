@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { Container } from "react-bootstrap";
+import { Player } from "./api";
 import { ClipRect, Clip } from "./draw";
 import { scenario } from "./scenario";
 
@@ -28,11 +29,16 @@ const intervalId = setInterval(draw, 100); // 1000ms = 1 second
 export function GameController() {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
+  const [state, setState] = useState<any|null>(null);
+  const [player, setPlayer] = useState<Player|null>(null);
+  const [random, setRandom] = useState<string>("");
+
 
   useEffect(() => {
     if (l2account) {
         //scenario.status = "play";
         console.log(l2account);
+        setPlayer(new Player(l2account.address, "http://localhost:3000"))
     }
   }, [l2account]);
 
@@ -42,6 +48,25 @@ export function GameController() {
 
   const account = useAppSelector(selectL1Account);
   console.log("l1 account:", account);
+
+  async function getState() {
+    const state = await player!.getState();
+    setState(state);
+  }
+
+  async function deposit() {
+    await player!.deposit(100n);
+    await getState();
+  }
+
+  async function bet() {
+    await player!.place(10n);
+    await getState();
+  }
+
+
+
+
 
   return (
     <>
@@ -59,7 +84,17 @@ export function GameController() {
       }
       {l2account &&
         <div className="center">
-          <canvas id="canvas"></canvas>
+          {state &&
+            <>
+            <div>current seed: {state!.global.rand_commitment}</div>
+            <div>current balance: {state!.player?.data.balance}</div>
+            <div>waiting for result: {state!.player?.data.placed}</div>
+            <div>settled result: {state!.player?.data.previous}</div>
+            </>
+          }
+          <button onClick={getState}>get state</button>
+          <button onClick={deposit}>deposit</button>
+          <button onClick={bet}>bet</button>
         </div>
       }
     </>
