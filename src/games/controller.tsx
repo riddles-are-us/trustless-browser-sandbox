@@ -179,6 +179,11 @@ export function GameController() {
             <div className="button3" onClick={handleDiscoShakeHeads}></div>
             <div className="button4" onClick={handleDiscoPostComments}></div>
           </div>
+                <div className={progress>=1 ? "giftbox-buttons" : "none"}>
+            <div className="button-yes"></div>
+            <div className="button-no"></div>
+          </div>
+
         </div>
       }
     </>

@@ -24,14 +24,6 @@ canvas {
   display: block; /* Removes the default inline spacing for canvas */
 }
 
-iframe.discord {
-  position: fixed;
-  top:0px;
-  bottom:0px;
-  left:0px;
-  width: 200;
-}
-
 button.btn-confirm {
   font-size: 30px;
   color: white;
@@ -71,3 +63,31 @@ div.stage-buttons {
   }
 }
 
+div.giftbox-buttons {
+  position: absolute;
+  left: 380px;
+  top: 360px;
+  .button-yes {
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-color: gray;
+  }
+  .button-no {
+    margin-left:15px;
+    display: inline-block;
+    height:70px;
+    width:70px;
+    background-color: gray;
+  }
+  animation: fadeIn 1s;
+}
+
+div.none {
+  display: None;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
