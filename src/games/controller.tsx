@@ -76,18 +76,7 @@ export function GameController() {
                 dispatch(loginL2AccountAsync(account!))
                 loadAudio((ele) => {return ele;});
               }}
-            > Current Party: BOX DEMO, 4 music, 1000000 Drops of token APCY </button>
-
-            <button className="btn btn-confirm mb-5"
-              onClick={() => {
-                dispatch(loginL2AccountAsync(account!))
-                loadAudio2((ele) => {return ele;});
-              }}
-            > Current Party: BOX DEMO, 4 music, 1000000 Drops of token APCY </button>
-
-            <button className="btn btn-confirm mb-5"
-            > Coming Soon: BOX DEMO2 [2024/8/39:22:00], 4 music, 1000000 Drops of token APCY </button>
-
+            > Connect and R.O.C.K</button>
         </Container>
       </div>
       }
@@ -95,7 +84,7 @@ export function GameController() {
         <div className="center" id="stage">
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">
-                  <div className="button1" onClick={handleDiscoShake}></div>
+            <div className="button1" onClick={handleDiscoShake}></div>
             <div className="button2" onClick={handleDiscoJump}></div>
             <div className="button3" onClick={handleDiscoSpin}></div>
             <div className="button4" onClick={handleDiscoLFG}></div>

@@ -42,6 +42,16 @@ export class Clip {
     this.clips = new Map<string, Array<ClipRect>>();
     this.ratio = ratio;
   }
+
+  getBottom() {
+    if (this.currentClip != null && this.currentFrame != null) {
+      const rect = this.clips.get(this.currentClip)![this.currentFrame];
+      return this.top + (rect.bottom - rect.top);
+    }
+    else {
+      return 0;
+    }
+  }
   setSpeed(vx: number, vy: number) {
     this.vx = vx;
     this.vy = vy;
@@ -360,22 +370,33 @@ export function drawBackground(ratioArray: Array<Beat>, ctx: CanvasRenderingCont
 }
 
 export function drawProgress(progress: number, ctx: CanvasRenderingContext2D) {
-  const width = 750 * progress;
-  ctx.fillStyle = "blue";  // gray color
-  ctx.fillRect(100, 20, 756, 30);
+  const ratio = 0.5;
+  const width = 740 * progress;
+  ctx.fillStyle = "#90D5FF";  // gray color
+  ctx.fillRect(204, 34, 740 * ratio, 14);
   ctx.fillStyle = "orange";  // gray color
-  ctx.fillRect(102, 22, width, 26);
+  ctx.fillRect(204, 34, width, 14);
+  ctx.drawImage(spirites.progressBar, 200, 30, 753 * ratio, 45 * ratio);
+  ctx.drawImage(spirites.giftbox, 200 + width - 10, 20, 90*ratio, 90 * ratio);
 }
 
-export function drawBeat(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
-  // 900 width
-  const top = HEIGHT;
-  const channels = ratioArray.length;
-  const width = WIDTH/channels;
-  ctx.fillStyle = "#000";  // gray color
-  for(let w=0; w<channels; w++) {
-    const height = (ratioArray[w].weight - 1)/5;
-    ctx.fillRect(w * width, top - height, width, height);
+export class Audience {
+  toggle: number;
+  light: number;
+  constructor() {
+    this.toggle = 300;
+    this.light = 0;
   }
-  return ratioArray;
+  drawBeat(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
+    // 900 width
+    ctx.fillStyle = "#000";  // gray color
+    const avg = averageBeat(ratioArray);
+    this.toggle = this.toggle - avg;
+    if (this.toggle < 0) {
+      this.light = 1 - this.light;
+      this.toggle = 500;
+    }
+    ctx.drawImage(spirites.audience[this.light], 0, 0, WIDTH, HEIGHT);
+    return ratioArray;
+  }
 }

@@ -1,5 +1,5 @@
 import {
-  Torch, drawBeat, drawHorn,
+  Torch, Audience, drawHorn,
   drawBackground, drawProgress,
   ClipRect, Clip, Light, FixedLight,
   HEIGHT, WIDTH, Beat,
@@ -36,12 +36,14 @@ class Scenario {
   lights: Array<Light>;
   fixedLights: Array<FixedLight>;
   torch: Torch;
+  audience: Audience;
   constructor() {
+    this.audience = new Audience();
     this.status = "pause";
     this.clips = [];
     for (let i = 0; i<20; i++) {
       this.clips.push(
-        createDogClip(220 + getRandomNumber(80), 50 + getRandomNumber(800), getRandomNumber(2), (i * 2)% 24),
+        createDogClip(220 + getRandomNumber(80), 50 + getRandomNumber(800), getRandomNumber(4), (i * 2)% 24),
       );
     }
     this.lights = [
@@ -80,13 +82,14 @@ class Scenario {
       light.drawLight(ratioArray, context);
     }
     this.torch.drawLight(ratioArray, context);
-    for (const obj of this.clips) {
+    const clips = this.clips.sort((a, b) => a.getBottom() - b.getBottom());
+    for (const obj of clips) {
         obj.draw(context);
     }
     for (const light of this.lights) {
       light.drawLight(ratioArray, context);
     }
-    drawBeat(ratioArray, context);
+    this.audience.drawBeat(ratioArray, context);
     if (state.progress > this.progress) {
       const effectiveProgress = this.progress + 0.001;
       if (effectiveProgress > state.progress) {
