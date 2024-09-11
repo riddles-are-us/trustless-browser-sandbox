@@ -5,7 +5,7 @@ import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer, selectPlayerList } from "../data/puppy_party/properties";
+import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer, selectPlayerList, selectLastLotteryTimestamp } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
@@ -28,11 +28,13 @@ export function GameController() {
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
+  const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const playerList = useAppSelector(selectPlayerList);
 
 
   const [cooldown, setCooldown] = useState(false);
+  const [redeemCounting, setRedeemCounting] = useState(0);
 
 
   console.log("lastActionTimestamp", lastActionTimestamp, "globalTimer", globalTimer);
@@ -49,7 +51,12 @@ export function GameController() {
     } else {
        setCooldown(false);
     }
-    progressRef.current = progress;
+    let rc = 0;
+    if (lastLotteryTimestamp != 0) {
+      rc = 10 - (globalTimer - lastLotteryTimestamp);
+    }
+    setRedeemCounting(rc);
+
   }, [lastActionTimestamp, globalTimer]);
 
 
@@ -219,7 +226,7 @@ export function GameController() {
             <div className={`button4 cd-${cooldown}`} onClick={handleDiscoPostComments}></div>
           </div>
           <div className={progress>=1000 ? "giftbox-buttons" : "none"}>
-            <div className="button-yes" onClick={handleRedeemRewards}>Click to redeem rewards</div>
+            <div className="button-yes" onClick={handleRedeemRewards}>Click to redeem rewards {redeemCounting} ticks left </div>
           </div>
 
         </div>
