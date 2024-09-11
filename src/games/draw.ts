@@ -371,7 +371,7 @@ export function drawBackground(ratioArray: Array<Beat>, ctx: CanvasRenderingCont
 
 export function drawProgress(progress: number, ctx: CanvasRenderingContext2D) {
   const ratio = 0.5;
-  const width = 740 * progress;
+  const width = 740 * progress * ratio;
   ctx.fillStyle = "#90D5FF";  // gray color
   ctx.fillRect(204, 34, 740 * ratio, 14);
   ctx.fillStyle = "orange";  // gray color
