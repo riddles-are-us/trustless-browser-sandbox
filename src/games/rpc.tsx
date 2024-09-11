@@ -1,17 +1,13 @@
 import axios from "axios";
 import { sign, query } from "./sign";
-import dotenv from "dotenv";
 
-const getURL = () => {
-  if(process.env.BASEURL && process.env.PORT) {
-    return process.env.BASEURL + ":" + process.env.PORT;
-  } else {
-    return "http://localhost:3000"
-  }
-}
+// Get the current URL components
+const currentLocation = window.location;
+const protocol = currentLocation.protocol; // e.g., 'http:' or 'https:'
+const hostname = currentLocation.hostname; // e.g., 'sinka' or 'localhost'
 
 const instance = axios.create({
-  baseURL: getURL(),
+  baseURL: `${protocol}//${hostname}` + ":3000",
   headers: { "Content-Type": "application/json" },
 });
 
