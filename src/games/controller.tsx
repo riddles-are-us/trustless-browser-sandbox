@@ -5,7 +5,7 @@ import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState, setUIState, selectNonce, selectProgress } from "../data/puppy_party/properties";
+import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
@@ -28,6 +28,10 @@ export function GameController() {
   const nonce = useAppSelector(selectNonce);
   const progress = useAppSelector(selectProgress);
   const progressRef = useRef(progress);
+  const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
+  const globalTimer = useAppSelector(selectGlobalTimer);
+
+  console.log("lastActionTimestamp", lastActionTimestamp, "globalTimer", globalTimer);
 
    // Update the ref value whenever `progress` changes
    useEffect(() => {
