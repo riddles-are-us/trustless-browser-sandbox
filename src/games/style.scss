@@ -38,28 +38,32 @@ div.stage-buttons {
     display: inline-block;
     height:70px;
     width:70px;
-    background-color: blue;
+    background-image: url('images/btn1.png');
+    background-size: cover;
   }
   .button2 {
     margin-left:15px;
     display: inline-block;
     height:70px;
     width:70px;
-    background-color: blue;
+    background-image: url('images/btn2.png');
+    background-size: cover;
   }
   .button3 {
     margin-left:15px;
     display: inline-block;
     height:70px;
     width:70px;
-    background-color: blue;
+    background-image: url('images/btn3.png');
+    background-size: cover;
   }
   .button4 {
     margin-left:15px;
     display: inline-block;
     height:70px;
     width:70px;
-    background-color: blue;
+    background-image: url('images/btn4.png');
+    background-size: cover;
   }
 }
 
@@ -82,6 +86,22 @@ div.giftbox-buttons {
   }
   animation: fadeIn 1s;
 }
+
+div.cd-true {
+  cursor: pointer;
+  //filter: grayscale(100%);
+}
+
+div.cd-true:hover {
+  cursor: pointer;
+}
+
+
+div.cd-false {
+  filter: grayscale(100%);
+}
+
+
 
 div.none {
   display: None;

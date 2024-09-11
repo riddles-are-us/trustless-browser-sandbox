@@ -5,11 +5,10 @@ import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer } from "../data/puppy_party/properties";
+import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer, selectPlayerList } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
-import { cornersOfRectangle } from "@dnd-kit/core/dist/utilities/algorithms/helpers";
 
 //import cover from "./images/towerdefence.jpg";
 
@@ -30,13 +29,29 @@ export function GameController() {
   const progressRef = useRef(progress);
   const lastActionTimestamp = useAppSelector(selectLastActionTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
+  const playerList = useAppSelector(selectPlayerList);
+
+
+  const [cooldown, setCooldown] = useState(false);
+
 
   console.log("lastActionTimestamp", lastActionTimestamp, "globalTimer", globalTimer);
 
    // Update the ref value whenever `progress` changes
-   useEffect(() => {
+  useEffect(() => {
     progressRef.current = progress;
   }, [progress]);
+
+  useEffect(() => {
+    const delta = globalTimer - lastActionTimestamp;
+    if (delta > 3) {
+       setCooldown(true);
+    } else {
+       setCooldown(false);
+    }
+    progressRef.current = progress;
+  }, [lastActionTimestamp, globalTimer]);
+
 
   useEffect(() => {
     const draw = (): void => {
@@ -44,7 +59,11 @@ export function GameController() {
       if (scenario.status === "play" && analyserInfo != null) {
         const ratioArray = getBeat(analyserInfo!);
         const progress = progressRef.current / 1000;
-        scenario.draw(ratioArray, { progress });
+        scenario.draw(ratioArray, {
+            progress,
+            l2account,
+            playerList,
+        });
         scenario.step(ratioArray);
       }
     };
@@ -117,43 +136,63 @@ export function GameController() {
   console.log("l1 account:", account);
 
   function handleDiscoShakeFeet() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(SHAKE_FEET, nonce),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    if (cooldown == false) {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(SHAKE_FEET, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    }
   }
 
   function handleDiscoJump() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(JUMP, nonce),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    if (cooldown == false) {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(JUMP, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    }
   }
 
   function handleDiscoShakeHeads() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(SHAKE_HEADS, nonce),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    if (cooldown == false) {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    }
   }
 
   function handleDiscoPostComments() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    if (cooldown == false) {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    }
+  }
+
+  function handleRedeemRewards() {
+    if (cooldown == false) {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    }
   }
 
   return (
@@ -174,14 +213,13 @@ export function GameController() {
         <div className="center" id="stage">
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">
-            <div className="button1" onClick={handleDiscoShakeFeet}></div>
-            <div className="button2" onClick={handleDiscoJump}></div>
-            <div className="button3" onClick={handleDiscoShakeHeads}></div>
-            <div className="button4" onClick={handleDiscoPostComments}></div>
+            <div className={`button1 cd-${cooldown}`} onClick={handleDiscoShakeFeet}></div>
+            <div className={`button2 cd-${cooldown}`} onClick={handleDiscoJump}></div>
+            <div className={`button3 cd-${cooldown}`} onClick={handleDiscoShakeHeads}></div>
+            <div className={`button4 cd-${cooldown}`} onClick={handleDiscoPostComments}></div>
           </div>
-                <div className={progress>=1 ? "giftbox-buttons" : "none"}>
-            <div className="button-yes"></div>
-            <div className="button-no"></div>
+          <div className={progress>=1000 ? "giftbox-buttons" : "none"}>
+            <div className="button-yes" onClick={handleRedeemRewards}>Click to redeem rewards</div>
           </div>
 
         </div>

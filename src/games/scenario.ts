@@ -46,6 +46,8 @@ class Scenario {
         createDogClip(220 + getRandomNumber(80), 50 + getRandomNumber(800), getRandomNumber(4), (i * 2)% 24),
       );
     }
+    this.clips[0].name = "ME";
+    this.clips[0].focus = true;
     this.lights = [
       new Light(0,115,90, 200, 70, 6, 2),
       new Light(0,300,60, 140, 60, 3, 4),

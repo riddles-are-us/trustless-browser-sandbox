@@ -20,6 +20,7 @@ export class ClipRect {
 }
 
 export class Clip {
+  name: string;
   src: HTMLImageElement;
   top: number;
   left: number;
@@ -30,7 +31,9 @@ export class Clip {
   currentFrame: number | null;
   currentClip: string | null;
   ratio: number;
+  focus: boolean;
   constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
+    this.name = "NPC";
     this.src = src;
     this.boundry = boundry;
     this.vx = 0;
@@ -41,6 +44,7 @@ export class Clip {
     this.currentClip = null;
     this.clips = new Map<string, Array<ClipRect>>();
     this.ratio = ratio;
+    this.focus = false;
   }
 
   getBottom() {
@@ -64,10 +68,20 @@ export class Clip {
       const w = rect.right-rect.left;
       const h = rect.bottom - rect.top;
       ctx.drawImage(this.src, rect.left, rect.top, w, h, this.left, this.top, w * this.ratio, w * this.ratio);
-      ctx.fillStyle = "#000000";  // Red color
+
+      if (this.focus == false) {
+        ctx.fillStyle = "black";  // Red color
+      } else {
+        ctx.fillStyle = "orange";  // Red color
+      }
+      ctx.fillRect(this.left+30, this.top - 13, 40, 15);
+      ctx.fillStyle = "white";  // Red color
       ctx.font = "12px Arial";
+      ctx.fillText(this.name, this.left+35, this.top); // text, x, y
+      /*
       ctx.fillText(this.currentClip, this.left+10, this.top); // text, x, y
       ctx.fillText(this.currentFrame.toString(), this.left + 10, this.top+30); // text, x, y
+      */
     }
   }
 

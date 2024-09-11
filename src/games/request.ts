@@ -69,7 +69,7 @@ export const queryState = createAsyncThunk<
                 return {
                     player,
                     playerList,
-                    globalTimer: counter * SERVER_TICK_TO_SECOND,
+                    globalTimer: counter,
                 };
             } catch (err: any) {
                 return rejectWithValue(err);
