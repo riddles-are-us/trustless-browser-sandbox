@@ -1,8 +1,17 @@
 import axios from "axios";
 import { sign, query } from "./sign";
+import dotenv from "dotenv";
+
+const getURL = () => {
+  if(process.env.BASEURL && process.env.PORT) {
+    return process.env.BASEURL + ":" + process.env.PORT;
+  } else {
+    return "http://localhost:3000"
+  }
+}
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: getURL(),
   headers: { "Content-Type": "application/json" },
 });
 
