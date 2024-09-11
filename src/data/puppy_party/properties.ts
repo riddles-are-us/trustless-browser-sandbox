@@ -108,6 +108,11 @@ export const propertiesSlice = createSlice({
 export const selectUIState = (state: RootState) => state.puppyParty.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.puppyParty.properties.globalTimer;
 export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.player.nonce);
+export const selectPlayerList = (state: RootState) => state.puppyParty.properties.playerList;
+export const selectBalance = (state: RootState) => state.puppyParty.properties.player.data.balance;
+export const selectAction = (state: RootState) => state.puppyParty.properties.player.data.action;
+export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp;
+export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp;
 export const selectProgress = (state: RootState) => state.puppyParty.properties.player.data.progress;
 export const { setUIState } = propertiesSlice.actions;
 export default propertiesSlice.reducer;
