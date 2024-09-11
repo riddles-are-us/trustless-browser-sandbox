@@ -32,7 +32,6 @@ export function GameController() {
    // Update the ref value whenever `progress` changes
    useEffect(() => {
     progressRef.current = progress;
-    console.log("progress in outerside", progress);
   }, [progress]);
 
   useEffect(() => {
@@ -41,7 +40,6 @@ export function GameController() {
       if (scenario.status === "play" && analyserInfo != null) {
         const ratioArray = getBeat(analyserInfo!);
         const progress = progressRef.current / 1000;
-        console.log("progress in draw", progress);
         scenario.draw(ratioArray, { progress });
         scenario.step(ratioArray);
       }
