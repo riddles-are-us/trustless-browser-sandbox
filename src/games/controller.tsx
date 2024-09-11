@@ -5,14 +5,14 @@ import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState, setUIState, selectNonce } from "../data/puppy_party/properties";
+import { UIState, selectUIState, setUIState, selectNonce, selectProgress } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
+import { cornersOfRectangle } from "@dnd-kit/core/dist/utilities/algorithms/helpers";
 
 //import cover from "./images/towerdefence.jpg";
 
-const SWAY = 0n;
 const CREATE_PLAYER = 1n;
 const SHAKE_FEET = 2n;
 const JUMP = 3n;
@@ -20,26 +20,41 @@ const SHAKE_HEADS = 4n;
 const POST_COMMENTS = 5n;
 const LOTTERY = 6n;
 
-const progress = 0.001;
-
-function draw(): void {
-  const analyserInfo = audioSystem.play();
-  if (scenario.status == "play" && analyserInfo!=null) {
-      const ratioArray = getBeat(analyserInfo!);
-      scenario.draw(ratioArray, {progress: progress});
-      scenario.step(ratioArray);
-  }
-}
-
-// Set the interval
-const intervalId = setInterval(draw, 100); // 1000ms = 1 second
-
 export function GameController() {
   const dispatch = useAppDispatch();
   const l2account = useAppSelector(selectL2Account);
   const uIState = useAppSelector(selectUIState);
   const [inc, setInc] = useState(0);
   const nonce = useAppSelector(selectNonce);
+  const progress = useAppSelector(selectProgress);
+  const progressRef = useRef(progress);
+
+   // Update the ref value whenever `progress` changes
+   useEffect(() => {
+    progressRef.current = progress;
+    console.log("progress in outerside", progress);
+  }, [progress]);
+
+  useEffect(() => {
+    const draw = (): void => {
+      const analyserInfo = audioSystem.play();
+      if (scenario.status === "play" && analyserInfo != null) {
+        const ratioArray = getBeat(analyserInfo!);
+        const progress = progressRef.current / 1000;
+        console.log("progress in draw", progress);
+        scenario.draw(ratioArray, { progress });
+        scenario.step(ratioArray);
+      }
+    };
+
+    // Set the interval
+    const intervalId = setInterval(draw, 100); // 1000ms = 1 second
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   function createPlayer() {
     try {

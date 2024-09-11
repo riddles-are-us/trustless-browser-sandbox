@@ -12,16 +12,51 @@ export enum UIState{
   Idle
 }
 
+interface PlayerState {
+  nonce: number;
+  data: {
+    balance: number;
+    action: bigint;
+    last_lottery_timestamp: number;
+    last_action_timestamp: number;
+    progress: number;
+  }
+}
+
+interface PlayerListElement {
+  pid: string,
+  data: {
+    balance: number;
+    action: bigint;
+    last_lottery_timestamp: number;
+    last_action_timestamp: number;
+    progress: number;
+  }
+}
+
 interface PropertiesState {
     uIState: UIState;
+    player: PlayerState;
     globalTimer: number;
-    nonce: number;
+    playerList: PlayerListElement[];
 }
+
+const SWAY = 0n;
 
 const initialState: PropertiesState = {
     uIState: UIState.Init,
+    player: {
+      nonce: 0,
+      data: {
+        balance: 0,
+        action: SWAY,
+        last_lottery_timestamp: 0,
+        last_action_timestamp: 0,
+        progress: 0,
+      }
+    },
     globalTimer: 0,
-    nonce: 0,
+    playerList: []
 };
 
 export const propertiesSlice = createSlice({
@@ -54,8 +89,11 @@ export const propertiesSlice = createSlice({
         if (state.uIState == UIState.QueryState){
           state.uIState = UIState.Idle;
         }
+
+        state.playerList = action.payload.playerList;
         state.globalTimer = action.payload.globalTimer;
-        state.nonce = action.payload.player.nonce;
+        state.player = action.payload.player;
+        console.log("state player:", state.player);
         console.log("send transaction fulfilled");
       })
       .addCase(queryState.rejected, (state, action) => {
@@ -69,7 +107,7 @@ export const propertiesSlice = createSlice({
 
 export const selectUIState = (state: RootState) => state.puppyParty.properties.uIState;
 export const selectGlobalTimer = (state: RootState) => state.puppyParty.properties.globalTimer;
-export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.nonce);
-    
+export const selectNonce = (state: RootState) => BigInt(state.puppyParty.properties.player.nonce);
+export const selectProgress = (state: RootState) => state.puppyParty.properties.player.data.progress;
 export const { setUIState } = propertiesSlice.actions;
 export default propertiesSlice.reducer;
