@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from "../../app/store";
 import { getConfig, sendTransaction, queryState } from "../../games/request"
-import { useAppSelector } from "../../app/hooks";
-import { selectL2Account } from "../../data/accountSlice";
 
 export enum UIState{
   Init,
