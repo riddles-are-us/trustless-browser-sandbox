@@ -36,13 +36,18 @@ export function GameController() {
 
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
-
+  const [alreadyDraw, setAlreadyDraw] = useState(false);
 
   console.log("lastActionTimestamp", lastActionTimestamp, "globalTimer", globalTimer);
 
    // Update the ref value whenever `progress` changes
   useEffect(() => {
     progressRef.current = progress;
+
+    // Reset to false
+    if(progress == 1000) {
+      setAlreadyDraw(false);
+    }
   }, [progress]);
 
   useEffect(() => {
@@ -203,13 +208,16 @@ export function GameController() {
   }
 
   function handleRedeemRewards() {
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(LOTTERY, nonce),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    // Set to true as long as the player click the lottery button
+    setAlreadyDraw(true);
+
+    dispatch(
+      sendTransaction({
+        cmd: getTransactionCommandArray(LOTTERY, nonce),
+        prikey: l2account!.address,
+      })
+    );
+    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
   function handleCancelRewards() {
@@ -246,7 +254,7 @@ export function GameController() {
             <div className={`button3 cd-${cooldown}`} onClick={handleDiscoShakeHeads}></div>
             <div className={`button4 cd-${cooldown}`} onClick={handleDiscoPostComments}></div>
           </div>
-          <div className={progress>=1000 && redeemCounting >= 0 ? "giftbox-buttons" : "none"}>
+          <div className={progress >= 1000 && redeemCounting >= 0 && !alreadyDraw ? "giftbox-buttons" : "none"}>
             <div className="button-yes" onClick={handleRedeemRewards}>Click to redeem rewards {redeemCounting} ticks left </div>
           </div>
         </div>
