@@ -47,7 +47,7 @@ export function GameController() {
 
   useEffect(() => {
     const delta = globalTimer - lastActionTimestamp;
-    if (delta > 3) {
+    if (delta > 2) {
        setCooldown(false);
     } else {
        setCooldown(true);
@@ -203,23 +203,23 @@ export function GameController() {
   }
 
   function handleRedeemRewards() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(LOTTERY, nonce),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(LOTTERY, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
   function handleCancelRewards() {
-    dispatch(
-      sendTransaction({
-        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce),
-        prikey: l2account!.address,
-      })
-    );
-    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
   return (
