@@ -25,7 +25,7 @@ class AudioSystem {
       index = index%this.preparedAudioInfo.length;
       if(this.preparedAudioInfo[index].analyserInfo != null) {
         this.index = index;
-        this.preparedAudioInfo[index].audio.play();
+        this.preparedAudioInfo[index].play();
         return;
       }
     }
@@ -37,7 +37,7 @@ class AudioSystem {
       for (let i=0; i<this.preparedAudioInfo.length; i++) {
         if(this.preparedAudioInfo[i].analyserInfo != null) {
           this.index = i;
-          this.preparedAudioInfo[i].audio.play();
+          this.preparedAudioInfo[i].play();
           this.status = "play";
           return this.preparedAudioInfo[i].analyserInfo;
         }
@@ -53,23 +53,37 @@ export const audioSystem = new AudioSystem();
 class AudioInfo {
   audio: HTMLAudioElement;
   analyserInfo: AnalyserInfo | null;
+  source: MediaElementAudioSourceNode | null;
   constructor(audio: HTMLAudioElement) {
     this.audio = audio;
     this.analyserInfo = null;
+    this.source = null;
+  }
+
+  play() {
+    if (this.source) {
+      this.source.disconnect();
+      this.source.connect(this.analyserInfo!.analyser);
+    }
+    this.audio.play();
   }
 
   handleCanplay(audio: HTMLAudioElement) {
     // connect the audio element to the analyser node and the analyser node
     // to the main Web Audio context
     const context = new AudioContext();
-    const source = context.createMediaElementSource(audio);
-    const analyser = context.createAnalyser();
-    const analyserInfo = new AnalyserInfo(analyser);
-    source.connect(analyser);
-    analyser.connect(context.destination);
-    this.analyserInfo = analyserInfo;
+    if (this.source == null) {
+      this.source = context.createMediaElementSource(audio);
+      const analyser = context.createAnalyser();
+      const analyserInfo = new AnalyserInfo(analyser);
+      this.analyserInfo = analyserInfo;
+      analyser.connect(context.destination);
+    }
   }
 }
+
+
+let loaded = 0;
 
 function prepareAudio(url: string): AudioInfo {
   const audio = new Audio();
@@ -79,10 +93,15 @@ function prepareAudio(url: string): AudioInfo {
   const audioPrepareInfo = new AudioInfo(audio);
   audio.load();
   audio.addEventListener('canplay', ()=> {
-    audioPrepareInfo.handleCanplay(audio)
+    audioPrepareInfo.handleCanplay(audio);
+    loaded += 1;
+    if(loaded == 4) {
+      audioSystem.play();
+    }
   });
   return audioPrepareInfo;
 }
+
 
 
 export class AnalyserInfo {

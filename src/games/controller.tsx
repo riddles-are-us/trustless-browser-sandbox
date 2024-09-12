@@ -203,27 +203,23 @@ export function GameController() {
   }
 
   function handleRedeemRewards() {
-    if (cooldown == true) {
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(LOTTERY, nonce),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-    }
+    dispatch(
+      sendTransaction({
+        cmd: getTransactionCommandArray(LOTTERY, nonce),
+        prikey: l2account!.address,
+      })
+    );
+    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
   function handleCancelRewards() {
-    if (cooldown == true) {
-      dispatch(
-        sendTransaction({
-          cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce),
-          prikey: l2account!.address,
-        })
-      );
-      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
-    }
+    dispatch(
+      sendTransaction({
+        cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce),
+        prikey: l2account!.address,
+      })
+    );
+    dispatch(queryState({ cmd: [], prikey: l2account!.address }));
   }
 
   return (
