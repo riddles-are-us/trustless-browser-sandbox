@@ -5,7 +5,7 @@ import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer, selectPlayerList, selectLastLotteryTimestamp } from "../data/puppy_party/properties";
+import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer, selectPlayerList, selectLastLotteryTimestamp, selectBalance } from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
@@ -18,6 +18,7 @@ const JUMP = 3n;
 const SHAKE_HEADS = 4n;
 const POST_COMMENTS = 5n;
 const LOTTERY = 6n;
+const CANCELL_LOTTERY = 7n;
 
 export function GameController() {
   const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ export function GameController() {
   const lastLotteryTimestamp = useAppSelector(selectLastLotteryTimestamp);
   const globalTimer = useAppSelector(selectGlobalTimer);
   const playerList = useAppSelector(selectPlayerList);
-
+  const balance = useAppSelector(selectBalance);
 
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
@@ -54,9 +55,12 @@ export function GameController() {
     let rc = 0;
     if (lastLotteryTimestamp != 0) {
       rc = 10 - (globalTimer - lastLotteryTimestamp);
+
+      if(rc < 0) {
+        handleCancelRewards();
+      }
     }
     setRedeemCounting(rc);
-
   }, [lastActionTimestamp, globalTimer]);
 
 
@@ -143,7 +147,7 @@ export function GameController() {
   console.log("l1 account:", account);
 
   function handleDiscoShakeFeet() {
-    if (cooldown == false) {
+    if (cooldown == true) {
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(SHAKE_FEET, nonce),
@@ -155,7 +159,7 @@ export function GameController() {
   }
 
   function handleDiscoJump() {
-    if (cooldown == false) {
+    if (cooldown == true) {
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(JUMP, nonce),
@@ -167,7 +171,7 @@ export function GameController() {
   }
 
   function handleDiscoShakeHeads() {
-    if (cooldown == false) {
+    if (cooldown == true) {
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(SHAKE_HEADS, nonce),
@@ -179,7 +183,7 @@ export function GameController() {
   }
 
   function handleDiscoPostComments() {
-    if (cooldown == false) {
+    if (cooldown == true) {
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
@@ -191,10 +195,22 @@ export function GameController() {
   }
 
   function handleRedeemRewards() {
-    if (cooldown == false) {
+    if (cooldown == true) {
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
+          cmd: getTransactionCommandArray(LOTTERY, nonce),
+          prikey: l2account!.address,
+        })
+      );
+      dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+    }
+  }
+
+  function handleCancelRewards() {
+    if (cooldown == true) {
+      dispatch(
+        sendTransaction({
+          cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce),
           prikey: l2account!.address,
         })
       );
@@ -218,6 +234,7 @@ export function GameController() {
       }
       {l2account &&
         <div className="center" id="stage">
+          <div className="balance">balance: {balance}</div>
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">
             <div className={`button1 cd-${cooldown}`} onClick={handleDiscoShakeFeet}></div>
@@ -225,10 +242,9 @@ export function GameController() {
             <div className={`button3 cd-${cooldown}`} onClick={handleDiscoShakeHeads}></div>
             <div className={`button4 cd-${cooldown}`} onClick={handleDiscoPostComments}></div>
           </div>
-          <div className={progress>=1000 ? "giftbox-buttons" : "none"}>
+          <div className={progress>=1000 && redeemCounting >= 0 ? "giftbox-buttons" : "none"}>
             <div className="button-yes" onClick={handleRedeemRewards}>Click to redeem rewards {redeemCounting} ticks left </div>
           </div>
-
         </div>
       }
     </>

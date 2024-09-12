@@ -100,6 +100,9 @@ class Scenario {
         this.progress = effectiveProgress;
       }
     }
+    if(state.progress == 0) {
+      this.progress = 0;
+    }
     drawProgress(this.progress, context);
   }
 

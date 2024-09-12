@@ -18,6 +18,12 @@ div.center {
     transform: translate(50%, -50%);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     color:white;
+
+    .balance {
+      position: absolute;
+      top: 2%;
+      right: 5%;
+    }
 }
 canvas {
   border: 0px solid gray;
