@@ -93,7 +93,11 @@ class Scenario {
     }
     this.audience.drawBeat(ratioArray, context);
     if (state.progress > this.progress) {
-      const effectiveProgress = this.progress + 0.001;
+      let modifier = 1;
+      if (state.progress - this.progress > 0.01) {
+        modifier = (state.progress - this.progress) / 0.01;
+      }
+      const effectiveProgress = this.progress + 0.001 * modifier;
       if (effectiveProgress > state.progress) {
         this.progress = state.progress;
       } else {

@@ -93,17 +93,17 @@ div.giftbox-buttons {
   animation: fadeIn 1s;
 }
 
-div.cd-true {
+div.cd-false {
   cursor: pointer;
   //filter: grayscale(100%);
 }
 
-div.cd-true:hover {
+div.cd-false:hover {
   cursor: pointer;
 }
 
 
-div.cd-false {
+div.cd-true {
   filter: grayscale(100%);
 }
 

@@ -48,9 +48,9 @@ export function GameController() {
   useEffect(() => {
     const delta = globalTimer - lastActionTimestamp;
     if (delta > 3) {
-       setCooldown(true);
-    } else {
        setCooldown(false);
+    } else {
+       setCooldown(true);
     }
     let rc = 0;
     if (lastLotteryTimestamp != 0) {
