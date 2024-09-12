@@ -32,6 +32,7 @@ export class Clip {
   currentClip: string | null;
   ratio: number;
   focus: boolean;
+  target: [number, number] | null;
   constructor(src: HTMLImageElement, boundry: ClipRect, ratio: number) {
     this.name = "NPC";
     this.src = src;
@@ -45,6 +46,7 @@ export class Clip {
     this.clips = new Map<string, Array<ClipRect>>();
     this.ratio = ratio;
     this.focus = false;
+    this.target = null;
   }
 
   getBottom() {
@@ -92,17 +94,19 @@ export class Clip {
       this.currentFrame = (this.currentFrame + 1) % len;
       this.top = this.vy + this.top;
       this.left = this.vx + this.left;
-      if (this.top < this.boundry.top) {
-        this.top = this.boundry.top;
-      }
-      if (this.top > this.boundry.bottom) {
-        this.top = this.boundry.bottom;
-      }
-      if (this.left < this.boundry.left) {
-        this.left = this.boundry.left;
-      }
-      if (this.left > this.boundry.right) {
-        this.left = this.boundry.right;
+      if (this.target == null) {
+        if (this.top < this.boundry.top) {
+          this.top = this.boundry.top;
+        }
+        if (this.top > this.boundry.bottom) {
+          this.top = this.boundry.bottom;
+        }
+        if (this.left < this.boundry.left) {
+          this.left = this.boundry.left;
+        }
+        if (this.left > this.boundry.right) {
+          this.left = this.boundry.right;
+        }
       }
     }
   }

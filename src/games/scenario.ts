@@ -10,7 +10,7 @@ import spirits from "./spirite";
 function createDogClip(top:number, left:number, dogIndex: number, start: number) {
   const spiriteHeight = 200;
   const spiriteWeight = 200;
-  const boundry = new ClipRect(HEIGHT/2 - 50, 50, WIDTH-100, HEIGHT-200);
+  const boundry = new ClipRect(HEIGHT/2 - 40, 50, WIDTH-100, HEIGHT-200);
   const clip = new Clip(spirits.spirites[0], boundry, 0.5);
   const clips = [];
   for (let i=0; i< 24; i++) {
@@ -37,6 +37,8 @@ class Scenario {
   fixedLights: Array<FixedLight>;
   torch: Torch;
   audience: Audience;
+  actor: Clip;
+  actorState: "focus" | "restore";
   constructor() {
     this.audience = new Audience();
     this.status = "pause";
@@ -56,11 +58,27 @@ class Scenario {
       new Light(0,500,60, 140, 80, -10, 8),
       new Light(0,800,30, 90, 60, 2, 10),
     ];
+    this.actor = this.clips[0];
     this.fixedLights = [new FixedLight(0,0)];
     this.torch = new Torch(100, 100, 40, 4, 4);
     this.progress = 0;
+    this.actorState = "restore";
 
   }
+
+  focusActor(left: number, top: number) {
+    this.actorState = "focus";
+    this.actor.target = [left, top];
+  }
+
+  restoreActor() {
+    this.actorState = "restore";
+    const top = 220 + getRandomNumber(80);
+    const left = 50 + getRandomNumber(800);
+    this.actor.target = [left, top];
+  }
+
+
   draw(ratioArray: Array<Beat>, state: any) {
     const c = document.getElementById("canvas")! as HTMLCanvasElement;
     //c.width = window.innerWidth;
@@ -124,6 +142,19 @@ class Scenario {
       const ry = Math.sign(rx) * Math.sqrt(1 - rx*rx);
       obj.setSpeed(rx*vratio, ry*vratio);
     }
+
+    if (this.actor.target != null) {
+      let rx = this.actor.target[0] - this.actor.left;
+      let ry = this.actor.target[1] - this.actor.top;
+      if (Math.abs(rx) > 10) {
+        rx = Math.sign(rx) * 10;
+      }
+      if (Math.abs(ry) > 10) {
+        ry = Math.sign(ry) * 10;
+      }
+      this.actor.setSpeed(rx, ry);
+    }
+
     for (const l of this.lights) {
       l.incFrame();
     }

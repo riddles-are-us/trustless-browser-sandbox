@@ -147,7 +147,8 @@ export function GameController() {
   console.log("l1 account:", account);
 
   function handleDiscoShakeFeet() {
-    if (cooldown == true) {
+    if (cooldown == false) {
+      scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(SHAKE_FEET, nonce),
@@ -155,11 +156,13 @@ export function GameController() {
         })
       );
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      setTimeout(()=>{scenario.restoreActor()}, 5000);
     }
   }
 
   function handleDiscoJump() {
-    if (cooldown == true) {
+    if (cooldown == false) {
+      scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(JUMP, nonce),
@@ -167,11 +170,13 @@ export function GameController() {
         })
       );
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      setTimeout(()=>{scenario.restoreActor()}, 5000);
     }
   }
 
   function handleDiscoShakeHeads() {
-    if (cooldown == true) {
+    if (cooldown == false) {
+      scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(SHAKE_HEADS, nonce),
@@ -179,11 +184,13 @@ export function GameController() {
         })
       );
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      setTimeout(()=>{scenario.restoreActor()}, 5000);
     }
   }
 
   function handleDiscoPostComments() {
-    if (cooldown == true) {
+    if (cooldown == false) {
+      scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
           cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
@@ -191,6 +198,7 @@ export function GameController() {
         })
       );
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+      setTimeout(()=>{scenario.restoreActor()}, 5000);
     }
   }
 
