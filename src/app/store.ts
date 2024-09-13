@@ -8,7 +8,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['acccount/deriveL2Account/fulfilled'],
+        ignoredActions: ['acccount/deriveL2Account/fulfilled', "client/sendTransaction/fulfilled", "client/sendTransaction/pending"],
         ignoredActionPaths: ['payload.web3','payload.seed', 'payload.injector'],
         ignoredPaths: [
           "acccount/fetchAccount/fulfilled",
@@ -17,7 +17,8 @@ export const store = configureStore({
           "status.config.latest_server_checksum",
           "game.preMerkleRoot",
           "game.postMerkleRoot",
-          "account.l2account"
+          "account.l2account",
+          "puppyParty.properties.player.data.action"
         ],
       },
     }),
