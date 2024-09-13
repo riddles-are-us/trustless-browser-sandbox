@@ -78,7 +78,7 @@ export const propertiesSlice = createSlice({
         if (state.uIState == UIState.CreatePlayer){
           state.uIState = UIState.QueryState;
         }
-        console.log("send transaction fulfilled");
+        console.log("send transaction fulfilled. The command processed at:", action.payload);
       })
       .addCase(sendTransaction.rejected, (state, action) => {
         console.log(`send transaction rejected: ${action.payload}`);
@@ -92,7 +92,7 @@ export const propertiesSlice = createSlice({
         state.globalTimer = action.payload.globalTimer;
         state.player = action.payload.player;
         console.log("state player:", state.player);
-        console.log("send transaction fulfilled");
+        console.log("query state fulfilled");
       })
       .addCase(queryState.rejected, (state, action) => {
         if (state.uIState == UIState.QueryState){

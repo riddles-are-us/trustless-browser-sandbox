@@ -38,7 +38,8 @@
     "web3subscriber": "git+https://github.com/DelphinusLab/delphinus-web3subscriber.git",
     "zkwasm-service-cli": "git+https://github.com/DelphinusLab/zkWasm-service-cli.git",
     "zkwasm-service-helper": "git+https://github.com/DelphinusLab/zkWasm-service-helper.git",
-    "react-app-rewired": "^2.2.1"
+    "react-app-rewired": "^2.2.1",
+    "bn.js": "^5.2.1"
   },
   "scripts": {
     "start": "npx react-app-rewired start",

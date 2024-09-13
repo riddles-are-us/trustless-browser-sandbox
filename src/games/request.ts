@@ -1,4 +1,4 @@
-import { query_config, send_transaction, query_state } from './rpc';
+import { query_config, send_transaction, query_state, queryJobStatus, delay } from './rpc';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const SERVER_TICK_TO_SECOND = 5;
@@ -43,7 +43,26 @@ export const sendTransaction = createAsyncThunk<
             try {
                 const { cmd, prikey } = params;
                 const res = await send_transaction(cmd, prikey);
-                return res;
+                for (let i=0; i<5; i++) {//detect job status with 1 sec delay
+                    await delay(1000);
+                    let jobStatus;
+                    try {
+                        jobStatus = await queryJobStatus(res.jobid);
+                        if(jobStatus.finishedOn == undefined) {
+                            throw Error("WaitingForProcess");
+                        }
+                    } catch(e) {
+                        continue
+                    }
+                    if (jobStatus) {
+                        if (jobStatus.finishedOn != undefined && jobStatus.failedReason == undefined ) {
+                            return jobStatus.finishedOn;
+                        } else {
+                            throw Error(jobStatus.failedReason)
+                        }
+                    }
+                }
+                throw Error("MonitorTransactionFail");
             } catch (err: any) {
                 return rejectWithValue(err);
             }
