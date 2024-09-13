@@ -233,15 +233,11 @@ export function GameController() {
   return (
     <>
       {!l2account && account &&
-      <div className="center" id="stage">
-        <Container className="mt-5">
-            <button className="btn btn-confirm mb-5"
-              onClick={() => {
-                dispatch(loginL2AccountAsync(account!))
-                loadAudio((ele) => {return ele;});
-              }}
-            > Connect and R.O.C.K</button>
-        </Container>
+      <div className="loading" id="stage"
+          onClick={() => {
+              dispatch(loginL2AccountAsync(account!))
+              loadAudio((ele) => {return ele;});
+          }}>
       </div>
       }
       {l2account &&

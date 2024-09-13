@@ -2,8 +2,9 @@ import {
   Torch, Audience, drawHorn,
   drawBackground, drawProgress,
   ClipRect, Clip, Light, FixedLight,
-  HEIGHT, WIDTH, Beat,
+  HEIGHT, WIDTH, Beat, drawScreen,
 }  from "./draw";
+import {ShapeBuilder, Shape, Effect} from "./effects";
 
 import spirits from "./spirite";
 
@@ -39,6 +40,11 @@ class Scenario {
   audience: Audience;
   actor: Clip;
   actorState: "focus" | "restore";
+  shapeBuilder: ShapeBuilder;
+  shape: Shape;
+  toggleShapeCounter: number;
+  toggleShapeIndex: number;
+  toggleText: Array<string>;
   constructor() {
     this.audience = new Audience();
     this.status = "pause";
@@ -63,7 +69,11 @@ class Scenario {
     this.torch = new Torch(100, 100, 40, 4, 4);
     this.progress = 0;
     this.actorState = "restore";
-
+    this.shapeBuilder = new ShapeBuilder();
+    this.toggleText = ["MEME", "DISCO", "LFGGGG", "ROCK"];
+    this.shape = this.shapeBuilder.letter("!!!!!!!!!");
+    this.toggleShapeCounter = 100;
+    this.toggleShapeIndex = this.toggleText.length;
   }
 
   focusActor(left: number, top: number) {
@@ -87,7 +97,22 @@ class Scenario {
     c.height = HEIGHT;
     const context = c.getContext("2d")!;
     context.clearRect(0, 0, c.width, c.height);
+    drawScreen(ratioArray, context);
+
+    const eff = new Effect(WIDTH, 400, context);
+    if (this.toggleShapeCounter == 0) {
+      this.toggleShapeIndex = (this.toggleShapeIndex + 1) % this.toggleText.length;
+      const text = this.toggleText[this.toggleShapeIndex];
+      this.shape.switchShape(eff, this.shapeBuilder.letter(text), true);
+      this.toggleShapeCounter = 100;
+    } else {
+      this.shape.render(eff);
+    }
+
     drawBackground(ratioArray, context);
+    context.drawImage(spirits.leftEcoImage, 0, 0, 1700 * 0.5, 1076*0.5);
+    context.drawImage(spirits.rightEcoImage, WIDTH - 1324 * 0.5, 0, 1324*0.5, 798*0.5);
+
 
 
     /*
@@ -159,6 +184,7 @@ class Scenario {
       l.incFrame();
     }
     this.torch.incFrame();
+    this.toggleShapeCounter --;
   }
 }
 

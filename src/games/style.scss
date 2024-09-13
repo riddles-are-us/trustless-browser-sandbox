@@ -3,12 +3,26 @@ body, html {
   padding: 0;
   overflow: hidden; /* Prevent scrollbars */
   height: 100%;
-  background-image: url('images/bggray.png');
+  background-image: url('images/bggray.jpg');
   background-size: cover;
   background-position: center;
 
    /* Apply grayscale filter */
 }
+div.loading {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    color:white;
+    background-image: url('images/loading.png');
+    background-size: cover;
+    cursor: pointer;
+}
+
 div.center {
     position: absolute;
     width: 960px;

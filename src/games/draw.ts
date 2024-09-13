@@ -190,10 +190,10 @@ export class FixedLight {
     //ctx.globalCompositeOperation = "saturation";
     //
     ctx.beginPath();
-    ctx.moveTo(180, 75);
-    ctx.lineTo(300, 300);
+    ctx.moveTo(170, 75);
+    ctx.lineTo(260, 300);
     ctx.lineTo(550, 210);
-    ctx.lineTo(270, 8);
+    ctx.lineTo(250, 8);
     ctx.closePath();
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
@@ -381,6 +381,10 @@ export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D)
     freeze --;
   }
   return ratioArray;
+}
+
+export function drawScreen(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
+  ctx.drawImage(spirites.screenImage, 0, 0, WIDTH, HEIGHT);
 }
 
 export function drawBackground(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D) {
