@@ -81,7 +81,29 @@ function createCommand(command: bigint, nonce: bigint) {
 export function getTransactionCommandArray(
   action: bigint,
   nonce: bigint,
+  params: bigint[]
 ) {
   const command = createCommand(action, nonce);
-  return [command, 0n, 0n, 0n];
+  return [command, params[0], params[1], params[2]];
+}
+
+export async function queryJobStatus(jobId: number) {
+  try {
+    const url = `/job/${jobId}`;
+    const response = await instance(url, {
+      method: 'GET',
+    });
+    if (response.status === 201) {
+      const jsonResponse = response.data;
+      return jsonResponse;
+    } else {
+      throw "QueryJobError";
+    }
+  } catch(error) {
+    throw "QueryJobError " + error;
+  }
+}
+
+export function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

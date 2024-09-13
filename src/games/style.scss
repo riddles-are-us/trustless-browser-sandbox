@@ -33,6 +33,16 @@ div.center {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     color:white;
 
+    .withdraw {
+      position: absolute;
+      top: 2%;
+      right: 16%;
+      height: 30px;
+      width: 80px;
+      border: 1px solid white;
+      cursor: pointer;
+    }
+
     .balance {
       position: absolute;
       top: 2%;

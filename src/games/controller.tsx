@@ -9,8 +9,14 @@ import { UIState, selectUIState, setUIState, selectNonce, selectProgress, select
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
+import BN from "bn.js"
+import { WithdrawComponent } from "./withdraw";
 
 //import cover from "./images/towerdefence.jpg";
+
+function bytesToHex(bytes: Array<number>): string  {
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
 
 const CREATE_PLAYER = 1n;
 const SHAKE_FEET = 2n;
@@ -19,6 +25,7 @@ const SHAKE_HEADS = 4n;
 const POST_COMMENTS = 5n;
 const LOTTERY = 6n;
 const CANCELL_LOTTERY = 7n;
+const WITHDRAW = 8n;
 
 export function GameController() {
   const dispatch = useAppDispatch();
@@ -33,14 +40,15 @@ export function GameController() {
   const globalTimer = useAppSelector(selectGlobalTimer);
   const playerList = useAppSelector(selectPlayerList);
   const balance = useAppSelector(selectBalance);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [amount, setAmount] = useState('');
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
   const [alreadyDraw, setAlreadyDraw] = useState(false);
 
   console.log("lastActionTimestamp", lastActionTimestamp, "globalTimer", globalTimer);
 
-   // Update the ref value whenever `progress` changes
+  // Update the ref value whenever `progress` changes
   useEffect(() => {
     progressRef.current = progress;
 
@@ -97,7 +105,7 @@ export function GameController() {
     try {
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(CREATE_PLAYER, nonce),
+          cmd: getTransactionCommandArray(CREATE_PLAYER, nonce, [0n, 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -156,7 +164,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_FEET, nonce),
+          cmd: getTransactionCommandArray(SHAKE_FEET, nonce, [0n, 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -170,7 +178,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(JUMP, nonce),
+          cmd: getTransactionCommandArray(JUMP, nonce, [0n, 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -184,7 +192,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce),
+          cmd: getTransactionCommandArray(SHAKE_HEADS, nonce, [0n, 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -198,7 +206,7 @@ export function GameController() {
       scenario.focusActor(440, 190);
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(POST_COMMENTS, nonce),
+          cmd: getTransactionCommandArray(POST_COMMENTS, nonce, [0n, 0n, 0n]),
           prikey: l2account!.address,
         })
       );
@@ -213,7 +221,7 @@ export function GameController() {
 
     dispatch(
       sendTransaction({
-        cmd: getTransactionCommandArray(LOTTERY, nonce),
+        cmd: getTransactionCommandArray(LOTTERY, nonce, [0n, 0n, 0n]),
         prikey: l2account!.address,
       })
     );
@@ -223,11 +231,52 @@ export function GameController() {
   function handleCancelRewards() {
       dispatch(
         sendTransaction({
-          cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce),
+          cmd: getTransactionCommandArray(CANCELL_LOTTERY, nonce, [0n, 0n, 0n]),
           prikey: l2account!.address,
         })
       );
       dispatch(queryState({ cmd: [], prikey: l2account!.address }));
+  }
+
+  // Function to handle the withdraw button click
+  const handleWithdrawClick = () => {
+    setIsModalVisible(true); // Show the modal
+  };
+
+  // Function to handle the confirmation of the withdraw
+  const handleConfirmWithdraw = () => {
+    console.log('Withdrawing amount:', amount);
+    setIsModalVisible(false); // Hide the modal after withdrawal
+    withdrawRewards(BigInt(amount), nonce);
+    setAmount("0");
+  };
+
+  async function withdrawRewards(amount: bigint, nonce: bigint) {
+    const address = account!.address.slice(2);
+    const addressBN = new BN(address, 16);
+    const addressBE = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
+    console.log("address is", address);
+    console.log("address big endian is", addressBE);
+    const firstLimb = BigInt('0x' + bytesToHex(addressBE.slice(0,4).reverse()));
+    const sndLimb = BigInt('0x' + bytesToHex(addressBE.slice(4,12).reverse()));
+    const thirdLimb = BigInt('0x' + bytesToHex(addressBE.slice(12, 20).reverse()));
+
+    /*
+    (32 bit amount | 32 bit highbit of address)
+    (64 bit mid bit of address (be))
+    (64 bit tail bit of address (be))
+    */
+
+    console.log("first is", firstLimb);
+    console.log("snd is", sndLimb);
+    console.log("third is", thirdLimb);
+
+    dispatch(
+      sendTransaction({
+        cmd: getTransactionCommandArray(WITHDRAW, nonce, [(firstLimb << 32n) + amount, sndLimb, thirdLimb]),
+        prikey: l2account!.address,
+      })
+    );
   }
 
   return (
@@ -242,6 +291,15 @@ export function GameController() {
       }
       {l2account &&
         <div className="center" id="stage">
+          <WithdrawComponent
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+            amount={amount}
+            setAmount={setAmount}
+            balance={balance}
+            handleWithdrawClick={handleWithdrawClick}
+            handleConfirmWithdraw={handleConfirmWithdraw}
+          />
           <div className="balance">balance: {balance}</div>
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">

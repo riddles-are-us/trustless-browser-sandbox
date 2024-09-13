@@ -55,7 +55,7 @@ export function sign(cmd: Array<bigint>, prikey: string) {
   const pkey = PrivateKey.fromString(prikey);
   const r = pkey.r();
   const R = Point.base.mul(r);
-  const H = cmd[0] + (cmd[1] << 64n) + (cmd[2] << 128n) + (cmd[3] << 196n);
+  const H = cmd[0] + (cmd[1] << 64n) + (cmd[2] << 128n) + (cmd[3] << 192n);
   const hbn = new BN(H.toString(10));
   const S = r.add(pkey.key.mul(new CurveField(hbn)));
   const pubkey = pkey.publicKey;
