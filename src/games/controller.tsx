@@ -5,7 +5,20 @@ import { ClipRect, Clip, getBeat} from "./draw";
 import { loadAudio2, loadAudio, AnalyserInfo, audioSystem} from "./audio";
 import { scenario } from "./scenario";
 import { getConfig, sendTransaction, queryState } from "./request";
-import { UIState, selectUIState, setUIState, selectNonce, selectProgress, selectLastActionTimestamp, selectGlobalTimer, selectPlayerList, selectLastLotteryTimestamp, selectBalance } from "../data/puppy_party/properties";
+import {
+  UIState,
+  setLastTxResult,
+  selectUIState,
+  setUIState,
+  selectNonce,
+  selectProgress,
+  selectLastActionTimestamp,
+  selectGlobalTimer,
+  selectPlayerList,
+  selectLastLotteryTimestamp,
+  selectBalance,
+  selectLastTxResult
+} from "../data/puppy_party/properties";
 import { getTransactionCommandArray } from "./rpc";
 import { selectL2Account, selectL1Account, loginL2AccountAsync, loginL1AccountAsync } from "../data/accountSlice";
 import "./style.scss";
@@ -40,7 +53,10 @@ export function GameController() {
   const globalTimer = useAppSelector(selectGlobalTimer);
   const playerList = useAppSelector(selectPlayerList);
   const balance = useAppSelector(selectBalance);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const lastTxResult = useAppSelector(selectLastTxResult);
+  const [isWDModalVisible, setIsWDModalVisible] = useState(false);
+  const [isWDResModalVisible, setIsWDResModalVisible] = useState(false);
+  const [withdrawRes, setWithdrawRes] = useState('');
   const [amount, setAmount] = useState('');
   const [cooldown, setCooldown] = useState(false);
   const [redeemCounting, setRedeemCounting] = useState(0);
@@ -243,13 +259,16 @@ export function GameController() {
 
   // Function to handle the withdraw button click
   const handleWithdrawClick = () => {
-    setIsModalVisible(true); // Show the modal
+    dispatch(setLastTxResult(""));
+    setIsWDModalVisible(true); // Show the modal
   };
 
   // Function to handle the confirmation of the withdraw
   const handleConfirmWithdraw = () => {
     console.log('Withdrawing amount:', amount);
-    setIsModalVisible(false); // Hide the modal after withdrawal
+    setIsWDModalVisible(false); // Hide the modal after withdrawal
+    setIsWDResModalVisible(true);
+    dispatch(setUIState({ uIState: UIState.Withdraw }));
     withdrawRewards(BigInt(amount), nonce);
     setAmount("0");
   };
@@ -296,8 +315,13 @@ export function GameController() {
       <>
         <div className="nav">
           <WithdrawComponent
-            isModalVisible={isModalVisible}
-            setIsModalVisible={setIsModalVisible}
+            isWDModalVisible={isWDModalVisible}
+            setIsWDModalVisible={setIsWDModalVisible}
+            isWDResModalVisible={isWDResModalVisible}
+            setIsWDResModalVisible={setIsWDResModalVisible}
+            lastTxResult={lastTxResult}
+            withdrawRes={withdrawRes}
+            setWithdrawRes={setWithdrawRes}
             amount={amount}
             setAmount={setAmount}
             balance={balance}
