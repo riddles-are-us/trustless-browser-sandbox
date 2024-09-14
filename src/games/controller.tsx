@@ -143,6 +143,9 @@ export function GameController() {
       if (uIState == UIState.Init) {
         dispatch(setUIState({ uIState: UIState.QueryConfig }));
       }
+
+      const ele = document.getElementById("stage");
+      ele!.style.transform = "translate(50%, -50%) scale(2)";
     }
   }, [l2account]);
 
@@ -290,7 +293,8 @@ export function GameController() {
       </div>
       }
       {l2account &&
-        <div className="center" id="stage">
+      <>
+        <div className="nav">
           <WithdrawComponent
             isModalVisible={isModalVisible}
             setIsModalVisible={setIsModalVisible}
@@ -301,6 +305,9 @@ export function GameController() {
             handleConfirmWithdraw={handleConfirmWithdraw}
           />
           <div className="balance">balance: {balance}</div>
+        </div>
+
+        <div className="center" id="stage">
           <canvas id="canvas"></canvas>
           <div className="stage-buttons">
             <div className={`button1 cd-${cooldown}`} onClick={handleDiscoShakeFeet}></div>
@@ -312,6 +319,7 @@ export function GameController() {
                   <div className="button-yes" onClick={handleRedeemRewards}>Raffle if full, click to collect rewards: {redeemCounting} ticks left </div>
           </div>
         </div>
+      </>
       }
     </>
   );

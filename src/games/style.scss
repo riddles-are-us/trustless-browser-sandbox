@@ -9,6 +9,14 @@ body, html {
 
    /* Apply grayscale filter */
 }
+
+div.nav {
+  background-color:black;
+  color:white;
+  div {
+    margin-left: 10px;
+  }
+}
 div.loading {
     position: absolute;
     width: 300px;
