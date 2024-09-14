@@ -99,20 +99,26 @@ div.stage-buttons {
 
 div.giftbox-buttons {
   position: absolute;
-  left: 380px;
-  top: 360px;
+  left: 260px;
+  top: 260px;
+  width: 400px;
+  height: 95px;
+  background-image: url('images/giftbox.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  padding-left: 60px;
+  padding-top: 90px;
   .button-yes {
+    cursor: pointer;
+    color: orange;
+    font-weight: 800;
     display: inline-block;
     height:70px;
-    width:70px;
-    background-color: gray;
-  }
-  .button-no {
-    margin-left:15px;
-    display: inline-block;
-    height:70px;
-    width:70px;
-    background-color: gray;
+    width:270px;
+    background-color: black;
+    padding:5px;
+    text-align: center;
+    font-size: 16px;
   }
   animation: fadeIn 1s;
 }

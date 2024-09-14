@@ -309,7 +309,7 @@ export function GameController() {
             <div className={`button4 cd-${cooldown}`} onClick={handleDiscoPostComments}></div>
           </div>
           <div className={progress >= 1000 && redeemCounting >= 0 && !alreadyDraw ? "giftbox-buttons" : "none"}>
-            <div className="button-yes" onClick={handleRedeemRewards}>Click to redeem rewards {redeemCounting} ticks left </div>
+                  <div className="button-yes" onClick={handleRedeemRewards}>Raffle if full, click to collect rewards: {redeemCounting} ticks left </div>
           </div>
         </div>
       }
