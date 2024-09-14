@@ -3,8 +3,13 @@ import { Modal } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
 interface WithdrawComponentProps {
-  isModalVisible: boolean;
-  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isWDModalVisible: boolean;
+  setIsWDModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isWDResModalVisible: boolean;
+  setIsWDResModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  lastTxResult: number | string;
+  withdrawRes: string;
+  setWithdrawRes: React.Dispatch<React.SetStateAction<string>>;
   amount: string;
   setAmount: React.Dispatch<React.SetStateAction<string>>;
   balance: number;
@@ -13,8 +18,13 @@ interface WithdrawComponentProps {
 }
 
 export function WithdrawComponent({
-    isModalVisible,
-    setIsModalVisible,
+    isWDModalVisible,
+    setIsWDModalVisible,
+    isWDResModalVisible,
+    setIsWDResModalVisible,
+    lastTxResult,
+    withdrawRes,
+    setWithdrawRes,
     amount,
     setAmount,
     balance,
@@ -29,13 +39,18 @@ export function WithdrawComponent({
         setAmount('');
       }
     };
+    if(typeof lastTxResult == "number") {
+      setWithdrawRes("Withdraw transaction handled, please check explorer.zkwasmhub.com for more information");
+    } else {
+      setWithdrawRes(lastTxResult);
+    }
 
     return (
       <div>
         <div className="withdraw" onClick={handleWithdrawClick}>
           Withdraw
         </div>
-        <Modal show={isModalVisible} onHide={() => setIsModalVisible(false)}>
+        <Modal show={isWDModalVisible} onHide={() => setIsWDModalVisible(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Enter Amount to Withdraw</Modal.Title>
           </Modal.Header>
@@ -49,11 +64,24 @@ export function WithdrawComponent({
             <div>Please enter a number between 0 and {balance}.</div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setIsModalVisible(false)}>
+            <Button variant="secondary" onClick={() => setIsWDModalVisible(false)}>
               Cancel
             </Button>
             <Button variant="primary" onClick={handleConfirmWithdraw}>
               Confirm Withdraw
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={isWDResModalVisible} onHide={() => setIsWDResModalVisible(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Withdraw Result</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>{withdrawRes}</div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setIsWDResModalVisible(false)}>
+              Close
             </Button>
           </Modal.Footer>
         </Modal>

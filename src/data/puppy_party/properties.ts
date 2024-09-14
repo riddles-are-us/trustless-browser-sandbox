@@ -7,7 +7,8 @@ export enum UIState{
   QueryConfig,
   QueryState,
   CreatePlayer,
-  Idle
+  Idle,
+  Withdraw
 }
 
 interface PlayerState {
@@ -35,6 +36,7 @@ interface PlayerListElement {
 interface PropertiesState {
     uIState: UIState;
     player: PlayerState;
+    lastTxResult: string | number,
     globalTimer: number;
     playerList: PlayerListElement[];
 }
@@ -53,6 +55,7 @@ const initialState: PropertiesState = {
         progress: 0,
       }
     },
+    lastTxResult: "",
     globalTimer: 0,
     playerList: []
 };
@@ -63,6 +66,9 @@ export const propertiesSlice = createSlice({
   reducers: {
     setUIState: (state, action) => {
       state.uIState = action.payload.uIState;
+    },
+    setLastTxResult: (state, action) => {
+      state.lastTxResult = action.payload.lastTxResult;
     }
   },
   extraReducers: (builder) => {
@@ -78,9 +84,14 @@ export const propertiesSlice = createSlice({
         if (state.uIState == UIState.CreatePlayer){
           state.uIState = UIState.QueryState;
         }
+        state.lastTxResult = action.payload;
         console.log("send transaction fulfilled. The command processed at:", action.payload);
       })
       .addCase(sendTransaction.rejected, (state, action) => {
+        if (state.uIState == UIState.Withdraw){
+          state.lastTxResult = action.payload!.message;
+        }
+        state.uIState = UIState.QueryState;
         console.log(`send transaction rejected: ${action.payload}`);
       })
       .addCase(queryState.fulfilled, (state, action) => {
@@ -112,5 +123,6 @@ export const selectAction = (state: RootState) => state.puppyParty.properties.pl
 export const selectLastLotteryTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_lottery_timestamp;
 export const selectLastActionTimestamp = (state: RootState) => state.puppyParty.properties.player.data.last_action_timestamp;
 export const selectProgress = (state: RootState) => state.puppyParty.properties.player.data.progress;
-export const { setUIState } = propertiesSlice.actions;
+export const selectLastTxResult = (state: RootState) => state.puppyParty.properties.lastTxResult;
+export const { setUIState, setLastTxResult } = propertiesSlice.actions;
 export default propertiesSlice.reducer;

@@ -3,9 +3,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const SERVER_TICK_TO_SECOND = 5;
 
-interface SendTransactionRes {
-    success: boolean;
-    jobid: string | undefined;
+interface SendTransactionError {
+    name: string;
+    message: string;
+    stack?: string;
 }
 
 interface SendTransactionParams {
@@ -34,9 +35,9 @@ export const getConfig = createAsyncThunk(
 )
 
 export const sendTransaction = createAsyncThunk<
-    SendTransactionRes,
+    number,
     SendTransactionParams,
-    { rejectValue: string }
+    { rejectValue: SendTransactionError }
     >(
         'client/sendTransaction',
         async (params: {cmd: Array<bigint>, prikey: string }, { rejectWithValue }) => {
