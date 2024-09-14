@@ -371,9 +371,9 @@ export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D)
 
   if (freeze==0 && (ratio > 1.08 && avg > 130)) {
     ele!.style.transition = 'transform 0.1s ease';
-    ele!.style.transform = transform  + " " + `scale(${r + 0.02})` + " " + "rotate(0.25deg)";
+    ele!.style.transform = "translate(50%, -50%)" + " " + `scale(${r + 0.02})` + " " + "rotate(0.25deg)";
     ele!.style.transition = 'transform 0.1s ease';
-    ele!.style.transform = transform  + " " + `scale(${r + 0.02})` + " " + "rotate(-0.25deg)";
+    ele!.style.transform = "translate(50%, -50%)" + " " + `scale(${r + 0.02})` + " " + "rotate(-0.25deg)";
     freeze = 10;
   } else {
     ele!.style.transform = transform;
