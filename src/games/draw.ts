@@ -365,7 +365,7 @@ export function drawHorn(ratioArray: Array<Beat>, ctx: CanvasRenderingContext2D)
   ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y, 88*rH, 105*rH);
   ctx.drawImage(spirites.horn, 0, 0, 177, 210, x, y+110, 88*rL, 105*rL);
   const ele = document.getElementById("stage");
-  const height = window.document.body.offsetHeight - 200;
+  const height = window.document.body.offsetHeight - 100;
   const r = Math.floor(height/5.4)/100;
   const transform = `translate(50%, -50%) scale(${r})`;
 
