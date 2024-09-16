@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 
@@ -39,11 +39,13 @@ export function WithdrawComponent({
         setAmount('');
       }
     };
-    if(typeof lastTxResult == "number") {
-      setWithdrawRes("Withdraw transaction handled, please check explorer.zkwasmhub.com for more information");
-    } else {
-      setWithdrawRes(lastTxResult);
-    }
+    useEffect(() => {
+      if (typeof lastTxResult === "number") {
+        setWithdrawRes("Withdraw transaction handled, please check explorer.zkwasmhub.com for more information");
+      } else {
+        setWithdrawRes(lastTxResult);
+      }
+    }, [lastTxResult, setWithdrawRes]);
 
     return (
       <div>
