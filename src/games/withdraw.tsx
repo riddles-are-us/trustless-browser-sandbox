@@ -45,7 +45,7 @@ export function WithdrawComponent({
       } else {
         setWithdrawRes(lastTxResult);
       }
-    }, [lastTxResult, setWithdrawRes]);
+    }, [lastTxResult]);
 
     return (
       <div>
