@@ -23,7 +23,7 @@ interface PlayerState {
 }
 
 interface PlayerListElement {
-  pid: string,
+  pid: Array<string>,
   data: {
     balance: number;
     action: bigint;

@@ -81,11 +81,11 @@ export const queryState = createAsyncThunk<
                 const { cmd, prikey } = params;
                 const res = await query_state(cmd, prikey);
                 const datas = JSON.parse(res.data);
-                console.log("query state data", datas.data);
+                console.log("query state data", datas);
 
                 const player = datas.player;
-                const playerList = datas.player_list;
-                const counter = datas.counter;
+                const playerList = datas.state.player_list;
+                const counter = datas.state.counter;
                 return {
                     player,
                     playerList,
