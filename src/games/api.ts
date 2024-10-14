@@ -6,8 +6,9 @@ function bytesToHex(bytes: Array<number>): string  {
 }
 
 const CMD_WITHDRAW = 1n;
-const CMD_DEPOSIT = 2n;
+const CMD_REGISTER = 2n;
 const CMD_PLACE = 3n;
+const CMD_RECURRECT = 4n;
 
 
 function createCommand(nonce: bigint, command: bigint, feature: bigint) {
@@ -25,33 +26,33 @@ export class Player {
     this.rpc = new ZKWasmAppRpc(rpc);
   }
 
-  async deposit(balance: bigint) {
-    let nonce = await this.getNonce();
-    let accountInfo = new LeHexBN(query(this.processingKey).pkx).toU64Array();
+  async register() {
+    const nonce = await this.getNonce();
+    const accountInfo = new LeHexBN(query(this.processingKey).pkx).toU64Array();
     try {
-      let finished = await this.rpc.sendTransaction(
-        new BigUint64Array([createCommand(nonce, CMD_DEPOSIT, 0n), accountInfo[1], accountInfo[2], balance]),
+      const state = await this.rpc.sendTransaction(
+        new BigUint64Array([createCommand(nonce, CMD_REGISTER, 0n), accountInfo[1], accountInfo[2], 0n]),
         this.processingKey
       );
-      console.log("deposit processed at:", finished);
+      return state;
     } catch(e) {
       if(e instanceof Error) {
         console.log(e.message);
       }
-      console.log("deposit error at processing key:", this.processingKey);
+      console.log("register error at processing key:", this.processingKey);
     }
   }
 
   async getState(): Promise<any> {
-    let state:any = await this.rpc.queryState(this.processingKey);
+    const state:any = await this.rpc.queryState(this.processingKey);
     return JSON.parse(state.data);
   }
 
   async getNonce(): Promise<bigint> {
-    let state:any = await this.rpc.queryState(this.processingKey);
+    const state:any = await this.rpc.queryState(this.processingKey);
     let nonce = 0n;
     if (state.data) {
-      let data = JSON.parse(state.data);
+      const data = JSON.parse(state.data);
       if (data.player) {
         nonce = BigInt(data.player.nonce);
       }
@@ -59,41 +60,58 @@ export class Player {
     return nonce;
   }
 
-  async place(bet: bigint) {
-    let nonce = await this.getNonce();
+  async place(pos: bigint) {
+    const nonce = await this.getNonce();
     try {
-      let processStamp = await this.rpc.sendTransaction(
-        new BigUint64Array([createCommand(nonce, CMD_PLACE, 0n), bet, 0n, 0n]),
+      const state:any = await this.rpc.sendTransaction(
+        new BigUint64Array([createCommand(nonce, CMD_PLACE, 0n), pos, 0n, 0n]),
         this.processingKey
       );
-      console.log("place processed at:", processStamp);
+      return state;
     } catch(e) {
       if (e instanceof Error) {
         console.log(e.message);
       }
-      console.log("place error at id:", bet);
+      throw (e);
     }
   }
 
+  async resurrect() {
+    const nonce = await this.getNonce();
+    try {
+      const state:any = await this.rpc.sendTransaction(
+        new BigUint64Array([createCommand(nonce, CMD_RECURRECT, 0n), 0n, 0n, 0n]),
+        this.processingKey
+      );
+      return state;
+    } catch(e) {
+      if (e instanceof Error) {
+        console.log(e.message);
+      }
+      throw (e);
+    }
+  }
+
+
   async withdrawRewards(address: string, amount: bigint) {
-    let nonce = await this.getNonce();
-    let addressBN = new BN(address, 16);
-    let a = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
+    const nonce = await this.getNonce();
+    const addressBN = new BN(address, 16);
+    const a = addressBN.toArray("be", 20); // 20 bytes = 160 bits and split into 4, 8, 8
 
     console.log("address is", address);
     console.log("address be is", a);
 
 
     /*
-  (32 bit amount | 32 bit highbit of address)
-  (64 bit mid bit of address (be))
-  (64 bit tail bit of address (be))
+    (32 bit amount | 32 bit highbit of address)
+    (64 bit mid bit of address (be))
+    (64 bit tail bit of address (be))
      */
 
 
-    let firstLimb = BigInt('0x' + bytesToHex(a.slice(0,4).reverse()));
-    let sndLimb = BigInt('0x' + bytesToHex(a.slice(4,12).reverse()));
-    let thirdLimb = BigInt('0x' + bytesToHex(a.slice(12, 20).reverse()));
+    const firstLimb = BigInt('0x' + bytesToHex(a.slice(0,4).reverse()));
+    const sndLimb = BigInt('0x' + bytesToHex(a.slice(4,12).reverse()));
+    const thirdLimb = BigInt('0x' + bytesToHex(a.slice(12, 20).reverse()));
 
 
     console.log("first is", firstLimb);
@@ -101,14 +119,14 @@ export class Player {
     console.log("third is", thirdLimb);
 
     try {
-      let processStamp = await this.rpc.sendTransaction(
+      const state:any = await this.rpc.sendTransaction(
         new BigUint64Array([
           createCommand(nonce, CMD_WITHDRAW, 0n),
           (firstLimb << 32n) + amount,
           sndLimb,
           thirdLimb
         ]), this.processingKey);
-      console.log("withdraw rewards processed at:", processStamp);
+      return JSON.parse(state.data);
     } catch(e) {
       if (e instanceof Error) {
         console.log(e.message);
@@ -117,4 +135,3 @@ export class Player {
     }
   }
 }
-

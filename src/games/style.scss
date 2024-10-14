@@ -8,3 +8,56 @@ body, html {
 
    /* Apply grayscale filter */
 }
+
+div.center {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background-image: url("../images/dungen.jpg");
+    background-repeat: no-repeat;
+    background-size: auto 100%; /* Makes the background fit the height */
+    background-position: center center; /* Centers the image */
+}
+
+div.content {
+    margin: auto;
+    max-width: 500px;
+}
+
+div.explorer {
+    position: fixed;
+    width: 150px;
+    margin-left: 180px;
+    align-items: center; /* Centers vertically */
+    img {
+      width: 100%;
+    }
+    bottom: 100px;
+}
+
+div.nav {
+    background-color: black;
+    color: white;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+div.foot {
+    position: fixed;
+    margin-left: 100px;
+    top: 300px;
+    color: white;
+    button {
+      padding: 10px;
+      margin:10px;
+
+    }
+}
+
+p.hint {
+    font-size: 50px;
+    color: white;
+    text-align: center;
+}

@@ -36,8 +36,8 @@
     "url": "^0.11.3",
     "wait-on": "^6.0.1",
     "web3subscriber": "git+https://github.com/DelphinusLab/delphinus-web3subscriber.git",
-    "zkwasm-ts-server": "https://gitpkg.vercel.app/DelphinusLab/zkwasm-mini-rollup/ts?main",
-    "zkwasm-service-helper": "github:DelphinusLab/zkWasm-service-helper"
+    "zkwasm-service-helper": "github:DelphinusLab/zkWasm-service-helper",
+    "zkwasm-ts-server": "https://gitpkg.vercel.app/DelphinusLab/zkwasm-mini-rollup/ts?main"
   },
   "scripts": {
     "start": "npx react-app-rewired start",
